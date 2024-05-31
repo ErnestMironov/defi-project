@@ -1,4 +1,16 @@
-@tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-  
+@import "./fonts.scss";
+@import "./tailwind.scss";
+
+@layer base {
+  html {
+    font-size: 0.83vw;
+
+    @media (max-width: 1023px) {
+      font-size: 16px;
+    }
+
+    body {
+      @apply font-sans text-white bg-primary-bg;
+    }
+  }
+}

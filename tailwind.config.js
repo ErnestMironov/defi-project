@@ -9,6 +9,9 @@ module.exports = {
   ],
   prefix: "",
   theme: {
+    fontFamily: {
+      sans: ["HelveticaNeueCyr", "sans-serif"],
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -17,6 +20,12 @@ module.exports = {
       },
     },
     extend: {
+      colors: {
+        'primary-bg':'#020202',
+
+        // text
+        'white':'#FFF',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
