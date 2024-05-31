@@ -1,8 +1,7 @@
 import type { ComponentProps } from 'react'
 
-interface LandingProps extends ComponentProps<'div'> {
-}
+interface LandingProperties extends ComponentProps<'div'> {}
 
-export const Landing = (props: LandingProps) => {
-return <div>landing</div>
+export const Landing = (_props: LandingProperties) => {
+  return <div>landing</div>
 }
