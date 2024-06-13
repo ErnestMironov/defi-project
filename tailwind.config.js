@@ -10,7 +10,24 @@ module.exports = {
   prefix: "",
   theme: {
     fontFamily: {
-      sans: ["HelveticaNeueCyr", "sans-serif"],
+      sans: ["Arimo", "sans-serif"],
+    },
+    fontSize: {
+      // 'xs': ['0.8125rem', {lineHeight: '0.975rem',}],
+      // 'sm': ['0.875rem', {lineHeight: '1.1375rem'}],
+      // 'semi-base': ['0.9375rem', {lineHeight: '1.125rem'}],
+      'base': ['1rem', {lineHeight: '1.2rem'}],
+      // 'lg': ['1.125rem', {lineHeight: '1.35rem'}],
+      'xl': ['1.375rem', {lineHeight: '1.65rem'}],
+      // '2xl': ['1.5rem', {lineHeight: '2.4rem'}],
+      // '2.1xl': ['1.5625rem', {lineHeight: '2.5rem'}],
+      // '2.5xl': ['1.75rem', {lineHeight: '2.1rem'}],
+      // '3xl': ['1.875rem', {lineHeight: '2.25rem'}],
+      // '4xl': ['2.5rem', {lineHeight: '3rem'}],
+      // '3.5xl': ['2.8125rem', {lineHeight: '3.9375rem'}],
+      // '4.5xl': ['3.25rem', {lineHeight: '3.9rem'}],
+      // '5xl': ['3.4375rem', {lineHeight: '4.125rem'}],
+      // '6xl': ['4.0625rem', {lineHeight: '4.875rem'}],
     },
     container: {
       center: true,
@@ -22,9 +39,18 @@ module.exports = {
     extend: {
       colors: {
         'primary-bg':'#020202',
+        'primary-bg--light':'#F7F6F9',
 
+        'primary-pink': '#C494F4',
+        
         // text
-        'white':'#FFF',
+        'white':'#FEFEFE',
+        'black':'#323949',
+        'gray': '#9998B8',
+        'text-80': 'rgba(50, 57, 73, 0.80)',
+        'blue1': '#6A97FF',
+
+        'card-light':'#1B212D',
       },
       keyframes: {
         "accordion-down": {

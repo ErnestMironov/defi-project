@@ -9,7 +9,7 @@ interface BaseLayoutProperties extends ComponentProps<'div'> {}
 
 export const BaseLayout = (_props: BaseLayoutProperties) => {
   return (
-    <div className="flex min-h-screen flex-col bg-primary-bg px-[6.25rem]">
+    <div className="flex min-h-screen flex-col px-[6.25rem]">
       <Header className="flex py-12 [&>*]:flex-1">
         <div />
         <HeaderMenu />
