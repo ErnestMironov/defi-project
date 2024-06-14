@@ -10,6 +10,7 @@ export const routes = createRoutesFromElements(
         path={ROUTES.HOME}
         lazy={async () => {
           const { Landing } = await import('@pages/landing/Landing')
+          console.log('🚀 ~ lazy={ ~ Landing:', Landing)
           return {
             Component: Landing,
           }
