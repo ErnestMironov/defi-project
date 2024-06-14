@@ -1,0 +1,46 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Arrow from '@assets/icons/arrow.svg'
+import Usdt from '@assets/icons/tokens/usdt.svg'
+import clsx from 'clsx'
+import { forwardRef } from 'react'
+
+type TooltipComponentProperties = {
+  isOpen: boolean
+  tooltipContent: any
+  onMouseEnter: () => void
+  onMouseLeave: () => void
+}
+
+export const D3TooltipComponent = forwardRef(
+  (props: TooltipComponentProperties, reference: any) => {
+    const { isOpen, tooltipContent, ...rest } = props
+    return (
+      <div
+        {...rest}
+        ref={reference}
+        className={clsx(
+          'absolute z-10 flex flex-col flex-nowrap gap-5 rounded-2xl bg-white px-5 py-4 text-black shadow-md transition-all duration-300 ease-in-out [box-shadow:0px_2.556px_5.111px_0px_rgba(0,_0,_0,_0.04)]',
+          isOpen ? 'opacity-1' : 'opacity-0',
+        )}
+      >
+        <div className="flex items-center gap-2">
+          <Usdt className="size-6 overflow-visible" />
+          <p className="text-[1.375rem]">{tooltipContent?.value}</p>
+        </div>
+        <div className="text-base text-text-80">
+          <div className="flex items-center">
+            <span>800.98%</span>
+            <Arrow className="mx-2" />
+            <span>834.71%</span>
+            <span className="ml-1">APY</span>
+          </div>
+          <div className="mt-2">
+            <span>5 days ago</span>
+            <span className="ml-2">(21.05.24 22:12)</span>
+          </div>
+        </div>
+        <div className="text-blue1">View on Explorer</div>
+      </div>
+    )
+  },
+)

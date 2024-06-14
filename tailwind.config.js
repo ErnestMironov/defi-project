@@ -10,14 +10,14 @@ module.exports = {
   prefix: "",
   theme: {
     fontFamily: {
-      sans: ["Arimo", "sans-serif"],
+      sans: [/* "Arial",  */"sans-serif"],
     },
     fontSize: {
       // 'xs': ['0.8125rem', {lineHeight: '0.975rem',}],
-      // 'sm': ['0.875rem', {lineHeight: '1.1375rem'}],
+      'sm': ['0.875rem', {lineHeight: '1.225rem'}],
       // 'semi-base': ['0.9375rem', {lineHeight: '1.125rem'}],
       'base': ['1rem', {lineHeight: '1.2rem'}],
-      // 'lg': ['1.125rem', {lineHeight: '1.35rem'}],
+      'lg': ['1.125rem', {lineHeight: '1.35rem'}],
       'xl': ['1.375rem', {lineHeight: '1.65rem'}],
       // '2xl': ['1.5rem', {lineHeight: '2.4rem'}],
       // '2.1xl': ['1.5625rem', {lineHeight: '2.5rem'}],
@@ -40,8 +40,6 @@ module.exports = {
       colors: {
         'primary-bg':'#020202',
         'primary-bg--light':'#F7F6F9',
-
-        'primary-pink': '#C494F4',
         
         // text
         'white':'#FEFEFE',
@@ -49,6 +47,8 @@ module.exports = {
         'gray': '#9998B8',
         'text-80': 'rgba(50, 57, 73, 0.80)',
         'blue1': '#6A97FF',
+        'gray-100': '#9998B8',
+        
 
         'card-light':'#1B212D',
       },

@@ -1,8 +1,17 @@
-import { Area, AreaChart, CartesianGrid, Line, Tooltip, YAxis } from 'recharts'
+import dayjs from 'dayjs'
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 
-import { TooltipComponent } from '../TooltipComponent'
+import { TooltipComponent } from './TooltipComponent'
 
-const data = [
+const mockData = [
   {
     name: 'Page A',
     uv: 100,
@@ -47,57 +56,99 @@ const data = [
   },
 ]
 
-export const LineChart = () => {
+export type RechartDataType = {
+  name: string
+  uv: number
+  pv: number
+  amt: number
+}
+
+export type LineChartColor = '#6160FF' | '#A6C1FF'
+
+interface AreaChartComponentProperties {
+  data?: RechartDataType[]
+  color?: LineChartColor
+}
+
+const colorMapping = {
+  '#6160FF': {
+    color2: '#A6C1FF',
+    colorUv: 'url(#colorUv1)',
+  },
+  '#A6C1FF': {
+    color2: '#6160FF',
+    colorUv: 'url(#colorUv2)',
+  },
+}
+
+export const LineChartComponent = (props: AreaChartComponentProperties) => {
+  const { data = mockData, color } = props
+  const { color2, colorUv } = colorMapping[color || '#6160FF']
+  const color1 = color
+  const colorUv1 = colorUv
+  const colorUv2 = colorUv === 'url(#colorUv1)' ? 'url(#colorUv2)' : 'url(#colorUv1)'
   return (
-    <AreaChart
-      width={600}
-      height={300}
-      data={data}
-      margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
+    <ResponsiveContainer
+      width="100%"
+      height="100%"
+      className="[&_.recharts-cartesian-axis-line]:stroke-slate-500/20  [&_.recharts-cartesian-grid-horizontal_line:first-child]:opacity-0 [&_.recharts-cartesian-grid-horizontal_line:last-child]:translate-y-[0.05rem]"
     >
-      <Line type="monotone" dataKey="uv" stroke="#C494F4" />
-      <CartesianGrid
-        stroke="#ccc"
-        opacity={0.4}
-        strokeDasharray="10 10"
-        vertical={false}
-      />
-      <YAxis />
-      <Tooltip
-        // cursor={false}
-        content={({ active, payload, coordinate }) => {
-          console.log('coordinate', coordinate)
-
-          if (active && payload && payload.length > 0 && coordinate) {
-            return <TooltipComponent />
-          }
-
-          return null
+      <AreaChart
+        width={500}
+        height={400}
+        data={data}
+        margin={{
+          top: 10,
+          right: 8,
+          left: 0,
+          bottom: 0,
         }}
-      />
-      <Line type="monotone" dataKey="uv" stroke="url(#colorUv)" />
-      <Area
-        type="monotone"
-        dataKey="uv"
-        stroke="#C494F4"
-        strokeWidth={3}
-        fill="url(#verticalStrokes)"
-      />
-      <defs>
-        <pattern id="verticalStrokes" width="6" height="10" patternUnits="userSpaceOnUse">
-          <line
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="10"
-            style={{ stroke: '#66657c', strokeWidth: 5 }}
-          />
-        </pattern>
-        <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#C494F4" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#C494F4" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-    </AreaChart>
+      >
+        <CartesianGrid strokeDasharray="8 8" vertical={false} />
+        <XAxis
+          axisLine
+          tickLine={false}
+          dataKey="uv"
+          tickFormatter={(value) => dayjs(value).format('MMM').toUpperCase()}
+          className="text-[0.6875rem] [&_text]:fill-gray-100"
+          interval="preserveStartEnd"
+        />
+        <YAxis
+          axisLine={false}
+          tickLine={false}
+          tickFormatter={(value) => (value === 0 ? '' : `$${value}`)}
+          className="text-[0.8125rem] [&_text]:fill-gray-100"
+          interval="preserveStartEnd"
+        />
+        <Tooltip
+          content={({ active, payload, coordinate }) => {
+            if (active && payload && payload.length > 0 && coordinate) {
+              return (
+                <TooltipComponent
+                  data={[
+                    { color: '#6160FF', value: '220,342.76', apy: '3.4' },
+                    { color: '#A6C1FF', value: '220,342.76', apy: '3.4' },
+                  ]}
+                />
+              )
+            }
+
+            return null
+          }}
+        />
+        <Area type="monotone" dataKey="pv" stroke={color1} fill={colorUv1} />
+        <Area type="monotone" dataKey="uv" stroke={color2} fill={colorUv2} />
+        <defs>
+          <linearGradient id="colorUv1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="45%" stopColor="#6160FF" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="#6160FF" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="45%" stopColor="#A6C1FF" stopOpacity={0.5} />
+            <stop offset="100%" stopColor="#A6C1FF" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+      </AreaChart>
+    </ResponsiveContainer>
   )
 }

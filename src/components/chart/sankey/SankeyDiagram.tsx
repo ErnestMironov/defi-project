@@ -85,7 +85,7 @@ export const SankeyDiagram = () => {
         })
       }
     })
-    series.links.template.events.on('pointerout', function (e) {
+    series.links.template.events.on('pointerout', function () {
       if (!isOverTooltip) {
         setIsOpen(false)
       }
