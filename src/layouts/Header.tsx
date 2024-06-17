@@ -1,4 +1,5 @@
 import { Logo } from '@components/ui/logo'
+import { ModeToggle } from '@modules/theme/ThemeToggler'
 import clsx from 'clsx'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
@@ -14,7 +15,9 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
         <Logo fill="#060606" />
       </Link>
       <HeaderMenu />
-      <div />
+      <div>
+        <ModeToggle />
+      </div>
     </header>
   )
 }
