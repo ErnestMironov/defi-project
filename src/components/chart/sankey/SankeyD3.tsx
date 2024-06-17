@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/no-use-before-define */
@@ -123,18 +124,19 @@ export const mockData: SankeyChartDataType = {
     { source: '2', target: '7', value: 20 },
     { source: '3', target: '12', value: 10 },
     { source: '4', target: '9', value: 20 },
+    { source: '4', target: '8', value: 20 },
     { source: '5', target: '8', value: 10 },
     { source: '5', target: '10', value: 10 },
     { source: '6', target: '7', value: 12 },
   ],
 }
 const COLORS = [
-  'rgba(135, 99, 243, 0.15)',
-  'rgba(254, 244, 154, 0.30)',
-  'rgba(50, 57, 73, 0.08)',
-  'rgba(247, 190, 204, 0.25)',
-  'rgba(121, 222, 194, 0.20)',
-  'rgba(166, 193, 255, 0.60)',
+  'rgba(135, 99, 243, 0.30)',
+  'rgba(254, 244, 154, 0.45)',
+  'rgba(50, 57, 73, 0.23)',
+  'rgba(247, 190, 204, 0.40)',
+  'rgba(121, 222, 194, 0.35)',
+  'rgba(166, 193, 255, 0.75)',
 ]
 const MARGIN_Y = 25
 const MARGIN_X = 5
@@ -171,7 +173,7 @@ export const Sankey = ({ data }: SankeyProperties) => {
   }, [tooltip])
   const dimensions = useDimensions(containerReference)
   const sankeyGenerator = sankey()
-    .nodeWidth(20)
+    .nodeWidth(10)
     .nodePadding(15)
     .extent([
       [MARGIN_X, MARGIN_Y],
@@ -179,7 +181,7 @@ export const Sankey = ({ data }: SankeyProperties) => {
     ])
     .nodeId((node) => (node as NodeType).id)
     .nodeAlign(sankeyCenter)
-    .nodeSort(() => +1)
+  // .nodeSort(() => +1)
 
   // Compute nodes and links positions
   const { nodes, links } = sankeyGenerator(data as any)
@@ -188,11 +190,11 @@ export const Sankey = ({ data }: SankeyProperties) => {
   // Draw the nodes
   //
   const allNodes = nodes.map((node) => {
-    console.log('node', node)
-    const color =
-      (node.sourceLinks as any).length > 0
-        ? COLORS[(node.index as any) % COLORS.length]
-        : COLORS[Number((node as any).id) % COLORS.length]
+    // console.log('node', node)
+    const color1 = COLORS[Number(node.index as any) % COLORS.length]
+    const color2 = COLORS[Number(node.index as any) % COLORS.length]
+
+    const color = (node.sourceLinks as any).length > 0 ? color1 : color2
     return (
       <>
         <g key={node.index}>
@@ -220,31 +222,47 @@ export const Sankey = ({ data }: SankeyProperties) => {
   // Draw the links
   //
   const allLinks = links.map((link, i) => {
+    const gradientId = `gradient-${i}`
     const linkGenerator = sankeyLinkHorizontal()
     const path = linkGenerator(link)
-    console.log('link', link)
-
+    // console.log('link', link)
+    const color1 = COLORS[Number((link.source as any).index) % COLORS.length]
+    const color2 = COLORS[Number((link.target as any).index) % COLORS.length]
     return (
-      <path
-        key={i}
-        d={path || ''}
-        stroke={COLORS[(link.source as any).index % COLORS.length]}
-        fill="none"
-        strokeOpacity={0.5}
-        strokeWidth={link.width}
-        className="mix-blend-multiply hover:animate-pulse hover:[stroke-opacity:_1]"
-        // strokeLinecap="round"
-        onMouseEnter={(e) => {
-          setIsOpen(true)
-          setTooltip({
-            // content: `${(link.source as NodeType).id}->${(link.target as NodeType).id}`,
-            content: '200,220.20',
-            x: e.clientX,
-            y: e.clientY,
-          })
-        }}
-        onMouseLeave={() => setIsOpen(false)}
-      />
+      <g key={i}>
+        <defs>
+          <linearGradient
+            id={gradientId}
+            gradientUnits="userSpaceOnUse"
+            x1={(link.source as any).x1}
+            y1={0}
+            x2={(link.target as any).x0}
+            y2={0}
+          >
+            <stop offset="0" stopColor={color1} />
+            <stop offset="1" stopColor={color2} />
+          </linearGradient>
+        </defs>
+        <path
+          d={path || ''}
+          stroke={`url(#${gradientId})`}
+          fill="none"
+          strokeOpacity={0.5}
+          strokeWidth={link.width}
+          className="mix-blend-multiply hover:animate-pulse hover:[stroke-opacity:_1]"
+          // strokeLinecap="round"
+          onMouseEnter={(e) => {
+            setIsOpen(true)
+            setTooltip({
+              // content: `${(link.source as NodeType).id}->${(link.target as NodeType).id}`,
+              content: '200,220.20',
+              x: e.clientX,
+              y: e.clientY,
+            })
+          }}
+          onMouseLeave={() => setIsOpen(false)}
+        />
+      </g>
     )
   })
 

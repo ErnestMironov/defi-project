@@ -26,7 +26,7 @@ export const FramesSelect = ({
         <div
           key={item}
           className={cn(
-            'flex items-center justify-center px-3 py-2 text-sm text-text-80 hover:bg-[#F0EFF5] cursor-pointer relative after:right-0 after:w-[0.0625rem] after:absolute after:h-full ' /* dark:hover:bg-[#3A3944] */,
+            'flex items-center justify-center px-3 py-2 text-sm text-text-80 hover:bg-[#F0EFF5] cursor-pointer relative after:right-0 after:w-[1px] after:absolute after:h-full ' /* dark:hover:bg-[#3A3944] */,
             frame === item && 'bg-[#F0EFF5]',
             i === 0 && 'pl-4',
             i === array.length - 1 ? 'pr-4' : 'after:bg-[#DEDDEC]',
