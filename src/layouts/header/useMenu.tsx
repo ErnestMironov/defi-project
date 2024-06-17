@@ -1,63 +1,66 @@
-import ArrowRight from '@assets/icons/arrow-right.svg'
 import { ROUTES } from '@routes/routes'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 export interface IMenuItem {
   href: string
   label: string
-  src?: React.FC<React.SVGProps<SVGElement>>
+  src?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element
   callback?: () => void
 }
 
 interface IMenu {
-  dashboard: IMenuItem
-  usdt: IMenuItem
-  usdc: IMenuItem
+  analytics: IMenuItem
+  deposit: IMenuItem
   docs: IMenuItem
 }
 
-const scrollToTop = () => {
-  document.body.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: 'smooth',
-  })
-}
-
 export const useMenu = (): IMenu => {
-  const { t } = useTranslation()
-
   return useMemo(() => {
     return {
-      main: {
-        href: ROUTES.HOME,
-        label: t('Menu.main'),
-        callback: scrollToTop,
+      deposit: {
+        href: ROUTES.DEPOSIT,
+        label: 'Deposit',
       },
-      dashboard: {
-        href: ROUTES.DASHBOARD,
-        label: t('Menu.dashboard'),
-      },
-      usdt: {
-        href: ROUTES.USDT,
-        label: 'USDT',
-      },
-      usdc: {
-        href: ROUTES.USDC,
-        label: 'USDC',
+      analytics: {
+        href: ROUTES.ANALYTICS,
+        label: 'Analytics',
       },
       docs: {
-        href: ROUTES.DOCS,
-        label: t('Menu.docs'),
-        src: ArrowRight,
+        href: 'https://docs.maat.fi/',
+        label: 'Docs',
+        src: (props: React.SVGProps<SVGSVGElement>) => (
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+          >
+            <path
+              d="M9.66406 9.63916L19.8708 9.63916L19.8708 20.0349"
+              stroke="#323949"
+              strokeWidth="1.5"
+              strokeMiterlimit="10"
+              strokeLinecap="square"
+            />
+            <path
+              d="M9.69141 20.0068L19.2255 10.2962"
+              stroke="#323949"
+              strokeWidth="1.5"
+              strokeMiterlimit="10"
+              strokeLinecap="square"
+              strokeLinejoin="round"
+            />
+          </svg>
+        ),
       },
     }
-  }, [t])
+  }, [])
 }
 
 export const useMenuArray = () => {
   const menu = useMenu()
 
-  return Object.values(menu).filter((item) => item.href !== ROUTES.HOME) as IMenuItem[]
+  return Object.values(menu) as IMenuItem[]
 }

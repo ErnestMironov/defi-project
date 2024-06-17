@@ -7,11 +7,21 @@ export const routes = createRoutesFromElements(
   <Route path="/">
     <Route Component={BaseLayout}>
       <Route
-        path={ROUTES.HOME}
+        path={ROUTES.DEPOSIT}
         lazy={async () => {
-          const { Landing } = await import('@pages/landing/Landing')
+          const { Deposit } = await import('@pages/deposit/Deposit')
           return {
-            Component: Landing,
+            Component: Deposit,
+          }
+        }}
+      />
+      <Route
+        path={ROUTES.ANALYTICS}
+        lazy={async () => {
+          const { Analytics } = await import('@pages/analytics/Analytics')
+          console.log('🚀 ~ lazy={ ~ Landing:', Analytics)
+          return {
+            Component: Analytics,
           }
         }}
       />
