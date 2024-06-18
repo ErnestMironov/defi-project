@@ -2,7 +2,7 @@ interface LogoProperties extends React.SVGProps<SVGSVGElement> {
   fill?: string
 }
 
-export const Logo = ({ fill, ...rest }: LogoProperties) => {
+export const Logo = ({ fill }: LogoProperties) => {
   return (
     <svg
       width="74"

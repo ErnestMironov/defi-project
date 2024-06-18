@@ -3,56 +3,58 @@
 @tailwind utilities;
 
 :root {
-	/* COLORS */
-	--main: #6160ff;
-	--logo: #060606;
-	--white: #ffffff;
-	--bg: #f7f6f9;
-	--button-40: rgba(97 96 255 / 0.4);
-	--stroke: #deddec;
-	--stroke-60: rgba(222 221 236 / 0.6);
-	--text: #323949;
-	--text-white: #ffffff;
-	--text-100: #323949;
-	--text-90: rgba(50 57 73 / 0.9);
-	--text-80: rgba(50 57 73 / 0.8);
-	--error: #ff4057;
-	--error-card-40: rgba(255 64 87 / 0.04);
-	--violet-violet-text: #7173ad;
-	--violet-100: #8763f3;
-	--violet-40: rgba(135 99 243 / 0.4);
-	--violet-15: rgba(135 99 243 / 0.15);
-	--violet-4: rgba(97 96 255 / 0.04);
-	--blue-blue1: #6a97ff;
-	--blue-blue2: #a6c1ff;
-	--green-100: #79dec2;
-	--green-50: rgba(121 222 194 / 0.5);
-	--green-10: rgba(121 222 194 / 0.1);
-	--gray-gray-100: #9998b8;
-	--gray-70: rgba(153 152 184 / 0.7);
-	--gray-50: rgba(153 152 184 / 0.5);
-	--dark-cards-100: #434251;
-	--dark-cards-70: rgba(67 66 81 / 0.7);
-	--dark-default-input-4: rgba(255 255 255 / 0.04);
-	--dark-some-button: #4c4b5c;
-	--mobile-dark-bg: #23242c;
-	--mobile-dark-white: #ffffff;
-	--mobile-dark-green: #79dec2;
-	--mobile-dark-blue-1: #a6c1ff;
-	--mobile-dark-blue-20: rgba(180 203 255 / 0.2);
-	--mobile-dark-blue-2: #323949;
-	--mobile-dark-gray-text: #9998b8;
-	--mobile-dark-gray-70-bg-card: rgba(67 66 81 / 0.7);
-	--mobile-dark-violet-100: #8763f3;
-	--mobile-dark-violet-15: rgba(135 99 243 / 0.15);
-	--mobile-dark-violet-4: rgba(97 96 255 / 0.04);
+  /* COLORS */
+  --main: #6160ff;
+  --logo: #060606;
+  --white: #ffffff;
+  --bg: #f7f6f9;
+  --button-40: rgba(97 96 255 / 0.4);
+  --stroke: #deddec;
+  --stroke-60: rgba(222 221 236 / 0.6);
+  --text: #323949;
+  --text-white: #ffffff;
+  --text-100: #323949;
+  --text-90: rgba(50 57 73 / 0.9);
+  --text-80: rgba(50 57 73 / 0.8);
+  --error: #ff4057;
+  --error-card-40: rgba(255 64 87 / 0.05);
+  --violet-violet-text: #7173ad;
+  --violet-100: #8763f3;
+  --violet-40: rgba(135 99 243 / 0.4);
+  --violet-15: rgba(135 99 243 / 0.15);
+  --violet-4: rgba(97 96 255 / 0.04);
+  --blue-blue1: #6a97ff;
+  --blue-blue2: #a6c1ff;
+  --green-100: #79dec2;
+  --green-50: rgba(121 222 194 / 0.5);
+  --green-10: rgba(121 222 194 / 0.1);
+  --gray-gray-100: #9998b8;
+  --gray-70: rgba(153 152 184 / 0.7);
+  --gray-50: rgba(153 152 184 / 0.5);
+  --dark-cards-100: #434251;
+  --dark-cards-70: rgba(67 66 81 / 0.7);
+  --dark-default-input-4: rgba(255 255 255 / 0.04);
+  --dark-some-button: #4c4b5c;
+  --mobile-dark-bg: #23242c;
+  --mobile-dark-white: #ffffff;
+  --mobile-dark-green: #79dec2;
+  --mobile-dark-blue-1: #a6c1ff;
+  --mobile-dark-blue-20: rgba(180 203 255 / 0.2);
+  --mobile-dark-blue-2: #323949;
+  --mobile-dark-gray-text: #9998b8;
+  --mobile-dark-gray-70-bg-card: rgba(67 66 81 / 0.7);
+  --mobile-dark-violet-100: #8763f3;
+  --mobile-dark-violet-15: rgba(135 99 243 / 0.15);
+  --mobile-dark-violet-4: rgba(97 96 255 / 0.04);
 
-	/* SHADOWS */
-	--shadow: 0 3px 1px 0 rgba(135 99 243 / 0.12);
-	--dark-shadow: 0 2px 1px 0 rgba(214 200 255 / 0.22);
+  /* SHADOWS */
+  --shadow: 0 3px 1px 0 rgba(135 99 243 / 0.12);
+  --shadow-hover: 0px 4px 1px 0px rgba(135, 99, 243, 0.12);
+  --dark-shadow: 0 2px 1px 0 rgba(214 200 255 / 0.22);
+  --dark-shadow-hover: 0 4px 1px 0 rgba(214 200 255 / 0.22);
 }
 
 .dark {
-	--bg: #23242c;
-	--text: #fff;
+  --bg: #23242c;
+  --text: #fff;
 }

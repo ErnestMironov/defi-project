@@ -15,15 +15,16 @@ module.exports = {
     fontSize: {
       // 'xs': ['0.8125rem', {lineHeight: '0.975rem',}],
       'sm': ['0.875rem', {lineHeight: '1.225rem'}],
-      // 'semi-base': ['0.9375rem', {lineHeight: '1.125rem'}],
+      'semi-base': ['0.9375rem', {lineHeight: '1.125rem'}],
       'base': ['1rem', {lineHeight: '1.2rem'}],
+      'md': ['1.1875rem', {lineHeight: '1.425rem'}],
       'lg': ['1.125rem', {lineHeight: '1.35rem'}],
       'xl': ['1.375rem', {lineHeight: '1.65rem'}],
-      // '2xl': ['1.5rem', {lineHeight: '2.4rem'}],
+      '2xl': ['1.5rem', {lineHeight: '1.8rem'}],
       // '2.1xl': ['1.5625rem', {lineHeight: '2.5rem'}],
       // '2.5xl': ['1.75rem', {lineHeight: '2.1rem'}],
-      // '3xl': ['1.875rem', {lineHeight: '2.25rem'}],
-      // '4xl': ['2.5rem', {lineHeight: '3rem'}],
+      '3xl': ['1.875rem', {lineHeight: '2.25rem'}],
+      '4xl': ['2.5rem', {lineHeight: '3rem'}],
       // '3.5xl': ['2.8125rem', {lineHeight: '3.9375rem'}],
       // '4.5xl': ['3.25rem', {lineHeight: '3.9rem'}],
       // '5xl': ['3.4375rem', {lineHeight: '4.125rem'}],
@@ -97,7 +98,9 @@ module.exports = {
       },
       boxShadow: {
         'shadow': 'var(--shadow)',
+        'shadow--hover': 'var(--shadow-hover)',
         'dark-shadow': 'var(--dark-shadow)',
+        'dark-shadow--hover': 'var(--dark-shadow-hover)',
       },
       keyframes: {
         "accordion-down": {
@@ -113,7 +116,19 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fillOpacity: {
+        '0': '0',
+        '25': '0.25',
+        '50': '0.5',
+        '75': '0.75',
+        '100': '1',
+      }
     },
+    variants: {
+      extend: {
+        fillOpacity: ['responsive', 'hover', 'focus', 'active', 'group-hover'],
+      },
+    }
   },
   plugins: [require("tailwindcss-animate")],
 }
