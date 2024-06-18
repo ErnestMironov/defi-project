@@ -51,7 +51,7 @@ module.exports = {
         'gray-100': '#9998B8',
         
 
-        'card-light':'#1B212D',
+        'card': 'var(--card)',
         'main': 'var(--main)',
         'logo': 'var(--logo)',
         'white': 'var(--white)',
@@ -74,12 +74,15 @@ module.exports = {
         'blue1': 'var(--blue-blue1)',
         'blue2': 'var(--blue-blue2)',
         'green-100': 'var(--green-100)',
+        'green-15': 'var(--green-15)',
+        'green-30': 'var(--green-30)',
         'green-50': 'var(--green-50)',
-        'green-10': 'var(--green-10)',
+        'green-80': 'var(--green-80)',
         'gray-gray-100': 'var(--gray-gray-100)',
         'gray-70': 'var(--gray-70)',
         'gray-50': 'var(--gray-50)',
         'dark-bg': 'var(--dark-bg)',
+        'cards': 'var(--cards)',
         'dark-cards-100': 'var(--dark-cards-100)',
         'dark-cards-70': 'var(--dark-cards-70)',
         'dark-default-input-4': 'var(--dark-default-input-4)',
@@ -111,10 +114,22 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        moonArc: {
+          '0%': { transform: 'translate(20px, 20px) rotate(0deg)' },
+          '50%': { transform: 'translate(10px, 10px) rotate(180deg)' },
+          '100%': { transform: 'translate(0, 0) rotate(360deg)' },
+        },
+        sunArc: {
+          '0%': { transform: 'translate(0, 0) rotate(0deg)' },
+          '50%': { transform: 'translate(10px, -10px) rotate(180deg)' },
+          '100%': { transform: 'translate(0, 0) rotate(360deg)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        moonArc: 'moonArc 0.3s ease-in-out forwards',
+        sunArc: 'sunArc 0.3s ease-in-out forwards',
       },
       fillOpacity: {
         '0': '0',
