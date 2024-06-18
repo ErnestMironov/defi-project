@@ -50,7 +50,7 @@ module.exports = {
         'gray-100': '#9998B8',
         
 
-        'card-light':'#1B212D',
+        'card': 'var(--card)',
         'main': 'var(--main)',
         'logo': 'var(--logo)',
         'white': 'var(--white)',
@@ -79,6 +79,7 @@ module.exports = {
         'gray-70': 'var(--gray-70)',
         'gray-50': 'var(--gray-50)',
         'dark-bg': 'var(--dark-bg)',
+        'cards': 'var(--cards)',
         'dark-cards-100': 'var(--dark-cards-100)',
         'dark-cards-70': 'var(--dark-cards-70)',
         'dark-default-input-4': 'var(--dark-default-input-4)',
@@ -109,8 +110,8 @@ module.exports = {
           to: { height: "0" },
         },
         moonArc: {
-          '0%': { transform: 'translate(0, 0) rotate(0deg)' },
-          '50%': { transform: 'translate(-10px, -10px) rotate(180deg)' },
+          '0%': { transform: 'translate(20px, 20px) rotate(0deg)' },
+          '50%': { transform: 'translate(10px, 10px) rotate(180deg)' },
           '100%': { transform: 'translate(0, 0) rotate(360deg)' },
         },
         sunArc: {

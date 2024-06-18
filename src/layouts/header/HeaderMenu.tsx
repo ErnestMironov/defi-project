@@ -26,7 +26,7 @@ export const HeaderMenu = ({ className, ...rest }: HeaderMenuProperties) => {
           )}
         >
           {menuItem.label}
-          {menuItem.src && <menuItem.src className="relative bottom-1" />}
+          {menuItem.src && <menuItem.src className="relative bottom-0.5 size-7" />}
           {menuItem.href === location.pathname && (
             <div className="absolute bottom-0 h-0.5 w-full bg-violet-100" />
           )}

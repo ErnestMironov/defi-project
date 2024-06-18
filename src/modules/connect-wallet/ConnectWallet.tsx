@@ -27,7 +27,11 @@ export const ConnectWallet = ({ btnProps }: IConnectWalletProperties) => {
       {address ? (
         <>
           <span>{shortenString(address)}</span>{' '}
-          <ArrowDown className={clsx('size-4 transition-all duration-150')} />
+          <ArrowDown
+            className={clsx(
+              'size-4 transition-all duration-150 dark:[&_path]:stroke-white',
+            )}
+          />
         </>
       ) : (
         <span>CONNECT WALLET</span>
