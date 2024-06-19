@@ -30,7 +30,7 @@ export const TokenWithNetwork = (props: TokenWithNetworkProperties) => {
         return '-right-1.5 -top-1'
       }
       default: {
-        return 'bottom-0.5 right-0.5'
+        return '-bottom-[10%] -right-[10%]'
       }
     }
   })()

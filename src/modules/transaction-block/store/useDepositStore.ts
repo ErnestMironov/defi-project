@@ -17,8 +17,8 @@ interface SelectedAssetState {
   setDepositAsset: (by: Asset | null) => void
   depositNetwork: NetworkType | null
   setDepositNetwork: (by: NetworkType | null) => void
-  withdrawNetwork: NetworkType | null
-  setWithdrawNetwork: (by: NetworkType | null) => void
+  withdrawNetwork: NetworkType
+  setWithdrawNetwork: (by: NetworkType) => void
   vault: string
   setVault: (by: string) => void
   status: TxStatus

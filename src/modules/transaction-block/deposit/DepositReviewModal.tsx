@@ -126,7 +126,7 @@ export const DepositReviewModal = ({ trigger }: DepositReviewModalProperties) =>
           </Button>
         </DialogContent>
       </Dialog>
-      <DoneModal />
+      <DoneModal txType="deposit" />
     </>
   )
 }

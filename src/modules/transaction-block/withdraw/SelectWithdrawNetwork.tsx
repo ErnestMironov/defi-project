@@ -1,16 +1,10 @@
 import { TokenIconComponent } from '@components/token-icon'
-import React from 'react'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 import { useDepositStore } from '../store/useDepositStore'
 
 export const SelectWithdrawNetwork = () => {
-  const {
-    depositAsset: asset,
-    txType,
-    withdrawNetwork,
-    setWithdrawNetwork,
-  } = useDepositStore()
+  const { withdrawNetwork, setWithdrawNetwork } = useDepositStore()
   return (
     <SelectNetworkPopover
       network={withdrawNetwork}
