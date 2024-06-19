@@ -75,7 +75,7 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
     },
     {
       title: 'MAAT Overview',
-      logoColor: '#323949',
+      logoColor: 'currentColor',
       stats: [
         {
           title: 'TVL',
