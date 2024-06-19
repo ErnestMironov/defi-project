@@ -5,11 +5,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { useState } from 'react'
 
-import { useDepositStore } from './store/useDepositStore'
+import { useDepositStore } from '../store/useDepositStore'
 
 interface SelectAssetPopoverProperties {}
 
-const vaults = [
+export const VAULTS = [
   { token: 'USDT', apy: 34 },
   { token: 'USDC', apy: 31 },
 ]
@@ -34,11 +34,11 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
           </PopoverClose>
         </div>
         <div className="mt-6 space-y-2">
-          {vaults.map((item) => (
+          {VAULTS.map((item) => (
             <button
               type="button"
               key={item.token}
-              className="flex w-full items-center justify-between rounded-xl border border-stroke px-4 py-[1.19rem] hover:bg-violet-4"
+              className="flex w-full items-center justify-between rounded-xl border border-stroke-100 px-4 py-[1.19rem] hover:bg-input-default"
               onClick={() => onChange(item.token)}
             >
               <div className="flex items-center gap-3">

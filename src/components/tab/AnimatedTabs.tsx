@@ -9,10 +9,15 @@ interface SpringTabsProperties extends ComponentProps<'div'> {
 }
 
 export const AnimatedTabs = (props: SpringTabsProperties) => {
-  const { tabs, activeTab, onTabChange } = props
+  const { tabs, activeTab, onTabChange, className } = props
 
   return (
-    <div className="flex w-fit space-x-1 rounded-full border border-gray-50 p-[0.38rem]">
+    <div
+      className={cn(
+        'flex w-fit space-x-1 rounded-full border border-gray-50 p-[0.38rem]',
+        className,
+      )}
+    >
       {tabs.map((tab) => (
         <button
           type="button"
@@ -23,7 +28,7 @@ export const AnimatedTabs = (props: SpringTabsProperties) => {
           {activeTab === tab.id && (
             <motion.span
               layoutId="bubble"
-              className="absolute inset-0 z-10 bg-main"
+              className="absolute inset-0 bg-main-100"
               style={{ borderRadius: 9999 }}
               transition={{
                 type: 'spring',
@@ -34,7 +39,7 @@ export const AnimatedTabs = (props: SpringTabsProperties) => {
           )}
           <div
             className={cn(
-              'relative z-[100] text-text-80 transition-all duration-300',
+              'relative text-text-80 transition-all duration-300',
               activeTab === tab.id && 'text-white',
             )}
           >
