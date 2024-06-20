@@ -30,7 +30,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
           icon={<TokenIconComponent symbol={vault} className="size-[2.14288rem]" />}
         />
       </DialogTrigger>
-      <DialogContent className="gap-6 text-text-100">
+      <DialogContent className="gap-6 text-text">
         <DialogHeader>
           <DialogTitle>Select asset</DialogTitle>
         </DialogHeader>
@@ -46,7 +46,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
                 {token}
               </div>
               <div className="ml-auto flex flex-col items-end gap-1">
-                <p className="text-base text-text-100">7,472.09 {token}</p>
+                <p className="text-base text-text">7,472.09 {token}</p>
                 <p className="text-semi-base font-bold text-gray-80">$7,472.09</p>
               </div>
             </button>

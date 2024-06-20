@@ -63,7 +63,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           }
         />
       </DialogTrigger>
-      <DialogContent className="gap-6 text-text-100">
+      <DialogContent className="gap-6 text-text">
         <DialogHeader>
           <DialogTitle>Select asset</DialogTitle>
         </DialogHeader>
@@ -71,7 +71,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           <Search />
           <input
             type="text"
-            className="mx-3 grow text-lg placeholder:text-gray-100 focus:outline-none"
+            className="mx-3 grow bg-transparent text-lg placeholder:text-gray-100 focus:outline-none"
             placeholder="Search"
           />
           <SelectNetworkPopover
@@ -100,11 +100,11 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
                   width="2.14288rem"
                 />
                 <div className="ml-3 flex flex-col items-start">
-                  <p className="text-[1.25rem]/[1.75rem] text-text-100">{name}</p>
+                  <p className="text-[1.25rem]/[1.75rem] text-text">{name}</p>
                   <p className="text-[0.9375rem]/[1.125rem] text-gray-80">{network}</p>
                 </div>
                 <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
-                  <p className="text-base text-text-100">7,472.09 {symbol}</p>
+                  <p className="text-base text-text">7,472.09 {symbol}</p>
                   <p className="text-semi-base text-gray-80">$7,472.09</p>
                 </div>
               </button>

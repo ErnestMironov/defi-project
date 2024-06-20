@@ -22,7 +22,7 @@ const documentation: IDocument[] = [
 
 const DocumentCard = ({ link, linkName, text }: IDocument) => {
   return (
-    <div className="flex flex-col items-start justify-between gap-[1.38rem] self-stretch rounded-[1.75rem] bg-[#FFF] px-8 py-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]">
+    <div className="group flex flex-col items-start justify-between gap-[1.38rem] self-stretch rounded-[1.75rem] bg-cards px-8 py-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]">
       <a
         href={link}
         target="_blank"
@@ -30,7 +30,7 @@ const DocumentCard = ({ link, linkName, text }: IDocument) => {
         className="flex items-center gap-2 rounded-xl bg-green-15 px-4 py-2.5 font-[Arial] text-[0.9375rem] font-bold uppercase not-italic leading-[120%] text-[#79DEC2]"
       >
         {linkName}
-        <LinkArrow />
+        <LinkArrow className="duration-300 group-hover:translate-x-2" />
       </a>
       <p className="text-[1.375rem] font-normal uppercase leading-[120%]">{text}</p>
     </div>

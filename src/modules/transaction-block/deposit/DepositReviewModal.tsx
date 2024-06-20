@@ -44,7 +44,7 @@ export const DepositReviewModal = ({ trigger }: DepositReviewModalProperties) =>
     <>
       <Dialog open={opened} onOpenChange={toggle}>
         {trigger}
-        <DialogContent className="max-w-[38.75rem] gap-10 text-text-100">
+        <DialogContent className="max-w-[38.75rem] gap-10 text-text">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3">
               <span>Deposit Review</span>

@@ -294,7 +294,7 @@ export const SankeyDiagram = () => {
       <div
         ref={tooltipReference}
         className={clsx(
-          'absolute z-10 flex flex-col flex-nowrap gap-5 rounded-2xl bg-white px-5 py-4 text-black shadow-md transition-all duration-300 ease-in-out [box-shadow:0px_2.556px_5.111px_0px_rgba(0,_0,_0,_0.04)]',
+          'absolute z-10 flex flex-col flex-nowrap gap-5 rounded-2xl bg-cards px-5 py-4 text-black shadow-md transition-all duration-300 ease-in-out [box-shadow:0px_2.556px_5.111px_0px_rgba(0,_0,_0,_0.04)]',
           isOpen ? 'opacity-1' : 'opacity-0',
         )}
       >

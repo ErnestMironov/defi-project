@@ -18,7 +18,7 @@ export function ThemeToggle() {
     >
       <SwitchPrimitives.Thumb
         className={cn(
-          'pointer-events-none size-[.95rem] bg-white rounded-full shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-[1.05rem] bg-[linear-gradient(180deg,_#69F_0%,_#31E_100%)] [filter:drop-shadow(0px_2.353px_4.706px_rgba(0,_0,_0,_0.44))] data-[state=unchecked]:bg-[linear-gradient(180deg,_#FD6_0%,_#EA1_100%)] flex justify-center items-center [&>svg]:size-[70%] overflow-hidden',
+          'pointer-events-none size-[.95rem] bg-cards rounded-full shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-[1.05rem] bg-[linear-gradient(180deg,_#69F_0%,_#31E_100%)] [filter:drop-shadow(0px_2.353px_4.706px_rgba(0,_0,_0,_0.44))] data-[state=unchecked]:bg-[linear-gradient(180deg,_#FD6_0%,_#EA1_100%)] flex justify-center items-center [&>svg]:size-[70%] overflow-hidden',
         )}
       >
         {theme === 'dark' ? (

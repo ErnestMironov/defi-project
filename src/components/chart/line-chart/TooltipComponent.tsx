@@ -17,7 +17,7 @@ interface TooltipComponentProperties extends ComponentProps<'div'> {
 
 export const TooltipComponent = ({ data }: TooltipComponentProperties) => {
   return (
-    <div className="flex flex-col gap-1 rounded-2xl bg-white px-4 py-3 shadow-md">
+    <div className="flex flex-col gap-1 rounded-2xl bg-cards px-4 py-3 shadow-md">
       <div className="text-[0.79863rem] text-gray-100">29 May 00:00</div>
       <div className="flex flex-col gap-[0.38rem]">
         {data.map((item, i) => {

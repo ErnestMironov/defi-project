@@ -12,7 +12,7 @@ export const FailModal = (_props: FailModalProperties) => {
 
   return (
     <Dialog open={status === 'error'} onOpenChange={close}>
-      <DialogContent className="max-w-[38.75rem] text-text-100">
+      <DialogContent className="max-w-[38.75rem] text-text">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 uppercase">Failed</DialogTitle>
         </DialogHeader>
