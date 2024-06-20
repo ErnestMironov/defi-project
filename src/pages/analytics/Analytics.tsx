@@ -4,6 +4,7 @@ import type { ComponentProps } from 'react'
 
 import { DocumentationLinks } from './modules/DocsLinks'
 import { Overviews } from './modules/Overviews'
+import { Strategies } from './modules/Strategies'
 
 interface AnalyticsProperties extends ComponentProps<'div'> {}
 
@@ -17,6 +18,7 @@ export const Analytics = (_props: AnalyticsProperties) => {
       </div>
       <DocumentationLinks className="mt-32" />
       <SankeyDiagramBasicDemo />
+      <Strategies />
     </div>
   )
 }
