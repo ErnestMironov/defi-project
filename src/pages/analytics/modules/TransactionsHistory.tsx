@@ -1,7 +1,10 @@
+import type { StableType } from '@components/stable-switcher/StableSwitcher'
+import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Table } from '@components/table'
 import { ActionChip, TxType } from '@components/transaction-type-badge'
 import { Logo } from '@components/ui/logo'
 import { cn } from '@utils/cn'
+import { useState } from 'react'
 
 interface ITransaction {
   action: TxType
@@ -58,12 +61,19 @@ const defaultData: ITransaction[] = [
 export const TransactionsHistory: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
 ) => {
+  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+
   return (
-    <div {...props} className={cn('flex flex-col gap-[1.5rem]', props.className)}>
+    <div {...props} className={cn('flex flex-col', props.className)}>
       <h2 className="flex items-center gap-6 text-[2.1875rem] font-normal uppercase not-italic leading-[100%]">
         <Logo />
         Transactions History
       </h2>
+      <StableSwitcher
+        activeTab={activeStableType}
+        setActiveTab={setStableType}
+        className="mb-6 mt-12"
+      />
       <Table>
         <Table.Head>
           <Table.Row>

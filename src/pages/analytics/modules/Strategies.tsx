@@ -44,7 +44,7 @@ export const Strategies: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props
           <Logo />
           Strategies
         </h2>
-        <Button className="mt-4">DEPOSIT</Button>
+        <Button>DEPOSIT</Button>
       </div>
       <Table>
         <Table.Head>
