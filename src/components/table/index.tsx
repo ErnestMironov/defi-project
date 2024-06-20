@@ -1,72 +1,77 @@
+import { cn } from '@utils/cn'
 import React from 'react'
-import styled from 'styled-components'
-
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 0.25rem;
-  font-size: 1.375rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 120%;
-`
 
 export const Table = ({
   children,
   ...rest
 }: { children: React.ReactNode } & React.HTMLAttributes<HTMLTableElement>) => {
-  return <StyledTable {...rest}>{children}</StyledTable>
+  return (
+    <table
+      className="w-full border-separate border-spacing-y-2 pt-2 text-xl font-normal leading-6"
+      {...rest}
+    >
+      {children}
+    </table>
+  )
 }
 
-const TableHead = styled.thead`
-  color: ${({ theme }) => theme.text100};
+const TableHead = ({
+  children,
+  ...rest
+}: React.HTMLAttributes<HTMLTableSectionElement>) => {
+  return (
+    <thead className="text-gray-700 -translate-y-2" {...rest}>
+      {children}
+    </thead>
+  )
+}
 
-  td {
-    background-color: transparent;
-  }
+const TableBody = ({
+  children,
+  ...rest
+}: React.HTMLAttributes<HTMLTableSectionElement>) => {
+  return (
+    <tbody className="text-gray-700 bg-transparent" {...rest}>
+      {children}
+    </tbody>
+  )
+}
 
-  tr {
-    cursor: default;
-  }
-`
+const TableRow = ({ children, ...rest }: React.HTMLAttributes<HTMLTableRowElement>) => {
+  return (
+    <tr className="bg-cards" {...rest}>
+      {children}
+    </tr>
+  )
+}
 
-const TableBody = styled.tbody`
-  background-color: transparent;
-  color: ${({ theme }) => theme.text100};
-`
+const TableCell = ({ children, ...rest }: React.HTMLAttributes<HTMLTableCellElement>) => {
+  return (
+    <td
+      className="bg-white px-10 py-6 text-left text-[1.25rem] leading-[140%] first:rounded-l-3xl last:rounded-r-3xl"
+      {...rest}
+    >
+      {children}
+    </td>
+  )
+}
 
-const TableRow = styled.tr`
-  background: ${({ theme }) => theme.bgGradient};
-`
-
-const TableCell = styled.td`
-  background-color: ${({ theme }) => theme.white};
-  padding: 1.5rem 2.5rem 1.5rem 2rem;
-  text-align: right;
-
-  &:first-child {
-    text-align: left;
-    border-radius: 1.5rem 0 0 1.5rem;
-  }
-
-  &:last-child {
-    border-radius: 0 1.5rem 1.5rem 0;
-  }
-`
-
-const TableHeadCell = styled.th`
-  padding: 1.5rem 2.5rem 1.5rem 2rem;
-  text-align: right;
-
-  &:first-child {
-    text-align: left;
-    border-radius: 1.5rem 0 0 1.5rem;
-  }
-
-  &:last-child {
-    border-radius: 0 1.5rem 1.5rem 0;
-  }
-`
+const TableHeadCell = ({
+  children,
+  ...rest
+}: React.HTMLAttributes<HTMLTableHeaderCellElement>) => {
+  return (
+    <th
+      {...rest}
+      className={cn(
+        'px-10 py-6 text-left text-[1.25rem] font-normal leading-[140%] first:rounded-l-3xl last:rounded-r-3xl',
+        rest.className,
+      )}
+    >
+      {children}
+    </th>
+  )
+}
 
 Table.Head = TableHead
 Table.Body = TableBody

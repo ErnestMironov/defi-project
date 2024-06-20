@@ -5,6 +5,7 @@ import type { ComponentProps } from 'react'
 import { DocumentationLinks } from './modules/DocsLinks'
 import { Overviews } from './modules/Overviews'
 import { Strategies } from './modules/Strategies'
+import { TransactionsHistory } from './modules/TransactionsHistory'
 
 interface AnalyticsProperties extends ComponentProps<'div'> {}
 
@@ -18,7 +19,8 @@ export const Analytics = (_props: AnalyticsProperties) => {
       </div>
       <DocumentationLinks className="mt-32" />
       <SankeyDiagramBasicDemo />
-      <Strategies />
+      <Strategies className="mt-[8.75rem]" />
+      <TransactionsHistory className="mt-28" />
     </div>
   )
 }

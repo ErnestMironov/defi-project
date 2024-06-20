@@ -7,6 +7,7 @@ import { useTheme } from './ThemeProvider'
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
+  console.log('🚀 ~ ThemeToggle ~ theme:', theme)
 
   return (
     <SwitchPrimitives.Root

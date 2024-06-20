@@ -1,0 +1,82 @@
+import { cn } from '@utils/cn'
+import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+
+import BridgeIcon from './icons/bridge.svg'
+import DepositIcon from './icons/deposit.svg'
+import WithdrawIcon from './icons/withdraw.svg'
+
+type BadgeData = {
+  text: string
+  icon: ReactNode
+  bgColor: string
+  textColor: string
+}
+
+export enum TxType {
+  Deposit = 'deposit',
+  Withdraw = 'withdraw',
+  Bridge = 'bridge',
+}
+
+function useBadgeData(action: TxType) {
+  const [BadgeData, setBadgeData] = useState<BadgeData>()
+
+  useEffect(() => {
+    switch (action) {
+      case TxType.Deposit: {
+        setBadgeData({
+          text: 'Deposit',
+          bgColor: '#79DEC226',
+          textColor: '#79DEC2',
+          icon: <DepositIcon />,
+        })
+        break
+      }
+      case TxType.Withdraw: {
+        setBadgeData({
+          text: 'Withdraw',
+          bgColor: '#6A97FF26',
+          textColor: '#6A97FF',
+          icon: <WithdrawIcon />,
+        })
+        break
+      }
+      case TxType.Bridge: {
+        setBadgeData({
+          text: 'Bridge',
+          bgColor: '#8763F326',
+          textColor: '#8763F3',
+          icon: <BridgeIcon />,
+        })
+        break
+      }
+      default: {
+        setBadgeData({
+          text: 'Unknown',
+          bgColor: '#FF000026',
+          textColor: '#FF0000',
+          icon: <div>?</div>,
+        })
+      }
+    }
+  }, [action])
+
+  return BadgeData
+}
+
+export const ActionChip = ({ type }: { type: TxType }) => {
+  const data = useBadgeData(type as TxType)
+
+  return (
+    <div
+      className={cn(
+        'inline-flex pl-4 pr-5 py-3 items-center gap-3 rounded-2xl bg-blue-15 text-[1.125rem] leading-[140%] uppercase',
+      )}
+      style={{ backgroundColor: data?.bgColor, color: data?.textColor }}
+    >
+      {data?.icon}
+      {data?.text}
+    </div>
+  )
+}
