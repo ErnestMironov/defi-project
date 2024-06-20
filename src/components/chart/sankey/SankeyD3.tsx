@@ -161,13 +161,21 @@ export const Sankey = ({ data }: SankeyProperties) => {
   } | null>(null)
   useEffect(() => {
     if (tooltip) {
-      let left = tooltip.x
-
       const dimensions = tooltipReference.current?.getBoundingClientRect() as DOMRect
+      let left = Math.min(
+        tooltip.x,
+        document.documentElement.clientWidth - dimensions.width,
+      )
+      const top = Math.min(
+        tooltip.y + window.scrollY,
+        document.documentElement.clientHeight - dimensions.height + window.scrollY,
+      )
+
       if (tooltip?.x > (containerReference.current as HTMLDivElement)?.clientWidth / 2) {
-        left = tooltip?.x - dimensions?.width
+        left = Math.max(0, tooltip?.x - dimensions?.width)
       }
-      tooltipReference.current?.style.setProperty('top', `${tooltip.y}px`)
+
+      tooltipReference.current?.style.setProperty('top', `${top}px`)
       tooltipReference.current?.style.setProperty('left', `${left}px`)
     }
   }, [tooltip])
