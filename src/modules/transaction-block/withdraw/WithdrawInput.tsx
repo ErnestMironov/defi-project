@@ -82,6 +82,7 @@ export const WithdrawInput = () => {
             className="mt-10 w-full"
             onClick={() => {
               setStatus('success')
+              // setStatus('error')
             }}
           >
             Withdraw

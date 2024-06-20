@@ -91,12 +91,22 @@ export const DepositReviewModal = ({ trigger }: DepositReviewModalProperties) =>
                 width="2rem"
               />
               <p className="flex items-center">
-                <span className={cn(approveStatus === 'success' && 'text-[#58CDAD]')}>
+                <span
+                  className={cn(
+                    approveStatus === 'success' && 'text-[#58CDAD]',
+                    approveStatus === 'error' && 'text-red-100',
+                  )}
+                >
                   Approve USDC spending
                 </span>
                 {approveStatus === 'approving' && <DotLoader />}
                 {approveStatus === 'success' && (
                   <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
+                )}
+                {approveStatus === 'error' && (
+                  <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
+                    Rejected
+                  </div>
                 )}
               </p>
             </div>
@@ -119,7 +129,8 @@ export const DepositReviewModal = ({ trigger }: DepositReviewModalProperties) =>
             size="lg"
             onClick={() => {
               close()
-              setStatus('success')
+              // setStatus('success')
+              setStatus('error')
             }}
           >
             Approve
