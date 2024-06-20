@@ -2,7 +2,13 @@ import Rainbow from '@assets/images/rainbow-circle.png'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogOverlay,
+  DialogTitle,
+} from '@components/ui/dialog'
 import { useMemo } from 'react'
 
 import { useDepositStore } from './store/useDepositStore'
@@ -33,6 +39,7 @@ export const DoneModal = ({ txType, network }: DoneModalProperties) => {
   }, [txType])
   return (
     <Dialog open={status === 'success'} onOpenChange={close}>
+      <DialogOverlay className="backdrop-blur-xl" />
       <DialogContent className="max-w-[38.75rem] text-text-100">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 uppercase">Done!</DialogTitle>
