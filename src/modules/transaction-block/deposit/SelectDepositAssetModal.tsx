@@ -71,7 +71,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           <Search />
           <input
             type="text"
-            className="mx-3 grow text-lg placeholder:text-gray-100 focus:outline-none"
+            className="mx-3 grow bg-transparent text-lg placeholder:text-gray-100 focus:outline-none"
             placeholder="Search"
           />
           <SelectNetworkPopover

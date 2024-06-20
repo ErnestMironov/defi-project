@@ -212,10 +212,10 @@ export const Sankey = ({ data }: SankeyProperties) => {
             x={node.x0}
             y={node.y0}
             stroke="black"
-            strokeOpacity={0.1}
+            strokeOpacity={0}
             fillOpacity={1}
             fill={color}
-            rx={0.9}
+            rx={1}
           />
         </g>
         <Node
@@ -255,9 +255,9 @@ export const Sankey = ({ data }: SankeyProperties) => {
           d={path || ''}
           stroke={`url(#${gradientId})`}
           fill="none"
-          strokeOpacity={0.5}
+          strokeOpacity={1}
           strokeWidth={link.width}
-          className="mix-blend-multiply hover:animate-pulse hover:[stroke-opacity:_1]"
+          className="hover:animate-pulse hover:[stroke-opacity:_1]"
           // strokeLinecap="round"
           onMouseEnter={(e) => {
             setIsOpen(true)
@@ -315,10 +315,9 @@ const Node = ({
                   ? (node.x1 as number) + 6 + i * 170 + 40
                   : (node.x0 as number) - 6 - i * 170 - 100
               }
-              className="text-lg uppercase"
+              className="fill-text-100 text-lg uppercase"
               y={((node.y1 as number) + (node.y0 as number)) / 2}
               dy="0.3em"
-              fill="black"
             >
               {object.name}
             </text>

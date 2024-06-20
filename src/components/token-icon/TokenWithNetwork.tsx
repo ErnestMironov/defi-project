@@ -44,7 +44,7 @@ export const TokenWithNetwork = (props: TokenWithNetworkProperties) => {
       />
       <div
         className={cn(
-          'scale-[0.8] absolute flex w-1/2 aspect-square items-center justify-center rounded-full bg-white overflow-visible',
+          'scale-[0.8] absolute flex w-1/2 aspect-square items-center justify-center rounded-full bg-cards overflow-visible',
           positionClassName,
           classNames?.network,
         )}
@@ -52,7 +52,7 @@ export const TokenWithNetwork = (props: TokenWithNetworkProperties) => {
         <TokenIconComponent
           symbol={network}
           className={cn(
-            'size-full aspect-square overflow-visible ring-2 ring-white rounded-full',
+            'size-full aspect-square overflow-visible ring-2 ring-cards rounded-full',
           )}
         />
       </div>

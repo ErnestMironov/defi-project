@@ -38,14 +38,14 @@ export const SelectNetworkPopover = ({
       <PopoverContent
         align="center"
         sideOffset={24}
-        className="w-[10.8125rem] rounded-2xl border border-stroke-100 px-2 py-4 text-text-100 !shadow-none"
+        className="w-[10.8125rem] rounded-2xl border px-2 py-4 !shadow-none"
       >
         {NETWORKS.map((network) => (
           <div
             onClick={() => onNetworkChange(network)}
             key={network}
             className={cn(
-              'flex items-center justify-between rounded-[0.625rem] px-3 py-2 cursor-pointer hover:bg-main/10',
+              'flex items-center justify-between rounded-[0.625rem] px-3 py-2 cursor-pointer',
               network === currentNetwork && 'bg-[#6160FF26]',
             )}
           >

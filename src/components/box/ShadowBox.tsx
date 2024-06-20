@@ -8,7 +8,7 @@ export const ShadowBox = (props: ShadowBoxProperties) => {
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-3xl bg-white shadow-shadow dark:shadow-dark-shadow',
+        'relative overflow-hidden rounded-3xl bg-cards shadow-shadow dark:shadow-dark-shadow',
         className,
       )}
     >
