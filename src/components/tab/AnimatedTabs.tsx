@@ -5,17 +5,23 @@ import { type ComponentProps } from 'react'
 interface SpringTabsProperties extends ComponentProps<'div'> {
   tabs: { id: string; label: string }[]
   activeTab: string
+  classNames?: {
+    container?: string
+    tab?: string
+    activeTab?: string
+  }
   onTabChange: (tab: string) => void
 }
 
 export const AnimatedTabs = (props: SpringTabsProperties) => {
-  const { tabs, activeTab, onTabChange, className } = props
+  const { tabs, activeTab, onTabChange, className, classNames } = props
 
   return (
     <div
       className={cn(
         'flex w-fit space-x-1 rounded-full border border-gray-50 p-[0.38rem]',
         className,
+        classNames?.container,
       )}
     >
       {tabs.map((tab) => (
@@ -23,12 +29,15 @@ export const AnimatedTabs = (props: SpringTabsProperties) => {
           type="button"
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className="relative rounded-full px-[2.06rem] py-4 text-md font-medium transition"
+          className={cn(
+            'relative rounded-full px-[2.06rem] py-4 text-md font-medium transition',
+            classNames?.tab,
+          )}
         >
           {activeTab === tab.id && (
             <motion.span
               layoutId="bubble"
-              className="absolute inset-0 bg-main-100"
+              className={cn('absolute inset-0 bg-main-100', classNames?.activeTab)}
               style={{ borderRadius: 9999 }}
               transition={{
                 type: 'spring',

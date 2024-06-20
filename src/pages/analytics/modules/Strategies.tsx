@@ -1,3 +1,4 @@
+import { Table } from '@components/table'
 import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
 import { cn } from '@utils/cn'
@@ -43,8 +44,30 @@ export const Strategies: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props
           <Logo />
           Strategies
         </h2>
-        <Button className="mt-4">DEPOSIT</Button>
+        <Button>DEPOSIT</Button>
       </div>
+      <Table>
+        <Table.Head>
+          <Table.Row>
+            <Table.HeadCell className="w-48">Token</Table.HeadCell>
+            <Table.HeadCell className="w-48">Chain</Table.HeadCell>
+            <Table.HeadCell>Protocol</Table.HeadCell>
+            <Table.HeadCell>Projected APY</Table.HeadCell>
+            <Table.HeadCell className="w-48">TVL</Table.HeadCell>
+          </Table.Row>
+        </Table.Head>
+        <Table.Body>
+          {defaultData.map((strategy, index) => (
+            <Table.Row key={index}>
+              <Table.Cell>{strategy.Token}</Table.Cell>
+              <Table.Cell>{strategy.Chain}</Table.Cell>
+              <Table.Cell>{strategy.Protocol}</Table.Cell>
+              <Table.Cell>{strategy.ProjectedAPY}</Table.Cell>
+              <Table.Cell>{strategy.TVL}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
     </div>
   )
 }
