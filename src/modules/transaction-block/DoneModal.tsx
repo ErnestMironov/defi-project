@@ -40,13 +40,13 @@ export const DoneModal = ({ txType, network }: DoneModalProperties) => {
   return (
     <Dialog open={status === 'success'} onOpenChange={close}>
       <DialogOverlay className="backdrop-blur-xl" />
-      <DialogContent className="max-w-[38.75rem] text-text-100">
+      <DialogContent className="max-w-[38.75rem] text-text">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 uppercase">Done!</DialogTitle>
         </DialogHeader>
         <div className="relative mt-6 flex h-[14.5625rem] flex-col items-center justify-center overflow-hidden rounded-[2.5rem] bg-input-default shadow-shadow">
           <p className="text-xl text-gray-100">{title}</p>
-          <p className="mt-1 text-[3.75rem]/[4.5rem] text-text-100">1,500.0</p>
+          <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">1,500.0</p>
           <div className="mt-[0.38rem] flex items-center gap-3">
             {network ? (
               <TokenWithNetwork

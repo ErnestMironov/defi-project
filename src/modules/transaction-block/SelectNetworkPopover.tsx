@@ -53,7 +53,7 @@ export const SelectNetworkPopover = ({
               <TokenIconComponent symbol={network} className="size-4" />
               <span
                 className={cn(
-                  'text-base text-text-100',
+                  'text-base text-text',
                   network === currentNetwork && 'text-main-100',
                 )}
               >

@@ -12,7 +12,7 @@ export const ShadowBoxWithValue = (props: ShadowBoxProperties) => {
   return (
     <ShadowBox className="relative flex flex-col gap-1 overflow-hidden rounded-3xl bg-cards px-6 py-8 shadow-shadow dark:shadow-dark-shadow">
       <div className="text-lg uppercase text-gray-100">{label}</div>
-      <div className="text-3xl text-text-100">{value}</div>
+      <div className="text-3xl text-text">{value}</div>
       {children}
     </ShadowBox>
   )
