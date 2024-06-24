@@ -139,7 +139,7 @@ export const TransactionsHistory: React.FC<React.HTMLAttributes<HTMLDivElement>>
           ))}
         </Table.Body>
       </Table>
-      <Pagination />
+      <Pagination className="mt-6" />
     </div>
   )
 }

@@ -1,4 +1,12 @@
+/* eslint-disable react/no-array-index-key */
+import ArrowDown from '@assets/icons/arrow-down.svg'
+import { PER_PAGE_ARRAY } from '@constants/per-page-array'
+import { useDisclosure } from '@hooks/useDisclosure'
+import { useLocalStorage } from '@hooks/useLocalStorage'
+import { usePagination } from '@hooks/usePagination'
+import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
+import { useState } from 'react'
 
 import ChevronLeft from './icons/chevron-left.svg'
 import ChevronRight from './icons/chevron-right.svg'
@@ -10,7 +18,7 @@ const PaginationButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = ({
   <button
     {...props}
     className={cn(
-      'flex items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 p-5',
+      'flex items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 p-5 hover:text-light-blue-100 hover:border-light-blue-100 hover:bg-[#A6C1FF14] [&_path]:hover:fill-light-blue-100',
       props.className,
     )}
     type="button"
@@ -19,30 +27,116 @@ const PaginationButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = ({
   </button>
 )
 
-export const Pagination = () => {
+interface PaginationProperties extends React.HTMLAttributes<HTMLDivElement> {
+  pgCount?: number
+  currentPage?: number
+}
+
+export const Pagination = ({ className }: PaginationProperties) => {
+  const [perPage, setPerPage] = useLocalStorage('perPage', 10)
+
+  // TODO: remove this lines
+  const [currentPage, setCurrentPage] = useState(10)
+  const totalCount = 1000
+
+  const paginationRange = usePagination({
+    currentPage,
+    totalCount,
+    siblingCount: 1,
+    pageSize: perPage,
+  })
+
+  const onPageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+  const onNextPage = () => {
+    onPageChange(currentPage + 1)
+  }
+
+  const onPreviousPage = () => {
+    onPageChange(currentPage - 1)
+  }
+
+  const [opened, { toggle: togglePerPage }] = useDisclosure()
+
+  if (!paginationRange || currentPage === 0 || paginationRange.length < 2) {
+    return null
+  }
   return (
-    <div className="flex items-stretch gap-4">
+    <div className={cn('flex items-stretch gap-4', className)}>
       <div className="flex items-stretch gap-2">
         <PaginationButton
-          className="flex items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 p-5"
+          className={cn(currentPage === 1 && '[&_path]:fill-gray-50 pointer-events-none')}
           aria-label="Previous"
+          onClick={onPreviousPage}
         >
           <ChevronLeft />
         </PaginationButton>
+        {paginationRange.map((pg, i) => {
+          if (pg === '...') {
+            return (
+              <span
+                key={`${pg}_${i}`}
+                className="flex min-w-14 items-center justify-center py-0 text-[1.125rem] leading-[100%]"
+              >
+                {pg}
+              </span>
+            )
+          }
+          return (
+            <PaginationButton
+              key={`${pg}_${i}`}
+              onClick={() => onPageChange(pg as number)}
+              className={cn(
+                'min-w-14 py-0 text-[1.125rem] leading-[100%]',
+                currentPage === pg &&
+                  'text-light-blue-100 border-light-blue-100 hover:bg-inherit',
+              )}
+            >
+              {pg}
+            </PaginationButton>
+          )
+        })}
         <PaginationButton
-          className={cn('min-w-14 py-0 text-[1.125rem] leading-[100%]', {
-            'text-light-blue-100 border-light-blue-100': true,
-          })}
+          aria-label="Next"
+          onClick={onNextPage}
+          className={cn(
+            currentPage === totalCount && 'pointer-events-none [&_path]:fill-gray-50',
+          )}
         >
-          1
-        </PaginationButton>
-        <PaginationButton aria-label="Next">
           <ChevronRight />
         </PaginationButton>
       </div>
-      <PaginationButton className="py-0 text-[1.125rem] leading-[100%]">
-        10 / page
-      </PaginationButton>
+      <Popover open={opened} onOpenChange={togglePerPage}>
+        <PopoverTrigger className="group flex w-[8.75rem] items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 py-[1.12rem] text-[1.125rem]/[0]">
+          {perPage} / page{' '}
+          <ArrowDown className="ml-2 size-4 overflow-visible transition group-data-[state='open']:rotate-180 [&_path]:stroke-text" />
+        </PopoverTrigger>
+        <PopoverContent
+          align="center"
+          sideOffset={8}
+          className="flex w-[8.75rem] flex-col rounded-[0.625rem] border border-stroke-100 bg-cards"
+        >
+          {PER_PAGE_ARRAY.map((_perPage, i, array) => {
+            return (
+              <button
+                type="button"
+                className={cn(
+                  perPage === _perPage && 'bg-input-active',
+                  'hover:bg-input-active px-5 py-[1.31rem] text-lg relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-stroke-100',
+                  i === array.length - 1 && 'after:bg-transparent',
+                )}
+                onClick={() => {
+                  setPerPage(_perPage)
+                  togglePerPage()
+                }}
+              >
+                {_perPage} / page
+              </button>
+            )
+          })}
+        </PopoverContent>
+      </Popover>
     </div>
   )
 }
