@@ -1,3 +1,4 @@
+import { Pagination } from '@components/pagination/Pagination'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Table } from '@components/table'
@@ -138,6 +139,7 @@ export const TransactionsHistory: React.FC<React.HTMLAttributes<HTMLDivElement>>
           ))}
         </Table.Body>
       </Table>
+      <Pagination />
     </div>
   )
 }

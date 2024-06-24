@@ -63,6 +63,12 @@ module.exports = {
         'input-error': 'var(--input-error)',
         'blue1': 'var(--dark-blue-100)',
         'blue2': 'var(--blue-blue2)',
+        'light-blue': {
+          100: 'var(--light-blue-100)',
+          15: 'var(--light-blue-15)',
+          30: 'var(--light-blue-30)',
+          50: 'var(--light-blue-50)',
+        },
         'red-100': 'var(--red-100)',
         'green-100': 'var(--green-100)',
         'green-15': 'var(--green-15)',
