@@ -104,7 +104,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           bottom: 0,
         }}
       >
-        <CartesianGrid strokeDasharray="8 8" vertical={false} />
+        <CartesianGrid strokeDasharray="8 8" opacity={0.5} vertical={false} />
         <XAxis
           axisLine
           tickLine={false}

@@ -9,7 +9,7 @@ export const parseFloatLocale = (value?: string, decimals = 2): string | undefin
 }
 
 export const formatAmountValue = (
-  value?: string,
+  value?: string | number,
   fractionDigits = 4,
   showLess = true,
 ): string | undefined => {

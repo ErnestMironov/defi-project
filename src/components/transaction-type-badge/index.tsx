@@ -71,7 +71,7 @@ export const ActionChip = ({ type }: { type: TxType }) => {
   return (
     <div
       className={cn(
-        'inline-flex pl-4 pr-5 py-3 items-center gap-3 rounded-2xl bg-blue-15 text-[1.125rem] leading-[140%] uppercase',
+        'inline-flex lg:pl-4 lg:pr-5 lg:py-3 items-center gap-3 rounded-2xl bg-blue-15 lg:text-[1.125rem] leading-[140%] uppercase text-[0.875rem] pl-4 pr-5 py-2',
       )}
       style={{ backgroundColor: data?.bgColor, color: data?.textColor }}
     >

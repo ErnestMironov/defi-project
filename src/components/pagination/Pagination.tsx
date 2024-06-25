@@ -120,6 +120,7 @@ export const Pagination = ({ className }: PaginationProperties) => {
           {PER_PAGE_ARRAY.map((_perPage, i, array) => {
             return (
               <button
+                key={_perPage}
                 type="button"
                 className={cn(
                   perPage === _perPage && 'bg-input-active',

@@ -10,11 +10,12 @@ interface SpringTabsProperties extends ComponentProps<'div'> {
     tab?: string
     activeTab?: string
   }
+  layoutId: string
   onTabChange: (tab: string) => void
 }
 
 export const AnimatedTabs = (props: SpringTabsProperties) => {
-  const { tabs, activeTab, onTabChange, className, classNames } = props
+  const { tabs, activeTab, onTabChange, className, classNames, layoutId } = props
 
   return (
     <div
@@ -30,13 +31,14 @@ export const AnimatedTabs = (props: SpringTabsProperties) => {
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            'relative rounded-full px-[2.06rem] py-4 text-md font-medium transition',
+            'relative rounded-full py-4 text-md font-medium transition',
             classNames?.tab,
           )}
         >
           {activeTab === tab.id && (
             <motion.span
-              layoutId="bubble"
+              // layoutId="bubble"
+              layoutId={layoutId}
               className={cn('absolute inset-0 bg-main-100', classNames?.activeTab)}
               style={{ borderRadius: 9999 }}
               transition={{
