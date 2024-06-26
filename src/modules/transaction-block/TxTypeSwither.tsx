@@ -21,6 +21,10 @@ export const TxTypeSwitcher = (props: TxTypeSwitcherProperties) => {
       tabs={TABS}
       activeTab={txType}
       onTabChange={(value) => setTxType(value as TxType)}
+      classNames={{
+        tab: 'w-[9.125rem] max-lg:w-1/2 max-lg:py-[0.62rem] max-lg:text-base',
+        container: 'max-lg:w-full max-lg:p-1',
+      }}
     />
   )
 }

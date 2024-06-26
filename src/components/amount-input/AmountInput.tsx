@@ -20,7 +20,7 @@ export const AmountInput = forwardRef(
           type="text"
           placeholder="0.00"
           className={cn(
-            'text-2.5xl relative max-w-[20rem] border-none bg-transparent py-0 pl-0 pr-3 leading-[120%] placeholder:text-gray-100 focus:outline-none lg:pr-2 lg:text-4xl lg:font-medium',
+            'text-2.5xl relative w-full border-none bg-transparent py-0 pl-0 pr-3 leading-[120%] placeholder:text-gray-100 focus:outline-none lg:pr-2 lg:text-4xl lg:font-medium',
             className,
             error && 'text-red-100',
           )}
@@ -43,7 +43,7 @@ export const AmountInput = forwardRef(
         {after && value && (
           <div
             className={cn(
-              'pointer-events-none select-none absolute inset-0 size-full max-w-80 truncate border-none bg-transparent py-0 pl-0 pr-3 text-2.5xl leading-[120%] text-transparent placeholder:text-gray-100 focus:outline-none lg:pr-2 lg:text-4xl lg:font-medium',
+              'pointer-events-none select-none absolute inset-0 size-full truncate border-none bg-transparent py-0 pl-0 pr-3 text-2.5xl leading-[120%] text-transparent placeholder:text-gray-100 focus:outline-none lg:pr-2 lg:text-4xl lg:font-medium',
               className,
             )}
           >

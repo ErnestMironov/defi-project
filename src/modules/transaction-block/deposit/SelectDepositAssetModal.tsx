@@ -11,7 +11,10 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
+import useDeviceWidth from '@hooks/useDeviceWidth'
+import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 import type { Asset } from '../store/useDepositStore'
@@ -35,6 +38,7 @@ const MOCK_TOKENS = [
 ]
 
 export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) => {
+  const { isBelowDesktop } = useDeviceWidth()
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
@@ -45,6 +49,19 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const onChange = (_asset: Asset) => {
     setAsset(_asset)
     setOpened(false)
+  }
+  if (isBelowDesktop) {
+    return createPortal(
+      <div
+        className={cn(
+          'fixed z-[50] h-screen w-screen translate-y-[100vh] bg-bg',
+          opened && 'translate-y-0',
+        )}
+      >
+        123
+      </div>,
+      document.body,
+    )
   }
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
@@ -57,7 +74,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
                 symbol={asset?.symbol}
                 network={asset?.network}
                 position="bottom-right"
-                width="2.14288rem"
+                width={isBelowDesktop ? '1.25rem' : '2.14288rem'}
               />
             )
           }
