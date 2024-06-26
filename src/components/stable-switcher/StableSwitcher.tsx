@@ -10,6 +10,7 @@ export type StableType = (typeof STABLE_TYPE)[keyof typeof STABLE_TYPE]
 interface TxTypeSwitcherProperties extends ComponentProps<'div'> {
   activeTab: StableType
   setActiveTab: (tab: StableType) => void
+  layoutId: string
 }
 
 const TABS = [
@@ -30,7 +31,8 @@ export const StableSwitcher = ({
       onTabChange={(value) => setActiveTab(value as StableType)}
       classNames={{
         activeTab: 'bg-gray-100',
-        tab: 'w-[9.21rem]',
+        tab: 'w-[9.21rem] max-lg:text-base max-lg:py-[0.62rem] max-lg:w-[6.375rem]',
+        container: 'max-lg:p-[0.25rem]',
       }}
     />
   )

@@ -24,21 +24,21 @@ const mockOverviews: IOverview = {
 
 const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
   return (
-    <div className="flex flex-1 flex-col gap-14 rounded-[1.75rem] bg-cards px-12 py-10 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]">
-      <h3 className="flex gap-4 text-[1.5rem] font-normal uppercase leading-[120%] tracking-[0.015rem]">
-        <Logo className="h-[1.5625rem] w-[4.1875rem]" fill={data.logoColor} />
+    <div className="flex snap-center flex-col gap-6 rounded-2xl bg-cards px-4 py-5 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] max-lg:min-w-[90vw] lg:flex-1 lg:gap-14 lg:rounded-[1.75rem] lg:px-12 lg:py-10">
+      <h3 className="flex items-center gap-[0.69rem] text-base/[0] uppercase tracking-[0.015rem] lg:gap-4 lg:text-[1.5rem]">
+        <Logo
+          className="h-[1.625rem] w-[2.0625rem] lg:h-[1.5625rem] lg:w-[4.1875rem]"
+          fill={data.logoColor}
+        />
         {data.title}
       </h3>
-      <div className="flex gap-[4.5rem]">
+      <div className="gap-8 max-lg:grid max-lg:w-full max-lg:grid-cols-[repeat(3,4.9375rem)] lg:flex lg:gap-[4.5rem]">
         {data.stats.map((stat) => (
-          <div
-            key={stat.title}
-            className="flex flex-col gap-2 text-[1.125rem] font-normal leading-[120%] tracking-[0.015rem]"
-          >
-            <div className="text-[1.125rem] uppercase leading-[120%] text-gray-100">
+          <div key={stat.title} className="flex flex-col gap-2 lg:tracking-[0.015rem]">
+            <div className="text-[0.75rem] uppercase text-gray-100 max-lg:h-7 lg:text-lg">
               {stat.title}
             </div>
-            <div className="text-[2.375rem] font-normal leading-[120%]">
+            <div className="text-[1.5rem] leading-[120%] lg:text-[2.375rem]">
               {stat?.prefix}
               {stat.value}
               {stat?.postfix}
@@ -96,7 +96,12 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
   ]
 
   return (
-    <div className={clsx('flex w-full gap-4', props.className)}>
+    <div
+      className={clsx(
+        'hide-scrollbar flex w-full gap-2 max-lg:snap-x max-lg:snap-mandatory max-lg:overflow-x-auto max-lg:pb-[0.38rem] lg:gap-4',
+        props.className,
+      )}
+    >
       {overviewsData.map((overview) => (
         <Overview key={overview.title} data={overview} />
       ))}

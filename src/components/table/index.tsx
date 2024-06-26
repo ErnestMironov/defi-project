@@ -20,7 +20,7 @@ const TableHead = ({
   ...rest
 }: React.HTMLAttributes<HTMLTableSectionElement>) => {
   return (
-    <thead className="text-gray-700 -translate-y-2" {...rest}>
+    <thead className="-translate-y-2 text-gray-700" {...rest}>
       {children}
     </thead>
   )
@@ -31,7 +31,7 @@ const TableBody = ({
   ...rest
 }: React.HTMLAttributes<HTMLTableSectionElement>) => {
   return (
-    <tbody className="text-gray-700 bg-transparent" {...rest}>
+    <tbody className="bg-transparent text-gray-700" {...rest}>
       {children}
     </tbody>
   )
@@ -39,7 +39,7 @@ const TableBody = ({
 
 const TableRow = ({ children, ...rest }: React.HTMLAttributes<HTMLTableRowElement>) => {
   return (
-    <tr className="bg-cards" {...rest}>
+    <tr className="bg-cards text-text" {...rest}>
       {children}
     </tr>
   )
@@ -48,7 +48,7 @@ const TableRow = ({ children, ...rest }: React.HTMLAttributes<HTMLTableRowElemen
 const TableCell = ({ children, ...rest }: React.HTMLAttributes<HTMLTableCellElement>) => {
   return (
     <td
-      className="bg-white px-10 py-6 text-left text-[1.25rem] leading-[140%] first:rounded-l-3xl last:rounded-r-3xl"
+      className="bg-transparent px-10 py-6 text-left text-[1.25rem] leading-[140%] first:rounded-l-3xl last:rounded-r-3xl"
       {...rest}
     >
       {children}

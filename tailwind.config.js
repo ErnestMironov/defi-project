@@ -60,6 +60,7 @@ module.exports = {
         'violet-15': 'var(--violet-15)',
         'violet-4': 'var(--violet-4)',
         'input-default': 'var(--input-default)',
+        'input-active': 'var(--input-active)',
         'input-error': 'var(--input-error)',
         'blue1': 'var(--dark-blue-100)',
         'blue2': 'var(--blue-blue2)',

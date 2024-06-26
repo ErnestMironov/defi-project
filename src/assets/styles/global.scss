@@ -2,37 +2,43 @@
 @import "./tailwind.scss";
 
 @layer base {
-	html {
-		font-size: 0.83vw;
+  html {
+    font-size: 0.83vw;
 
-		@media (max-width: 1023px) {
-			font-size: 16px;
-		}
+    @media (max-width: 1023px) {
+      font-size: 16px;
+    }
 
-		body {
-			@apply font-arial text-text bg-bg;
-		}
-	}
+    body {
+      @apply font-arial text-text bg-bg;
+    }
+  }
 }
 
 .link-d3 {
-	transition: stroke 0.3s ease;
-	stroke: gray;
+  transition: stroke 0.3s ease;
+  stroke: gray;
 }
 
 .link:hover {
-	animation: pulse 2s infinite;
-	stroke: red;
+  animation: pulse 2s infinite;
+  stroke: red;
 }
 
 @keyframes pulse {
-	0% {
-		stroke-opacity: 1;
-	}
-	50% {
-		stroke-opacity: 0.5;
-	}
-	100% {
-		stroke-opacity: 1;
-	}
+  0% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.5;
+  }
+  100% {
+    stroke-opacity: 1;
+  }
+}
+
+.hide-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
