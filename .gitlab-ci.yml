@@ -9,14 +9,14 @@ stages:
   - deploy_dev
 
 variables:
-  VITE_APP_IMAGE_NAME: $CI_REGISTRY_IMAGE/vite-app/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHA
+  IMAGE_NAME: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHA
 
 build:
   stage: build
   script:
     - curl -s -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage -d chat_id=$CHAT_BOT_ID -d text="🔨New MAAT-Frontend Build Started%0A👨‍💻$GITLAB_USER_NAME"
-    - docker build . -t $VITE_APP_IMAGE_NAME
-    - docker push $VITE_APP_IMAGE_NAME
+    - docker build . -t $IMAGE_NAME
+    - docker push $IMAGE_NAME
   tags:
     - lumos
 
