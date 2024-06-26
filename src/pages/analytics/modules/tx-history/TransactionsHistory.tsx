@@ -1,15 +1,20 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import Arrow from '@assets/icons/arrow-filled.svg'
 import { Pagination } from '@components/pagination/Pagination'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Table } from '@components/table'
+import { TokenIconComponent } from '@components/token-icon'
 import { ActionChip, TxType } from '@components/transaction-type-badge'
 import { Accordion } from '@components/ui/accordion'
 import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
+import { formatAmountValue } from '@utils/formatValue'
+import { getFromNow } from '@utils/get-day-difference'
+import { shortenString } from '@utils/transform'
 import { useState } from 'react'
 
 import { TransactionMobileItem } from './TransactionMobileItem'
@@ -137,18 +142,7 @@ export const TransactionsHistoryDesktop: React.FC<
             <Table.HeadCell>
               <div className="flex items-center gap-2">
                 From
-                <svg
-                  width="13"
-                  height="8"
-                  viewBox="0 0 13 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12.8536 3.64645C13.0488 3.84171 13.0488 4.15829 12.8536 4.35355L9.67157 7.53553C9.47631 7.7308 9.15973 7.7308 8.96447 7.53553C8.7692 7.34027 8.7692 7.02369 8.96447 6.82843L11.7929 4L8.96447 1.17157C8.7692 0.976311 8.7692 0.659728 8.96447 0.464466C9.15973 0.269204 9.47631 0.269204 9.67157 0.464466L12.8536 3.64645ZM0.5 3.5H12.5V4.5H0.5V3.5Z"
-                    fill="#323949"
-                  />
-                </svg>
+                <Arrow />
                 To
               </div>
             </Table.HeadCell>
@@ -165,28 +159,32 @@ export const TransactionsHistoryDesktop: React.FC<
               </Table.Cell>
               <Table.Cell>{tx.amount}</Table.Cell>
               <Table.Cell>
-                {tx.strategy} / {tx.weeklyAPY} / {tx.tvl}
+                {tx.action === TxType.Bridge ? (
+                  '-'
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <div className="flex -space-x-2">
+                      <TokenIconComponent symbol={tx.from} className="size-10" />
+                      <TokenIconComponent symbol={tx.to} className="size-10" />
+                    </div>
+                    /<span>{tx.weeklyAPY}%</span>/
+                    <span>${formatAmountValue(tx.tvl)}</span>
+                  </div>
+                )}
               </Table.Cell>
               <Table.Cell>
-                <div className="flex items-center gap-2">
-                  {tx.from}
-                  <svg
-                    width="13"
-                    height="8"
-                    viewBox="0 0 13 8"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12.8536 3.64645C13.0488 3.84171 13.0488 4.15829 12.8536 4.35355L9.67157 7.53553C9.47631 7.7308 9.15973 7.7308 8.96447 7.53553C8.7692 7.34027 8.7692 7.02369 8.96447 6.82843L11.7929 4L8.96447 1.17157C8.7692 0.976311 8.7692 0.659728 8.96447 0.464466C9.15973 0.269204 9.47631 0.269204 9.67157 0.464466L12.8536 3.64645ZM0.5 3.5H12.5V4.5H0.5V3.5Z"
-                      fill="#323949"
-                    />
-                  </svg>
-                  {tx.to}
-                </div>
+                {tx.action === TxType.Bridge ? (
+                  <div className="flex items-center gap-2">
+                    <TokenIconComponent symbol={tx.from} className="size-10" />
+                    <Arrow />
+                    <TokenIconComponent symbol={tx.to} className="size-10" />
+                  </div>
+                ) : (
+                  '-'
+                )}
               </Table.Cell>
-              <Table.Cell>{tx.txHash}</Table.Cell>
-              <Table.Cell>{tx.created}</Table.Cell>
+              <Table.Cell>{shortenString(tx.txHash)}</Table.Cell>
+              <Table.Cell>{getFromNow(tx.created)}</Table.Cell>
               <Table.Cell>{tx.nonce}</Table.Cell>
             </Table.Row>
           ))}

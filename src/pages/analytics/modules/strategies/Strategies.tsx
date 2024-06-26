@@ -1,6 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { Table } from '@components/table'
+import { IconWithLabelComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
 import useDeviceWidth from '@hooks/useDeviceWidth'
@@ -97,9 +98,15 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
         <Table.Body>
           {defaultData.map((strategy, index) => (
             <Table.Row key={index}>
-              <Table.Cell>{strategy.token}</Table.Cell>
-              <Table.Cell>{strategy.chain}</Table.Cell>
-              <Table.Cell>{strategy.protocol}</Table.Cell>
+              <Table.Cell>
+                <IconWithLabelComponent symbol={strategy.token} className="size-10" />
+              </Table.Cell>
+              <Table.Cell>
+                <IconWithLabelComponent symbol={strategy.chain} className="size-10" />
+              </Table.Cell>
+              <Table.Cell>
+                <IconWithLabelComponent symbol={strategy.protocol} className="size-10" />
+              </Table.Cell>
               <Table.Cell>{strategy.projectedApy}</Table.Cell>
               <Table.Cell>{strategy.tvl}</Table.Cell>
             </Table.Row>

@@ -18,7 +18,7 @@ const PaginationButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = ({
   <button
     {...props}
     className={cn(
-      'flex items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 p-5 hover:text-light-blue-100 hover:border-light-blue-100 hover:bg-[#A6C1FF14] [&_path]:hover:fill-light-blue-100',
+      'flex items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 p-5 hover:text-light-blue-100 hover:border-light-blue-100 hover:bg-[#A6C1FF14] [&_path]:hover:fill-light-blue-100 [&_path]:fill-text',
       props.className,
     )}
     type="button"
@@ -101,7 +101,8 @@ export const Pagination = ({ className }: PaginationProperties) => {
           aria-label="Next"
           onClick={onNextPage}
           className={cn(
-            currentPage === totalCount && 'pointer-events-none [&_path]:fill-gray-50',
+            currentPage === totalCount / perPage &&
+              'pointer-events-none [&_path]:fill-gray-50',
           )}
         >
           <ChevronRight />
@@ -109,7 +110,7 @@ export const Pagination = ({ className }: PaginationProperties) => {
       </div>
       <Popover open={opened} onOpenChange={togglePerPage}>
         <PopoverTrigger className="group flex w-[8.75rem] items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 py-[1.12rem] text-[1.125rem]/[0]">
-          {perPage} / page{' '}
+          {perPage} / page
           <ArrowDown className="ml-2 size-4 overflow-visible transition group-data-[state='open']:rotate-180 [&_path]:stroke-text" />
         </PopoverTrigger>
         <PopoverContent
