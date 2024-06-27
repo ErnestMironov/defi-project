@@ -2,6 +2,7 @@ import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
 import type { Chain } from 'viem'
 import { defineChain } from 'viem'
+import { arbitrum, base, bsc, mainnet, mantle, optimism, polygon } from 'viem/chains'
 
 export const XFI_CHAIN_ID = 4157
 
@@ -25,13 +26,13 @@ const projectId = '50045bde677b3817fbdad11aaa86c090'
 
 // 2. Create wagmiConfig
 const metadata = {
-  name: 'PhoLend',
-  description: 'PhoLend',
-  url: 'https://pholend.com/', // origin must match your domain & subdomain
+  name: 'MAAT',
+  description: 'MAAT',
+  url: 'https://maat.finance/', // origin must match your domain & subdomain
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
 
-const chains = [XFI_TESTNET] as const
+const chains = [mainnet, optimism, arbitrum, polygon, base, mantle, bsc] as const
 
 export const wagmiConfig = defaultWagmiConfig({
   chains,

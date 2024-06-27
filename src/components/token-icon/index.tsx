@@ -5,15 +5,28 @@ import React from 'react'
 
 interface TokenIconProperties extends React.SVGProps<SVGElement> {
   symbol?: string | null
+  tokenLogoFallback?: string
 }
 
 export const TokenIconComponent = ({
   symbol,
   className,
+  tokenLogoFallback,
   ...rest
 }: TokenIconProperties) => {
   const asset = useTokenAsset(symbol)
-  if (!asset) return
+  if (!asset && !tokenLogoFallback) return null
+
+  if (!asset)
+    return (
+      <img
+        src={tokenLogoFallback}
+        className={clsx(className, 'overflow-visible')}
+        alt=""
+        style={rest.style}
+      />
+    )
+
   const { TokenIcon } = asset
   return <TokenIcon {...rest} className={clsx(className, 'overflow-visible')} />
 }

@@ -3,6 +3,7 @@ import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { DialogTrigger } from '@components/ui/dialog'
 import { cn } from '@utils/cn'
+import { formatTokenBalance } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -62,7 +63,7 @@ export const DepositInput = () => {
             <div className="flex items-center">
               <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {BigNumber(MOCK_MAX).toFormat(2)}
+                {formatTokenBalance(asset?.balance, asset?.contract_decimals)}
               </p>
               <button
                 type="button"

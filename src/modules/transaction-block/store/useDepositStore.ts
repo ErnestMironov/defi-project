@@ -1,20 +1,15 @@
+import type { ITokenData } from '@api/tokens-balance/api'
 import type { NetworkType } from '@constants/networks'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
 import { create } from 'zustand'
 
-export type Asset = {
-  name: string
-  symbol: string
-  network: string
-}
-
 type TxStatus = 'pending' | 'loading' | 'success' | 'error'
 
 interface SelectedAssetState {
   // TODO: Define the state
-  depositAsset: Asset | null
-  setDepositAsset: (by: Asset | null) => void
+  depositAsset: ITokenData | null
+  setDepositAsset: (by: ITokenData | null) => void
   depositNetwork: NetworkType | null
   setDepositNetwork: (by: NetworkType | null) => void
   withdrawNetwork: NetworkType

@@ -3,7 +3,9 @@
 import Arbitrum from '@assets/icons/networks/arbitrum.svg'
 import Avalanche from '@assets/icons/networks/avalanche.svg'
 import Base from '@assets/icons/networks/base.svg'
+import Bsc from '@assets/icons/networks/bsc.svg'
 import Ethereum from '@assets/icons/networks/ethereum.svg'
+import MantleNetowork from '@assets/icons/networks/mantle.svg'
 import Optimism from '@assets/icons/networks/optimism.svg'
 import Polygon from '@assets/icons/networks/polygon.svg'
 // protocol icons
@@ -87,17 +89,17 @@ const TOKENS: ITokenAsset[] = [
   // network icons
   {
     TokenIcon: Ethereum,
-    symbol: 'Ethereum',
+    symbol: 'eth-mainnet',
     name: 'Ethereum',
   },
   {
     TokenIcon: Optimism,
-    symbol: 'Optimism',
+    symbol: 'optimism-mainnet',
     name: 'Optimism',
   },
   {
     TokenIcon: Arbitrum,
-    symbol: 'Arbitrum',
+    symbol: 'arbitrum-mainnet',
     name: 'Arbitrum',
   },
   {
@@ -112,8 +114,18 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Polygon,
-    symbol: 'Polygon',
+    symbol: 'matic-mainnet',
     name: 'Polygon',
+  },
+  {
+    TokenIcon: Bsc,
+    symbol: 'bsc-mainnet',
+    name: 'Binance SC',
+  },
+  {
+    TokenIcon: MantleNetowork,
+    symbol: 'mantle-mainnet',
+    name: 'Mantle',
   },
   // protocol icons
   {

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
+import type { ITokenData } from '@api/tokens-balance/api'
+import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import Search from '@assets/icons/search.svg'
 import { Select } from '@components/select/Select'
 import { TokenIconComponent } from '@components/token-icon'
@@ -12,41 +14,47 @@ import {
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import useDeviceWidth from '@hooks/useDeviceWidth'
+import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
+import { formatTokenBalance } from '@utils/formatValue'
 import { type ComponentProps, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useAccount } from 'wagmi'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
-import type { Asset } from '../store/useDepositStore'
 import { useDepositStore } from '../store/useDepositStore'
 
 interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
-const MOCK_TOKENS = [
-  { name: 'USDC', symbol: 'USDC', network: 'Optimism' },
-  { name: 'USDT', symbol: 'USDT', network: 'Base' },
-  { name: 'DAI', symbol: 'DAI', network: 'Arbitrum' },
-  { name: 'FRAX', symbol: 'FRAX', network: 'Arbitrum' },
-  { name: 'USDC', symbol: 'USDC', network: 'Optimism' },
-  { name: 'USDT', symbol: 'USDT', network: 'Base' },
-  { name: 'DAI', symbol: 'DAI', network: 'Arbitrum' },
-  { name: 'FRAX', symbol: 'FRAX', network: 'Arbitrum' },
-  { name: 'USDC', symbol: 'USDC', network: 'Optimism' },
-  { name: 'USDT', symbol: 'USDT', network: 'Base' },
-  { name: 'DAI', symbol: 'DAI', network: 'Arbitrum' },
-  { name: 'FRAX', symbol: 'FRAX', network: 'Arbitrum' },
-]
+const SelectChainTrigger = () => {
+  const { depositNetwork } = useDepositStore()
+  console.log('🚀 ~ SelectChainTrigger ~ asset:', depositNetwork)
+  const chainData = useTokenAsset(depositNetwork)
+
+  return (
+    <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
+      <div className="overflow-hidden rounded-full">
+        <TokenIconComponent symbol={depositNetwork} className="size-4" />
+      </div>
+      <span>{chainData?.name || 'All networks'}</span>
+    </div>
+  )
+}
 
 export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
+
+  const { address } = useAccount()
+  const { data: userTokens } = useTokensBalance({ address })
+
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
-    depositNetwork: network,
+    depositNetwork: chain,
     setDepositNetwork: setNetwork,
   } = useDepositStore()
-  const [opened, setOpened] = useState(false)
-  const onChange = (_asset: Asset) => {
+  const [opened, setOpened] = useState(true)
+  const onChange = (_asset: ITokenData) => {
     setAsset(_asset)
     setOpened(false)
   }
@@ -67,12 +75,12 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
         <Select
-          value={asset?.symbol || 'Any token'}
+          value={asset?.contract_ticker_symbol || 'Any token'}
           icon={
             asset && (
               <TokenWithNetwork
-                symbol={asset?.symbol}
-                network={asset?.network}
+                symbol={asset?.contract_ticker_symbol}
+                network={asset?.chain_id}
                 position="bottom-right"
                 width={isBelowDesktop ? '1.25rem' : '2.14288rem'}
               />
@@ -92,40 +100,46 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
             placeholder="Search"
           />
           <SelectNetworkPopover
-            network={network}
+            chain={chain}
             onChange={(_network) => setNetwork(_network)}
-            trigger={
-              <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
-                <TokenIconComponent symbol={network} className="size-4" />
-                <span>{network || 'All networks'}</span>
-              </div>
-            }
+            trigger={<SelectChainTrigger />}
           />
         </div>
         <ScrollArea className="-mx-4 h-[19.5rem] px-4">
           <div className="space-y-2">
-            {MOCK_TOKENS.map(({ symbol, network, name }) => (
-              <button
-                type="button"
-                onClick={() => onChange({ symbol, network, name })}
-                className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
-              >
-                <TokenWithNetwork
-                  symbol={symbol}
-                  network={network}
-                  position="bottom-right"
-                  width="2.14288rem"
-                />
-                <div className="ml-3 flex flex-col items-start">
-                  <p className="text-[1.25rem]/[1.75rem] text-text">{name}</p>
-                  <p className="text-[0.9375rem]/[1.125rem] text-gray-80">{network}</p>
-                </div>
-                <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
-                  <p className="text-base text-text">7,472.09 {symbol}</p>
-                  <p className="text-semi-base text-gray-80">$7,472.09</p>
-                </div>
-              </button>
-            ))}
+            {Object.values(userTokens ?? {})
+              .flat()
+              .flatMap((token) => (
+                <button
+                  type="button"
+                  onClick={() => onChange(token)}
+                  className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+                >
+                  <TokenWithNetwork
+                    symbol={token.contract_ticker_symbol}
+                    tokenLogoFallback={token.logo_url}
+                    network={token.chain_id}
+                    position="bottom-right"
+                    width="2.14288rem"
+                  />
+
+                  <div className="ml-3 flex flex-col items-start">
+                    <p className="text-[1.25rem]/[1.75rem] text-text">
+                      {token.contract_name}
+                    </p>
+                    <p className="text-[0.9375rem]/[1.125rem] text-gray-80">
+                      {token.chain_id}
+                    </p>
+                  </div>
+                  <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
+                    <p className="text-base text-text">
+                      {formatTokenBalance(token?.balance, token?.contract_decimals)}{' '}
+                      {token.contract_ticker_symbol}
+                    </p>
+                    <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
+                  </div>
+                </button>
+              ))}
           </div>
         </ScrollArea>
       </DialogContent>

@@ -9,6 +9,7 @@ interface TokenWithNetworkProperties extends React.HTMLAttributes<HTMLDivElement
   position?: 'top' | 'bottom' | 'left' | 'right' | 'top-right' | 'bottom-right'
   classNames?: { token?: string; network?: string }
   width?: string
+  tokenLogoFallback?: string
 }
 
 export const TokenWithNetwork = (props: TokenWithNetworkProperties) => {
@@ -40,6 +41,7 @@ export const TokenWithNetwork = (props: TokenWithNetworkProperties) => {
       <TokenIconComponent
         symbol={symbol}
         style={{ width, height: width }}
+        tokenLogoFallback={props.tokenLogoFallback}
         className={cn('', classNames?.token)}
       />
       <div

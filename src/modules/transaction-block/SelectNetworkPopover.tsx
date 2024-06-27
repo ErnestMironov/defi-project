@@ -3,27 +3,68 @@ import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
-import type { NetworkType } from '@constants/networks'
-import { NETWORKS } from '@constants/networks'
+import { CHAINS } from '@constants/chains'
+import type { Chains } from '@covalenthq/client-sdk'
+import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 
 interface SelectNetworkPopoverProperties {
   trigger: React.ReactNode
-  onChange: (network: NetworkType) => void
-  network?: NetworkType | null
+  onChange: (chain: Chains) => void
+  chain?: Chains | null
+}
+
+const ChainItem = ({
+  onNetworkChange,
+  chain,
+  currentChain,
+}: {
+  onNetworkChange: (chain: Chains) => void
+  chain: Chains
+  currentChain: Chains | null | undefined
+}) => {
+  const data = useTokenAsset(chain)
+
+  return (
+    <div
+      onClick={() => onNetworkChange(chain)}
+      className={cn(
+        'flex items-center justify-between rounded-[0.625rem] px-3 py-1.5 cursor-pointer hover:bg-[#6160FF26]',
+        chain === currentChain && 'bg-[#6160FF26]',
+      )}
+    >
+      <div className="flex  items-center gap-2">
+        <div className="overflow-hidden rounded-full">
+          <TokenIconComponent
+            symbol={chain}
+            className="size-4 overflow-hidden rounded-full"
+          />
+        </div>
+        <span
+          className={cn('text-base text-text', chain === currentChain && 'text-main-100')}
+        >
+          {data?.name || chain}
+        </span>
+      </div>
+      {chain === currentChain && (
+        <Check className="ml-auto size-[1.125rem] overflow-visible" />
+      )}
+    </div>
+  )
 }
 
 export const SelectNetworkPopover = ({
   trigger,
   onChange,
-  network: currentNetwork,
+  chain: currentChain,
 }: SelectNetworkPopoverProperties) => {
   const [isOpened, setIsOpened] = useState(false)
-  const onNetworkChange = (network: NetworkType) => {
-    onChange(network)
+  const onNetworkChange = (chain: Chains) => {
+    onChange(chain)
     setIsOpened(false)
   }
+
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
       <PopoverTrigger className="flex items-center gap-2">
@@ -38,33 +79,18 @@ export const SelectNetworkPopover = ({
       <PopoverContent
         align="center"
         sideOffset={24}
-        className="w-[10.8125rem] rounded-2xl border px-2 py-4 !shadow-none"
+        className="pointer-events-auto inline-block w-auto rounded-2xl border px-2 py-4 !shadow-none"
       >
-        {NETWORKS.map((network) => (
-          <div
-            onClick={() => onNetworkChange(network)}
-            key={network}
-            className={cn(
-              'flex items-center justify-between rounded-[0.625rem] px-3 py-2 cursor-pointer',
-              network === currentNetwork && 'bg-[#6160FF26]',
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <TokenIconComponent symbol={network} className="size-4" />
-              <span
-                className={cn(
-                  'text-base text-text',
-                  network === currentNetwork && 'text-main-100',
-                )}
-              >
-                {network}
-              </span>
-            </div>
-            {network === currentNetwork && (
-              <Check className="ml-auto size-[1.125rem] overflow-visible" />
-            )}
-          </div>
-        ))}
+        <div className="flex flex-col gap-1 ">
+          {CHAINS.map((chain: Chains) => (
+            <ChainItem
+              key={chain}
+              onNetworkChange={onNetworkChange}
+              chain={chain}
+              currentChain={currentChain}
+            />
+          ))}
+        </div>
       </PopoverContent>
     </Popover>
   )
