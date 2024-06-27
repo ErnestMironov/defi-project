@@ -28,7 +28,6 @@ interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
 const SelectChainTrigger = () => {
   const { depositNetwork } = useDepositStore()
-  console.log('🚀 ~ SelectChainTrigger ~ asset:', depositNetwork)
   const chainData = useTokenAsset(depositNetwork)
 
   return (
@@ -38,6 +37,45 @@ const SelectChainTrigger = () => {
       </div>
       <span>{chainData?.name || 'All networks'}</span>
     </div>
+  )
+}
+
+function TokensListItem({
+  onChange,
+  token,
+}: {
+  onChange: (_asset: ITokenData) => void
+  token: ITokenData
+}) {
+  const chainData = useTokenAsset(token.chain_id)
+  console.log('🚀 ~ chainData:', chainData)
+
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(token)}
+      className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+    >
+      <TokenWithNetwork
+        symbol={token.contract_ticker_symbol}
+        tokenLogoFallback={token.logo_url}
+        network={token.chain_id}
+        position="bottom-right"
+        width="2.14288rem"
+      />
+
+      <div className="ml-3 flex flex-col items-start">
+        <p className="text-[1.25rem]/[1.75rem] text-text">{token.contract_name}</p>
+        <p className="text-[0.9375rem]/[1.125rem] text-gray-80">{chainData?.name}</p>
+      </div>
+      <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
+        <p className="text-base text-text">
+          {formatTokenBalance(token?.balance, token?.contract_decimals)}{' '}
+          {token.contract_ticker_symbol}
+        </p>
+        <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
+      </div>
+    </button>
   )
 }
 
@@ -110,35 +148,11 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
             {Object.values(userTokens ?? {})
               .flat()
               .flatMap((token) => (
-                <button
-                  type="button"
-                  onClick={() => onChange(token)}
-                  className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
-                >
-                  <TokenWithNetwork
-                    symbol={token.contract_ticker_symbol}
-                    tokenLogoFallback={token.logo_url}
-                    network={token.chain_id}
-                    position="bottom-right"
-                    width="2.14288rem"
-                  />
-
-                  <div className="ml-3 flex flex-col items-start">
-                    <p className="text-[1.25rem]/[1.75rem] text-text">
-                      {token.contract_name}
-                    </p>
-                    <p className="text-[0.9375rem]/[1.125rem] text-gray-80">
-                      {token.chain_id}
-                    </p>
-                  </div>
-                  <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
-                    <p className="text-base text-text">
-                      {formatTokenBalance(token?.balance, token?.contract_decimals)}{' '}
-                      {token.contract_ticker_symbol}
-                    </p>
-                    <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
-                  </div>
-                </button>
+                <TokensListItem
+                  key={token.contract_address}
+                  onChange={onChange}
+                  token={token}
+                />
               ))}
           </div>
         </ScrollArea>
