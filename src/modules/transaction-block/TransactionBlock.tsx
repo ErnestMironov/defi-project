@@ -26,10 +26,13 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
   return (
     <>
       <ShadowBox
-        className={clsx('flex w-full flex-col gap-9 px-6 py-8', className)}
+        className={clsx(
+          'flex w-full flex-col px-6 py-8 max-lg:gap-6 max-lg:p-4',
+          className,
+        )}
         {...rest}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:items-center lg:justify-between">
           <TxTypeSwitcher />
           {txType === TX_TYPE.WITHDRAW && <SelectWithdrawNetwork />}
         </div>

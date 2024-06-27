@@ -27,7 +27,12 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
       <DialogTrigger>
         <Select
           value={vault}
-          icon={<TokenIconComponent symbol={vault} className="size-[2.14288rem]" />}
+          icon={
+            <TokenIconComponent
+              symbol={vault}
+              className="size-[2.14288rem] max-lg:size-[1.125rem]"
+            />
+          }
         />
       </DialogTrigger>
       <DialogContent className="gap-6 text-text">

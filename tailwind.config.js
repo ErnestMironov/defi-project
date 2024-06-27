@@ -13,7 +13,7 @@ module.exports = {
       arial: ["Arial", "sans-serif"],
     },
     fontSize: {
-      // 'xs': ['0.8125rem', {lineHeight: '0.975rem',}],
+      'xs': ['0.8125rem', {lineHeight: '0.975rem',}],
       'sm': ['0.875rem', {lineHeight: '1.225rem'}],
       'semi-base': ['0.9375rem', {lineHeight: '1.125rem'}],
       'base': ['1rem', {lineHeight: '1.2rem'}],

@@ -13,12 +13,12 @@ interface SelectProperties extends ComponentProps<'div'> {
 
 export const Select = ({ symbol, value, opened, icon }: SelectProperties) => {
   return (
-    <ShadowBox className="flex min-h-14 cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover">
-      {icon || <TokenIconComponent symbol={symbol} className="size-8 overflow-visible" />}
+    <ShadowBox className="flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14">
+      {icon || <TokenIconComponent symbol={symbol} className="size-8 max-lg:size-5" />}
       <div>{value}</div>
       <ArrowDown
         className={cn(
-          'size-4 transition group-data-[state="open"]:rotate-180',
+          'size-4 max-lg:size-3 transition group-data-[state="open"]:rotate-180',
           opened && 'rotate-180',
         )}
       />
