@@ -17,7 +17,7 @@ import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
-import { type ComponentProps, useState } from 'react'
+import { type ComponentProps, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useAccount } from 'wagmi'
 
@@ -48,7 +48,6 @@ function TokensListItem({
   token: ITokenData
 }) {
   const chainData = useTokenAsset(token.chain_id)
-  console.log('🚀 ~ chainData:', chainData)
 
   return (
     <button
@@ -96,6 +95,23 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     setAsset(_asset)
     setOpened(false)
   }
+
+  const filteredByChainTokens = useMemo(() => {
+    if (!userTokens) return []
+
+    console.log('🚀 ~ filteredByChainTokens ~ userTokens:', userTokens)
+
+    console.log('🚀 ~ filteredByChainTokens ~ chain:', chain)
+    if (chain) {
+      console.log('🚀 ~ filteredByChainTokens ~ userTokens[chain]:', userTokens[chain])
+      return userTokens[chain] || []
+    }
+
+    return Object.values(userTokens)
+      .flat()
+      .filter((token) => token.chain_id === chain)
+  }, [userTokens, chain])
+
   if (isBelowDesktop) {
     return createPortal(
       <div
@@ -109,6 +125,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
       document.body,
     )
   }
+
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
@@ -145,15 +162,13 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
         </div>
         <ScrollArea className="-mx-4 h-[19.5rem] px-4">
           <div className="space-y-2">
-            {Object.values(userTokens ?? {})
-              .flat()
-              .flatMap((token) => (
-                <TokensListItem
-                  key={token.contract_address}
-                  onChange={onChange}
-                  token={token}
-                />
-              ))}
+            {filteredByChainTokens.map((token) => (
+              <TokensListItem
+                key={token.contract_address}
+                onChange={onChange}
+                token={token}
+              />
+            ))}
           </div>
         </ScrollArea>
       </DialogContent>
