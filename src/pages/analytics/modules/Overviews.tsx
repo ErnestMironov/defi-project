@@ -1,25 +1,12 @@
+import { useOverview } from '@api/queries/getOverview'
 import { Logo } from '@components/ui/logo'
 import clsx from 'clsx'
 import React from 'react'
-import type { IOverview } from 'src/lib/types/overview'
 
-interface IOverviewCard {
+export interface IOverviewCard {
   title: string
   logoColor: string
-  stats: Array<{ [key: string]: string | number }>
-}
-
-const mockOverviews: IOverview = {
-  userOverview: {
-    deposited: 89.02,
-    monthlyYield: 12,
-    averageAPY: 6,
-  },
-  maatOverview: {
-    tvl: '89.02M',
-    cumulativeEarnings: '12M',
-    strategies: 6,
-  },
+  stats: Array<{ [key: string]: string | number | undefined }>
 }
 
 const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
@@ -51,6 +38,11 @@ const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
 }
 
 export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
+  const { data, loading, error } = useOverview()
+
+  if (loading) return 'Loading...'
+  if (error) return `Error! ${error.message}`
+
   const overviewsData: IOverviewCard[] = [
     {
       title: 'User Overview',
@@ -58,17 +50,17 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
       stats: [
         {
           title: 'Deposited',
-          value: mockOverviews.userOverview.deposited,
+          value: data.userOverview.deposited,
           prefix: '$',
         },
         {
           title: 'Monthly Yield',
-          value: mockOverviews.userOverview.monthlyYield,
+          value: data.userOverview.yeald,
           prefix: '$',
         },
         {
           title: 'Average APY',
-          value: mockOverviews.userOverview.averageAPY,
+          value: data.userOverview.apy,
           postfix: '%',
         },
       ],
@@ -79,17 +71,17 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
       stats: [
         {
           title: 'TVL',
-          value: mockOverviews.maatOverview.tvl,
+          value: data.maatOverview.tvl,
           prefix: '$',
         },
         {
           title: 'Cumulative Earnings',
-          value: mockOverviews.maatOverview.cumulativeEarnings,
+          value: data.maatOverview.cumulativeEarnings,
           prefix: '$',
         },
         {
           title: 'Strategies',
-          value: mockOverviews.maatOverview.strategies,
+          value: data.maatOverview.strategies,
         },
       ],
     },

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import Copy from '@assets/icons/copy.svg'
+import type { StrategyStats } from '@codegen/graphql'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import {
   Accordion,
@@ -12,13 +13,12 @@ import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/u
 import { useClipboard } from '@hooks/useClipboard'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
+import BigNumber from 'bignumber.js'
 import type { ComponentProps } from 'react'
 import toast from 'react-hot-toast'
 
-import type { StrategyType } from './Strategies'
-
 interface StrategyMobileCardProperties extends ComponentProps<'div'> {
-  strategy: StrategyType
+  strategy: StrategyStats
   isLast?: boolean
 }
 
@@ -38,19 +38,27 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
   return (
     <div {...rest}>
       <div className="flex items-center gap-3">
-        <TokenIconComponent className="size-6" symbol={strategy.token} />
-        <span className="text-lg">{strategy.token}</span>
+        <TokenIconComponent className="size-6" symbol={strategy.tokenSymbol} />
+        <span className="text-lg">{strategy.tokenSymbol}</span>
       </div>
       <div className="my-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-[0.82rem] even:[&>*]:justify-self-end [&_h6]:text-base [&_h6]:leading-normal">
         <h6>Chain | Protocol</h6>
         <div className="flex items-center space-x-[-0.44rem]">
-          <TokenIconComponent symbol={strategy.chain} className="size-6" />
+          <TokenIconComponent symbol={strategy.chainName} className="size-6" />
           <TokenIconComponent symbol={strategy.protocol} className="size-6" />
         </div>
         <h6>Projected APY</h6>
-        <div className="font-bold">{strategy.projectedApy}%</div>
+        <div className="font-bold">{strategy.apy.toFixed(2)}%</div>
         <h6>TVL</h6>
-        <div>${formatAmountValue(String(strategy.tvl))}</div>
+        <div>
+          $
+          {formatAmountValue(
+            BigNumber(strategy.deposited)
+              .div(10 ** strategy.decimals)
+              ?.toString(),
+            2,
+          )}
+        </div>
       </div>
       <Drawer>
         <DrawerTrigger className="w-full">
@@ -67,8 +75,8 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             Strategy Description
           </DrawerTitle>
           <div className="hide-scrollbar mt-4 flex items-center gap-3 overflow-x-scroll text-base">
-            <IconWithLabelComponent symbol={strategy.token} className="size-6" />
-            <IconWithLabelComponent symbol={strategy.chain} className="size-6" />
+            <IconWithLabelComponent symbol={strategy.tokenSymbol} className="size-6" />
+            <IconWithLabelComponent symbol={strategy.chainName} className="size-6" />
             <IconWithLabelComponent symbol={strategy.protocol} className="size-6" />
           </div>
           <Divider />

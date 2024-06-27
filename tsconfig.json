@@ -33,7 +33,8 @@
       "@configs/*": ["./src/lib/configs/*"],
       "@hooks/*": ["./src/lib/hooks/*"],
       "@store/*": ["./src/lib/store/*"],
-      "@utils/*": ["./src/lib/utils/*"]
+      "@utils/*": ["./src/lib/utils/*"],
+      "@codegen/*": ["./src/__generated__/*"]
     }
   },
   "include": ["src"],

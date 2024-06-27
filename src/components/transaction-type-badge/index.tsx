@@ -1,3 +1,4 @@
+import { ActionType } from '@codegen/graphql'
 import { cn } from '@utils/cn'
 import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
@@ -13,18 +14,15 @@ type BadgeData = {
   textColor: string
 }
 
-export enum TxType {
-  Deposit = 'deposit',
-  Withdraw = 'withdraw',
-  Bridge = 'bridge',
-}
-
-function useBadgeData(action: TxType) {
+function useBadgeData(action: ActionType) {
   const [BadgeData, setBadgeData] = useState<BadgeData>()
 
   useEffect(() => {
+    console.log('action', action)
+
     switch (action) {
-      case TxType.Deposit: {
+      case ActionType.Deposit:
+      case ActionType.DepositInStrategy: {
         setBadgeData({
           text: 'Deposit',
           bgColor: '#79DEC226',
@@ -33,7 +31,7 @@ function useBadgeData(action: TxType) {
         })
         break
       }
-      case TxType.Withdraw: {
+      case ActionType.Withdraw: {
         setBadgeData({
           text: 'Withdraw',
           bgColor: '#6A97FF26',
@@ -42,7 +40,7 @@ function useBadgeData(action: TxType) {
         })
         break
       }
-      case TxType.Bridge: {
+      case ActionType.Bridge: {
         setBadgeData({
           text: 'Bridge',
           bgColor: '#8763F326',
@@ -65,8 +63,10 @@ function useBadgeData(action: TxType) {
   return BadgeData
 }
 
-export const ActionChip = ({ type }: { type: TxType }) => {
-  const data = useBadgeData(type as TxType)
+export const ActionChip = ({ type }: { type: ActionType }) => {
+  console.log('type', type)
+
+  const data = useBadgeData(type)
 
   return (
     <div

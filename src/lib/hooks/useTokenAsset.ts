@@ -166,5 +166,8 @@ const TOKENS: ITokenAsset[] = [
 // by symbol
 export const useTokenAsset = (query?: string | null) => {
   // console.log('🚀 ~ useTokenAsset ~ query:', query)
-  return TOKENS.find((token) => token.symbol?.toLowerCase() === query?.toLowerCase())
+  if (!query || typeof query !== 'string') return
+  return TOKENS.find(
+    (token) => query.toLowerCase()?.includes(token.symbol?.toLowerCase()),
+  )
 }
