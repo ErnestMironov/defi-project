@@ -26,7 +26,7 @@ export const useMenu = (): IMenu => {
         label: 'Analytics',
       },
       docs: {
-        href: 'https://docs.maat.fi/',
+        href: 'https://docs.maat.finance/',
         label: 'Docs',
         src: (props: React.SVGProps<SVGSVGElement>) => (
           <svg

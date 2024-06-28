@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@amcharts/amcharts5": "^5.9.11",
+		"@covalenthq/client-sdk": "^1.0.2",
 		"@floating-ui/react": "^0.26.16",
 		"@radix-ui/react-accordion": "^1.2.0",
 		"@radix-ui/react-dialog": "^1.1.1",
