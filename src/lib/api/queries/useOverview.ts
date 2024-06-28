@@ -24,6 +24,7 @@ export const GET_OVERVIEW = gql(`
       vault
     }
   }
+  maatEarnings
   }
 `)
 
@@ -61,7 +62,7 @@ export const useOverview = () => {
     },
     maatOverview: {
       tvl: formatAmountValue(tvl, 2),
-      cumulativeEarnings: '0',
+      cumulativeEarnings: formatAmountValue(data?.maatEarnings, 2, false),
       strategies,
     },
   }

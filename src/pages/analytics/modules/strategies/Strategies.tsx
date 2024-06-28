@@ -1,6 +1,4 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable @typescript-eslint/no-use-before-define */
-import { useStrategies } from '@api/queries/getStrategies'
+import { useStrategies } from '@api/queries/useStrategies'
 import type { StrategyStats } from '@codegen/graphql'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'

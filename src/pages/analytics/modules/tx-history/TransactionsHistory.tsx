@@ -1,6 +1,5 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable @typescript-eslint/no-use-before-define */
-import { useTxHistory } from '@api/queries/getTxHistory'
+
+import { useTxHistory } from '@api/queries/useTxHistory'
 import Arrow from '@assets/icons/arrow-filled.svg'
 import { ActionType } from '@codegen/graphql'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'

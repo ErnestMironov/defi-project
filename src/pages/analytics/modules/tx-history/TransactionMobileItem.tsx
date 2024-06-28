@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
+
 import Arrow from '@assets/icons/arrow-filled.svg'
 import { ActionType } from '@codegen/graphql'
 import { TokenIconComponent } from '@components/token-icon'

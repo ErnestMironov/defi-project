@@ -1,4 +1,4 @@
-import { useMaatTokensTvl } from '@api/queries/getTokensTvlData'
+import { useMaatTokensTvl } from '@api/queries/useMaatTokensTvl'
 import Dot from '@assets/icons/dot.svg'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'

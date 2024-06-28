@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import Dot from '@assets/icons/dot.svg'
 import { cn } from '@utils/cn'
 import dayjs from 'dayjs'

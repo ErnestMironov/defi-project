@@ -1,8 +1,6 @@
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
-/* eslint-disable @typescript-eslint/no-use-before-define */
-import { useRebalance } from '@api/queries/getRebalance'
+import { useRebalance } from '@api/queries/useRebalance'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg?url'
 import Aave from '@assets/icons/protocols/aave.svg?url'
 import Lendle from '@assets/icons/protocols/lendle.svg?url'

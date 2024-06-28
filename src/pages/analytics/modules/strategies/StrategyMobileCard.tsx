@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import Copy from '@assets/icons/copy.svg'
 import type { StrategyStats } from '@codegen/graphql'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'

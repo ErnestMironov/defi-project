@@ -24,6 +24,8 @@ export const maatTokensApy = gql(`
 
 export const useMaatTokensApy = ({ from }: { from: number }) => {
   const { data, ...rest } = useQuery(maatTokensApy, { variables: { from } })
+  console.log('asd', data)
+
   const chartData = useMemo(() => {
     const apyData = data?.apies
     if (!apyData) return

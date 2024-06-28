@@ -1,4 +1,4 @@
-import { useMaatTokensApy } from '@api/queries/getTokensApyData'
+import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
 import Dot from '@assets/icons/dot.svg'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'

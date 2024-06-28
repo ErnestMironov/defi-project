@@ -1,5 +1,6 @@
-import { useOverview } from '@api/queries/getOverview'
+import { useOverview } from '@api/queries/useOverview'
 import { Logo } from '@components/ui/logo'
+import { Skeleton } from '@components/ui/skeleton'
 import clsx from 'clsx'
 import React from 'react'
 
@@ -39,9 +40,6 @@ const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
 
 export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
   const { data, loading, error } = useOverview()
-
-  if (loading) return 'Loading...'
-  if (error) return `Error! ${error.message}`
 
   const overviewsData: IOverviewCard[] = [
     {
@@ -86,6 +84,25 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
       ],
     },
   ]
+
+  if (loading) {
+    return (
+      <div
+        className={clsx(
+          'hide-scrollbar flex w-full gap-2 max-lg:snap-x max-lg:snap-mandatory max-lg:overflow-x-auto max-lg:pb-[0.38rem] lg:gap-4',
+          props.className,
+        )}
+      >
+        {Array.from({ length: 2 }).map((_value, i) => (
+          <Skeleton
+            key={i}
+            className="h-[9.125rem] w-full rounded-[1.75rem] max-lg:min-w-[90vw] max-[370px]:min-w-max lg:h-[15.0625rem]"
+          />
+        ))}
+      </div>
+    )
+  }
+  if (error) return `Error! ${error.message}`
 
   return (
     <div
