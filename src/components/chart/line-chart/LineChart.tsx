@@ -53,7 +53,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           dataKey="timestamp"
           tickFormatter={(value) => dayjs(value).format('MMM').toUpperCase()}
           className="text-[0.6875rem] [&_text]:fill-gray-100"
-          interval="preserveStartEnd"
+          interval={15}
         />
         <YAxis
           axisLine={false}

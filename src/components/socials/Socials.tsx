@@ -12,8 +12,8 @@ export const Socials = (props: SocialsProperties) => {
   const { className } = props
   return (
     <div className={cn('flex items-center gap-8', className)}>
-      {SOCIALS.map((Icon) => (
-        <Icon className="size-10 overflow-visible [&_path]:fill-gray-50" />
+      {SOCIALS.map((Icon, i) => (
+        <Icon key={i} className="size-10 overflow-visible [&_path]:fill-gray-50" />
       ))}
     </div>
   )

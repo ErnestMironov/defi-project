@@ -9,6 +9,7 @@ import { ActionChip } from '@components/transaction-type-badge'
 import { Accordion } from '@components/ui/accordion'
 import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
+import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
@@ -64,7 +65,7 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
       <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
         {data?.map((tx, index, array) => (
           <TransactionMobileItem
-            key={tx.txHash}
+            key={index}
             tx={tx}
             isLast={index === array.length - 1}
           />
@@ -81,7 +82,11 @@ export const TransactionsHistoryDesktop: React.FC<
   React.HTMLAttributes<HTMLDivElement>
 > = (props) => {
   const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
-  const { data } = useTxHistory()
+  const { data, loading, error } = useTxHistory()
+  if (loading) {
+    return <TransactionsHistoryDesktopSkeleton />
+  }
+  if (error) return `Error! ${error.message}`
 
   return (
     <div {...props} className={cn('flex flex-col', props.className)}>
@@ -152,6 +157,71 @@ export const TransactionsHistoryDesktop: React.FC<
         </Table.Body>
       </Table>
       {/* <Pagination className="mt-6" /> */}
+    </div>
+  )
+}
+
+const TransactionsHistoryDesktopSkeleton: React.FC<
+  React.HTMLAttributes<HTMLDivElement>
+> = (props) => {
+  return (
+    <div {...props} className={cn('flex flex-col', props.className)}>
+      <h2 className="flex items-center gap-6 text-[2.1875rem] font-normal uppercase not-italic leading-[100%]">
+        <Logo />
+        Transactions History
+      </h2>
+      <StableSwitcher
+        layoutId="stable-switcher-transactions-history"
+        activeTab="USDT"
+        setActiveTab={() => {}}
+        className="mb-6 mt-12"
+      />
+      <Table>
+        <Table.Head>
+          <Table.Row>
+            <Table.HeadCell>Action</Table.HeadCell>
+            <Table.HeadCell>Amount</Table.HeadCell>
+            <Table.HeadCell>Strategy / Weekly APY / TVL</Table.HeadCell>
+            <Table.HeadCell>
+              <div className="flex items-center gap-2">
+                From
+                <Arrow />
+                To
+              </div>
+            </Table.HeadCell>
+            <Table.HeadCell>Tx Hash</Table.HeadCell>
+            <Table.HeadCell>Created</Table.HeadCell>
+            <Table.HeadCell>Nonce</Table.HeadCell>
+          </Table.Row>
+        </Table.Head>
+        <Table.Body>
+          {Array.from({ length: 4 })?.map((_, index) => (
+            <Table.Row key={index}>
+              <Table.Cell>
+                <Skeleton className="h-12 w-40 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-12 w-20 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-12 w-60 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="w-30 h-12 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="w-30 h-12 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-12 w-24 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-10 w-20 rounded-xl" />
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
     </div>
   )
 }

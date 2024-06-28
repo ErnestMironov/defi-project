@@ -3,6 +3,7 @@ import Dot from '@assets/icons/dot.svg'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
+import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
 import dayjs from 'dayjs'
@@ -52,9 +53,7 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
   const { data, loading, error } = useMaatTokensApy({ from: currentTimestamp })
   if (loading)
     return (
-      <div className="flex size-full items-center justify-center max-lg:min-h-72">
-        Loading...
-      </div>
+      <Skeleton className="flex h-[21.75rem] w-full items-center justify-center rounded-[1.75rem] max-lg:h-72" />
     )
   if (error) return `Error! ${error.message}`
 
