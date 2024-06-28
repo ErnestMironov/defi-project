@@ -9,12 +9,17 @@ import {
   DialogOverlay,
   DialogTitle,
 } from '@components/ui/dialog'
+import { formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 
 import { useTxStore } from './store/useDepositStore'
 
 export const DoneModal = () => {
-  const { txType, vault, setCurrentModal, currentModal, withdrawNetwork } = useTxStore()
+  const { txType, vault, setCurrentModal, currentModal, withdrawNetwork, inputValue } =
+    useTxStore()
+
+  const formattedAmount = formatAmountValue(inputValue)
+
   const onClose = () => setCurrentModal(null)
 
   const title = useMemo(() => {
@@ -39,7 +44,7 @@ export const DoneModal = () => {
         </DialogHeader>
         <div className="relative mt-6 flex h-[14.5625rem] flex-col items-center justify-center overflow-hidden rounded-[2.5rem] bg-input-default shadow-shadow">
           <p className="text-xl text-gray-100">{title}</p>
-          <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">1,500.0</p>
+          <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">{formattedAmount}</p>
           <div className="mt-[0.38rem] flex items-center gap-3">
             {txType === 'withdraw' ? (
               <TokenWithNetwork
