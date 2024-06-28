@@ -1,4 +1,3 @@
-
 import { useTxHistory } from '@api/queries/useTxHistory'
 import Arrow from '@assets/icons/arrow-filled.svg'
 import { ActionType } from '@codegen/graphql'
@@ -56,12 +55,12 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
           Transactions <br /> History
         </h2>
       </div>
-      <StableSwitcher
+      {/* <StableSwitcher
         layoutId="stable-switcher-transactions-history"
         activeTab={activeStableType}
         setActiveTab={setStableType}
         className="mb-6 mt-8"
-      />
+      /> */}
       <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
         {data?.map((tx, index, array) => (
           <TransactionMobileItem

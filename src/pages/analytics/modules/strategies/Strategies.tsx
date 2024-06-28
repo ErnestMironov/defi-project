@@ -8,6 +8,7 @@ import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
+import { useNavigate } from 'react-router-dom'
 
 import { StrategyMobileCard } from './StrategyMobileCard'
 
@@ -57,6 +58,7 @@ export const StrategiesMobile: React.FC<React.HTMLAttributes<HTMLDivElement>> = 
 export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
 ) => {
+  const navigate = useNavigate()
   const { data, loading, error } = useStrategies()
   if (loading) return '...'
   if (loading) return 'Loading...'
@@ -69,7 +71,7 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
           <Logo />
           Strategies
         </h2>
-        <Button>DEPOSIT</Button>
+        <Button onClick={() => navigate('/')}>DEPOSIT</Button>
       </div>
       <Table>
         <Table.Head>
