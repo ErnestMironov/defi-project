@@ -11,7 +11,7 @@ import { useState } from 'react'
 
 interface SelectNetworkPopoverProperties {
   trigger: React.ReactNode
-  onChange: (chain: Chains) => void
+  onChange: (chain: Chains | null) => void
   chain?: Chains | null
 }
 
@@ -20,11 +20,17 @@ const ChainItem = ({
   chain,
   currentChain,
 }: {
-  onNetworkChange: (chain: Chains) => void
-  chain: Chains
+  onNetworkChange: (chain: Chains | null) => void
+  chain: Chains | null
   currentChain: Chains | null | undefined
 }) => {
   const data = useTokenAsset(chain)
+
+  const chainName = () => {
+    if (chain === null) return 'All networks'
+
+    return data?.name || chain
+  }
 
   return (
     <div
@@ -44,7 +50,7 @@ const ChainItem = ({
         <span
           className={cn('text-base text-text', chain === currentChain && 'text-main-100')}
         >
-          {data?.name || chain}
+          {chainName()}
         </span>
       </div>
       {chain === currentChain && (
@@ -60,7 +66,7 @@ export const SelectNetworkPopover = ({
   chain: currentChain,
 }: SelectNetworkPopoverProperties) => {
   const [isOpened, setIsOpened] = useState(false)
-  const onNetworkChange = (chain: Chains) => {
+  const onNetworkChange = (chain: Chains | null) => {
     onChange(chain)
     setIsOpened(false)
   }
@@ -90,6 +96,11 @@ export const SelectNetworkPopover = ({
               currentChain={currentChain}
             />
           ))}
+          <ChainItem
+            chain={null}
+            onNetworkChange={onNetworkChange}
+            currentChain={currentChain}
+          />
         </div>
       </PopoverContent>
     </Popover>

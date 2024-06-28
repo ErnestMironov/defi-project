@@ -80,6 +80,7 @@ function TokensListItem({
 
 export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
+  const [searchValue, setSearchValue] = useState('')
 
   const { address } = useAccount()
   const { data: userTokens } = useTokensBalance({ address })
@@ -99,18 +100,31 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const filteredByChainTokens = useMemo(() => {
     if (!userTokens) return []
 
-    console.log('🚀 ~ filteredByChainTokens ~ userTokens:', userTokens)
-
-    console.log('🚀 ~ filteredByChainTokens ~ chain:', chain)
     if (chain) {
-      console.log('🚀 ~ filteredByChainTokens ~ userTokens[chain]:', userTokens[chain])
+      if (searchValue) {
+        return userTokens[chain].filter((token) => {
+          return token.contract_name?.toLowerCase()?.includes(searchValue)
+        })
+      }
+
       return userTokens[chain] || []
     }
 
-    return Object.values(userTokens)
-      .flat()
-      .filter((token) => token.chain_id === chain)
-  }, [userTokens, chain])
+    const fbcTokens = Object.values(userTokens).flat()
+
+    if (searchValue) {
+      return fbcTokens.filter((token) => {
+        return token.contract_name?.toLowerCase()?.includes(searchValue)
+      })
+    }
+
+    return fbcTokens
+  }, [userTokens, chain, searchValue])
+
+  console.log(
+    '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
+    filteredByChainTokens,
+  )
 
   if (isBelowDesktop) {
     return createPortal(
@@ -150,6 +164,8 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
         <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4">
           <Search />
           <input
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             type="text"
             className="mx-3 grow bg-transparent text-lg placeholder:text-gray-100 focus:outline-none"
             placeholder="Search"
@@ -162,9 +178,10 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
         </div>
         <ScrollArea className="-mx-4 h-[19.5rem] px-4">
           <div className="space-y-2">
-            {filteredByChainTokens.map((token) => (
+            {filteredByChainTokens?.map((token) => (
               <TokensListItem
-                key={token.contract_address}
+                // eslint-disable-next-line no-unsafe-optional-chaining
+                key={token?.contract_address + token?.chain_id}
                 onChange={onChange}
                 token={token}
               />
