@@ -8,7 +8,7 @@ interface DepositProperties extends ComponentProps<'div'> {}
 
 export const Deposit = (_props: DepositProperties) => {
   return (
-    <div className="pointer-events-none flex w-full justify-center">
+    <div className="flex w-full justify-center">
       <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:gap-4">
         <div className="grid grid-cols-2 gap-3">
           <ShadowBoxWithValue label="USDС APY" value="721%">

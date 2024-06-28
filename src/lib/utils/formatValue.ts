@@ -54,3 +54,20 @@ export const abbreviateHealthFactor = (value?: string): string | undefined => {
   }
   return numberValue.toFixed(2)
 }
+
+export const formatTokenBalance = (
+  balance: string | bigint | null,
+  decimals: number,
+): string => {
+  if (balance === null) {
+    return '0'
+  }
+
+  const balanceString = typeof balance === 'bigint' ? balance.toString() : balance
+  const bigBalance = new BigNumber(balanceString).shiftedBy(-decimals)
+  let formattedBalance = bigBalance.toFixed(5, BigNumber.ROUND_DOWN)
+
+  formattedBalance = formattedBalance.replace(/\.?0+$/, '')
+
+  return formattedBalance
+}

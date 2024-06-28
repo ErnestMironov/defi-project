@@ -32,7 +32,7 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
         )}
         {...rest}
       >
-        <div className="flex max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:items-center lg:justify-between">
+        <div className="flex max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:mb-10 lg:items-center lg:justify-between">
           <TxTypeSwitcher />
           {txType === TX_TYPE.WITHDRAW && <SelectWithdrawNetwork />}
         </div>

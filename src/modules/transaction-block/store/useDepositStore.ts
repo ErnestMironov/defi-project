@@ -1,24 +1,19 @@
-import type { NetworkType } from '@constants/networks'
+import type { ITokenData } from '@api/tokens-balance/api'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
+import { Chains } from '@covalenthq/client-sdk'
 import { create } from 'zustand'
-
-export type Asset = {
-  name: string
-  symbol: string
-  network: string
-}
 
 type TxStatus = 'pending' | 'loading' | 'success' | 'error'
 
 interface SelectedAssetState {
   // TODO: Define the state
-  depositAsset: Asset | null
-  setDepositAsset: (by: Asset | null) => void
-  depositNetwork: NetworkType | null
-  setDepositNetwork: (by: NetworkType | null) => void
-  withdrawNetwork: NetworkType
-  setWithdrawNetwork: (by: NetworkType) => void
+  depositAsset: ITokenData | null
+  setDepositAsset: (by: ITokenData | null) => void
+  depositNetwork: Chains | null
+  setDepositNetwork: (by: Chains | null) => void
+  withdrawNetwork: Chains
+  setWithdrawNetwork: (by: Chains) => void
   vault: string
   setVault: (by: string) => void
   status: TxStatus
@@ -34,7 +29,7 @@ export const useDepositStore = create<SelectedAssetState>()((set) => ({
   // network
   depositNetwork: null,
   setDepositNetwork: (by) => set({ depositNetwork: by }),
-  withdrawNetwork: 'Optimism',
+  withdrawNetwork: Chains.OPTIMISM_MAINNET,
   setWithdrawNetwork: (by) => set({ withdrawNetwork: by }),
   // vault
   vault: 'USDT',
