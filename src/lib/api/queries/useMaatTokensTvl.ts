@@ -2,6 +2,7 @@
 import { useQuery } from '@apollo/client'
 import { gql } from '@codegen/gql'
 import type { RechartDataType } from '@components/chart/line-chart/LineChart'
+import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
 
 export const queryMaatTokensTvlData = gql(`
@@ -33,8 +34,13 @@ export const useMaatTokensTvl = ({ from }: { from: number }) => {
     tokensTvlApyData.forEach((item: any) => {
       const { timestamp, staked, token } = item
       // TODO: remove lastUv and lastPv for null
-      const uv = token.symbol.toLowerCase() === 'usdc' ? Number(staked) : lastUv
-      const pv = token.symbol.toLowerCase() === 'usdt' ? Number(staked) : lastPv
+      const formattedStaked = Number(
+        BigNumber(staked)
+          .div(10 ** 6)
+          .toString(),
+      )
+      const uv = token.symbol.toLowerCase() === 'usdc' ? formattedStaked : lastUv
+      const pv = token.symbol.toLowerCase() === 'usdt' ? formattedStaked : lastPv
       tvlDataArray.push({
         name: token,
         timestamp: Number(timestamp),

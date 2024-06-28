@@ -84,7 +84,7 @@ export const TransactionsHistoryDesktop: React.FC<
   const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
   const { data, loading, error } = useTxHistory()
   if (loading) {
-    return <TransactionsHistoryDesktopSkeleton />
+    return <TransactionsHistoryDesktopSkeleton {...props} />
   }
   if (error) return `Error! ${error.message}`
 

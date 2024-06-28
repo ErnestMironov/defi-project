@@ -39,7 +39,11 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
         {txType === TX_TYPE.DEPOSIT && <DepositInput />}
         {txType === TX_TYPE.WITHDRAW && <WithdrawInput />}
         {!isConnected && (
-          <Button className="w-full" size="lg" onClick={() => openConnectModal()}>
+          <Button
+            className="w-full lg:mt-10"
+            size="lg"
+            onClick={() => openConnectModal()}
+          >
             Connect wallet
           </Button>
         )}
