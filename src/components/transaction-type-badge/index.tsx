@@ -18,8 +18,6 @@ function useBadgeData(action: ActionType) {
   const [BadgeData, setBadgeData] = useState<BadgeData>()
 
   useEffect(() => {
-    console.log('action', action)
-
     switch (action) {
       case ActionType.Deposit:
       case ActionType.DepositInStrategy: {
@@ -64,8 +62,6 @@ function useBadgeData(action: ActionType) {
 }
 
 export const ActionChip = ({ type }: { type: ActionType }) => {
-  console.log('type', type)
-
   const data = useBadgeData(type)
 
   return (

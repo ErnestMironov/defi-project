@@ -11,18 +11,11 @@ import {
 } from '@components/ui/dialog'
 import { useMemo } from 'react'
 
-import { useDepositStore } from './store/useDepositStore'
+import { useTxStore } from './store/useDepositStore'
 
-type DoneModalProperties =
-  | {
-      txType: 'deposit'
-      network?: string
-    }
-  | { txType: 'withdraw'; network: string }
-
-export const DoneModal = ({ txType, network }: DoneModalProperties) => {
-  const { vault, status, setStatus } = useDepositStore()
-  const close = () => setStatus('pending')
+export const DoneModal = () => {
+  const { txType, vault, setCurrentModal, currentModal, withdrawNetwork } = useTxStore()
+  const onClose = () => setCurrentModal(null)
 
   const title = useMemo(() => {
     switch (txType) {
@@ -38,7 +31,7 @@ export const DoneModal = ({ txType, network }: DoneModalProperties) => {
     }
   }, [txType])
   return (
-    <Dialog open={status === 'success'} onOpenChange={close}>
+    <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
       <DialogOverlay className="backdrop-blur-xl" />
       <DialogContent className="max-w-[38.75rem] text-text">
         <DialogHeader>
@@ -48,12 +41,12 @@ export const DoneModal = ({ txType, network }: DoneModalProperties) => {
           <p className="text-xl text-gray-100">{title}</p>
           <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">1,500.0</p>
           <div className="mt-[0.38rem] flex items-center gap-3">
-            {network ? (
+            {txType === 'withdraw' ? (
               <TokenWithNetwork
                 width="1.75rem"
                 position="bottom-right"
                 symbol={vault}
-                network={network}
+                network={withdrawNetwork}
               />
             ) : (
               <TokenIconComponent symbol={vault} className="size-7" />
@@ -69,7 +62,7 @@ export const DoneModal = ({ txType, network }: DoneModalProperties) => {
         <Button size="lg" variant="outline" className="mt-10">
           Go check analytics
         </Button>
-        <Button size="lg" onClick={close} className="mt-3">
+        <Button size="lg" onClick={onClose} className="mt-3">
           Close
         </Button>
       </DialogContent>

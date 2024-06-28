@@ -15,19 +15,17 @@ import {
 import { ScrollArea } from '@components/ui/scroll-area'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
-import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
 import { type ComponentProps, useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { useAccount } from 'wagmi'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
-import { useDepositStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useDepositStore'
 
 interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
 const SelectChainTrigger = () => {
-  const { depositNetwork } = useDepositStore()
+  const { depositNetwork } = useTxStore()
   const chainData = useTokenAsset(depositNetwork)
 
   return (
@@ -90,7 +88,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     setDepositAsset: setAsset,
     depositNetwork: chain,
     setDepositNetwork: setNetwork,
-  } = useDepositStore()
+  } = useTxStore()
   const [opened, setOpened] = useState(false)
   const onChange = (_asset: ITokenData) => {
     setAsset(_asset)
@@ -125,20 +123,6 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
     filteredByChainTokens,
   )
-
-  if (isBelowDesktop) {
-    return createPortal(
-      <div
-        className={cn(
-          'fixed z-[50] h-screen w-screen translate-y-[100vh] bg-bg',
-          opened && 'translate-y-0',
-        )}
-      >
-        123
-      </div>,
-      document.body,
-    )
-  }
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>

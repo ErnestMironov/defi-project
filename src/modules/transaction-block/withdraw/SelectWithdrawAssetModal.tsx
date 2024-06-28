@@ -8,17 +8,35 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@components/ui/dialog'
+import { formatAmountValue } from '@utils/formatValue'
+import BigNumber from 'bignumber.js'
 import { type ComponentProps, useState } from 'react'
 
+import type { Vault } from '../deposit/SelectVault'
 import { VAULTS } from '../deposit/SelectVault'
-import { useDepositStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useDepositStore'
+import { useVaultBalance, VAULT_ADDRESSES } from './hooks/useVaultBalance'
 
 interface SelectWithdrawAssetModalProperties extends ComponentProps<'div'> {}
 
 export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalProperties) => {
-  const { vault, setVault } = useDepositStore()
+  const { vault, setVault } = useTxStore()
   const [opened, setOpened] = useState(false)
-  const onChange = (_asset: string) => {
+
+  const { tokenBalance: tokenBalanceUsdc } = useVaultBalance(VAULT_ADDRESSES.USDC)
+  const { tokenBalance: tokenBalanceUsdt } = useVaultBalance(VAULT_ADDRESSES.USDT)
+  const tokenBalanceUsdcUsd = formatAmountValue(
+    BigNumber((tokenBalanceUsdc as any) || 0)
+      .div(10 ** 6)
+      .toString(),
+  )
+  const tokenBalanceUsdtUsd = formatAmountValue(
+    BigNumber((tokenBalanceUsdt as any) || 0)
+      .div(10 ** 6)
+      .toString(),
+  )
+
+  const onChange = (_asset: Vault) => {
     setVault(_asset)
     setOpened(false)
   }
@@ -40,22 +58,27 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
           <DialogTitle>Select asset</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
-          {VAULTS.map(({ token }) => (
-            <button
-              type="button"
-              onClick={() => onChange(token)}
-              className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
-            >
-              <TokenIconComponent symbol={token} className="size-8" />
-              <div className="ml-3 flex flex-col items-start text-[1.25rem]/[1.75rem]">
-                {token}
-              </div>
-              <div className="ml-auto flex flex-col items-end gap-1">
-                <p className="text-base text-text">7,472.09 {token}</p>
-                <p className="text-semi-base font-bold text-gray-80">$7,472.09</p>
-              </div>
-            </button>
-          ))}
+          {VAULTS.map((vault) => {
+            const value = vault === 'USDC' ? tokenBalanceUsdcUsd : tokenBalanceUsdtUsd
+            return (
+              <button
+                type="button"
+                onClick={() => onChange(vault)}
+                className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+              >
+                <TokenIconComponent symbol={vault} className="size-8" />
+                <div className="ml-3 flex flex-col items-start text-[1.25rem]/[1.75rem]">
+                  {vault}
+                </div>
+                <div className="ml-auto flex flex-col items-end gap-1">
+                  <p className="text-base text-text">
+                    {value} {vault}
+                  </p>
+                  <p className="text-semi-base font-bold text-gray-80">${value}</p>
+                </div>
+              </button>
+            )
+          })}
         </div>
       </DialogContent>
     </Dialog>
