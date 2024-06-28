@@ -5,22 +5,21 @@ import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { useState } from 'react'
 
-import { useDepositStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useDepositStore'
 
 interface SelectAssetPopoverProperties {}
 
-export const VAULTS = [
-  { token: 'USDT', apy: 34 },
-  { token: 'USDC', apy: 31 },
-]
+export const VAULTS = ['USDT', 'USDC'] as const
+export type Vault = (typeof VAULTS)[number]
 
 export const SelectVault = (_props: SelectAssetPopoverProperties) => {
-  const { vault, setVault } = useDepositStore()
+  const { vault, setVault } = useTxStore()
   const [isOpened, setIsOpened] = useState(false)
-  const onChange = (_vault: string) => {
+  const onChange = (_vault: Vault) => {
     setVault(_vault)
     setIsOpened(false)
   }
+
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
       <PopoverTrigger>
@@ -34,18 +33,18 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
           </PopoverClose>
         </div>
         <div className="mt-6 space-y-2">
-          {VAULTS.map((item) => (
+          {VAULTS.map((_vault) => (
             <button
               type="button"
-              key={item.token}
+              key={_vault}
               className="flex w-full items-center justify-between rounded-xl border border-stroke-100 px-4 py-[1.19rem] hover:bg-input-default"
-              onClick={() => onChange(item.token)}
+              onClick={() => onChange(_vault)}
             >
               <div className="flex items-center gap-3">
-                <TokenIconComponent symbol={item.token} className="size-8" />
-                <span className="text-[1.25rem]/[1.75rem] uppercase">{item.token}</span>
+                <TokenIconComponent symbol={_vault} className="size-8" />
+                <span className="text-[1.25rem]/[1.75rem] uppercase">{_vault}</span>
               </div>
-              <div className="text-base font-bold text-gray-100">APY {item.apy}%</div>
+              {/* <div className="text-base font-bold text-gray-100">APY {12}%</div> */}
             </button>
           ))}
         </div>

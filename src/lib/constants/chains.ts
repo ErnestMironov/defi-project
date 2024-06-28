@@ -6,6 +6,6 @@ export const CHAINS = [
   Chains.OPTIMISM_MAINNET,
   Chains.MATIC_MAINNET,
   Chains.BSC_MAINNET,
-  Chains.MANTLE_MAINNET,
+  // Chains.MANTLE_MAINNET,
 ] as const
 export type ChainType = (typeof CHAINS)[number]

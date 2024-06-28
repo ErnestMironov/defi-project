@@ -7,8 +7,9 @@ import { type ComponentProps } from 'react'
 import { useAccount } from 'wagmi'
 
 import { DepositInput } from './deposit/DepositInput'
+import { DoneModal } from './DoneModal'
 import { FailModal } from './FailModal'
-import { useDepositStore } from './store/useDepositStore'
+import { useTxStore } from './store/useDepositStore'
 import { TxTypeSwitcher } from './TxTypeSwither'
 import { SelectWithdrawNetwork } from './withdraw/SelectWithdrawNetwork'
 import { WithdrawInput } from './withdraw/WithdrawInput'
@@ -17,7 +18,7 @@ interface DepositBlockProperties extends ComponentProps<'div'> {}
 
 export const TransactionBlock = (props: DepositBlockProperties) => {
   const { className, ...rest } = props
-  const { txType } = useDepositStore()
+  const { txType } = useTxStore()
 
   const { open: openConnectModal } = useWeb3Modal()
 
@@ -49,6 +50,7 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
         )}
       </ShadowBox>
       <FailModal />
+      <DoneModal />
     </>
   )
 }

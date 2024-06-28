@@ -25,6 +25,7 @@ export default defineConfig({
       "@hooks": `${root}/lib/hooks`,
       "@store": `${root}/lib/store`,
       "@utils": `${root}/lib/utils`,
+      "@abi": `${root}/abi`,
       "@codegen": `${root}/__generated__/`,
     },
   },

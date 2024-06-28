@@ -46,7 +46,7 @@ export const TransactionsHistory: React.FC<React.HTMLAttributes<HTMLDivElement>>
 export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
 ) => {
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
   const { data } = useTxHistory()
   return (
     <div {...props} className={cn('flex flex-col px-4', props.className)}>
@@ -86,7 +86,7 @@ export const TransactionsHistoryDesktop: React.FC<
   if (loading) {
     return <TransactionsHistoryDesktopSkeleton {...props} />
   }
-  if (error) return `Error! ${error.message}`
+  if (error) return <TransactionsHistoryDesktopSkeleton {...props} />
 
   return (
     <div {...props} className={cn('flex flex-col', props.className)}>

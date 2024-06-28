@@ -28,8 +28,24 @@ export const useMaatTokensTvl = ({ from }: { from: number }) => {
   const chartData = useMemo(() => {
     const tokensTvlApyData = data?.maatTvls
     if (!tokensTvlApyData) return
-    let lastUv = 0
-    let lastPv = 0
+    console.log(tokensTvlApyData)
+
+    const stakedUsdc = tokensTvlApyData.find(
+      (item) => item.token.symbol.toLowerCase() === 'usdc',
+    )?.staked
+    const stakedUsdt = tokensTvlApyData.find(
+      (item) => item.token.symbol.toLowerCase() === 'usdt',
+    )?.staked
+    let lastUv = Number(
+      BigNumber(stakedUsdc)
+        .div(10 ** 6)
+        .toString(),
+    )
+    let lastPv = Number(
+      BigNumber(stakedUsdt)
+        .div(10 ** 6)
+        .toString(),
+    )
     const tvlDataArray = [] as RechartDataType[]
     tokensTvlApyData.forEach((item: any) => {
       const { timestamp, staked, token } = item

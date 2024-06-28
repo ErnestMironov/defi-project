@@ -62,7 +62,7 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
   const navigate = useNavigate()
   const { data, loading, error } = useStrategies()
   if (loading) return <StrategySkeletonDesktop {...props} />
-  if (error) return `Error! ${error.message}`
+  if (error) return <StrategySkeletonDesktop {...props} />
 
   return (
     <div {...props} className={cn('flex flex-col gap-6', props.className)}>
@@ -85,6 +85,8 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
         </Table.Head>
         <Table.Body>
           {(data?.strategyStats as StrategyStats[])?.map((strategy, index) => {
+            console.log(strategy?.chainName)
+
             return (
               <Table.Row key={index}>
                 <Table.Cell>

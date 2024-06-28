@@ -1,11 +1,12 @@
 /* eslint-disable import/no-unused-modules */
 // network icons
+import Binance from '@assets/icons/bnb.svg'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg'
 import Avalanche from '@assets/icons/networks/avalanche.svg'
 import Base from '@assets/icons/networks/base.svg'
 import Bsc from '@assets/icons/networks/bsc.svg'
 import Ethereum from '@assets/icons/networks/ethereum.svg'
-import MantleNetowork from '@assets/icons/networks/mantle.svg'
+// import MantleNetowork from '@assets/icons/networks/mantle.svg'
 import Optimism from '@assets/icons/networks/optimism.svg'
 import Polygon from '@assets/icons/networks/polygon.svg'
 // protocol icons
@@ -77,6 +78,11 @@ const TOKENS: ITokenAsset[] = [
     name: 'FRAX',
   },
   {
+    TokenIcon: Binance,
+    symbol: 'BNB',
+    name: 'Binance',
+  },
+  {
     TokenIcon: Usdc,
     symbol: 'USDC',
     name: 'USDC',
@@ -99,7 +105,7 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Arbitrum,
-    symbol: 'arbitrum-mainnet',
+    symbol: 'arbitrum',
     name: 'Arbitrum',
   },
   {
@@ -114,16 +120,26 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Polygon,
+    symbol: 'matic',
+    name: 'Polygon',
+  },
+  {
+    TokenIcon: Polygon,
     symbol: 'matic-mainnet',
     name: 'Polygon',
   },
   {
     TokenIcon: Bsc,
     symbol: 'bsc-mainnet',
-    name: 'Binance SC',
+    name: 'Binance',
   },
   {
-    TokenIcon: MantleNetowork,
+    TokenIcon: Mantle,
+    symbol: 'MNT',
+    name: 'Mantle',
+  },
+  {
+    TokenIcon: Mantle,
     symbol: 'mantle-mainnet',
     name: 'Mantle',
   },

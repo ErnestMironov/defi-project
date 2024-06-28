@@ -1,13 +1,17 @@
 import { TokenIconComponent } from '@components/token-icon'
+import { useTokenAsset } from '@hooks/useTokenAsset'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
-import { useDepositStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useDepositStore'
 
 export const SelectWithdrawNetwork = () => {
-  const { withdrawNetwork, setWithdrawNetwork } = useDepositStore()
+  const { withdrawNetwork, setWithdrawNetwork } = useTxStore()
+  const token = useTokenAsset(withdrawNetwork)
+  console.log('token', token)
+
   return (
     <SelectNetworkPopover
-      network={withdrawNetwork}
+      chain={withdrawNetwork}
       onChange={(network) => setWithdrawNetwork(network)}
       trigger={
         <div className="flex items-center">
@@ -16,7 +20,7 @@ export const SelectWithdrawNetwork = () => {
             symbol={withdrawNetwork}
             className="size-7 max-lg:size-[1.125rem]"
           />
-          <span className="ml-[0.38rem]">{withdrawNetwork}</span>
+          <span className="ml-[0.38rem]">{token?.name}</span>
         </div>
       }
     />

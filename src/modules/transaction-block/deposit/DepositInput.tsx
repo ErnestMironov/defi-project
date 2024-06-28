@@ -1,14 +1,13 @@
 import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
-import { DialogTrigger } from '@components/ui/dialog'
 import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
-import { useDepositStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useDepositStore'
 import { DepositReviewModal } from './DepositReviewModal'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
@@ -18,9 +17,8 @@ const MOCK_MAX = 7472.09
 export const DepositInput = () => {
   const { isConnected } = useAccount()
 
-  const { depositAsset: asset } = useDepositStore()
+  const { depositAsset: asset, setCurrentModal, inputValue, setInputValue } = useTxStore()
 
-  const [inputValue, setInputValue] = useState('')
   const [error, setError] = useState('')
   useEffect(() => {
     if (BigNumber(inputValue).isGreaterThan(BigNumber(MOCK_MAX))) {
@@ -58,16 +56,25 @@ export const DepositInput = () => {
             {error ? (
               <p className="text-lg text-red-100">{error}</p>
             ) : (
-              <p className="text-lg text-gray-100 max-lg:text-xs">$ 0.0</p>
+              <p className="text-lg text-gray-100 max-lg:text-xs">
+                $ {inputValue || '0.00'}
+              </p>
             )}
             <div className="flex items-center">
               <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {formatTokenBalance(asset?.balance, asset?.contract_decimals)}
+                {formatTokenBalance(asset.balance, asset.contract_decimals)}
               </p>
               <button
                 type="button"
                 className="ml-[0.62rem] font-bold uppercase text-main-100 max-lg:text-xs"
+                onClick={() =>
+                  setInputValue(
+                    BigNumber(asset.balance?.toString() || '0')
+                      .div(10 ** asset.contract_decimals)
+                      .toString(),
+                  )
+                }
               >
                 Max
               </button>
@@ -92,33 +99,35 @@ export const DepositInput = () => {
         </div>
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
-            <p className="text-lg text-gray-100 max-lg:text-xs">$ 0.0</p>
-            <div className="flex items-center">
+            <p className="text-lg text-gray-100 max-lg:text-xs">
+              $ {inputValue || '0.00'}
+            </p>
+            {/* <div className="flex items-center">
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">APY 34%</p>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
-      {isConnected && (
+      {/* {isConnected && (
         <p className="mt-4 text-base text-text-80 max-lg:mt-2 max-lg:text-xs">
           1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>
         </p>
-      )}
+      )} */}
       {isConnected && (
-        <DepositReviewModal
-          trigger={
-            <DialogTrigger disabled={!inputValue || !!error} className="w-full">
-              <Button
-                size="lg"
-                disabled={!inputValue || !!error}
-                className="w-full max-lg:mt-6 lg:mt-10"
-              >
-                Deposit
-              </Button>
-            </DialogTrigger>
-          }
-        />
+        <Button
+          size="lg"
+          disabled={!inputValue || !!error}
+          className="w-full max-lg:mt-6 lg:mt-10"
+          onClick={() => setCurrentModal('review')}
+        >
+          Deposit
+        </Button>
+        // trigger={
+        //   <DialogTrigger disabled={!inputValue || !!error} className="w-full">
+        //   </DialogTrigger>
+        // }
       )}
+      <DepositReviewModal />
     </div>
   )
 }

@@ -3,15 +3,14 @@ import Rainbow from '@assets/images/rainbow-circle.png'
 import { Button } from '@components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 
-import { useDepositStore } from './store/useDepositStore'
+import { useTxStore } from './store/useDepositStore'
 
-interface FailModalProperties {}
-export const FailModal = (_props: FailModalProperties) => {
-  const { status, setStatus } = useDepositStore()
-  const close = () => setStatus('pending')
+export const FailModal = () => {
+  const { currentModal, setCurrentModal } = useTxStore()
+  const close = () => setCurrentModal(null)
 
   return (
-    <Dialog open={status === 'error'} onOpenChange={close}>
+    <Dialog open={currentModal === 'error'} onOpenChange={close}>
       <DialogContent className="max-w-[38.75rem] text-text">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 uppercase">Failed</DialogTitle>
