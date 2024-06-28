@@ -13,6 +13,7 @@ export const formatAmountValue = (
   fractionDigits = 4,
   showLess = true,
 ): string | undefined => {
+  if (String(value) === '0') return '0'
   if (!value) return
   if (value === 'NaN') return '0.00'
   const bigNumberValue = BigNumber(value)
@@ -30,13 +31,13 @@ export const formatAmountValue = (
     return '0.00'
   }
   if (parsedValue >= 1e9) {
-    return `${(parsedValue / 1e9).toFixed(2)}B`
+    return `${(parsedValue / 1e9).toFixed(fractionDigits)}B`
   }
   if (parsedValue >= 1e6) {
-    return `${(parsedValue / 1e6).toFixed(2)}M`
+    return `${(parsedValue / 1e6).toFixed(fractionDigits)}M`
   }
   if (parsedValue >= 1e3) {
-    return `${(parsedValue / 1e3).toFixed(2)}K`
+    return `${(parsedValue / 1e3).toFixed(fractionDigits)}K`
   }
 
   return formattedAmount

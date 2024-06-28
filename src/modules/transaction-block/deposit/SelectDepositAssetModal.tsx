@@ -91,7 +91,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     depositNetwork: chain,
     setDepositNetwork: setNetwork,
   } = useDepositStore()
-  const [opened, setOpened] = useState(true)
+  const [opened, setOpened] = useState(false)
   const onChange = (_asset: ITokenData) => {
     setAsset(_asset)
     setOpened(false)

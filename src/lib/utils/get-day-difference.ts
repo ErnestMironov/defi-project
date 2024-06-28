@@ -12,7 +12,7 @@ export const getDaysAgo = (date: string) => {
   return dayjs().subtract(daysAgo, 'day').fromNow()
 }
 
-export const getFromNow = (date: string, suffix = false) => {
+export const getFromNow = (date: string | number, suffix = false) => {
   return dayjs(date)
     .fromNow(suffix)
     .replace('minutes', 'mins')

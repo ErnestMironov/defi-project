@@ -1,25 +1,13 @@
+import { useOverview } from '@api/queries/useOverview'
 import { Logo } from '@components/ui/logo'
+import { Skeleton } from '@components/ui/skeleton'
 import clsx from 'clsx'
 import React from 'react'
-import type { IOverview } from 'src/lib/types/overview'
 
-interface IOverviewCard {
+export interface IOverviewCard {
   title: string
   logoColor: string
-  stats: Array<{ [key: string]: string | number }>
-}
-
-const mockOverviews: IOverview = {
-  userOverview: {
-    deposited: 89.02,
-    monthlyYield: 12,
-    averageAPY: 6,
-  },
-  maatOverview: {
-    tvl: '89.02M',
-    cumulativeEarnings: '12M',
-    strategies: 6,
-  },
+  stats: Array<{ [key: string]: string | number | undefined }>
 }
 
 const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
@@ -51,6 +39,8 @@ const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
 }
 
 export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
+  const { data, loading, error } = useOverview()
+
   const overviewsData: IOverviewCard[] = [
     {
       title: 'User Overview',
@@ -58,17 +48,17 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
       stats: [
         {
           title: 'Deposited',
-          value: mockOverviews.userOverview.deposited,
+          value: data.userOverview.deposited,
           prefix: '$',
         },
         {
           title: 'Monthly Yield',
-          value: mockOverviews.userOverview.monthlyYield,
+          value: data.userOverview.yeald,
           prefix: '$',
         },
         {
           title: 'Average APY',
-          value: mockOverviews.userOverview.averageAPY,
+          value: data.userOverview.apy,
           postfix: '%',
         },
       ],
@@ -79,21 +69,40 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
       stats: [
         {
           title: 'TVL',
-          value: mockOverviews.maatOverview.tvl,
+          value: data.maatOverview.tvl,
           prefix: '$',
         },
         {
           title: 'Cumulative Earnings',
-          value: mockOverviews.maatOverview.cumulativeEarnings,
+          value: data.maatOverview.cumulativeEarnings,
           prefix: '$',
         },
         {
           title: 'Strategies',
-          value: mockOverviews.maatOverview.strategies,
+          value: data.maatOverview.strategies,
         },
       ],
     },
   ]
+
+  if (loading) {
+    return (
+      <div
+        className={clsx(
+          'hide-scrollbar flex w-full gap-2 max-lg:snap-x max-lg:snap-mandatory max-lg:overflow-x-auto max-lg:pb-[0.38rem] lg:gap-4',
+          props.className,
+        )}
+      >
+        {Array.from({ length: 2 }).map((_value, i) => (
+          <Skeleton
+            key={i}
+            className="h-[9.125rem] w-full rounded-[1.75rem] max-lg:min-w-[90vw] max-[370px]:min-w-max lg:h-[15.0625rem]"
+          />
+        ))}
+      </div>
+    )
+  }
+  if (error) return `Error! ${error.message}`
 
   return (
     <div
