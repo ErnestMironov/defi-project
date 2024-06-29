@@ -1,4 +1,4 @@
-/* eslint-disable react/no-array-index-key */
+
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
 import { useDisclosure } from '@hooks/useDisclosure'

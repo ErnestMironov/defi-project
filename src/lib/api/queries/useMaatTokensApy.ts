@@ -1,0 +1,59 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useQuery } from '@apollo/client'
+import { gql } from '@codegen/gql'
+import type { RechartDataType } from '@components/chart/line-chart/LineChart'
+import { useMemo } from 'react'
+
+export const maatTokensApy = gql(`
+  query MaatTokensApy($from: Float!) {
+    apies(where: { protocol: { id_eq: "maat" }, timestamp_gt: $from }) {
+      timestamp
+      token
+      id
+      apy
+    }
+    tokens {
+      addresses
+      decimals
+      id
+      name
+      symbol
+    }
+  }
+`)
+
+export const useMaatTokensApy = ({ from }: { from: number }) => {
+  const { data, ...rest } = useQuery(maatTokensApy, { variables: { from } })
+
+  const chartData = useMemo(() => {
+    const apyData = data?.apies
+    if (!apyData) return
+    const usdc = data?.tokens?.find((_token) => _token.symbol.toLowerCase() === 'usdc')
+      ?.addresses[0] as string
+    const usdt = data?.tokens?.find((_token) => _token.symbol.toLowerCase() === 'usdt')
+      ?.addresses[0] as string
+    let lastUv: null | number =
+      Number(apyData.find((apy) => apy.token === usdc)?.apy) ?? null
+    let lastPv: null | number =
+      Number(apyData.find((apy) => apy.token === usdt)?.apy) ?? null
+    const apyDataArray = [] as RechartDataType[]
+    apyData.forEach((item) => {
+      const { timestamp, apy, token } = item
+      const symbol = data?.tokens?.find((_token) => _token.addresses[0] === token)?.symbol
+      const uv = symbol?.toLowerCase() === 'usdc' ? Number(apy) : lastUv
+      const pv = symbol?.toLowerCase() === 'usdt' ? Number(apy) : lastPv
+
+      apyDataArray.push({
+        name: symbol || '',
+        timestamp: Number(timestamp),
+        uv,
+        pv,
+      })
+      lastUv = uv
+      lastPv = pv
+    })
+    return apyDataArray
+  }, [data])
+
+  return { data: chartData, ...rest }
+}

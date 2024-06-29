@@ -13,21 +13,20 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
+import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
-import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
 import { type ComponentProps, useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { useAccount } from 'wagmi'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
-import { useDepositStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useDepositStore'
 
 interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
 const SelectChainTrigger = () => {
-  const { depositNetwork } = useDepositStore()
+  const { depositNetwork } = useTxStore()
   const chainData = useTokenAsset(depositNetwork)
 
   return (
@@ -83,14 +82,14 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const [searchValue, setSearchValue] = useState('')
 
   const { address } = useAccount()
-  const { data: userTokens } = useTokensBalance({ address })
+  const { data: userTokens, isLoading } = useTokensBalance({ address })
 
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
     depositNetwork: chain,
     setDepositNetwork: setNetwork,
-  } = useDepositStore()
+  } = useTxStore()
   const [opened, setOpened] = useState(false)
   const onChange = (_asset: ITokenData) => {
     setAsset(_asset)
@@ -125,20 +124,6 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
     filteredByChainTokens,
   )
-
-  if (isBelowDesktop) {
-    return createPortal(
-      <div
-        className={cn(
-          'fixed z-[50] h-screen w-screen translate-y-[100vh] bg-bg',
-          opened && 'translate-y-0',
-        )}
-      >
-        123
-      </div>,
-      document.body,
-    )
-  }
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
@@ -178,6 +163,13 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
         </div>
         <ScrollArea className="-mx-4 h-[19.5rem] px-4">
           <div className="space-y-2">
+            {isLoading &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="flex h-[4.5rem] w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+                />
+              ))}
             {filteredByChainTokens?.map((token) => (
               <TokensListItem
                 // eslint-disable-next-line no-unsafe-optional-chaining

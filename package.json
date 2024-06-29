@@ -6,13 +6,15 @@
 	"scripts": {
 		"dev": "vite --host",
 		"build": "tsc && vite build",
-		"start": "vite preview"
+		"start": "vite preview",
+		"compile": "graphql-codegen",
+		"watch": "graphql-codegen -w"
 	},
 	"dependencies": {
 		"@0xsquid/sdk": "^2.8.20",
 		"@0xsquid/squid-types": "^0.1.84",
 		"@amcharts/amcharts5": "^5.9.11",
-		"@covalenthq/client-sdk": "^1.0.2",
+		"@apollo/client": "^3.10.6",
 		"@floating-ui/react": "^0.26.16",
 		"@radix-ui/react-accordion": "^1.2.0",
 		"@radix-ui/react-dialog": "^1.1.1",
@@ -33,6 +35,7 @@
 		"dayjs": "^1.11.11",
 		"ethers": "^6.13.1",
 		"framer-motion": "^11.2.10",
+		"graphql": "^16.9.0",
 		"i18next": "^23.11.3",
 		"i18next-browser-languagedetector": "^7.2.1",
 		"i18next-http-backend": "^2.5.1",
@@ -51,9 +54,13 @@
 		"vaul": "^0.9.1",
 		"viem": "2.x",
 		"wagmi": "^2.8.6",
+		"@covalenthq/client-sdk": "^1.0.2",
 		"zustand": "^4.5.2"
 	},
 	"devDependencies": {
+		"@graphql-codegen/cli": "^5.0.2",
+		"@graphql-codegen/client-preset": "^4.3.0",
+		"@graphql-typed-document-node/core": "^3.2.0",
 		"@tanstack/eslint-plugin-query": "^5.35.6",
 		"@types/node": "^20.12.9",
 		"@types/react": "^18.2.66",

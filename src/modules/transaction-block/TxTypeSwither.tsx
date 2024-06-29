@@ -3,7 +3,7 @@ import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
 import type { ComponentProps } from 'react'
 
-import { useDepositStore } from './store/useDepositStore'
+import { useTxStore } from './store/useDepositStore'
 
 interface TxTypeSwitcherProperties extends ComponentProps<'div'> {}
 
@@ -13,7 +13,7 @@ const TABS = [
 ]
 
 export const TxTypeSwitcher = (props: TxTypeSwitcherProperties) => {
-  const { txType, setTxType } = useDepositStore()
+  const { txType, setTxType } = useTxStore()
   return (
     <AnimatedTabs
       {...props}

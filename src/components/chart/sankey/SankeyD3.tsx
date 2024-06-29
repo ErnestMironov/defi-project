@@ -1,14 +1,11 @@
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
-/* eslint-disable @typescript-eslint/no-use-before-define */
+import { useRebalance } from '@api/queries/useRebalance'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg?url'
 import Aave from '@assets/icons/protocols/aave.svg?url'
 import Lendle from '@assets/icons/protocols/lendle.svg?url'
 import Mantle from '@assets/icons/protocols/mantle.svg?url'
 import Metis from '@assets/icons/protocols/metis.svg?url'
-import type { StableType } from '@components/stable-switcher/StableSwitcher'
-import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Button } from '@components/ui/button'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useDimensions } from '@hooks/useDimensions'
@@ -22,16 +19,16 @@ type ObjectsData = {
   name: string
   icon: string
 }
-type NodeType = {
+export type NodeType = {
   id: string
   objects: ObjectsData[]
 }
-type LinkType = {
+export type LinkType = {
   source: string
   target: string
   value: number
 }
-type SankeyChartDataType = {
+export type SankeyChartDataType = {
   nodes: NodeType[]
   links: LinkType[]
 }
@@ -296,17 +293,18 @@ export const Sankey = ({ data }: SankeyProperties) => {
 }
 
 export const SankeyDiagramBasicDemo = () => {
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const { data } = useRebalance()
+  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
   const { isBelowDesktop } = useDeviceWidth()
   return (
-    <div className="max-lg:px-4">
-      <StableSwitcher
+    <div className="mt-28 max-lg:mt-8 max-lg:px-4">
+      {/* <StableSwitcher
         layoutId="stable-switcher-sankey"
         activeTab={activeStableType}
         setActiveTab={setStableType}
         className="mb-[2.13rem] mt-28 max-lg:mb-[1.47rem] max-lg:mt-8"
-      />
-      <Sankey data={mockData} />
+      /> */}
+      {data && <Sankey data={mockData} />}
       {isBelowDesktop && (
         <Button className="mt-8 w-full" size="lg">
           Deposit

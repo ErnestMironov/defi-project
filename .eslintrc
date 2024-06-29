@@ -63,7 +63,7 @@
         "react/button-has-type": "warn",
         "react/no-unused-prop-types": "warn",
         "jsx-a11y/no-access-key": "warn",
-        "react/no-array-index-key": "warn",
+        "react/no-array-index-key": "off",
         "react/jsx-no-useless-fragment": "warn",
         "react/no-unstable-nested-components": "off",
         // @typescript-eslint rules
@@ -172,7 +172,9 @@
           {
             "argsIgnorePattern": "^_"
           }
-        ]
+        ],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": "off"
       }
     }
   ]

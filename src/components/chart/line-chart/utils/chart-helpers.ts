@@ -1,6 +1,4 @@
-import type { LineChartColor } from '../LineChart'
-
-export const getDotStyles = (color: LineChartColor) => {
+export const getDotStyles = (color: string) => {
   switch (color) {
     case '#6160FF': {
       return `[&_circle]:fill-[#6160FF]`

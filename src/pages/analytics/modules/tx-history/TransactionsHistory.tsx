@@ -1,75 +1,34 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable @typescript-eslint/no-use-before-define */
+import { useTxHistory } from '@api/queries/useTxHistory'
 import Arrow from '@assets/icons/arrow-filled.svg'
-import { Pagination } from '@components/pagination/Pagination'
-import type { StableType } from '@components/stable-switcher/StableSwitcher'
-import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
+import { ActionType } from '@codegen/graphql'
 import { Table } from '@components/table'
 import { TokenIconComponent } from '@components/token-icon'
-import { ActionChip, TxType } from '@components/transaction-type-badge'
+import { ActionChip } from '@components/transaction-type-badge'
 import { Accordion } from '@components/ui/accordion'
-import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
+import { Skeleton } from '@components/ui/skeleton'
+import { useClipboard } from '@hooks/useClipboard'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
-import { useState } from 'react'
 
 import { TransactionMobileItem } from './TransactionMobileItem'
 
 export interface ITransaction {
-  action: TxType
-  amount: number
+  action: ActionType
+  amount: string
   strategy: string
-  weeklyAPY: number
-  tvl: number
+  protocol?: string
+  apy: string
+  tvl?: string
   from: string
   to: string
   txHash: string
-  created: string
-  nonce: number
+  timestamp: string | number
+  nonce: string
 }
-
-const defaultData: ITransaction[] = [
-  {
-    action: TxType.Deposit,
-    amount: 1000,
-    strategy: 'Strategy A',
-    weeklyAPY: 0.5,
-    tvl: 100_000,
-    from: 'Base',
-    to: 'Sonne',
-    txHash: '0x1234567890abcdef1234567890abcdef',
-    created: '2024-06-20T12:34:56',
-    nonce: 1,
-  },
-  {
-    action: TxType.Withdraw,
-    amount: 500,
-    strategy: 'Strategy B',
-    weeklyAPY: 0.3,
-    tvl: 200_000,
-    from: 'Polygon',
-    to: 'Compound',
-    txHash: '0xfedcba09876543211234567890abcdef',
-    created: '2024-06-19T11:22:33',
-    nonce: 2,
-  },
-  {
-    action: TxType.Bridge,
-    amount: 100,
-    strategy: 'Strategy C',
-    weeklyAPY: 0.7,
-    tvl: 300_000,
-    from: 'Polygon',
-    to: 'Compound',
-    txHash: '0xabcdef12345678901234567890abcdef',
-    created: '2024-06-18T10:20:30',
-    nonce: 3,
-  },
-]
 
 export const TransactionsHistory: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
@@ -84,8 +43,8 @@ export const TransactionsHistory: React.FC<React.HTMLAttributes<HTMLDivElement>>
 export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
 ) => {
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
-
+  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const { data } = useTxHistory()
   return (
     <div {...props} className={cn('flex flex-col px-4', props.className)}>
       <div className="flex items-start gap-4">
@@ -94,24 +53,26 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
           Transactions <br /> History
         </h2>
       </div>
-      <StableSwitcher
+      {/* <StableSwitcher
         layoutId="stable-switcher-transactions-history"
         activeTab={activeStableType}
         setActiveTab={setStableType}
         className="mb-6 mt-8"
-      />
+      /> */}
+      {/* // TODO: remove */}
+      <div className="mb-6 mt-8" />
       <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
-        {defaultData.map((tx, index, array) => (
+        {data?.map((tx, index, array) => (
           <TransactionMobileItem
-            key={tx.txHash}
+            key={index}
             tx={tx}
             isLast={index === array.length - 1}
           />
         ))}
       </Accordion>
-      <Button size="lg" className="mt-8">
+      {/* <Button size="lg" className="mt-8">
         View more
-      </Button>
+      </Button> */}
     </div>
   )
 }
@@ -119,7 +80,14 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
 export const TransactionsHistoryDesktop: React.FC<
   React.HTMLAttributes<HTMLDivElement>
 > = (props) => {
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const { handleCopy } = useClipboard()
+
+  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const { data, loading, error } = useTxHistory()
+  if (loading) {
+    return <TransactionsHistoryDesktopSkeleton {...props} />
+  }
+  if (error) return <TransactionsHistoryDesktopSkeleton {...props} />
 
   return (
     <div {...props} className={cn('flex flex-col', props.className)}>
@@ -127,12 +95,14 @@ export const TransactionsHistoryDesktop: React.FC<
         <Logo />
         Transactions History
       </h2>
-      <StableSwitcher
+      {/* <StableSwitcher
         layoutId="stable-switcher-transactions-history"
         activeTab={activeStableType}
         setActiveTab={setStableType}
         className="mb-6 mt-12"
-      />
+      /> */}
+      {/* // TODO: remove */}
+      <div className="mb-6 mt-12" />
       <Table>
         <Table.Head>
           <Table.Row>
@@ -152,28 +122,27 @@ export const TransactionsHistoryDesktop: React.FC<
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {defaultData.map((tx, index) => (
+          {data?.map((tx, index, array) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <ActionChip type={tx.action} />
               </Table.Cell>
               <Table.Cell>{tx.amount}</Table.Cell>
               <Table.Cell>
-                {tx.action === TxType.Bridge ? (
+                {tx.action === ActionType.Bridge ? (
                   '-'
                 ) : (
                   <div className="flex items-center gap-4">
                     <div className="flex -space-x-2">
-                      <TokenIconComponent symbol={tx.from} className="size-10" />
-                      <TokenIconComponent symbol={tx.to} className="size-10" />
+                      <TokenIconComponent symbol={tx?.from} className="size-10" />
+                      <TokenIconComponent symbol={tx.protocol} className="size-10" />
                     </div>
-                    /<span>{tx.weeklyAPY}%</span>/
-                    <span>${formatAmountValue(tx.tvl)}</span>
+                    /<span>{tx.apy}%</span>/<span>${formatAmountValue(tx.tvl)}</span>
                   </div>
                 )}
               </Table.Cell>
               <Table.Cell>
-                {tx.action === TxType.Bridge ? (
+                {tx.action === ActionType.Bridge ? (
                   <div className="flex items-center gap-2">
                     <TokenIconComponent symbol={tx.from} className="size-10" />
                     <Arrow />
@@ -183,14 +152,86 @@ export const TransactionsHistoryDesktop: React.FC<
                   '-'
                 )}
               </Table.Cell>
-              <Table.Cell>{shortenString(tx.txHash)}</Table.Cell>
-              <Table.Cell>{getFromNow(tx.created)}</Table.Cell>
-              <Table.Cell>{tx.nonce}</Table.Cell>
+              <Table.Cell
+                className="cursor-pointer"
+                onClick={() => handleCopy(tx.txHash)}
+              >
+                {shortenString(tx.txHash)}
+              </Table.Cell>
+              <Table.Cell>{getFromNow(Number(tx.timestamp))}</Table.Cell>
+              <Table.Cell>#{array.length - index}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
-      <Pagination className="mt-6" />
+      {/* <Pagination className="mt-6" /> */}
+    </div>
+  )
+}
+
+const TransactionsHistoryDesktopSkeleton: React.FC<
+  React.HTMLAttributes<HTMLDivElement>
+> = (props) => {
+  return (
+    <div {...props} className={cn('flex flex-col ', props.className)}>
+      <h2 className="flex items-center gap-6 text-[2.1875rem] font-normal uppercase not-italic leading-[100%]">
+        <Logo />
+        Transactions History
+      </h2>
+      {/* <StableSwitcher
+        layoutId="stable-switcher-transactions-history"
+        activeTab="USDT"
+        setActiveTab={() => {}}
+        className="mb-6 mt-12"
+      /> */}
+      {/* // TODO: remove */}
+      <div className="mb-6 mt-12" />
+      <Table>
+        <Table.Head>
+          <Table.Row>
+            <Table.HeadCell>Action</Table.HeadCell>
+            <Table.HeadCell>Amount</Table.HeadCell>
+            <Table.HeadCell>Strategy / Weekly APY / TVL</Table.HeadCell>
+            <Table.HeadCell>
+              <div className="flex items-center gap-2">
+                From
+                <Arrow />
+                To
+              </div>
+            </Table.HeadCell>
+            <Table.HeadCell>Tx Hash</Table.HeadCell>
+            <Table.HeadCell>Created</Table.HeadCell>
+            <Table.HeadCell>Nonce</Table.HeadCell>
+          </Table.Row>
+        </Table.Head>
+        <Table.Body>
+          {Array.from({ length: 4 })?.map((_, index) => (
+            <Table.Row key={index}>
+              <Table.Cell>
+                <Skeleton className="h-12 w-40 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-12 w-20 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-12 w-60 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="w-30 h-12 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="w-30 h-12 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-12 w-24 rounded-xl" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-10 w-20 rounded-xl" />
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
     </div>
   )
 }
