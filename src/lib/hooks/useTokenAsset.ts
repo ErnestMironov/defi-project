@@ -105,7 +105,7 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Arbitrum,
-    symbol: 'arbitrum',
+    symbol: 'Arbitrum',
     name: 'Arbitrum',
   },
   {
