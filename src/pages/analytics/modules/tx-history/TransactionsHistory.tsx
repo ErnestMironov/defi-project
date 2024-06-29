@@ -1,13 +1,10 @@
 import { useTxHistory } from '@api/queries/useTxHistory'
 import Arrow from '@assets/icons/arrow-filled.svg'
 import { ActionType } from '@codegen/graphql'
-import type { StableType } from '@components/stable-switcher/StableSwitcher'
-import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Table } from '@components/table'
 import { TokenIconComponent } from '@components/token-icon'
 import { ActionChip } from '@components/transaction-type-badge'
 import { Accordion } from '@components/ui/accordion'
-import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
@@ -15,7 +12,6 @@ import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
-import { useState } from 'react'
 
 import { TransactionMobileItem } from './TransactionMobileItem'
 
@@ -71,9 +67,9 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
           />
         ))}
       </Accordion>
-      <Button size="lg" className="mt-8">
+      {/* <Button size="lg" className="mt-8">
         View more
-      </Button>
+      </Button> */}
     </div>
   )
 }
@@ -81,7 +77,7 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
 export const TransactionsHistoryDesktop: React.FC<
   React.HTMLAttributes<HTMLDivElement>
 > = (props) => {
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
   const { data, loading, error } = useTxHistory()
   if (loading) {
     return <TransactionsHistoryDesktopSkeleton {...props} />
@@ -94,12 +90,12 @@ export const TransactionsHistoryDesktop: React.FC<
         <Logo />
         Transactions History
       </h2>
-      <StableSwitcher
+      {/* <StableSwitcher
         layoutId="stable-switcher-transactions-history"
         activeTab={activeStableType}
         setActiveTab={setStableType}
         className="mb-6 mt-12"
-      />
+      /> */}
       <Table>
         <Table.Head>
           <Table.Row>
@@ -170,12 +166,12 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
         <Logo />
         Transactions History
       </h2>
-      <StableSwitcher
+      {/* <StableSwitcher
         layoutId="stable-switcher-transactions-history"
         activeTab="USDT"
         setActiveTab={() => {}}
         className="mb-6 mt-12"
-      />
+      /> */}
       <Table>
         <Table.Head>
           <Table.Row>
