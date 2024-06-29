@@ -62,6 +62,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
             const value = vault === 'USDC' ? tokenBalanceUsdcUsd : tokenBalanceUsdtUsd
             return (
               <button
+                key={vault}
                 type="button"
                 onClick={() => onChange(vault)}
                 className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
