@@ -297,7 +297,7 @@ export const SankeyDiagramBasicDemo = () => {
   // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
   const { isBelowDesktop } = useDeviceWidth()
   return (
-    <div className="max-lg:px-4">
+    <div className="mt-28 max-lg:mt-8 max-lg:px-4">
       {/* <StableSwitcher
         layoutId="stable-switcher-sankey"
         activeTab={activeStableType}
