@@ -1,4 +1,3 @@
-
 import Arrow from '@assets/icons/arrow-filled.svg'
 import { ActionType } from '@codegen/graphql'
 import { TokenIconComponent } from '@components/token-icon'
@@ -47,9 +46,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
               <TokenIconComponent symbol={tx.to} className="size-6 overflow-visible" />
             </div>
             <h6>Tx Hash</h6>
-            <div>
-              {shortenString(tx.txHash)} | {shortenString(tx.txHash)}
-            </div>
+            <div>{shortenString(tx.txHash)}</div>
           </>
         ) : (
           <>
