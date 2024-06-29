@@ -58,7 +58,7 @@ export const DepositInput = () => {
               <p className="text-lg text-red-100">{error}</p>
             ) : (
               <p className="text-lg text-gray-100 max-lg:text-xs">
-                $ {inputValue || '0.00'}
+                $ {Number(inputValue).toFixed(2) || '0.00'}
               </p>
             )}
             <div className="flex items-center">
@@ -95,7 +95,7 @@ export const DepositInput = () => {
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
             <p className="text-lg text-gray-100 max-lg:text-xs">
-              $ {inputValue || '0.00'}
+              $ {Number(inputValue).toFixed(2) || '0.00'}
             </p>
             {/* <div className="flex items-center">
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">APY 34%</p>

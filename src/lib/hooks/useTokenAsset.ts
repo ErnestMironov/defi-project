@@ -2,7 +2,6 @@
 // network icons
 import Binance from '@assets/icons/bnb.svg'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg'
-import Avalanche from '@assets/icons/networks/avalanche.svg'
 import Base from '@assets/icons/networks/base.svg'
 import Bsc from '@assets/icons/networks/bsc.svg'
 import Ethereum from '@assets/icons/networks/ethereum.svg'
@@ -34,6 +33,7 @@ interface ITokenAsset {
   TokenIcon: React.FC<React.SVGProps<SVGElement>>
   symbol: string
   name?: string
+  chainId?: number
 }
 
 const TOKENS: ITokenAsset[] = [
@@ -92,55 +92,58 @@ const TOKENS: ITokenAsset[] = [
     symbol: 'WBTC',
     name: 'Wrapped Bitcoin',
   },
-  // network icons
-  {
-    TokenIcon: Ethereum,
-    symbol: 'eth-mainnet',
-    name: 'Ethereum',
-  },
-  {
-    TokenIcon: Optimism,
-    symbol: 'optimism-mainnet',
-    name: 'Optimism',
-  },
-  {
-    TokenIcon: Arbitrum,
-    symbol: 'Arbitrum',
-    name: 'Arbitrum',
-  },
-  {
-    TokenIcon: Base,
-    symbol: 'Base',
-    name: 'Base',
-  },
-  {
-    TokenIcon: Avalanche,
-    symbol: 'Avalanche',
-    name: 'Avalanche',
-  },
-  {
-    TokenIcon: Polygon,
-    symbol: 'matic',
-    name: 'Polygon',
-  },
-  {
-    TokenIcon: Polygon,
-    symbol: 'matic-mainnet',
-    name: 'Polygon',
-  },
-  {
-    TokenIcon: Bsc,
-    symbol: 'bsc-mainnet',
-    name: 'Binance',
-  },
   {
     TokenIcon: Mantle,
     symbol: 'MNT',
     name: 'Mantle',
   },
+  // network icons
+  {
+    TokenIcon: Ethereum,
+    symbol: 'eth-mainnet',
+    chainId: 1,
+    name: 'Ethereum',
+  },
+  {
+    TokenIcon: Optimism,
+    symbol: 'optimism-mainnet',
+    chainId: 10,
+    name: 'Optimism',
+  },
+  {
+    TokenIcon: Arbitrum,
+    symbol: 'Arbitrum',
+    chainId: 42_161,
+    name: 'Arbitrum',
+  },
+  {
+    TokenIcon: Base,
+    symbol: 'Base',
+    chainId: 8453,
+    name: 'Base',
+  },
+  {
+    TokenIcon: Polygon,
+    symbol: 'matic',
+    chainId: 137,
+    name: 'Polygon',
+  },
+  {
+    TokenIcon: Polygon,
+    symbol: 'matic-mainnet',
+    chainId: 137,
+    name: 'Polygon',
+  },
+  {
+    TokenIcon: Bsc,
+    symbol: 'bsc-mainnet',
+    chainId: 56,
+    name: 'Binance',
+  },
   {
     TokenIcon: Mantle,
     symbol: 'mantle-mainnet',
+    chainId: 5000,
     name: 'Mantle',
   },
   // protocol icons

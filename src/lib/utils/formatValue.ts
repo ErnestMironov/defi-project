@@ -71,3 +71,8 @@ export const formatTokenBalance = (
 
   return formattedBalance
 }
+
+export const formatNumberWithCommas = (value: string | number): string => {
+  if (!value) return '0'
+  return value.toString().replaceAll(',', '.')
+}

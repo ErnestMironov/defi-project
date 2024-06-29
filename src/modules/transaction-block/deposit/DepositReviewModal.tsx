@@ -1,3 +1,6 @@
+import { useCrossChainSwap } from '@api/squid-router/useCrossChainSwap'
+import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
+import useSquidSDK from '@api/squid-router/useSquidSdk'
 import ArrangeSquare from '@assets/icons/arrange-square.svg'
 import Check from '@assets/icons/check.svg'
 import ArrowDown from '@assets/icons/curve-arrow-down.svg'
@@ -7,8 +10,12 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
+import { ARB_GATEWAY } from '@constants/contract-address'
+import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { parseFloatLocale } from '@utils/formatValue'
+import { useEffect, useState } from 'react'
+import { parseEther } from 'viem'
 
 import { useTxStore } from '../store/useDepositStore'
 import { useApproveDepositTransaction } from './hooks/useApproveDepositTransaction'
@@ -16,18 +23,82 @@ import { useCheckAllowance } from './hooks/useCheckAllowance'
 import { useDepositTransaction } from './hooks/useDepositTransaction'
 
 export const DepositReviewModal = () => {
+  const [transactionRequestTarget, setTransactionRequestTarget] = useState<
+    string | undefined
+  >(ARB_GATEWAY)
+  const [isSwapNeeded, setIsSwapNeeded] = useState(false)
+
   const {
     depositAsset: asset,
+    depositNetwork: chain,
     vault,
     inputValue: amount,
     currentModal,
     setCurrentModal,
   } = useTxStore()
+  const chainData = useTokenAsset(chain)
+  console.log('🚀 ~ DepositReviewModal ~ chainData:', chainData)
   const inputValue = parseFloatLocale(amount) as string
-  const { approve, status: approveStatus } = useApproveDepositTransaction()
+  console.log('🚀 ~ DepositReviewModal ~ amount:', amount)
+  console.log('🚀 ~ DepositReviewModal ~ inputValue:', inputValue)
+  const { approve, status: approveStatus } = useApproveDepositTransaction({
+    transactionRequestTarget,
+  })
   const { isAllowed } = useCheckAllowance()
-  const { deposit, status: depositStatus } = useDepositTransaction()
+  const { deposit: _deposit, status: depositStatus } = useDepositTransaction()
 
+  const { squid } = useSquidSDK()
+
+  const { route, requestId } = useGetSquidSwapRoute({
+    fromAmount: parseEther(amount).toString(),
+    fromChain: String(chainData?.chainId),
+    fromToken: asset?.contract_address!,
+    toChain: '42161',
+    toToken: squid?.tokens.find((token) => token.symbol?.toLowerCase() === 'usdc')
+      ?.address,
+    enableBoost: true,
+  })
+
+  const { swapTokens } = useCrossChainSwap({
+    route,
+    requestId,
+  })
+
+  useEffect(() => {
+    function isNetworkArb() {
+      return chainData?.chainId === 42_161
+    }
+
+    function isSTABLE() {
+      return (
+        asset?.contract_ticker_symbol.toLowerCase() === 'usdc' ||
+        asset?.contract_ticker_symbol.toLowerCase() === 'usdt'
+      )
+    }
+
+    const IS_SWAP_NEEDED = !isNetworkArb() || !isSTABLE()
+
+    setIsSwapNeeded(IS_SWAP_NEEDED)
+    setTransactionRequestTarget(
+      IS_SWAP_NEEDED ? route?.transactionRequest?.target : ARB_GATEWAY,
+    )
+  }, [asset?.contract_ticker_symbol, chainData?.chainId, route?.transactionRequest])
+
+  const deposit = () => {
+    if (!isAllowed) {
+      approve()
+      return
+    }
+
+    if (isSwapNeeded) {
+      swapTokens()
+      return
+    }
+
+    deposit()
+  }
+
+  console.log('🚀 ~ DepositReviewModal ~ isAllowed:', isAllowed)
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>
       <DialogContent className="max-w-[38.75rem] gap-10 text-text">
