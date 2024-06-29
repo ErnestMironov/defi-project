@@ -7,6 +7,7 @@ import { ActionChip } from '@components/transaction-type-badge'
 import { Accordion } from '@components/ui/accordion'
 import { Logo } from '@components/ui/logo'
 import { Skeleton } from '@components/ui/skeleton'
+import { useClipboard } from '@hooks/useClipboard'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
@@ -58,6 +59,8 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
         setActiveTab={setStableType}
         className="mb-6 mt-8"
       /> */}
+      {/* // TODO: remove */}
+      <div className="mb-6 mt-8" />
       <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
         {data?.map((tx, index, array) => (
           <TransactionMobileItem
@@ -77,6 +80,8 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
 export const TransactionsHistoryDesktop: React.FC<
   React.HTMLAttributes<HTMLDivElement>
 > = (props) => {
+  const { handleCopy } = useClipboard()
+
   // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
   const { data, loading, error } = useTxHistory()
   if (loading) {
@@ -96,6 +101,8 @@ export const TransactionsHistoryDesktop: React.FC<
         setActiveTab={setStableType}
         className="mb-6 mt-12"
       /> */}
+      {/* // TODO: remove */}
+      <div className="mb-6 mt-12" />
       <Table>
         <Table.Head>
           <Table.Row>
@@ -115,7 +122,7 @@ export const TransactionsHistoryDesktop: React.FC<
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {data?.map((tx, index) => (
+          {data?.map((tx, index, array) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <ActionChip type={tx.action} />
@@ -145,9 +152,14 @@ export const TransactionsHistoryDesktop: React.FC<
                   '-'
                 )}
               </Table.Cell>
-              <Table.Cell>{shortenString(tx.txHash)}</Table.Cell>
+              <Table.Cell
+                className="cursor-pointer"
+                onClick={() => handleCopy(tx.txHash)}
+              >
+                {shortenString(tx.txHash)}
+              </Table.Cell>
               <Table.Cell>{getFromNow(Number(tx.timestamp))}</Table.Cell>
-              <Table.Cell>#{index + 1}</Table.Cell>
+              <Table.Cell>#{array.length - index}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -161,7 +173,7 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
   React.HTMLAttributes<HTMLDivElement>
 > = (props) => {
   return (
-    <div {...props} className={cn('flex flex-col', props.className)}>
+    <div {...props} className={cn('flex flex-col ', props.className)}>
       <h2 className="flex items-center gap-6 text-[2.1875rem] font-normal uppercase not-italic leading-[100%]">
         <Logo />
         Transactions History
@@ -172,6 +184,8 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
         setActiveTab={() => {}}
         className="mb-6 mt-12"
       /> */}
+      {/* // TODO: remove */}
+      <div className="mb-6 mt-12" />
       <Table>
         <Table.Head>
           <Table.Row>

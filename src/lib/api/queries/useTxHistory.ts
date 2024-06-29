@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js'
 
 export const GET_TX_HISTORY = gql(`
   query TxHistory($type_in: [ActionType!] = [DEPOSIT]) {
-  maatActions(where: {type_in: $type_in}) {
+  maatActions(orderBy: timestamp_DESC,where: {type_in: $type_in}) {
     type
     txhash
     txId
@@ -59,14 +59,21 @@ export const useTxHistory = () => {
         )
       : '0'
 
-    const amount = strategy
-      ? formatAmountValue(
-          BigNumber(tx.data.amount)
-            .div(10 ** strategy.decimals)
-            ?.toString(),
-          2,
-        ) || '0'
-      : '0'
+    // const amount = strategy
+    //   ? formatAmountValue(
+    //       BigNumber(tx.data.amount)
+    //         .div(10 ** strategy.decimals)
+    //         ?.toString(),
+    //       2,
+    //     ) || '0'
+    //   : 'no strategy'
+    const amount =
+      formatAmountValue(
+        BigNumber(tx.data.amount)
+          .div(10 ** 6)
+          ?.toString(),
+        2,
+      ) || '0'
 
     return {
       action: tx.type,

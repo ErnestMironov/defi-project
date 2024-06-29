@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react'
+import toast from 'react-hot-toast'
 
 type CopiedValue = string | null
 
 type CopyFunction = (text: string) => Promise<boolean>
 
-export const useClipboard = (): { copiedText: CopiedValue; copy: CopyFunction } => {
+export const useClipboard = () => {
   const [copiedText, setCopiedText] = useState<CopiedValue>(null)
 
   const copy: CopyFunction = useCallback(async (text) => {
@@ -25,5 +26,16 @@ export const useClipboard = (): { copiedText: CopiedValue; copy: CopyFunction } 
     }
   }, [])
 
-  return { copiedText, copy }
+  const handleCopy = (text: string) => {
+    copy(text)
+      .then(() => {
+        toast.success('Copied!')
+        console.log('addScaleCorrector')
+      })
+      .catch(() => {
+        toast.error('Failed to copy.')
+      })
+  }
+
+  return { copiedText, copy, handleCopy }
 }
