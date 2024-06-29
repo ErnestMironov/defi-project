@@ -1,4 +1,5 @@
 // Import Squid SDK
+import type { ITokenData } from '@api/tokens-balance/api'
 import { useEthersSigner } from '@hooks/web3/useEthersSigner'
 import { ethers } from 'ethers' // Import ethers library
 import { erc20Abi } from 'viem'
@@ -11,7 +12,6 @@ const integratorId: string = process.env.INTEGRATOR_ID!
 // Define chain and token addresses
 const fromChainId = '56' // BNB chain ID
 const toChainId = '42161' // Arbitrum chain ID
-const _fromToken = '0x55d398326f99059fF775485246999027B3197955' // USDT token address on BNB
 const toToken = '0xaf88d065e77c8cC2239327C5EDb3A432268e5831' // USDC token address on Arbitrum
 
 // Define the amount to be sent (in smallest unit, e.g., wei for Ethereum)
@@ -37,7 +37,7 @@ const approveSpending = async (
   }
 }
 
-export const useCrossChainSwap = () => {
+export const useCrossChainSwap = ({ fromToken }: { fromToken: ITokenData }) => {
   const signer = useEthersSigner()
   // Main function
   // Initialize Squid SDK
@@ -68,9 +68,12 @@ export const useCrossChainSwap = () => {
       const { transactionRequest } = route
 
       // Approve the transactionRequest.target to spend fromAmount of fromToken
-      await approveSpending(transactionRequest?.target, _fromToken, amount, signer)
-
-      if (isPending) return
+      await approveSpending(
+        transactionRequest?.target,
+        fromToken.contract_address,
+        amount,
+        signer,
+      )
 
       // Execute the swap transaction
       const tx = (await squid.executeRoute({

@@ -1,9 +1,8 @@
-import { ethers } from 'ethers'
-import { erc20Abi } from 'viem';
-import { useWriteContract } from 'wagmi';
+import { erc20Abi } from 'viem'
+import { useWriteContract } from 'wagmi'
 
 export const useApproveSpending = () => {
-  const { data: hash, writeContract } = useWriteContract();
+  const { data: hash, writeContract } = useWriteContract()
 
   const approveSpending = async (
     transactionRequestTarget: string,
@@ -12,17 +11,17 @@ export const useApproveSpending = () => {
   ) => {
     try {
       const tx = await writeContract({
-        address: `0x${fromToken}`,
+        address: fromToken as `0x${string}`,
         abi: erc20Abi,
         functionName: 'approve',
-        args: [transactionRequestTarget, fromAmount],
-      });
-      console.log(`Approved ${fromAmount} tokens for ${transactionRequestTarget}`);
+        args: [transactionRequestTarget as `0x${string}`, BigInt(fromAmount)],
+      })
+      console.log(`Approved ${fromAmount} tokens for ${transactionRequestTarget}`)
     } catch (error) {
-      console.error('Approval failed:', error);
-      throw error;
+      console.error('Approval failed:', error)
+      throw error
     }
-  };
+  }
 
-  return { approveSpending, hash };
-};
+  return { approveSpending, hash }
+}
