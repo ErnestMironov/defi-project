@@ -10,7 +10,7 @@ interface IDocument {
 const documentation: IDocument[] = [
   {
     text: 'GitHub Check our Github to explore MAAT’s infrastructure',
-    link: 'https://maat.io/docs/maat-rebalances-you-earn',
+    link: 'https://github.com/MAAT-Finance',
     linkName: 'GitHub',
   },
   {
