@@ -1,12 +1,16 @@
+import { useCrossChainSwap } from '@api/squid-router/useSquidRouter'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
+import { Button } from '@components/ui/button'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import type { ComponentProps } from 'react'
 
 interface DepositProperties extends ComponentProps<'div'> {}
 
 export const Deposit = (_props: DepositProperties) => {
+  const { swapTokens } = useCrossChainSwap()
+
   return (
     <div className="flex w-full justify-center">
       <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:gap-4">
@@ -26,6 +30,7 @@ export const Deposit = (_props: DepositProperties) => {
             />
           </ShadowBoxWithValue>
         </div>
+        <Button onClick={swapTokens}>test swap</Button>
         <TransactionBlock />
       </div>
     </div>

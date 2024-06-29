@@ -42,6 +42,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
         <div className="space-y-2">
           {VAULTS.map(({ token }) => (
             <button
+              key={token}
               type="button"
               onClick={() => onChange(token)}
               className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
