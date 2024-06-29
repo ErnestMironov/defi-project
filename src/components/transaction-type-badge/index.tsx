@@ -29,7 +29,9 @@ function useBadgeData(action: ActionType) {
         })
         break
       }
-      case ActionType.Withdraw: {
+      case ActionType.Withdraw:
+      case ActionType.WithdrawFromStrategy:
+      case ActionType.WithdrawRequestFulfillment: {
         setBadgeData({
           text: 'Withdraw',
           bgColor: '#6A97FF26',

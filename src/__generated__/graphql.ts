@@ -164,7 +164,8 @@ export enum ActionType {
   RebalanceRequest = 'REBALANCE_REQUEST',
   RemoveStrategy = 'REMOVE_STRATEGY',
   Withdraw = 'WITHDRAW',
-  WithdrawFromStrategy = 'WITHDRAW_FROM_STRATEGY'
+  WithdrawFromStrategy = 'WITHDRAW_FROM_STRATEGY',
+  WithdrawRequestFulfillment = 'WITHDRAW_REQUEST_FULFILLMENT'
 }
 
 export type Balance = {

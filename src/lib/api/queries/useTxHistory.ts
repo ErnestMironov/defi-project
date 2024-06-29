@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 import { gql } from '@codegen/gql'
 import type { StrategyStats } from '@codegen/graphql'
 import { ActionType } from '@codegen/graphql'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import type { ITransaction } from '@pages/analytics/modules/tx-history/TransactionsHistory'
 import { formatAmountValue } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
@@ -37,13 +38,19 @@ export const GET_TX_HISTORY = gql(`
 export const useTxHistory = () => {
   const { data, ...rest } = useQuery(GET_TX_HISTORY, {
     variables: {
-      type_in: [ActionType.Withdraw, ActionType.DepositInStrategy, ActionType.Bridge],
+      type_in: [
+        ActionType.WithdrawFromStrategy,
+        ActionType.WithdrawRequestFulfillment,
+        ActionType.DepositInStrategy,
+        ActionType.Bridge,
+      ],
     },
   })
 
   const transactions: ITransaction[] | undefined = data?.maatActions.map((tx) => {
     const sourceChain = tx.chain?.name
-    const destinationChain = tx.chain?.name
+    const destinationChain =
+      CHAIN_NAMES_BY_ID[tx.data.dstChainId as keyof typeof CHAIN_NAMES_BY_ID]
 
     const strategy = data?.strategyStats.find(
       (_strategy: StrategyStats) => _strategy.strategyId === tx.data.strategyId,
