@@ -12,21 +12,22 @@ import { DepositReviewModal } from './DepositReviewModal'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
 
-const MOCK_MAX = 7472.09
-
 export const DepositInput = () => {
   const { isConnected } = useAccount()
 
   const { depositAsset: asset, setCurrentModal, inputValue, setInputValue } = useTxStore()
+  const assetBalance = BigNumber(asset?.balance?.toString() || '0')
+    .div(10 ** (asset?.contract_decimals || 6))
+    .toString()
 
   const [error, setError] = useState('')
   useEffect(() => {
-    if (BigNumber(inputValue).isGreaterThan(BigNumber(MOCK_MAX))) {
+    if (BigNumber(inputValue).isGreaterThan(BigNumber(assetBalance))) {
       setError('Exceeds balance')
       return
     }
     setError('')
-  }, [inputValue])
+  }, [assetBalance, inputValue])
   return (
     <div>
       <div
@@ -68,13 +69,7 @@ export const DepositInput = () => {
               <button
                 type="button"
                 className="ml-[0.62rem] font-bold uppercase text-main-100 max-lg:text-xs"
-                onClick={() =>
-                  setInputValue(
-                    BigNumber(asset.balance?.toString() || '0')
-                      .div(10 ** asset.contract_decimals)
-                      .toString(),
-                  )
-                }
+                onClick={() => setInputValue(assetBalance)}
               >
                 Max
               </button>
