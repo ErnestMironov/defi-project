@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
+import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { formatTokenBalance } from '@utils/formatValue'
@@ -81,7 +82,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const [searchValue, setSearchValue] = useState('')
 
   const { address } = useAccount()
-  const { data: userTokens } = useTokensBalance({ address })
+  const { data: userTokens, isLoading } = useTokensBalance({ address })
 
   const {
     depositAsset: asset,
@@ -162,6 +163,13 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
         </div>
         <ScrollArea className="-mx-4 h-[19.5rem] px-4">
           <div className="space-y-2">
+            {isLoading &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  className="flex h-[4.5rem] w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+                />
+              ))}
             {filteredByChainTokens?.map((token) => (
               <TokensListItem
                 // eslint-disable-next-line no-unsafe-optional-chaining
