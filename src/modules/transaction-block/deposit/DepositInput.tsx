@@ -15,7 +15,14 @@ import { SelectVault } from './SelectVault'
 export const DepositInput = () => {
   const { isConnected } = useAccount()
 
-  const { depositAsset: asset, setCurrentModal, inputValue, setInputValue } = useTxStore()
+  const {
+    depositAsset: asset,
+    setCurrentModal,
+    inputValue,
+    setInputValue,
+    inputValueInUSD,
+    setInputValueInUSD,
+  } = useTxStore()
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
@@ -23,16 +30,18 @@ export const DepositInput = () => {
 
   const [error, setError] = useState('')
   useEffect(() => {
+    setInputValueInUSD(
+      BigNumber(+inputValue)
+        .multipliedBy(BigNumber(asset?.quote ?? 1).div(BigNumber(assetBalance)))
+        .toFixed(3),
+    )
+
     if (BigNumber(inputValue).isGreaterThan(BigNumber(assetBalance))) {
       setError('Exceeds balance')
       return
     }
     setError('')
-  }, [assetBalance, inputValue])
-
-  const inputValueInUSD = BigNumber(+inputValue)
-    .multipliedBy(BigNumber(asset?.quote ?? 1).div(BigNumber(assetBalance)))
-    .toFixed(3)
+  }, [asset?.quote, assetBalance, inputValue, setInputValueInUSD])
 
   return (
     <div>

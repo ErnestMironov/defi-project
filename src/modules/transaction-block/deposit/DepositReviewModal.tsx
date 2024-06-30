@@ -36,9 +36,12 @@ export const DepositReviewModal = () => {
     inputValue: amount,
     currentModal,
     setCurrentModal,
+    inputValueInUSD,
   } = useTxStore()
+  console.log('🚀 ~ DepositReviewModal ~ chain:', chain)
   const chainData = useTokenAsset(chain)
-  const inputValue = parseFloatLocale(amount) as string
+  console.log('🚀 ~ DepositReviewModal ~ chainData:', chainData)
+  const inputValue = parseFloatLocale(amount, 8) as string
   const { approve: _approve, status: approveStatus } = useApproveDepositTransaction({
     transactionRequestTarget,
   })
@@ -141,14 +144,14 @@ export const DepositReviewModal = () => {
                 width="2.14288rem"
               />
             </div>
-            <p className="mt-4 text-gray-100">$ {inputValue}</p>
+            <p className="mt-4 text-gray-100">$ {inputValueInUSD}</p>
           </div>
           <div className="rounded-[1.25rem] border border-stroke-100 p-6">
             <div className="flex items-center justify-between">
-              <AmountInput value={inputValue} after={vault} readOnly />
+              <AmountInput value={inputValueInUSD} after={vault} readOnly />
               <TokenIconComponent symbol={vault} className="size-[2.14288rem]" />
             </div>
-            <p className="mt-4 text-gray-100">$ {inputValue}</p>
+            <p className="mt-4 text-gray-100">$ {inputValueInUSD}</p>
           </div>
           {/* <p className="text-base text-text-80">
             1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>
