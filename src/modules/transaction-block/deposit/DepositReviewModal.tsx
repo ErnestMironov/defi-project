@@ -14,7 +14,7 @@ import { ARB_GATEWAY } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { parseFloatLocale } from '@utils/formatValue'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { parseEther } from 'viem'
 import { useSwitchChain } from 'wagmi'
 
@@ -38,15 +38,12 @@ export const DepositReviewModal = () => {
     setCurrentModal,
     inputValueInUSD,
   } = useTxStore()
-  console.log('🚀 ~ DepositReviewModal ~ chain:', chain)
   const chainData = useTokenAsset(chain)
-  console.log('🚀 ~ DepositReviewModal ~ chainData:', chainData)
   const inputValue = parseFloatLocale(amount, 8) as string
   const { approve: _approve, status: approveStatus } = useApproveDepositTransaction({
     transactionRequestTarget,
   })
   const { isAllowed } = useCheckAllowance()
-  console.log('🚀 ~ DepositReviewModal ~ isAllowed:', isAllowed)
   const { deposit: _deposit, status: depositStatus } = useDepositTransaction()
   const { switchChain } = useSwitchChain()
 
@@ -63,16 +60,26 @@ export const DepositReviewModal = () => {
 
   const { squid } = useSquidSDK()
 
-  const { route, requestId } = useGetSquidSwapRoute({
+  const vaultAddress = useMemo(() => {
+    const depositTokenAsset = squid?.tokens.find(
+      (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
+    )
+    return depositTokenAsset?.address!
+  }, [squid?.tokens, vault])
+
+  const {
+    route,
+    requestId,
+    isPending: isRoutePending,
+  } = useGetSquidSwapRoute({
     fromAmount: parseEther(amount).toString(),
     fromChain: String(chainData?.chainId),
     fromToken: asset?.contract_address!,
     toChain: '42161',
-    toToken:
-      squid?.tokens.find((token) => token.symbol?.toLowerCase() === 'usdc')?.address ||
-      '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+    toToken: vaultAddress,
     enableBoost: true,
   })
+  console.log('🚀 ~ DepositReviewModal ~ isRoutePending:', isRoutePending)
 
   const { swapTokens } = useCrossChainSwap({
     route,
@@ -104,11 +111,6 @@ export const DepositReviewModal = () => {
   }
 
   const deposit = () => {
-    if (!isAllowed) {
-      approve()
-      return
-    }
-
     if (isSwapNeeded) {
       checkChain(swapTokens)
       return
@@ -159,35 +161,39 @@ export const DepositReviewModal = () => {
         </div>
         {/* Approve */}
         <div className="flex flex-col items-start gap-[0.44rem] text-lg">
-          <div className="flex items-center gap-3">
-            <TokenWithNetwork
-              symbol={asset?.contract_ticker_symbol}
-              network={asset?.chain_id}
-              position="bottom-right"
-              width="2rem"
-            />
-            <p className="flex items-center">
-              <span
-                className={cn(
-                  (isAllowed || approveStatus === 'success') && 'text-[#58CDAD]',
-                  approveStatus === 'error' && 'text-red-100',
-                )}
-              >
-                Approve USDC spending
-              </span>
-              {approveStatus === 'pending' && <DotLoader />}
-              {isAllowed ||
-                (approveStatus === 'success' && (
-                  <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
-                ))}
-              {!isAllowed && approveStatus === 'error' && (
-                <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
-                  Rejected
-                </div>
-              )}
-            </p>
-          </div>
-          <ArrowDown className="h-[1.125rem] w-8" />
+          {!asset?.native_token && (
+            <>
+              <div className="flex items-center gap-3">
+                <TokenWithNetwork
+                  symbol={asset?.contract_ticker_symbol}
+                  network={asset?.chain_id}
+                  position="bottom-right"
+                  width="2rem"
+                />
+                <p className="flex items-center">
+                  <span
+                    className={cn(
+                      (isAllowed || approveStatus === 'success') && 'text-[#58CDAD]',
+                      approveStatus === 'error' && 'text-red-100',
+                    )}
+                  >
+                    Approve USDC spending
+                  </span>
+                  {approveStatus === 'pending' && <DotLoader />}
+                  {isAllowed ||
+                    (approveStatus === 'success' && (
+                      <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
+                    ))}
+                  {!isAllowed && approveStatus === 'error' && (
+                    <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
+                      Rejected
+                    </div>
+                  )}
+                </p>
+              </div>
+              <ArrowDown className="h-[1.125rem] w-8" />
+            </>
+          )}
           <div className="flex items-center gap-3">
             <ArrangeSquare
               className={cn(
@@ -202,8 +208,12 @@ export const DepositReviewModal = () => {
             </p>
           </div>
         </div>
-        {isAllowed ? (
-          <Button size="lg" onClick={deposit} disabled={depositStatus === 'pending'}>
+        {isAllowed || asset?.native_token ? (
+          <Button
+            size="lg"
+            onClick={deposit}
+            disabled={depositStatus === 'pending' || isRoutePending}
+          >
             Deposit
           </Button>
         ) : (

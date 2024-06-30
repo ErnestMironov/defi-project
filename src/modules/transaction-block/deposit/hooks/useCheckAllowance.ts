@@ -25,8 +25,6 @@ export const useCheckAllowance = () => {
   }, [inputValue, refetch])
 
   const isAllowed = (() => {
-    if (depositAsset?.native_token) return true
-
     if (!data) return
 
     if (!depositAsset?.contract_decimals) return

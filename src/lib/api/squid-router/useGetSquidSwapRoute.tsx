@@ -20,6 +20,8 @@ export function useGetSquidSwapRoute(parameters_: {
   const { address } = useAccount()
   const { squid, loading } = useSquidSDK()
 
+  const [isPending, setIsPending] = useState(false)
+
   useEffect(() => {
     if (!fromAmount) return
     if (!fromToken || !toToken) return
@@ -38,12 +40,12 @@ export function useGetSquidSwapRoute(parameters_: {
     async function getSwapRoute() {
       if (loading || !squid) return
 
+      setIsPending(true)
       const { route: _route, requestId: _requestId } = await squid.getRoute(parameters)
-      console.log('🚀 ~ getSwapRoute ~ requestId:', _requestId)
-      console.log('Calculated route:', _route.estimate.toAmount)
-
       setRoute(_route)
       setRequestId(_requestId)
+
+      setIsPending(false)
     }
 
     getSwapRoute()
@@ -59,5 +61,5 @@ export function useGetSquidSwapRoute(parameters_: {
     toToken,
   ])
 
-  return { route, requestId }
+  return { route, requestId, isPending }
 }
