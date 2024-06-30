@@ -15,19 +15,34 @@ import { SelectVault } from './SelectVault'
 export const DepositInput = () => {
   const { isConnected } = useAccount()
 
-  const { depositAsset: asset, setCurrentModal, inputValue, setInputValue } = useTxStore()
+  const {
+    depositAsset: asset,
+    setCurrentModal,
+    inputValue,
+    setInputValue,
+    inputValueInUSD,
+    setInputValueInUSD,
+  } = useTxStore()
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
+  console.log('🚀 ~ DepositInput ~ assetBalance:', assetBalance)
 
   const [error, setError] = useState('')
   useEffect(() => {
+    setInputValueInUSD(
+      BigNumber(+inputValue)
+        .multipliedBy(BigNumber(asset?.quote ?? 1).div(BigNumber(assetBalance)))
+        .toFixed(3),
+    )
+
     if (BigNumber(inputValue).isGreaterThan(BigNumber(assetBalance))) {
       setError('Exceeds balance')
       return
     }
     setError('')
-  }, [assetBalance, inputValue])
+  }, [asset?.quote, assetBalance, inputValue, setInputValueInUSD])
+
   return (
     <div>
       <div
@@ -58,7 +73,7 @@ export const DepositInput = () => {
               <p className="text-lg text-red-100">{error}</p>
             ) : (
               <p className="text-lg text-gray-100 max-lg:text-xs">
-                $ {inputValue || '0.00'}
+                $ {inputValueInUSD || '0.00'}
               </p>
             )}
             <div className="flex items-center">
@@ -81,7 +96,7 @@ export const DepositInput = () => {
         <div className="flex w-full items-center justify-between">
           {isConnected && asset ? (
             <AmountInput
-              value={inputValue}
+              value={inputValueInUSD}
               decimals={18}
               onChange={(value) => setInputValue(value)}
             />
@@ -95,7 +110,7 @@ export const DepositInput = () => {
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
             <p className="text-lg text-gray-100 max-lg:text-xs">
-              $ {inputValue || '0.00'}
+              $ {inputValueInUSD || '0.00'}
             </p>
             {/* <div className="flex items-center">
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">APY 34%</p>
