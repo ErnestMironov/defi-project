@@ -119,6 +119,16 @@ export const DepositReviewModal = () => {
     checkChain(_deposit)
   }
 
+  // const valueInUSDAfterSwap = useMemo(() => {
+  //   return (
+  //     route?.estimate?.toAmountUSD -
+  //     route?.estimate?.gasCosts.reduce(
+  //       (totalGas, gasItem) => totalGas + gasItem?.amountUsd,
+  //       0,
+  //     )
+  //   )
+  // }, [route?.estimate?.toAmountUSD, route?.estimate?.gasCosts])
+
   console.log('🚀 ~ DepositReviewModal ~ isAllowed:', isAllowed)
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>
@@ -146,14 +156,14 @@ export const DepositReviewModal = () => {
                 width="2.14288rem"
               />
             </div>
-            <p className="mt-4 text-gray-100">$ {inputValueInUSD}</p>
+            <p className="mt-4 text-gray-100">$ {route?.estimate?.fromAmountUSD}</p>
           </div>
           <div className="rounded-[1.25rem] border border-stroke-100 p-6">
             <div className="flex items-center justify-between">
               <AmountInput value={inputValueInUSD} after={vault} readOnly />
               <TokenIconComponent symbol={vault} className="size-[2.14288rem]" />
             </div>
-            <p className="mt-4 text-gray-100">$ {inputValueInUSD}</p>
+            <p className="mt-4 text-gray-100">$ {route?.estimate?.toAmountUSD}</p>
           </div>
           {/* <p className="text-base text-text-80">
             1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>
