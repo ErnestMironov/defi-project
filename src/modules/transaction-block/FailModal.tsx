@@ -2,12 +2,15 @@ import Error from '@assets/icons/error-circle.svg'
 import Rainbow from '@assets/images/rainbow-circle.png'
 import { Button } from '@components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
+import { useNavigate } from 'react-router-dom'
 
 import { useTxStore } from './store/useDepositStore'
 
 export const FailModal = () => {
   const { currentModal, setCurrentModal } = useTxStore()
   const close = () => setCurrentModal(null)
+
+  const navigate = useNavigate()
 
   return (
     <Dialog open={currentModal === 'error'} onOpenChange={close}>
@@ -33,7 +36,12 @@ export const FailModal = () => {
             className="dark:opacity-1 absolute bottom-[-15.1rem] right-[-15.8rem] size-[27.9375rem] animate-[spin_20s_linear_infinite] opacity-50"
           />
         </div>
-        <Button size="lg" variant="outline" className="mt-10">
+        <Button
+          onClick={() => navigate('/analytics')}
+          size="lg"
+          variant="outline"
+          className="mt-10"
+        >
           Go check analytics
         </Button>
         <Button size="lg" onClick={close} className="mt-3">
