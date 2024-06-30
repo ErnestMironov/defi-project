@@ -22,6 +22,7 @@ export const useApproveDepositTransaction = ({
     )
       return
     const tokenAddress = depositAsset.contract_address as Address
+    console.log('🚀 ~ approve ~ tokenAddress:', tokenAddress)
     return writeContract({
       address: tokenAddress,
       abi: erc20Abi,

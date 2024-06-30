@@ -16,6 +16,7 @@ import { cn } from '@utils/cn'
 import { parseFloatLocale } from '@utils/formatValue'
 import { useEffect, useState } from 'react'
 import { parseEther } from 'viem'
+import { useSwitchChain } from 'wagmi'
 
 import { useTxStore } from '../store/useDepositStore'
 import { useApproveDepositTransaction } from './hooks/useApproveDepositTransaction'
@@ -41,11 +42,24 @@ export const DepositReviewModal = () => {
   const inputValue = parseFloatLocale(amount) as string
   console.log('🚀 ~ DepositReviewModal ~ amount:', amount)
   console.log('🚀 ~ DepositReviewModal ~ inputValue:', inputValue)
-  const { approve, status: approveStatus } = useApproveDepositTransaction({
+  const { approve: _approve, status: approveStatus } = useApproveDepositTransaction({
     transactionRequestTarget,
   })
   const { isAllowed } = useCheckAllowance()
   const { deposit: _deposit, status: depositStatus } = useDepositTransaction()
+  const { chains, switchChain } = useSwitchChain()
+  console.log('🚀 ~ DepositReviewModal ~ chains:', chains)
+
+  const checkChain = (function_: () => void) => {
+    switchChain(
+      {
+        chainId: chainData?.chainId ?? 42_161,
+      },
+      {
+        onSuccess: function_,
+      },
+    )
+  }
 
   const { squid } = useSquidSDK()
 
@@ -54,8 +68,9 @@ export const DepositReviewModal = () => {
     fromChain: String(chainData?.chainId),
     fromToken: asset?.contract_address!,
     toChain: '42161',
-    toToken: squid?.tokens.find((token) => token.symbol?.toLowerCase() === 'usdc')
-      ?.address,
+    toToken:
+      squid?.tokens.find((token) => token.symbol?.toLowerCase() === 'usdc')?.address ||
+      '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
     enableBoost: true,
   })
 
@@ -84,6 +99,10 @@ export const DepositReviewModal = () => {
     )
   }, [asset?.contract_ticker_symbol, chainData?.chainId, route?.transactionRequest])
 
+  const approve = async () => {
+    checkChain(_approve)
+  }
+
   const deposit = () => {
     if (!isAllowed) {
       approve()
@@ -91,11 +110,11 @@ export const DepositReviewModal = () => {
     }
 
     if (isSwapNeeded) {
-      swapTokens()
+      checkChain(swapTokens)
       return
     }
 
-    deposit()
+    checkChain(_deposit)
   }
 
   console.log('🚀 ~ DepositReviewModal ~ isAllowed:', isAllowed)
