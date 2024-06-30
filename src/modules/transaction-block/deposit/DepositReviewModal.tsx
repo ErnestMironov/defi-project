@@ -222,7 +222,7 @@ export const DepositReviewModal = () => {
           <Button
             size="lg"
             onClick={deposit}
-            disabled={depositStatus === 'pending' || isRoutePending}
+            disabled={depositStatus === 'pending' || (isRoutePending && isSwapNeeded)}
           >
             Deposit
           </Button>
