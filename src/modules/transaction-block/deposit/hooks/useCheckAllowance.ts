@@ -23,8 +23,13 @@ export const useCheckAllowance = () => {
   useEffect(() => {
     refetch()
   }, [inputValue, refetch])
+
   const isAllowed = (() => {
-    if (!depositAsset?.contract_decimals || !data) return
+    if (depositAsset?.native_token) return true
+
+    if (!data) return
+
+    if (!depositAsset?.contract_decimals) return
 
     return BigNumber(data.toString())
       .div(10 ** depositAsset.contract_decimals)

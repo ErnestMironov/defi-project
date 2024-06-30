@@ -38,17 +38,14 @@ export const DepositReviewModal = () => {
     setCurrentModal,
   } = useTxStore()
   const chainData = useTokenAsset(chain)
-  console.log('🚀 ~ DepositReviewModal ~ chainData:', chainData)
   const inputValue = parseFloatLocale(amount) as string
-  console.log('🚀 ~ DepositReviewModal ~ amount:', amount)
-  console.log('🚀 ~ DepositReviewModal ~ inputValue:', inputValue)
   const { approve: _approve, status: approveStatus } = useApproveDepositTransaction({
     transactionRequestTarget,
   })
   const { isAllowed } = useCheckAllowance()
+  console.log('🚀 ~ DepositReviewModal ~ isAllowed:', isAllowed)
   const { deposit: _deposit, status: depositStatus } = useDepositTransaction()
-  const { chains, switchChain } = useSwitchChain()
-  console.log('🚀 ~ DepositReviewModal ~ chains:', chains)
+  const { switchChain } = useSwitchChain()
 
   const checkChain = (function_: () => void) => {
     switchChain(
