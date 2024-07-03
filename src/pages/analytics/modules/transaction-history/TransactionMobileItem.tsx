@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@components/ui/accordion'
+import { Skeleton } from '@components/ui/skeleton'
 import { AccordionHeader } from '@radix-ui/react-accordion'
 import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
@@ -75,3 +76,21 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
 }
 
 const Divider = () => <div className="my-[1.31rem] h-px bg-gray-50" />
+
+export const SkeletonTransactionMobileItem = (
+  props: Omit<TransactionMobileItemProperties, 'tx' | 'txIndex'>,
+) => {
+  const { isLast } = props
+  return (
+    <AccordionItem value="">
+      <AccordionTrigger>
+        <Skeleton className="h-9 w-[7.5rem]" />
+      </AccordionTrigger>
+      <AccordionHeader className="mt-4 flex items-center gap-1 text-base text-gray-100">
+        #<Skeleton className="h-6 w-10 rounded-md" /> |{' '}
+        <Skeleton className="h-6 w-20 rounded-md" />
+      </AccordionHeader>
+      {!isLast && <Divider />}
+    </AccordionItem>
+  )
+}

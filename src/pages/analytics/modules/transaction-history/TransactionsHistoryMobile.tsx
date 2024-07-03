@@ -1,4 +1,5 @@
 import { useTxHistory } from '@api/queries/useTxHistory'
+import { DotLoader } from '@components/loader/DotLoader'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Button } from '@components/ui/button'
@@ -7,7 +8,10 @@ import { Accordion } from '@radix-ui/react-accordion'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 
-import { TransactionMobileItem } from './TransactionMobileItem'
+import {
+  SkeletonTransactionMobileItem,
+  TransactionMobileItem,
+} from './TransactionMobileItem'
 
 export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
@@ -15,24 +19,70 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
   const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const { data, pageInfo, fetchMore, totalCount } = useTxHistory({
+  const { data, loading, error, pageInfo, fetchMore, totalCount } = useTxHistory({
     perPage: 10,
     page: currentPage,
     symbol: activeStableType,
   })
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
-  const onViewMoreClick = () => {
-    fetchMore({
+  const onViewMoreClick = async () => {
+    setIsLoadingMore(true)
+    await fetchMore({
       variables: {
         after: pageInfo?.endCursor,
       },
     })
+    setIsLoadingMore(false)
   }
 
   const onStableChange = (value: StableType) => {
     setCurrentPage(1)
     setStableType(value)
   }
+
+  const renderBody = () => {
+    switch (true) {
+      case loading:
+      case !!error: {
+        return (
+          <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <SkeletonTransactionMobileItem key={i} isLast={i === 9} />
+            ))}
+          </Accordion>
+        )
+      }
+      default: {
+        return (
+          <>
+            <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
+              {totalCount &&
+                data?.map((tx, index, array) => (
+                  <TransactionMobileItem
+                    key={index}
+                    tx={tx}
+                    txIndex={totalCount - index}
+                    isLast={index === array.length - 1}
+                  />
+                ))}
+            </Accordion>
+            {isLoadingMore && (
+              <div className="my-4 flex items-center justify-center">
+                <DotLoader className="text-xl" />
+              </div>
+            )}
+            {pageInfo?.hasNextPage && (
+              <Button size="lg" className="mt-8" onClick={onViewMoreClick}>
+                View more
+              </Button>
+            )}
+          </>
+        )
+      }
+    }
+  }
+
   return (
     <div {...props} className={cn('flex flex-col px-4', props.className)}>
       <div className="flex items-start gap-4">
@@ -47,22 +97,7 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
         onTabChange={onStableChange}
         className="mb-6 mt-8"
       />
-      <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
-        {totalCount &&
-          data?.map((tx, index, array) => (
-            <TransactionMobileItem
-              key={index}
-              tx={tx}
-              txIndex={totalCount - index}
-              isLast={index === array.length - 1}
-            />
-          ))}
-      </Accordion>
-      {pageInfo?.hasNextPage && (
-        <Button size="lg" className="mt-8" onClick={onViewMoreClick}>
-          View more
-        </Button>
-      )}
+      {renderBody()}
     </div>
   )
 }
