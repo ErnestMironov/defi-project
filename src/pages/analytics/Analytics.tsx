@@ -7,7 +7,7 @@ import { TvlChartModule } from '@modules/charts/TvlChartModule'
 import { DocumentationLinks } from './modules/DocsLinks'
 import { Overviews } from './modules/Overviews'
 import { Strategies } from './modules/strategies/Strategies'
-import { TransactionsHistory } from './modules/tx-history/TransactionsHistory'
+import { TransactionsHistory } from './modules/transaction-history/TransactionsHistory'
 
 export const Analytics = () => {
   const { isBelowDesktop } = useDeviceWidth()

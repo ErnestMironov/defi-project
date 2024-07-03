@@ -5,9 +5,9 @@ import type { StrategyStats } from '@codegen/graphql'
 import { ActionType } from '@codegen/graphql'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import type { ITransaction } from '@pages/analytics/modules/tx-history/TransactionsHistory'
 import { formatAmountValue } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
+import type { ITransaction } from 'src/lib/types/transaction'
 
 export const GET_TX_HISTORY = gql(`
   query TxHistory($type_in: [ActionType!], $first: Int, $after: String, $symbol: String) {
@@ -91,14 +91,6 @@ export const useTxHistory = ({
           )
         : '0'
 
-      // const amount = strategy
-      //   ? formatAmountValue(
-      //       BigNumber(tx.data.amount)
-      //         .div(10 ** strategy.decimals)
-      //         ?.toString(),
-      //       2,
-      //     ) || '0'
-      //   : 'no strategy'
       const amount =
         formatAmountValue(
           BigNumber(edge.node.data.amount)
@@ -127,6 +119,7 @@ export const useTxHistory = ({
   return {
     data: transactions,
     totalCount: data?.maatActionsConnection.totalCount,
+    pageInfo: data?.maatActionsConnection.pageInfo,
     ...rest,
   }
 }

@@ -12,23 +12,23 @@ import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
 import type { ComponentProps } from 'react'
-
-import type { ITransaction } from './TransactionsHistory'
+import type { ITransaction } from 'src/lib/types/transaction'
 
 interface TransactionMobileItemProperties extends ComponentProps<'div'> {
   tx: ITransaction
   isLast?: boolean
+  txIndex: number
 }
 
 export const TransactionMobileItem = (props: TransactionMobileItemProperties) => {
-  const { tx, isLast } = props
+  const { tx, isLast, txIndex } = props
   return (
     <AccordionItem value={tx.txHash}>
       <AccordionTrigger>
         <ActionChip type={tx.action} />
       </AccordionTrigger>
       <AccordionHeader className="mt-4 text-base text-gray-100">
-        #12388 | {getFromNow(tx.timestamp)}
+        #{txIndex} | {getFromNow(tx.timestamp)}
       </AccordionHeader>
       <AccordionContent className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
         {tx.action === ActionType.Bridge ? (
