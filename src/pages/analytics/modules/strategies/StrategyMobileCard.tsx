@@ -14,7 +14,6 @@ import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import type { ComponentProps } from 'react'
-import toast from 'react-hot-toast'
 
 interface StrategyMobileCardProperties extends ComponentProps<'div'> {
   strategy: StrategyStats
@@ -23,17 +22,8 @@ interface StrategyMobileCardProperties extends ComponentProps<'div'> {
 
 export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
   const { strategy, isLast, ...rest } = props
-  const { copy } = useClipboard()
-  const handleCopy = (text: string) => {
-    copy(text)
-      .then(() => {
-        toast.success('Copied!')
-        console.log('addScaleCorrector')
-      })
-      .catch(() => {
-        toast.error('Failed to copy.')
-      })
-  }
+  const { copyWithToast } = useClipboard()
+
   return (
     <div {...rest}>
       <div className="flex items-center gap-3">
@@ -115,7 +105,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
               onClick={() => {
                 console.log('asd')
 
-                handleCopy('50xBb287E6017d3DE50xBb287E6017d3DE')
+                copyWithToast('50xBb287E6017d3DE50xBb287E6017d3DE')
               }}
             />
           </div>

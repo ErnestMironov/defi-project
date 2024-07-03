@@ -1,18 +1,24 @@
 import { useTxHistory } from '@api/queries/useTxHistory'
 import Arrow from '@assets/icons/arrow-filled.svg'
 import { ActionType } from '@codegen/graphql'
+import { Pagination } from '@components/pagination/Pagination'
+import type { StableType } from '@components/stable-switcher/StableSwitcher'
+import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Table } from '@components/table'
 import { TokenIconComponent } from '@components/token-icon'
 import { ActionChip } from '@components/transaction-type-badge'
 import { Accordion } from '@components/ui/accordion'
 import { Logo } from '@components/ui/logo'
 import { Skeleton } from '@components/ui/skeleton'
+import { PER_PAGE_ARRAY } from '@constants/per-page-array'
 import { useClipboard } from '@hooks/useClipboard'
 import useDeviceWidth from '@hooks/useDeviceWidth'
+import { useLocalStorage } from '@hooks/useLocalStorage'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
+import { useState } from 'react'
 
 import { TransactionMobileItem } from './TransactionMobileItem'
 
@@ -44,7 +50,9 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
   props,
 ) => {
   // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
-  const { data } = useTxHistory()
+  const [perPage] = useLocalStorage('perPage', 10)
+  const [currentPage, setCurrentPage] = useState(1)
+  const { data } = useTxHistory({ perPage, page: currentPage })
   return (
     <div {...props} className={cn('flex flex-col px-4', props.className)}>
       <div className="flex items-start gap-4">
@@ -80,12 +88,27 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
 export const TransactionsHistoryDesktop: React.FC<
   React.HTMLAttributes<HTMLDivElement>
 > = (props) => {
-  const { handleCopy } = useClipboard()
+  const { copyWithToast } = useClipboard()
+  const [currentPage, setCurrentPage] = useState(1)
+  const [perPage, setPerPage] = useState<(typeof PER_PAGE_ARRAY)[number]>(
+    PER_PAGE_ARRAY[0],
+  )
+  const onPageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+  const onPerPageChange = (_perPage: (typeof PER_PAGE_ARRAY)[number]) => {
+    setCurrentPage(1)
+    setPerPage(_perPage)
+  }
 
-  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
-  const { data, loading, error } = useTxHistory()
+  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const { data, loading, error, totalCount } = useTxHistory({
+    perPage,
+    page: currentPage,
+    symbol: activeStableType,
+  })
   if (loading) {
-    return <TransactionsHistoryDesktopSkeleton {...props} />
+    return <TransactionsHistoryDesktopSkeleton count={perPage} {...props} />
   }
   if (error) return <TransactionsHistoryDesktopSkeleton {...props} />
 
@@ -95,14 +118,12 @@ export const TransactionsHistoryDesktop: React.FC<
         <Logo />
         Transactions History
       </h2>
-      {/* <StableSwitcher
+      <StableSwitcher
         layoutId="stable-switcher-transactions-history"
         activeTab={activeStableType}
         setActiveTab={setStableType}
         className="mb-6 mt-12"
-      /> */}
-      {/* // TODO: remove */}
-      <div className="mb-6 mt-12" />
+      />
       <Table>
         <Table.Head>
           <Table.Row>
@@ -122,7 +143,7 @@ export const TransactionsHistoryDesktop: React.FC<
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {data?.map((tx, index, array) => (
+          {data?.map((tx, index) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <ActionChip type={tx.action} />
@@ -154,23 +175,36 @@ export const TransactionsHistoryDesktop: React.FC<
               </Table.Cell>
               <Table.Cell
                 className="cursor-pointer"
-                onClick={() => handleCopy(tx.txHash)}
+                onClick={() => copyWithToast(tx.txHash)}
               >
                 {shortenString(tx.txHash)}
               </Table.Cell>
               <Table.Cell>{getFromNow(Number(tx.timestamp))}</Table.Cell>
-              <Table.Cell>#{array.length - index}</Table.Cell>
+              {totalCount && (
+                <Table.Cell>
+                  #{totalCount - (currentPage - 1) * perPage - index}
+                </Table.Cell>
+              )}
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
-      {/* <Pagination className="mt-6" /> */}
+      {totalCount && (
+        <Pagination
+          className="mt-6"
+          currentPage={currentPage}
+          totalCount={totalCount}
+          onPageChange={onPageChange}
+          perPage={perPage}
+          onPerPageChange={onPerPageChange}
+        />
+      )}
     </div>
   )
 }
 
 const TransactionsHistoryDesktopSkeleton: React.FC<
-  React.HTMLAttributes<HTMLDivElement>
+  React.HTMLAttributes<HTMLDivElement> & { count?: number }
 > = (props) => {
   return (
     <div {...props} className={cn('flex flex-col ', props.className)}>
@@ -205,7 +239,7 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
           </Table.Row>
         </Table.Head>
         <Table.Body>
-          {Array.from({ length: 4 })?.map((_, index) => (
+          {Array.from({ length: props.count || 4 })?.map((_, index) => (
             <Table.Row key={index}>
               <Table.Cell>
                 <Skeleton className="h-12 w-40 rounded-xl" />

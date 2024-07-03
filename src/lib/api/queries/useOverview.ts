@@ -13,6 +13,7 @@ export const GET_OVERVIEW = gql(`
     staked
     token {
       decimals
+      symbol
     }
   }
   strategies {
@@ -36,13 +37,19 @@ export const useOverview = () => {
     // skip: !address,
   })
 
-  const tvl = data?.maatTvls
-    .reduce(
-      (accumulator, item) =>
-        accumulator.plus(BigNumber(item.staked).div(10 ** item.token.decimals)),
-      BigNumber(0),
-    )
-    .toString()
+  const tvl = (() => {
+    const usdtTvl = data?.maatTvls.find((item) => item.token.symbol === 'USDT')
+    const usdcTvl = data?.maatTvls.find((item) => item.token.symbol === 'USDC')
+    return [usdtTvl, usdcTvl]
+      .reduce(
+        (accumulator, item) =>
+          accumulator.plus(
+            BigNumber(item?.staked).div(10 ** (item?.token.decimals || 6)),
+          ),
+        BigNumber(0),
+      )
+      .toString()
+  })()
   const strategies = data?.strategies.length || '0'
   const deposited = data?.maatUserStats.balances
     .reduce((accumulator, item) => accumulator.plus(item.balance), BigNumber(0))

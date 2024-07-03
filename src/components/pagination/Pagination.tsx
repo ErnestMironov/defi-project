@@ -1,12 +1,9 @@
-
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
 import { useDisclosure } from '@hooks/useDisclosure'
-import { useLocalStorage } from '@hooks/useLocalStorage'
 import { usePagination } from '@hooks/usePagination'
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
 
 import ChevronLeft from './icons/chevron-left.svg'
 import ChevronRight from './icons/chevron-right.svg'
@@ -28,17 +25,21 @@ const PaginationButton: React.FC<React.HTMLAttributes<HTMLButtonElement>> = ({
 )
 
 interface PaginationProperties extends React.HTMLAttributes<HTMLDivElement> {
-  pgCount?: number
-  currentPage?: number
+  totalCount: number
+  currentPage: number
+  onPageChange: (page: number) => void
+  onPerPageChange: (page: (typeof PER_PAGE_ARRAY)[number]) => void
+  perPage: (typeof PER_PAGE_ARRAY)[number]
 }
 
-export const Pagination = ({ className }: PaginationProperties) => {
-  const [perPage, setPerPage] = useLocalStorage('perPage', 10)
-
-  // TODO: remove this lines
-  const [currentPage, setCurrentPage] = useState(10)
-  const totalCount = 1000
-
+export const Pagination = ({
+  className,
+  currentPage,
+  totalCount,
+  onPageChange,
+  perPage,
+  onPerPageChange,
+}: PaginationProperties) => {
   const paginationRange = usePagination({
     currentPage,
     totalCount,
@@ -46,9 +47,6 @@ export const Pagination = ({ className }: PaginationProperties) => {
     pageSize: perPage,
   })
 
-  const onPageChange = (page: number) => {
-    setCurrentPage(page)
-  }
   const onNextPage = () => {
     onPageChange(currentPage + 1)
   }
@@ -59,7 +57,7 @@ export const Pagination = ({ className }: PaginationProperties) => {
 
   const [opened, { toggle: togglePerPage }] = useDisclosure()
 
-  if (!paginationRange || currentPage === 0 || paginationRange.length < 2) {
+  if (!paginationRange || currentPage === 0) {
     return null
   }
   return (
@@ -101,7 +99,7 @@ export const Pagination = ({ className }: PaginationProperties) => {
           aria-label="Next"
           onClick={onNextPage}
           className={cn(
-            currentPage === totalCount / perPage &&
+            currentPage === paginationRange.at(-1) &&
               'pointer-events-none [&_path]:fill-gray-50',
           )}
         >
@@ -129,7 +127,7 @@ export const Pagination = ({ className }: PaginationProperties) => {
                   i === array.length - 1 && 'after:bg-transparent',
                 )}
                 onClick={() => {
-                  setPerPage(_perPage)
+                  onPerPageChange(_perPage)
                   togglePerPage()
                 }}
               >

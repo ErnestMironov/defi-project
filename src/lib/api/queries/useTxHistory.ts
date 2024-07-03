@@ -3,23 +3,36 @@ import { useQuery } from '@apollo/client'
 import { gql } from '@codegen/gql'
 import type { StrategyStats } from '@codegen/graphql'
 import { ActionType } from '@codegen/graphql'
+import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import type { ITransaction } from '@pages/analytics/modules/tx-history/TransactionsHistory'
 import { formatAmountValue } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 
 export const GET_TX_HISTORY = gql(`
-  query TxHistory($type_in: [ActionType!] = [DEPOSIT]) {
-  maatActions(orderBy: timestamp_DESC,where: {type_in: $type_in}) {
-    type
-    txhash
-    txId
-    timestamp
-    id
-    data
-    chain {
-      name
-      id
+  query TxHistory($type_in: [ActionType!], $first: Int, $after: String, $symbol: String) {
+    maatActionsConnection(orderBy: timestamp_DESC, where: {type_in: $type_in, token: {symbol_eq: $symbol}},first: $first, after: $after) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        type
+        txhash
+        txId
+        timestamp
+        id
+        data
+        chain {
+          name
+          id
+        }
+      }
     }
   }
   strategyStats {
@@ -35,7 +48,15 @@ export const GET_TX_HISTORY = gql(`
   }
 }`)
 
-export const useTxHistory = () => {
+export const useTxHistory = ({
+  page = 1,
+  perPage = 10,
+  symbol = 'USDT',
+}: {
+  page?: number
+  perPage?: number
+  symbol?: StableType
+} = {}) => {
   const { data, ...rest } = useQuery(GET_TX_HISTORY, {
     variables: {
       type_in: [
@@ -44,58 +65,68 @@ export const useTxHistory = () => {
         ActionType.DepositInStrategy,
         ActionType.Bridge,
       ],
+      first: perPage,
+      after: page - 1 === 0 ? undefined : String((page - 1) * perPage),
+      symbol,
     },
   })
 
-  const transactions: ITransaction[] | undefined = data?.maatActions.map((tx) => {
-    const sourceChain = tx.chain?.name
-    const destinationChain =
-      CHAIN_NAMES_BY_ID[tx.data.dstChainId as keyof typeof CHAIN_NAMES_BY_ID]
+  const transactions: ITransaction[] | undefined = data?.maatActionsConnection.edges.map(
+    (edge: any) => {
+      const sourceChain = edge.node.chain?.name
+      const destinationChain =
+        CHAIN_NAMES_BY_ID[edge.node.data.dstChainId as keyof typeof CHAIN_NAMES_BY_ID]
 
-    const strategy = data?.strategyStats.find(
-      (_strategy: StrategyStats) => _strategy.strategyId === tx.data.strategyId,
-    )
+      const strategy = data?.strategyStats.find(
+        (_strategy: StrategyStats) => _strategy.strategyId === edge.node.data.strategyId,
+      )
 
-    const strategyApy = formatAmountValue(strategy?.apy, 2) || '0'
-    const tvl = strategy
-      ? formatAmountValue(
-          BigNumber(strategy.deposited)
-            .div(10 ** strategy.decimals)
+      const strategyApy = formatAmountValue(strategy?.apy, 2) || '0'
+      const tvl = strategy
+        ? formatAmountValue(
+            BigNumber(strategy.deposited)
+              .div(10 ** strategy.decimals)
+              ?.toString(),
+            2,
+          )
+        : '0'
+
+      // const amount = strategy
+      //   ? formatAmountValue(
+      //       BigNumber(tx.data.amount)
+      //         .div(10 ** strategy.decimals)
+      //         ?.toString(),
+      //       2,
+      //     ) || '0'
+      //   : 'no strategy'
+      const amount =
+        formatAmountValue(
+          BigNumber(edge.node.data.amount)
+            .div(10 ** 6)
             ?.toString(),
           2,
-        )
-      : '0'
+        ) || '0'
 
-    // const amount = strategy
-    //   ? formatAmountValue(
-    //       BigNumber(tx.data.amount)
-    //         .div(10 ** strategy.decimals)
-    //         ?.toString(),
-    //       2,
-    //     ) || '0'
-    //   : 'no strategy'
-    const amount =
-      formatAmountValue(
-        BigNumber(tx.data.amount)
-          .div(10 ** 6)
-          ?.toString(),
-        2,
-      ) || '0'
+      return {
+        action: edge.node.type,
+        amount,
+        from: sourceChain,
+        to: destinationChain,
+        timestamp: edge.node.timestamp,
+        nonce: edge.node.id,
+        txHash: edge.node.txhash,
+        strategy: edge.node.data.strategyId,
+        apy: strategyApy,
+        tvl,
+        protocol: strategy?.protocol,
+        cursor: edge.cursor,
+      }
+    },
+  )
 
-    return {
-      action: tx.type,
-      amount,
-      from: sourceChain,
-      to: destinationChain,
-      timestamp: tx.timestamp,
-      nonce: tx.id,
-      txHash: tx.txhash,
-      strategy: tx.data.strategyId,
-      apy: strategyApy,
-      tvl,
-      protocol: strategy?.protocol,
-    }
-  })
-
-  return { data: transactions, ...rest }
+  return {
+    data: transactions,
+    totalCount: data?.maatActionsConnection.totalCount,
+    ...rest,
+  }
 }
