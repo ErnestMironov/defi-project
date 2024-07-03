@@ -17,7 +17,7 @@ import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ITransaction } from 'src/lib/types/transaction'
 
 export const TransactionsHistoryDesktop: React.FC<
@@ -36,6 +36,13 @@ export const TransactionsHistoryDesktop: React.FC<
     page: currentPage,
     symbol: activeStableType,
   })
+  const [totalCountMemo, setTotalCountMemo] = useState<number | undefined>()
+  useEffect(() => {
+    if (totalCount === undefined) {
+      return
+    }
+    setTotalCountMemo(totalCount)
+  }, [totalCount])
 
   const onPageChange = (page: number) => {
     setCurrentPage(page)
@@ -105,61 +112,49 @@ export const TransactionsHistoryDesktop: React.FC<
       }
       default: {
         return (
-          <>
-            <Table>
-              <Table.Head>
-                <Table.Row>
-                  <Table.HeadCell>Action</Table.HeadCell>
-                  <Table.HeadCell>Amount</Table.HeadCell>
-                  <Table.HeadCell>Strategy / Weekly APY / TVL</Table.HeadCell>
-                  <Table.HeadCell>
-                    <div className="flex items-center gap-2">
-                      From
-                      <Arrow />
-                      To
-                    </div>
-                  </Table.HeadCell>
-                  <Table.HeadCell>Tx Hash</Table.HeadCell>
-                  <Table.HeadCell>Created</Table.HeadCell>
-                  <Table.HeadCell>Nonce</Table.HeadCell>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {data?.map((tx, index) => (
-                  <Table.Row key={index}>
+          <Table>
+            <Table.Head>
+              <Table.Row>
+                <Table.HeadCell>Action</Table.HeadCell>
+                <Table.HeadCell>Amount</Table.HeadCell>
+                <Table.HeadCell>Strategy / Weekly APY / TVL</Table.HeadCell>
+                <Table.HeadCell>
+                  <div className="flex items-center gap-2">
+                    From
+                    <Arrow />
+                    To
+                  </div>
+                </Table.HeadCell>
+                <Table.HeadCell>Tx Hash</Table.HeadCell>
+                <Table.HeadCell>Created</Table.HeadCell>
+                <Table.HeadCell>Nonce</Table.HeadCell>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {data?.map((tx, index) => (
+                <Table.Row key={index}>
+                  <Table.Cell>
+                    <ActionChip type={tx.action} />
+                  </Table.Cell>
+                  <Table.Cell>{tx.amount}</Table.Cell>
+                  <Table.Cell>{renderStrategy(tx)}</Table.Cell>
+                  <Table.Cell>{renderFromTo(tx)}</Table.Cell>
+                  <Table.Cell
+                    className="cursor-pointer"
+                    onClick={() => copyWithToast(tx.txHash)}
+                  >
+                    {shortenString(tx.txHash)}
+                  </Table.Cell>
+                  <Table.Cell>{getFromNow(Number(tx.timestamp))}</Table.Cell>
+                  {totalCount && (
                     <Table.Cell>
-                      <ActionChip type={tx.action} />
+                      #{totalCount - (currentPage - 1) * perPage - index}
                     </Table.Cell>
-                    <Table.Cell>{tx.amount}</Table.Cell>
-                    <Table.Cell>{renderStrategy(tx)}</Table.Cell>
-                    <Table.Cell>{renderFromTo(tx)}</Table.Cell>
-                    <Table.Cell
-                      className="cursor-pointer"
-                      onClick={() => copyWithToast(tx.txHash)}
-                    >
-                      {shortenString(tx.txHash)}
-                    </Table.Cell>
-                    <Table.Cell>{getFromNow(Number(tx.timestamp))}</Table.Cell>
-                    {totalCount && (
-                      <Table.Cell>
-                        #{totalCount - (currentPage - 1) * perPage - index}
-                      </Table.Cell>
-                    )}
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-            {totalCount && (
-              <Pagination
-                className="mt-6"
-                currentPage={currentPage}
-                totalCount={totalCount}
-                onPageChange={onPageChange}
-                perPage={perPage}
-                onPerPageChange={onPerPageChange}
-              />
-            )}
-          </>
+                  )}
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
         )
       }
     }
@@ -177,6 +172,16 @@ export const TransactionsHistoryDesktop: React.FC<
         className="mb-6 mt-12"
       />
       {renderBody()}
+      {totalCountMemo && (
+        <Pagination
+          className="mt-6"
+          currentPage={currentPage}
+          totalCount={totalCountMemo}
+          onPageChange={onPageChange}
+          perPage={perPage}
+          onPerPageChange={onPerPageChange}
+        />
+      )}
     </div>
   )
 }
