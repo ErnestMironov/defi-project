@@ -26,6 +26,9 @@ interface SelectedAssetState {
   inputValue: string
   setInputValue: (value: string) => void
 
+  inputValueInUSD: string
+  setInputValueInUSD: (value: string) => void
+
   currentModal: ModalState | null
   setCurrentModal: (by: ModalState | null) => void
 }
@@ -33,11 +36,13 @@ interface SelectedAssetState {
 export const useTxStore = create<SelectedAssetState>()((set) => ({
   inputValue: '',
   setInputValue: (by) => set({ inputValue: by }),
+  inputValueInUSD: '0',
+  setInputValueInUSD: (by) => set({ inputValueInUSD: by }),
   // asset
   depositAsset: null,
   setDepositAsset: (by) => set({ depositAsset: by }),
   // network
-  depositNetwork: null,
+  depositNetwork: Chains.ARBITRUM_MAINNET,
   setDepositNetwork: (by) => set({ depositNetwork: by }),
   withdrawNetwork: Chains.ARBITRUM_MAINNET,
   setWithdrawNetwork: (by) => set({ withdrawNetwork: by }),

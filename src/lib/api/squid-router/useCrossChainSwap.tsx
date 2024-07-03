@@ -1,10 +1,10 @@
 // Import Squid SDK
-import type { ITokenData } from '@api/tokens-balance/api'
+import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import { useEthersSigner } from '@hooks/web3/useEthersSigner'
-import { ethers } from 'ethers' // Import ethers library
-import { erc20Abi } from 'viem'
+// Import ethers library
+import { useCallback } from 'react'
 
-import useSquidSDK from './squid-init'
+import useSquidSDK from './useSquidSdk'
 
 // Retrieve environment variables
 const integratorId: string = process.env.INTEGRATOR_ID!
@@ -12,72 +12,32 @@ const integratorId: string = process.env.INTEGRATOR_ID!
 // Define chain and token addresses
 const fromChainId = '56' // BNB chain ID
 const toChainId = '42161' // Arbitrum chain ID
-const toToken = '0xaf88d065e77c8cC2239327C5EDb3A432268e5831' // USDC token address on Arbitrum
 
-// Define the amount to be sent (in smallest unit, e.g., wei for Ethereum)
-const amount = '1000000000000000'
-
-// Set up JSON RPC provider and signer using the private key and RPC URL
-
-// Function to approve the transactionRequest.target to spend fromAmount of fromToken
-const approveSpending = async (
-  transactionRequestTarget: string,
-  fromToken: string,
-  fromAmount: string,
-  signer: any,
-) => {
-  const tokenContract = new ethers.Contract(fromToken, erc20Abi, signer)
-  try {
-    const tx = await tokenContract.approve(transactionRequestTarget, fromAmount)
-    await tx.wait()
-    console.log(`Approved ${fromAmount} tokens for ${transactionRequestTarget}`)
-  } catch (error) {
-    console.error('Approval failed:', error)
-    throw error
-  }
-}
-
-export const useCrossChainSwap = ({ fromToken }: { fromToken: ITokenData }) => {
-  const signer = useEthersSigner()
+export const useCrossChainSwap = ({
+  route,
+  requestId,
+}: {
+  route?: RouteResponse['route']
+  requestId?: string
+}) => {
   // Main function
   // Initialize Squid SDK
   const { squid, loading } = useSquidSDK()
-
-  // Set up parameters for swapping tokens
-  const parameters = {
-    fromAddress: signer?.address,
-    fromChain: fromChainId,
-    fromToken: _fromToken,
-    fromAmount: amount,
-    toChain: toChainId,
-    toToken,
-    toAddress: signer?.address,
-    enableBoost: true,
-  }
-
-  console.log('Parameters:', parameters) // Printing the parameters for QA
+  const signer = useEthersSigner()
 
   // Get the swap route using Squid SDK
-  const swapTokens = async () => {
+  const swapTokens = useCallback(async () => {
+    console.log('��� ~ useCrossChainSwap ~ route', route)
+    console.log('��� ~ useCrossChainSwap ~ requestId', requestId)
+    if (!route) return
     try {
       if (loading || !squid) return
 
-      const { route, requestId } = await squid.getRoute(parameters)
-      console.log('Calculated route:', route.estimate.toAmount)
-
-      const { transactionRequest } = route
-
-      // Approve the transactionRequest.target to spend fromAmount of fromToken
-      await approveSpending(
-        transactionRequest?.target,
-        fromToken.contract_address,
-        amount,
-        signer,
-      )
+      console.log('swapping started')
 
       // Execute the swap transaction
       const tx = (await squid.executeRoute({
-        signer,
+        signer: signer as unknown as any,
         route,
       })) as unknown as any
       const txReceipt = await tx.wait()
@@ -134,19 +94,18 @@ export const useCrossChainSwap = ({ fromToken }: { fromToken: ITokenData }) => {
               break
             }
             console.log('Transaction not found. Retrying...')
-            continue
           } else {
             throw error
           }
         }
-      } while (status && !completedStatuses.has(status.squidTransactionStatus))
+      } while (status && !completedStatuses.has(status?.squidTransactionStatus ?? ''))
 
       // Wait for the transaction to be mined
       console.log('Swap transaction executed:', txReceipt.transactionHash)
     } catch (error) {
       console.error(error)
     }
-  }
+  }, [route, requestId, loading, squid, signer])
 
   return { swapTokens }
 }
