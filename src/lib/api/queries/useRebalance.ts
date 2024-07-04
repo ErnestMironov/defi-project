@@ -21,6 +21,7 @@ export const GET_REBALANCE = gql(`
   }
   strategyStats {
     protocol
+    apy
     chainName
     strategyId
   }}
@@ -51,10 +52,8 @@ export const useRebalance = ({ symbol }: { symbol?: StableType }) => {
       amount: BigNumber(action.data.amount)
         .div(10 ** 6)
         .toNumber(),
-      objects: [
-        { name: strategy?.chainName, icon: 'arbitrum' },
-        { name: strategy?.protocol, icon: 'aave' },
-      ],
+      apy: strategy?.apy,
+      objects: [{ name: strategy?.chainName }, { name: strategy?.protocol }],
     }
   })
   // { source: '1', target: '11', value: 10 },

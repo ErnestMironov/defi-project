@@ -59,7 +59,7 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <LineChartComponent data={data} yPostfix="%" />
+        return <LineChartComponent data={data} yPostfix="%" frame={currentFrame} />
       }
     }
   }

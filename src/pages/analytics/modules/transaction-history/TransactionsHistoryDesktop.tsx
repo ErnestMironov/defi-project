@@ -140,7 +140,7 @@ export const TransactionsHistoryDesktop: React.FC<
                   <Table.Cell>{renderStrategy(tx)}</Table.Cell>
                   <Table.Cell>{renderFromTo(tx)}</Table.Cell>
                   <Table.Cell
-                    className="cursor-pointer"
+                    style={{ cursor: 'pointer' }}
                     onClick={() => copyWithToast(tx.txHash)}
                   >
                     {shortenString(tx.txHash)}
