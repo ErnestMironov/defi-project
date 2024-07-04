@@ -28,7 +28,7 @@ export const D3TooltipComponent = forwardRef(
       >
         <div className="flex items-center gap-2">
           <TokenIconComponent
-            symbol={tooltipContent.symbol}
+            symbol={tooltipContent?.symbol}
             className="size-6 overflow-visible"
           />
           <p className="text-[1.375rem]">{tooltipContent?.value.toFixed(2)}</p>
