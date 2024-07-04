@@ -28,9 +28,9 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
   const chartData = useMemo(() => {
     const apyData = data?.apies
     if (!apyData) return
-    const usdc = data?.tokens?.find((_token) => _token.symbol.toLowerCase() === 'usdc')
+    const usdc = data?.tokens?.find((_token) => _token.symbol === 'USDC')
       ?.addresses[0] as string
-    const usdt = data?.tokens?.find((_token) => _token.symbol.toLowerCase() === 'usdt')
+    const usdt = data?.tokens?.find((_token) => _token.symbol === 'USDT')
       ?.addresses[0] as string
     let lastUv: null | number =
       Number(apyData.find((apy) => apy.token === usdc)?.apy) ?? null
@@ -39,7 +39,8 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
     const apyDataArray = [] as RechartDataType[]
     apyData.forEach((item) => {
       const { timestamp, apy, token } = item
-      const symbol = data?.tokens?.find((_token) => _token.addresses[0] === token)?.symbol
+      const symbol = data?.tokens?.find((_token) => _token.addresses.includes(token))
+        ?.symbol
       const uv = symbol?.toLowerCase() === 'usdc' ? Number(apy) : lastUv
       const pv = symbol?.toLowerCase() === 'usdt' ? Number(apy) : lastPv
 

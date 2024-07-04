@@ -26,7 +26,7 @@ export const useClipboard = () => {
     }
   }, [])
 
-  const handleCopy = (text: string) => {
+  const copyWithToast = (text: string) => {
     copy(text)
       .then(() => {
         toast.success('Copied!')
@@ -37,5 +37,5 @@ export const useClipboard = () => {
       })
   }
 
-  return { copiedText, copy, handleCopy }
+  return { copiedText, copy, copyWithToast }
 }

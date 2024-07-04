@@ -30,13 +30,21 @@ function useBadgeData(action: ActionType) {
         break
       }
       case ActionType.Withdraw:
-      case ActionType.WithdrawFromStrategy:
-      case ActionType.WithdrawRequestFulfillment: {
+      case ActionType.WithdrawFromStrategy: {
         setBadgeData({
           text: 'Withdraw',
           bgColor: '#6A97FF26',
           textColor: '#6A97FF',
           icon: <WithdrawIcon />,
+        })
+        break
+      }
+      case ActionType.WithdrawRequestFulfillment: {
+        setBadgeData({
+          text: 'Draw Out',
+          bgColor: '#AAA9C926',
+          textColor: '#AAA9C9',
+          icon: <WithdrawIcon className="[&_path]:fill-[#AAA9C9]" />,
         })
         break
       }

@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
+
 import { useRebalance } from '@api/queries/useRebalance'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg?url'
+import Base from '@assets/icons/networks/base.svg?url'
 import Aave from '@assets/icons/protocols/aave.svg?url'
 import Lendle from '@assets/icons/protocols/lendle.svg?url'
 import Mantle from '@assets/icons/protocols/mantle.svg?url'
 import Metis from '@assets/icons/protocols/metis.svg?url'
+import Yearn from '@assets/icons/protocols/yearn.svg?url'
+import type { StableType } from '@components/stable-switcher/StableSwitcher'
+import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Button } from '@components/ui/button'
+import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useDimensions } from '@hooks/useDimensions'
 import type { SankeyNodeMinimal } from 'd3-sankey'
@@ -32,6 +38,16 @@ export type SankeyChartDataType = {
   nodes: NodeType[]
   links: LinkType[]
 }
+
+const ICON_URLS_MAP = {
+  aave: Aave,
+  yearn: Yearn,
+  arbitrum: Arbitrum,
+  base: Base,
+  metis: Metis,
+  mantle: Mantle,
+  lendle: Lendle,
+} as const
 
 export const mockData: SankeyChartDataType = {
   nodes: [
@@ -156,7 +172,9 @@ export const Sankey = ({ data }: SankeyProperties) => {
   const tooltipReference = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [tooltip, setTooltip] = useState<{
-    content: string
+    value: number
+    timestamp: number
+    hash: string
     x: number
     y: number
   } | null>(null)
@@ -229,12 +247,13 @@ export const Sankey = ({ data }: SankeyProperties) => {
   //
   // Draw the links
   //
-  const allLinks = links.map((link, i) => {
+  const allLinks = links.map((link: any, i) => {
     const gradientId = `gradient-${i}`
     const linkGenerator = sankeyLinkHorizontal()
     const path = linkGenerator(link)
     const color1 = COLORS[Number((link.source as any).index) % COLORS.length]
     const color2 = COLORS[Number((link.target as any).index) % COLORS.length]
+
     return (
       <g key={i}>
         <defs>
@@ -261,8 +280,9 @@ export const Sankey = ({ data }: SankeyProperties) => {
           onMouseEnter={(e) => {
             setIsOpen(true)
             setTooltip({
-              // content: `${(link.source as NodeType).id}->${(link.target as NodeType).id}`,
-              content: '200,220.20',
+              value: link.value,
+              timestamp: link.timestamp,
+              hash: link.txHash,
               x: e.clientX,
               y: e.clientY,
             })
@@ -284,7 +304,7 @@ export const Sankey = ({ data }: SankeyProperties) => {
       <D3TooltipComponent
         ref={tooltipReference}
         isOpen={isOpen}
-        tooltipContent={{ value: tooltip?.content }}
+        tooltipContent={tooltip}
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
       />
@@ -293,18 +313,38 @@ export const Sankey = ({ data }: SankeyProperties) => {
 }
 
 export const SankeyDiagramBasicDemo = () => {
-  const { data } = useRebalance()
-  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDC)
+  const { data, loading, error } = useRebalance({ symbol: activeStableType })
+
   const { isBelowDesktop } = useDeviceWidth()
+
+  const renderBody = () => {
+    switch (true) {
+      case loading:
+      case !!error: {
+        return <Skeleton className="h-[18.4375rem] rounded-3xl lg:h-[36.1875rem]" />
+      }
+      case !data?.links?.length: {
+        return (
+          <div className="flex h-[18.4375rem] items-center justify-center rounded-3xl bg-cards shadow-md lg:h-[36.1875rem]">
+            No rebalance data was found.
+          </div>
+        )
+      }
+      default: {
+        return <Sankey data={data} />
+      }
+    }
+  }
   return (
     <div className="mt-28 max-lg:mt-8 max-lg:px-4">
-      {/* <StableSwitcher
+      <StableSwitcher
         layoutId="stable-switcher-sankey"
         activeTab={activeStableType}
-        setActiveTab={setStableType}
+        onTabChange={(value) => setStableType(value)}
         className="mb-[2.13rem] mt-28 max-lg:mb-[1.47rem] max-lg:mt-8"
-      /> */}
-      {data && <Sankey data={mockData} />}
+      />
+      {renderBody()}
       {isBelowDesktop && (
         <Button className="mt-8 w-full" size="lg">
           Deposit
@@ -326,10 +366,14 @@ const Node = ({
     return (
       <g key={node.index}>
         {node.objects.map((object, i) => {
+          const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
+            object.name.match(new RegExp(key, 'i')),
+          )?.[1]
+
           return (
             <Fragment key={i}>
               <image
-                href={object.icon}
+                href={assetUrl}
                 x={
                   (node.x0 as number) < dimensions.width / 2
                     ? (node.x1 as number) + i * 40 + 0
@@ -348,6 +392,10 @@ const Node = ({
   return (
     <g key={node.index}>
       {node.objects.map((object, i) => {
+        const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
+          object.name.match(new RegExp(key, 'i')),
+        )?.[1]
+
         return (
           <Fragment key={i}>
             <text
@@ -363,7 +411,7 @@ const Node = ({
               {object.name}
             </text>
             <image
-              href={object.icon}
+              href={assetUrl}
               x={
                 (node.x0 as number) < dimensions.width / 2
                   ? (node.x1 as number) + i * 170 + 10

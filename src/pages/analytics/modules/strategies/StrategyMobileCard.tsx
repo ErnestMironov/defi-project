@@ -9,12 +9,12 @@ import {
 } from '@components/ui/accordion'
 import { Button } from '@components/ui/button'
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/ui/drawer'
+import { Skeleton } from '@components/ui/skeleton'
 import { useClipboard } from '@hooks/useClipboard'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import type { ComponentProps } from 'react'
-import toast from 'react-hot-toast'
 
 interface StrategyMobileCardProperties extends ComponentProps<'div'> {
   strategy: StrategyStats
@@ -23,17 +23,8 @@ interface StrategyMobileCardProperties extends ComponentProps<'div'> {
 
 export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
   const { strategy, isLast, ...rest } = props
-  const { copy } = useClipboard()
-  const handleCopy = (text: string) => {
-    copy(text)
-      .then(() => {
-        toast.success('Copied!')
-        console.log('addScaleCorrector')
-      })
-      .catch(() => {
-        toast.error('Failed to copy.')
-      })
-  }
+  const { copyWithToast } = useClipboard()
+
   return (
     <div {...rest}>
       <div className="flex items-center gap-3">
@@ -113,9 +104,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
               type="button"
               className="size-5 overflow-visible"
               onClick={() => {
-                console.log('asd')
-
-                handleCopy('50xBb287E6017d3DE50xBb287E6017d3DE')
+                copyWithToast('50xBb287E6017d3DE50xBb287E6017d3DE')
               }}
             />
           </div>
@@ -129,3 +118,38 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
 const Divider = ({ className }: ComponentProps<'div'>) => (
   <div className={cn('my-6 h-px bg-gray-50', className)} />
 )
+
+export const SkeletonStrategyMobileCard = (
+  props: Omit<StrategyMobileCardProperties, 'strategy'>,
+) => {
+  const { isLast, ...rest } = props
+
+  return (
+    <div {...rest}>
+      <div className="flex items-center gap-3">
+        <Skeleton className="size-6 rounded-full" />
+        <Skeleton className="h-6 w-20 text-lg" />
+      </div>
+      <div className="my-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-[0.82rem] even:[&>*]:justify-self-end [&_h6]:text-base [&_h6]:leading-normal">
+        <h6>Chain | Protocol</h6>
+        <div className="flex items-center space-x-[-0.44rem]">
+          <Skeleton className="size-6 rounded-full" />
+          <Skeleton className="size-6 rounded-full" />
+        </div>
+        <h6>Projected APY</h6>
+        <Skeleton className="h-6 w-20 text-lg" />
+        <h6>TVL</h6>
+        <Skeleton className="h-6 w-20 text-lg" />
+      </div>
+      <Button
+        size="lg"
+        variant="outline"
+        disabled
+        className="w-full border-light-blue-100 text-light-blue-100"
+      >
+        Read more
+      </Button>
+      {!isLast && <div className="my-6 h-px w-full bg-gray-50" />}
+    </div>
+  )
+}
