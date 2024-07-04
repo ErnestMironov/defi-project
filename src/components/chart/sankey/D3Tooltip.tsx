@@ -35,9 +35,9 @@ export const D3TooltipComponent = forwardRef(
         </div>
         <div className="text-base text-text-80">
           <div className="flex items-center">
-            <span>800.98%</span>
+            <span>{tooltipContent?.apies?.[0]?.toFixed(2)}%</span>
             <Arrow className="mx-2 [&_path]:fill-text" />
-            <span>834.71%</span>
+            <span>{tooltipContent?.apies?.[1]?.toFixed(2)}%</span>
             <span className="ml-1">APY</span>
           </div>
           <div className="mt-2">

@@ -24,7 +24,7 @@ import { D3TooltipComponent } from './D3Tooltip'
 
 type ObjectsData = {
   name: string
-  icon: string
+  apy?: string
 }
 export type NodeType = {
   id: string
@@ -50,104 +50,104 @@ const ICON_URLS_MAP = {
   lendle: Lendle,
 } as const
 
-export const mockData: SankeyChartDataType = {
-  nodes: [
-    {
-      id: '1',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '2',
-      objects: [
-        { name: 'Metis', icon: Metis },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '3',
-      objects: [
-        { name: 'Arbitrum', icon: Arbitrum },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '4',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '5',
-      objects: [
-        { name: 'Metis', icon: Metis },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '6',
-      objects: [
-        { name: 'Arbitrum', icon: Arbitrum },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '7',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '8',
-      objects: [
-        { name: 'Metis', icon: Metis },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '9',
-      objects: [
-        { name: 'Arbitrum', icon: Arbitrum },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '10',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '11',
-      objects: [
-        { name: 'Lendle', icon: Lendle },
-        { name: 'Metis', icon: Metis },
-      ],
-    },
-    {
-      id: '12',
-      objects: [
-        { name: 'Lendle', icon: Lendle },
-        { name: 'Arbitrum', icon: Arbitrum },
-      ],
-    },
-  ],
-  links: [
-    { source: '1', target: '11', value: 10 },
-    { source: '2', target: '7', value: 20 },
-    { source: '3', target: '12', value: 10 },
-    { source: '4', target: '9', value: 20 },
-    { source: '4', target: '8', value: 20 },
-    { source: '5', target: '8', value: 10 },
-    { source: '5', target: '10', value: 10 },
-    { source: '6', target: '7', value: 12 },
-  ],
-}
+// export const mockData: SankeyChartDataType = {
+//   nodes: [
+//     {
+//       id: '1',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '2',
+//       objects: [
+//         { name: 'Metis', icon: Metis },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '3',
+//       objects: [
+//         { name: 'Arbitrum', icon: Arbitrum },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '4',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '5',
+//       objects: [
+//         { name: 'Metis', icon: Metis },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '6',
+//       objects: [
+//         { name: 'Arbitrum', icon: Arbitrum },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '7',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '8',
+//       objects: [
+//         { name: 'Metis', icon: Metis },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '9',
+//       objects: [
+//         { name: 'Arbitrum', icon: Arbitrum },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '10',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '11',
+//       objects: [
+//         { name: 'Lendle', icon: Lendle },
+//         { name: 'Metis', icon: Metis },
+//       ],
+//     },
+//     {
+//       id: '12',
+//       objects: [
+//         { name: 'Lendle', icon: Lendle },
+//         { name: 'Arbitrum', icon: Arbitrum },
+//       ],
+//     },
+//   ],
+//   links: [
+//     { source: '1', target: '11', value: 10 },
+//     { source: '2', target: '7', value: 20 },
+//     { source: '3', target: '12', value: 10 },
+//     { source: '4', target: '9', value: 20 },
+//     { source: '4', target: '8', value: 20 },
+//     { source: '5', target: '8', value: 10 },
+//     { source: '5', target: '10', value: 10 },
+//     { source: '6', target: '7', value: 12 },
+//   ],
+// }
 const COLORS = [
   'rgba(135, 99, 243, 0.30)',
   'rgba(254, 244, 154, 0.45)',
@@ -173,14 +173,7 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
   const containerReference = useRef<HTMLDivElement | null>(null)
   const tooltipReference = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [tooltip, setTooltip] = useState<{
-    value: number
-    symbol: string
-    timestamp: number
-    hash: string
-    x: number
-    y: number
-  } | null>(null)
+  const [tooltip, setTooltip] = useState<any>(null)
   useEffect(() => {
     if (tooltip) {
       const dimensions = tooltipReference.current?.getBoundingClientRect() as DOMRect
@@ -281,10 +274,13 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
           className="hover:animate-pulse hover:[stroke-opacity:_1]"
           // strokeLinecap="round"
           onMouseEnter={(e) => {
+            console.log(link)
+
             setIsOpen(true)
             setTooltip({
               symbol,
               value: link.value,
+              apies: [link.source.apy, link.target.apy],
               timestamp: link.timestamp,
               hash: link.txHash,
               x: e.clientX,
@@ -380,7 +376,7 @@ const Node = ({
                 href={assetUrl}
                 x={
                   (node.x0 as number) < dimensions.width / 2
-                    ? (node.x1 as number) + i * 40 + 10
+                    ? (node.x1 as number) + i * 40 + 6
                     : (node.x0 as number) - i * 40 - 30
                 }
                 y={((node.y1 as number) + (node.y0 as number)) / 2 - 12}
