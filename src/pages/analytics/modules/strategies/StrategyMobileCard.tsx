@@ -10,9 +10,11 @@ import {
 import { Button } from '@components/ui/button'
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/ui/drawer'
 import { Skeleton } from '@components/ui/skeleton'
+import { PROTOCOL_DESCRIPTION } from '@constants/protocol-description'
 import { useClipboard } from '@hooks/useClipboard'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
+import { shortenString } from '@utils/transform'
 import BigNumber from 'bignumber.js'
 import type { ComponentProps } from 'react'
 
@@ -24,7 +26,9 @@ interface StrategyMobileCardProperties extends ComponentProps<'div'> {
 export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
   const { strategy, isLast, ...rest } = props
   const { copyWithToast } = useClipboard()
-
+  const description = Object.entries(PROTOCOL_DESCRIPTION).find(([key]) =>
+    strategy.protocol.match(new RegExp(key, 'i')),
+  )?.[1]
   return (
     <div {...rest}>
       <div className="flex items-center gap-3">
@@ -76,33 +80,41 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
                 Description
               </AccordionTrigger>
               <AccordionContent className="mr-5 mt-3 text-base">
-                Sonne Finance is a decentralized lending protocol for individuals,
-                institutions and protocols to access financial services. It is a
-                permissionless, open source and Optimistic protocol serving users on
-                Optimism. Users can deposit their assets, use them as collateral and
-                borrow against them.
+                {description}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
           <Divider />
           <h5 className="text-lg font-bold uppercase">Apy</h5>
           <div className="mt-3 grid grid-cols-2 gap-y-2 text-base even:[&>*]:justify-self-end even:[&>*]:font-bold">
-            <h6>Last 7 days</h6>
+            {/* <h6>Last 7 days</h6>
             <div>52.48%</div>
             <h6>Last 30 days</h6>
             <div>56.29%</div>
             <h6>Inception</h6>
-            <div>9.83%</div>
+            <div>9.83%</div> */}
+            <h6>Projected APY</h6>
+            <div className="font-bold">{strategy.apy.toFixed(2)}%</div>
+            <h6>TVL</h6>
+            <div>
+              $
+              {formatAmountValue(
+                BigNumber(strategy.deposited)
+                  .div(10 ** strategy.decimals)
+                  ?.toString(),
+                2,
+              )}
+            </div>
           </div>
           <Divider />
           <div className="flex items-center">
             <h6 className="text-lg font-bold">Address</h6>
             <div className="ml-auto max-w-[10.75rem] truncate">
-              50xBb287E6017d3DE50xBb287E6017d3DE
+              {shortenString(strategy.strategyId)}
             </div>
             <Copy
               type="button"
-              className="size-5 overflow-visible"
+              className="ml-2 size-5 overflow-visible"
               onClick={() => {
                 copyWithToast('50xBb287E6017d3DE50xBb287E6017d3DE')
               }}

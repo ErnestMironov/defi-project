@@ -54,11 +54,17 @@ export const TvlChartModule = (_props: LineChartModuleProperties) => {
       }
     }
   }
-  if (loading)
-    return (
-      <Skeleton className="flex h-[21.75rem] w-full items-center justify-center rounded-[1.75rem] max-lg:h-72" />
-    )
-  if (error) return `Error! ${error.message}`
+  const renderBody = () => {
+    switch (true) {
+      case loading:
+      case !!error: {
+        return <Skeleton className="size-full rounded-3xl" />
+      }
+      default: {
+        return <LineChartComponent data={data} yPrefix="$" />
+      }
+    }
+  }
   if (isBelowDesktop) {
     return (
       <div>
@@ -89,9 +95,7 @@ export const TvlChartModule = (_props: LineChartModuleProperties) => {
             )
           })}
         </div>
-        <div className="-ml-2 mt-[3.13rem] h-[10.5625rem]">
-          <LineChartComponent data={data} yPrefix="$" />
-        </div>
+        <div className="-ml-2 mt-[3.13rem] h-[10.5625rem]">{renderBody()}</div>
       </div>
     )
   }
@@ -115,9 +119,7 @@ export const TvlChartModule = (_props: LineChartModuleProperties) => {
           onFrameChange={(frame) => onFrameChange(frame as FrameType)}
         />
       </div>
-      <div className="mt-6 h-72">
-        <LineChartComponent data={data} yPrefix="$" />
-      </div>
+      <div className="mt-6 h-72">{renderBody()}</div>
     </div>
   )
 }

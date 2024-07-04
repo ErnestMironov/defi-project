@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Arrow from '@assets/icons/arrow.svg'
-import Usdt from '@assets/icons/tokens/usdt.svg'
+import { TokenIconComponent } from '@components/token-icon'
 import { getFromNow } from '@utils/get-day-difference'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -27,13 +27,16 @@ export const D3TooltipComponent = forwardRef(
         )}
       >
         <div className="flex items-center gap-2">
-          <Usdt className="size-6 overflow-visible" />
-          <p className="text-[1.375rem]">{tooltipContent?.value}</p>
+          <TokenIconComponent
+            symbol={tooltipContent?.symbol}
+            className="size-6 overflow-visible"
+          />
+          <p className="text-[1.375rem]">{tooltipContent?.value.toFixed(2)}</p>
         </div>
         <div className="text-base text-text-80">
           <div className="flex items-center">
             <span>800.98%</span>
-            <Arrow className="mx-2" />
+            <Arrow className="mx-2 [&_path]:fill-text" />
             <span>834.71%</span>
             <span className="ml-1">APY</span>
           </div>
@@ -45,7 +48,7 @@ export const D3TooltipComponent = forwardRef(
             </span>
           </div>
         </div>
-        <div className="text-blue1">View on Explorer</div>
+        {/* <div className="text-blue1">View in Explorer</div> */}
       </div>
     )
   },
