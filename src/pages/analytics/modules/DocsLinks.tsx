@@ -15,14 +15,14 @@ const documentation: IDocument[] = [
   },
   {
     text: 'Documentation Stay abreast of updates by engaging with docs',
-    link: 'https://maat.io/docs/maat-rebalances-you-earn',
+    link: 'https://docs.maat.finance/',
     linkName: 'Documentation',
   },
 ]
 
 const DocumentCard = ({ link, linkName, text }: IDocument) => {
   return (
-    <div className="group flex snap-center flex-col items-start justify-between gap-[1.38rem] self-stretch rounded-[1.75rem] bg-cards px-8 py-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] max-lg:min-w-[90vw] max-lg:gap-4">
+    <div className="group flex cursor-pointer snap-center flex-col items-start justify-between gap-[1.38rem] self-stretch rounded-[1.75rem] bg-cards px-8 py-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] max-lg:min-w-[90vw] max-lg:gap-4">
       <a
         href={link}
         target="_blank"

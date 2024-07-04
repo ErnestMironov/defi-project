@@ -82,7 +82,7 @@ export const TransactionsHistoryDesktop: React.FC<
         return (
           <div className="flex items-center gap-2">
             <TokenIconComponent symbol={tx.from} className="size-10" />
-            <Arrow />
+            <Arrow className="[&_path]:fill-text" />
             <TokenIconComponent symbol={tx.to} className="size-10" />
           </div>
         )
@@ -93,7 +93,7 @@ export const TransactionsHistoryDesktop: React.FC<
             <div className="flex size-10 items-center justify-center rounded-full border border-text dark:bg-white">
               <LogoIcon className="size-5 [&_path]:fill-black" />
             </div>
-            <Arrow />
+            <Arrow className="[&_path]:fill-text" />
             <ProfileIcon className="size-10" />
           </div>
         )
@@ -121,7 +121,7 @@ export const TransactionsHistoryDesktop: React.FC<
                 <Table.HeadCell>
                   <div className="flex items-center gap-2">
                     From
-                    <Arrow />
+                    <Arrow className="[&_path]:fill-text" />
                     To
                   </div>
                 </Table.HeadCell>
@@ -199,7 +199,7 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
           <Table.HeadCell>
             <div className="flex items-center gap-2">
               From
-              <Arrow />
+              <Arrow className="[&_path]:fill-text" />
               To
             </div>
           </Table.HeadCell>

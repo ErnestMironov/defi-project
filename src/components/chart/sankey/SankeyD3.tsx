@@ -18,6 +18,7 @@ import { useDimensions } from '@hooks/useDimensions'
 import type { SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { D3TooltipComponent } from './D3Tooltip'
 
@@ -165,14 +166,16 @@ type Data = {
 
 type SankeyProperties = {
   data: Data
+  symbol: string
 }
 
-export const Sankey = ({ data }: SankeyProperties) => {
+export const Sankey = ({ data, symbol }: SankeyProperties) => {
   const containerReference = useRef<HTMLDivElement | null>(null)
   const tooltipReference = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
   const [tooltip, setTooltip] = useState<{
     value: number
+    symbol: string
     timestamp: number
     hash: string
     x: number
@@ -278,8 +281,11 @@ export const Sankey = ({ data }: SankeyProperties) => {
           className="hover:animate-pulse hover:[stroke-opacity:_1]"
           // strokeLinecap="round"
           onMouseEnter={(e) => {
+            console.log('link', link)
+
             setIsOpen(true)
             setTooltip({
+              symbol,
               value: link.value,
               timestamp: link.timestamp,
               hash: link.txHash,
@@ -315,7 +321,7 @@ export const Sankey = ({ data }: SankeyProperties) => {
 export const SankeyDiagramBasicDemo = () => {
   const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDC)
   const { data, loading, error } = useRebalance({ symbol: activeStableType })
-
+  const navigate = useNavigate()
   const { isBelowDesktop } = useDeviceWidth()
 
   const renderBody = () => {
@@ -332,7 +338,7 @@ export const SankeyDiagramBasicDemo = () => {
         )
       }
       default: {
-        return <Sankey data={data} />
+        return <Sankey data={data} symbol={activeStableType} />
       }
     }
   }
@@ -346,7 +352,7 @@ export const SankeyDiagramBasicDemo = () => {
       />
       {renderBody()}
       {isBelowDesktop && (
-        <Button className="mt-8 w-full" size="lg">
+        <Button className="mt-8 w-full" size="lg" onClick={() => navigate('/')}>
           Deposit
         </Button>
       )}
@@ -376,7 +382,7 @@ const Node = ({
                 href={assetUrl}
                 x={
                   (node.x0 as number) < dimensions.width / 2
-                    ? (node.x1 as number) + i * 40 + 0
+                    ? (node.x1 as number) + i * 40 + 10
                     : (node.x0 as number) - i * 40 - 30
                 }
                 y={((node.y1 as number) + (node.y0 as number)) / 2 - 12}

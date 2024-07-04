@@ -24,7 +24,7 @@ interface TransactionMobileItemProperties extends ComponentProps<'div'> {
 export const TransactionMobileItem = (props: TransactionMobileItemProperties) => {
   const { tx, isLast, txIndex } = props
   return (
-    <AccordionItem value={tx.txHash}>
+    <AccordionItem value={`${tx.txHash}_${txIndex}`}>
       <AccordionTrigger>
         <ActionChip type={tx.action} />
       </AccordionTrigger>
@@ -38,12 +38,12 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
             <div>${formatAmountValue(tx.amount)}</div>
             <h6 className="flex items-center gap-2">
               from
-              <Arrow />
+              <Arrow className="[&_path]:fill-text" />
               To
             </h6>
             <div className="flex items-center gap-2">
               <TokenIconComponent symbol={tx.from} className="size-6 overflow-visible" />
-              <Arrow />
+              <Arrow className="[&_path]:fill-text" />
               <TokenIconComponent symbol={tx.to} className="size-6 overflow-visible" />
             </div>
             <h6>Tx Hash</h6>
