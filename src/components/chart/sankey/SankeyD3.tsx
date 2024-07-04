@@ -281,8 +281,6 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
           className="hover:animate-pulse hover:[stroke-opacity:_1]"
           // strokeLinecap="round"
           onMouseEnter={(e) => {
-            console.log('link', link)
-
             setIsOpen(true)
             setTooltip({
               symbol,

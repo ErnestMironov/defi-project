@@ -7,7 +7,6 @@ import { useTxStore } from '../store/useDepositStore'
 export const SelectWithdrawNetwork = () => {
   const { withdrawNetwork, setWithdrawNetwork } = useTxStore()
   const token = useTokenAsset(withdrawNetwork)
-  console.log('token', token)
 
   return (
     <SelectNetworkPopover

@@ -85,7 +85,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             </AccordionItem>
           </Accordion>
           <Divider />
-          <h5 className="text-lg font-bold uppercase">Apy</h5>
+          <h5 className="text-lg font-bold uppercase">Stats</h5>
           <div className="mt-3 grid grid-cols-2 gap-y-2 text-base even:[&>*]:justify-self-end even:[&>*]:font-bold">
             {/* <h6>Last 7 days</h6>
             <div>52.48%</div>
@@ -108,7 +108,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
           </div>
           <Divider />
           <div className="flex items-center">
-            <h6 className="text-lg font-bold">Address</h6>
+            <h6 className="text-lg font-bold">Strategy ID</h6>
             <div className="ml-auto max-w-[10.75rem] truncate">
               {shortenString(strategy.strategyId)}
             </div>

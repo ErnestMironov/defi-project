@@ -13,7 +13,6 @@ export const useDepositTransaction = () => {
   const { address } = useAccount()
 
   const deposit = useCallback(() => {
-    console.log('deposit')
 
     if (!depositAsset || !address) return
     const tokenAddress = depositAsset.contract_address as Address

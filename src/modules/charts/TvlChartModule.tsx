@@ -61,7 +61,7 @@ export const TvlChartModule = (_props: LineChartModuleProperties) => {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <LineChartComponent data={data} yPrefix="$" />
+        return <LineChartComponent data={data} yPrefix="$" frame={currentFrame} />
       }
     }
   }

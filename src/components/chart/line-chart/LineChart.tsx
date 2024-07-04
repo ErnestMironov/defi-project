@@ -1,3 +1,4 @@
+import type { FrameType } from '@modules/charts/ApyChartModule'
 import { formatAmountValue } from '@utils/formatValue'
 import dayjs from 'dayjs'
 import {
@@ -23,12 +24,50 @@ interface AreaChartComponentProperties {
   data?: RechartDataType[]
   yPrefix?: string
   yPostfix?: string
+  frame?: FrameType
 }
 
 export const LineChartComponent = (props: AreaChartComponentProperties) => {
-  const { data, yPrefix = '', yPostfix = '' } = props
+  const { data, yPrefix = '', yPostfix = '', frame } = props
   const tooltipFormatter = (value?: string) =>
     `${yPrefix}${formatAmountValue(value, 2)}${yPostfix}`
+
+  const filteredData = data?.reduce((accumulator, current, index) => {
+    if (index === 0 || frame === '1D') {
+      accumulator.push(current)
+      return accumulator
+    }
+    const previous = accumulator.at(-1)
+
+    if (dayjs(current.timestamp).diff(dayjs(previous?.timestamp), 'day') >= 1) {
+      accumulator.push(current)
+    }
+    return accumulator
+  }, [] as RechartDataType[])
+
+  const tickFormatter = (value: string) => {
+    let format: string = 'MMM'
+    switch (frame) {
+      case '1D': {
+        format = 'HH:MM'
+        break
+      }
+      case '1W': {
+        format = 'ddd'
+        break
+      }
+      // case '1M': {
+      //   format = 'DD MMM'
+      //   break
+      // }
+      default: {
+        format = 'DD MMM'
+        break
+      }
+    }
+    return dayjs(value).format(format).toUpperCase()
+  }
+
   return (
     <ResponsiveContainer
       width="100%"
@@ -51,9 +90,12 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           axisLine
           tickLine={false}
           dataKey="timestamp"
-          tickFormatter={(value) => dayjs(value).format('MMM').toUpperCase()}
+          tickFormatter={tickFormatter}
           className="text-[0.6875rem] [&_text]:fill-gray-100"
-          interval={15}
+          minTickGap={40}
+          tickCount={10}
+          ticks={filteredData?.map((tick) => tick.timestamp)}
+          // interval="preserveStartEnd"
         />
         <YAxis
           axisLine={false}
