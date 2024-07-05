@@ -4,20 +4,23 @@ import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { useCallback } from 'react'
 import type { Address } from 'viem'
-import { parseUnits } from 'viem'
-import { useAccount, useWriteContract } from 'wagmi'
+import { useWriteContract } from 'wagmi'
 
-export const useDepositTransaction = () => {
+export const useDepositTransaction = ({
+  address,
+  amount,
+}: {
+  address: Address
+  amount: bigint
+}) => {
   const { writeContract, ...rest } = useWriteContract()
-  const { depositAsset, setCurrentModal, inputValue } = useTxStore()
-  const { address } = useAccount()
+  const { depositAsset, setCurrentModal } = useTxStore()
 
   const deposit = useCallback(() => {
     console.log('deposit')
 
     if (!depositAsset || !address) return
     const tokenAddress = depositAsset.contract_address as Address
-    const amount = parseUnits(inputValue, depositAsset.contract_decimals)
 
     return writeContract(
       {
@@ -31,7 +34,7 @@ export const useDepositTransaction = () => {
         onError: () => setCurrentModal('error'),
       },
     )
-  }, [address, depositAsset, inputValue, setCurrentModal, writeContract])
+  }, [address, amount, depositAsset, setCurrentModal, writeContract])
 
   return { deposit, ...rest }
 }

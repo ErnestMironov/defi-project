@@ -5,9 +5,9 @@ import { Button } from '@components/ui/button'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
-import { useEffect, useMemo, useReducer } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 import type { Address } from 'viem'
-import { parseEther } from 'viem'
+import { parseEther, parseUnits } from 'viem'
 import { useSwitchChain } from 'wagmi'
 
 import { useApproveDepositTransaction } from './useApproveDepositTransaction'
@@ -147,6 +147,25 @@ export const useFullDepositFlow = () => {
     enableBoost: true,
   })
 
+  const [isSwapNeeded, setIsSwapNeeded] = useState(false)
+
+  useEffect(() => {
+    function isNetworkArb() {
+      return chainData?.chainId === 42_161
+    }
+
+    function isSTABLE() {
+      return (
+        asset?.contract_ticker_symbol.toLowerCase() === 'usdc' ||
+        asset?.contract_ticker_symbol.toLowerCase() === 'usdt'
+      )
+    }
+
+    const IS_SWAP_NEEDED = !isNetworkArb() || !isSTABLE()
+
+    setIsSwapNeeded(IS_SWAP_NEEDED)
+  }, [asset?.contract_ticker_symbol, chainData?.chainId, route?.transactionRequest])
+
   /*
    * 1. Approve tokens for swap
    */
@@ -234,13 +253,15 @@ export const useFullDepositFlow = () => {
    * 4. Approve tokens for deposit
    */
 
-  const approveValue = Number.isNaN(inputValueInUSD)
-    ? '10'
-    : (+inputValueInUSD * 10 ** 6).toString()
+  let approveValue = 10n
+  if (!Number.isNaN(+inputValueInUSD) && inputValueInUSD && +inputValueInUSD !== 0) {
+    approveValue = parseUnits(inputValueInUSD, 6)
+  }
+
   const { approve: _approveDeposit, status: approveDepositStatus } =
     useApproveDepositTransaction({
       tokenAddress: vaultAddress as Address,
-      approveValue,
+      approveValue: approveValue.toString(),
       transactionRequestTarget: ARB_GATEWAY,
     })
 
@@ -268,7 +289,10 @@ export const useFullDepositFlow = () => {
    * 5. Deposit tokens
    */
 
-  const { deposit: _deposit, status: depositStatus } = useDepositTransaction()
+  const { deposit: _deposit, status: depositStatus } = useDepositTransaction({
+    address: vaultAddress as Address,
+    amount: approveValue,
+  })
   const deposit = () => {
     dispatch({
       type: 'deposit',
@@ -343,7 +367,17 @@ export const useFullDepositFlow = () => {
         currentStep: 'approve2',
       })
     }
-  }, [approveDepositStatus, approveStatus, depositStatus, swapStatus])
+  }, [approveDepositStatus, approveStatus, depositStatus, isSwapNeeded, swapStatus])
+
+  // useEffect(() => {
+  //   console.log('🚀 ~ useEffect ~ isSwapNeeded:', isSwapNeeded)
+  //   if (!isSwapNeeded) {
+  //     dispatch({
+  //       type: 'setCurrentStep',
+  //       currentStep: 'switchToArbitrum',
+  //     })
+  //   }
+  // }, [isSwapNeeded])
 
   function resetStore() {
     dispatch({
@@ -427,6 +461,7 @@ export const useFullDepositFlow = () => {
 
   return {
     stepsState,
+    isSwapNeeded,
     ActionButton,
     dispatch,
     resetStore,

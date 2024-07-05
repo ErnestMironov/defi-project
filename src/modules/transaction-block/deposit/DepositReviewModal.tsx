@@ -14,7 +14,7 @@ import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { parseFloatLocale } from '@utils/formatValue'
 import Lottie from 'lottie-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { parseEther } from 'viem'
 
 import { useTxStore } from '../store/useDepositStore'
@@ -22,9 +22,8 @@ import { useCheckAllowance } from './hooks/useCheckAllowance'
 import { useFullDepositFlow } from './hooks/useFullDepositFlow'
 
 export const DepositReviewModal = () => {
-  const { ActionButton, stepsState, resetStore } = useFullDepositFlow()
-
-  const [isSwapNeeded, setIsSwapNeeded] = useState(false)
+  const { ActionButton, stepsState, resetStore, isSwapNeeded } = useFullDepositFlow()
+  console.log('🚀 ~ stepsState:', stepsState)
 
   const {
     depositAsset: asset,
@@ -57,23 +56,6 @@ export const DepositReviewModal = () => {
     toToken: vaultAddress,
     enableBoost: true,
   })
-
-  useEffect(() => {
-    function isNetworkArb() {
-      return chainData?.chainId === 42_161
-    }
-
-    function isSTABLE() {
-      return (
-        asset?.contract_ticker_symbol.toLowerCase() === 'usdc' ||
-        asset?.contract_ticker_symbol.toLowerCase() === 'usdt'
-      )
-    }
-
-    const IS_SWAP_NEEDED = !isNetworkArb() || !isSTABLE()
-
-    setIsSwapNeeded(IS_SWAP_NEEDED)
-  }, [asset?.contract_ticker_symbol, chainData?.chainId, route?.transactionRequest])
 
   useEffect(resetStore, [asset])
 
@@ -130,87 +112,90 @@ export const DepositReviewModal = () => {
         </div>
 
         {/* APPROVE FOR SWAP STEP  */}
-
         <div className="flex flex-col items-start gap-[0.44rem] text-lg">
-          {!asset?.native_token && (
+          {isSwapNeeded && (
             <>
+              {!asset?.native_token && (
+                <>
+                  <div className="flex items-center gap-3">
+                    <TokenWithNetwork
+                      symbol={asset?.contract_ticker_symbol}
+                      network={asset?.chain_id}
+                      position="bottom-right"
+                      width="2rem"
+                    />
+                    <p className="flex items-center">
+                      <span
+                        className={cn(
+                          stepsState.approve1.isSuccess && 'text-[#58CDAD]',
+                          stepsState.approve1.error && 'text-red-100',
+                        )}
+                      >
+                        Approve {asset?.contract_ticker_symbol} spending
+                      </span>
+                      {stepsState.approve1.isPending && (
+                        <Lottie
+                          className="relative -left-4 h-8"
+                          animationData={lottieLoader}
+                          loop
+                        />
+                      )}
+                      {stepsState.approve1.isSuccess ? (
+                        <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
+                      ) : null}
+                      {!isAllowed && stepsState.approve1.error && (
+                        <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
+                          {stepsState.approve1.error}
+                        </div>
+                      )}
+                    </p>
+                  </div>
+                  <ArrowDown className="h-[1.125rem] w-8" />
+                </>
+              )}
+
+              {/* SWAP STEP */}
+
               <div className="flex items-center gap-3">
-                <TokenWithNetwork
-                  symbol={asset?.contract_ticker_symbol}
-                  network={asset?.chain_id}
-                  position="bottom-right"
-                  width="2rem"
+                <ArrangeSquare
+                  className={cn(
+                    'size-8',
+                    '[&_path]:fill-[#8763F326]',
+                    (stepsState.currentStep === 'swap' || stepsState.swap.isSuccess) &&
+                      '[&_path]:fill-[#8763F3B2]',
+                  )}
                 />
                 <p className="flex items-center">
                   <span
                     className={cn(
-                      stepsState.approve1.isSuccess && 'text-[#58CDAD]',
-                      stepsState.approve1.error && 'text-red-100',
+                      stepsState.swap.isSuccess && 'text-[#58CDAD]',
+                      stepsState.swap.error && 'text-red-100',
                     )}
                   >
-                    Approve {asset?.contract_ticker_symbol} spending
-                  </span>
-                  {stepsState.approve1.isPending && (
+                    Confirm swap
+                  </span>{' '}
+                  {/* {depositStatus === 'pending' && ( */}
+                  {stepsState?.swap?.isPending && (
                     <Lottie
                       className="relative -left-4 h-8"
                       animationData={lottieLoader}
                       loop
                     />
                   )}
-                  {stepsState.approve1.isSuccess ? (
+                  {stepsState.swap.isSuccess ? (
                     <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
                   ) : null}
-                  {!isAllowed && stepsState.approve1.error && (
+                  {stepsState.swap.error && (
                     <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
-                      {stepsState.approve1.error}
+                      {stepsState.swap.error}
                     </div>
                   )}
                 </p>
               </div>
+
               <ArrowDown className="h-[1.125rem] w-8" />
             </>
           )}
-
-          {/* SWAP STEP */}
-
-          <div className="flex items-center gap-3">
-            <ArrangeSquare
-              className={cn(
-                'size-8',
-                '[&_path]:fill-[#8763F326]',
-                (stepsState.currentStep === 'swap' || stepsState.swap.isSuccess) &&
-                  '[&_path]:fill-[#8763F3B2]',
-              )}
-            />
-            <p className="flex items-center">
-              <span
-                className={cn(
-                  stepsState.swap.isSuccess && 'text-[#58CDAD]',
-                  stepsState.swap.error && 'text-red-100',
-                )}
-              >
-                Confirm swap
-              </span>{' '}
-              {/* {depositStatus === 'pending' && ( */}
-              {stepsState?.swap?.isPending && (
-                <Lottie
-                  className="relative -left-4 h-8"
-                  animationData={lottieLoader}
-                  loop
-                />
-              )}
-              {stepsState.swap.isSuccess ? (
-                <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
-              ) : null}
-              {stepsState.swap.error && (
-                <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
-                  {stepsState.swap.error}
-                </div>
-              )}
-            </p>
-          </div>
-
-          <ArrowDown className="h-[1.125rem] w-8" />
 
           {/* SWITCH TO ARBITRUM  */}
 
