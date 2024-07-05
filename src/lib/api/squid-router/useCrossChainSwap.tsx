@@ -1,8 +1,11 @@
 // Import Squid SDK
+
+import type { Squid } from '@0xsquid/sdk'
 import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import { useEthersSigner } from '@hooks/web3/useEthersSigner'
+import type { ethers } from 'ethers'
 // Import ethers library
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import useSquidSDK from './useSquidSdk'
 
@@ -13,6 +16,90 @@ const integratorId: string = process.env.INTEGRATOR_ID!
 const fromChainId = '56' // BNB chain ID
 const toChainId = '42161' // Arbitrum chain ID
 
+type SwapStatus = 'success' | 'pending' | 'error' | 'waiting-for-swap'
+
+async function waitForSuccessStatus(
+  squid: Squid,
+  txReceipt: ethers.TransactionReceipt,
+  changeStatusFunction: (status: SwapStatus) => void,
+  requestId?: string,
+) {
+  changeStatusFunction('pending')
+  const axelarScanLink = `https://axelarscan.io/gmp/${txReceipt.hash}`
+  console.log(`Finished! Check Axelarscan for details: ${axelarScanLink}`)
+
+  await new Promise((resolve) => setTimeout(resolve, 5000))
+
+  const getStatusParameters = {
+    transactionId: txReceipt.hash,
+    requestId,
+    integratorId,
+    fromChainId,
+    toChainId,
+  }
+
+  const completedStatuses = new Set([
+    'success',
+    'partial_success',
+    'needs_gas',
+    'not_found',
+  ])
+  const maxRetries = 30
+  let retryCount = 0
+
+  const checkStatus = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+      const status = await squid.getStatus(getStatusParameters)
+      console.log(`Route status: ${status.squidTransactionStatus}`)
+
+      if (
+        status &&
+        status.squidTransactionStatus &&
+        completedStatuses.has(status.squidTransactionStatus)
+      ) {
+        console.log('Swap transaction executed:', txReceipt.hash)
+        changeStatusFunction('success')
+
+        // Delay the reset of the swapStatus
+        setTimeout(() => {
+          changeStatusFunction('waiting-for-swap')
+        }, 5000) // Adjust the delay as needed
+
+        return
+      }
+
+      retryCount++
+      if (retryCount < maxRetries) {
+        await checkStatus()
+      } else if (status.squidTransactionStatus === 'ongoing') {
+        console.error('Max retries reached. Transaction is still ongoing.')
+      } else {
+        console.error('Max retries reached. Transaction not found.')
+      }
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        (error as any).response &&
+        (error as any).response.status === 404
+      ) {
+        changeStatusFunction('error')
+        retryCount++
+        if (retryCount < maxRetries) {
+          console.log('Transaction not found. Retrying...')
+          await checkStatus()
+        } else {
+          console.error('Max retries reached. Transaction not found.')
+        }
+      } else {
+        throw error
+      }
+    }
+  }
+
+  return checkStatus()
+}
+
 export const useCrossChainSwap = ({
   route,
   requestId,
@@ -20,6 +107,8 @@ export const useCrossChainSwap = ({
   route?: RouteResponse['route']
   requestId?: string
 }) => {
+  const [swapStatus, setSwapStatus] = useState<SwapStatus>('waiting-for-swap')
+  console.log('🚀 ~ requestId:', requestId)
   // Main function
   // Initialize Squid SDK
   const { squid, loading } = useSquidSDK()
@@ -27,8 +116,8 @@ export const useCrossChainSwap = ({
 
   // Get the swap route using Squid SDK
   const swapTokens = useCallback(async () => {
-    console.log('��� ~ useCrossChainSwap ~ route', route)
-    console.log('��� ~ useCrossChainSwap ~ requestId', requestId)
+    console.log('🚀 ~ useCrossChainSwap ~ route', route)
+    console.log('🚀 ~ useCrossChainSwap ~ requestId', requestId)
     if (!route) return
     try {
       if (loading || !squid) return
@@ -39,73 +128,15 @@ export const useCrossChainSwap = ({
       const tx = (await squid.executeRoute({
         signer: signer as unknown as any,
         route,
-      })) as unknown as any
+      })) as unknown as ethers.TransactionResponse
       const txReceipt = await tx.wait()
+      console.log('🚀 ~ swapTokens ~ txReceipt:', txReceipt)
 
-      // Show the transaction receipt with Axelarscan link
-      const axelarScanLink = `https://axelarscan.io/gmp/${txReceipt.transactionHash}`
-      console.log(`Finished! Check Axelarscan for details: ${axelarScanLink}`)
-
-      // Wait a few seconds before checking the status
-      await new Promise((resolve) => setTimeout(resolve, 5000))
-
-      // Parameters for checking the status of the transaction
-      const getStatusParameters = {
-        transactionId: txReceipt.transactionHash,
-        requestId,
-        integratorId,
-        fromChainId,
-        toChainId,
-      }
-
-      const completedStatuses = new Set([
-        'success',
-        'partial_success',
-        'needs_gas',
-        'not_found',
-      ])
-      const maxRetries = 10 // Maximum number of retries for status check
-      let retryCount = 0
-      let status = await squid.getStatus(getStatusParameters)
-
-      // Loop to check the transaction status until it is completed or max retries are reached
-      console.log(`Initial route status: ${status.squidTransactionStatus}`)
-
-      do {
-        try {
-          // Wait a few seconds before checking the status
-          await new Promise((resolve) => setTimeout(resolve, 5000))
-
-          // Retrieve the transaction's route status
-          status = await squid.getStatus(getStatusParameters)
-
-          // Display the route status
-          console.log(`Route status: ${status.squidTransactionStatus}`)
-        } catch (error: unknown) {
-          // Handle error if the transaction status is not found
-          if (
-            error instanceof Error &&
-            (error as any).response &&
-            (error as any).response.status === 404
-          ) {
-            retryCount++
-            if (retryCount >= maxRetries) {
-              console.error('Max retries reached. Transaction not found.')
-              break
-            }
-            console.log('Transaction not found. Retrying...')
-          } else {
-            throw error
-          }
-        }
-      } while (status && !completedStatuses.has(status?.squidTransactionStatus ?? ''))
-
-      // Wait for the transaction to be mined
-      console.log('Swap transaction executed:', txReceipt.transactionHash)
+      return await waitForSuccessStatus(squid, txReceipt!, setSwapStatus)
     } catch (error) {
       console.error(error)
     }
   }, [route, requestId, loading, squid, signer])
 
-  return { swapTokens }
+  return { swapTokens, swapStatus }
 }

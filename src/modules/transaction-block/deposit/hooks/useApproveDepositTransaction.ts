@@ -1,37 +1,30 @@
 // eslint-disable-next-line import/extensions
 // eslint-disable-next-line import/extensions
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { useCallback } from 'react'
 import { type Address, erc20Abi } from 'viem'
 import { useWriteContract } from 'wagmi'
 
 export const useApproveDepositTransaction = ({
+  approveValue,
+  tokenAddress,
   transactionRequestTarget,
 }: {
-  transactionRequestTarget?: string
+  approveValue: string
+  tokenAddress: Address
+  transactionRequestTarget: string
 }) => {
   const { writeContract, ...rest } = useWriteContract()
-  const { depositAsset, inputValue } = useTxStore()
 
   const approve = useCallback(() => {
-    if (
-      !depositAsset ||
-      !inputValue ||
-      !depositAsset.balance ||
-      !transactionRequestTarget
-    )
-      return
+    if (!approveValue || !tokenAddress || !transactionRequestTarget) return
 
-    console.log('🚀 ~ approve ~ depositAsset.balance:', depositAsset.balance)
-    const tokenAddress = depositAsset.contract_address as Address
-    console.log('🚀 ~ approve ~ tokenAddress:', tokenAddress)
     return writeContract({
       address: tokenAddress,
       abi: erc20Abi,
       functionName: 'approve',
-      args: [transactionRequestTarget as `0x${string}`, depositAsset.balance],
+      args: [transactionRequestTarget as `0x${string}`, BigInt(approveValue)],
     })
-  }, [depositAsset, inputValue, transactionRequestTarget, writeContract])
+  }, [approveValue, tokenAddress, transactionRequestTarget, writeContract])
 
   return { approve, ...rest }
 }

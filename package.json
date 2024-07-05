@@ -15,6 +15,7 @@
 		"@0xsquid/squid-types": "^0.1.84",
 		"@amcharts/amcharts5": "^5.9.11",
 		"@apollo/client": "^3.10.6",
+		"@covalenthq/client-sdk": "^1.0.2",
 		"@floating-ui/react": "^0.26.16",
 		"@radix-ui/react-accordion": "^1.2.0",
 		"@radix-ui/react-dialog": "^1.1.1",
@@ -39,6 +40,7 @@
 		"i18next": "^23.11.3",
 		"i18next-browser-languagedetector": "^7.2.1",
 		"i18next-http-backend": "^2.5.1",
+		"lottie-react": "^2.4.0",
 		"lucide-react": "^0.381.0",
 		"next-i18next": "^15.3.0",
 		"path": "^0.12.7",
@@ -54,7 +56,6 @@
 		"vaul": "^0.9.1",
 		"viem": "2.x",
 		"wagmi": "^2.8.6",
-		"@covalenthq/client-sdk": "^1.0.2",
 		"zustand": "^4.5.2"
 	},
 	"devDependencies": {

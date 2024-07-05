@@ -3,9 +3,9 @@ import type { Config } from '@0xsquid/sdk/dist/types'
 import { useEffect, useState } from 'react'
 
 export const SDK_INTEGRATOR_ID = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
-export const API_INTEGRATOR_ID = 'halo-497fab89-3145-47b1-8e06-ce2865b1a3ac'
+// export const API_INTEGRATOR_ID = 'halo-497fab89-3145-47b1-8e06-ce2865b1a3ac'
 
-export const SQUID_API_URL = 'https://v2.api.squidrouter.com'
+// export const SQUID_API_URL = 'https://v2.api.squidrouter.com'
 export const APIPLUS_SQUID_URL = 'https://apiplus.squidrouter.com'
 
 const useSquidSDK = () => {

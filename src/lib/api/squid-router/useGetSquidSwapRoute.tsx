@@ -12,13 +12,21 @@ export function useGetSquidSwapRoute(parameters_: {
   toToken: string
   enableBoost?: boolean
 }) {
-  const { fromToken, toToken, fromAmount, fromChain, toChain, enableBoost } = parameters_
-  console.log('🚀 ~ parameters_:', parameters_)
+  const {
+    fromToken,
+    toToken,
+    fromAmount,
+    fromChain,
+    toChain,
+    enableBoost = true,
+  } = parameters_
 
   const [route, setRoute] = useState<RouteResponse['route']>()
   const [requestId, setRequestId] = useState<string>()
   const { address } = useAccount()
   const { squid, loading } = useSquidSDK()
+
+  const [isPending, setIsPending] = useState(false)
 
   useEffect(() => {
     if (!fromAmount) return
@@ -32,18 +40,20 @@ export function useGetSquidSwapRoute(parameters_: {
       toChain,
       toToken,
       toAddress: address,
-      enableBoost: enableBoost ?? true,
+      enableBoost,
     }
+    console.log('🚀 ~ useEffect ~ parameters:', parameters)
 
     async function getSwapRoute() {
       if (loading || !squid) return
 
+      setIsPending(true)
       const { route: _route, requestId: _requestId } = await squid.getRoute(parameters)
-      console.log('🚀 ~ getSwapRoute ~ requestId:', _requestId)
-      console.log('Calculated route:', _route.estimate.toAmount)
-
+      console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
       setRoute(_route)
       setRequestId(_requestId)
+
+      setIsPending(false)
     }
 
     getSwapRoute()
@@ -59,5 +69,5 @@ export function useGetSquidSwapRoute(parameters_: {
     toToken,
   ])
 
-  return { route, requestId }
+  return { route, requestId, isPending }
 }

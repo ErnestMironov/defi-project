@@ -11,10 +11,13 @@ import {
 } from '@components/ui/dialog'
 import { formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useTxStore } from './store/useDepositStore'
 
 export const DoneModal = () => {
+  const navigate = useNavigate()
+
   const { txType, vault, setCurrentModal, currentModal, withdrawNetwork, inputValue } =
     useTxStore()
 
@@ -64,7 +67,12 @@ export const DoneModal = () => {
             className="dark:opacity-1 absolute bottom-[-15.1rem] right-[-15.8rem] size-[27.9375rem] animate-[spin_20s_linear_infinite] opacity-50"
           />
         </div>
-        <Button size="lg" variant="outline" className="mt-10">
+        <Button
+          onClick={() => navigate('/analytics')}
+          size="lg"
+          variant="outline"
+          className="mt-10"
+        >
           Go check analytics
         </Button>
         <Button size="lg" onClick={onClose} className="mt-3">
