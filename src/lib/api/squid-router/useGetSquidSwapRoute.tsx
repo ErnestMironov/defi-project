@@ -12,8 +12,14 @@ export function useGetSquidSwapRoute(parameters_: {
   toToken: string
   enableBoost?: boolean
 }) {
-  const { fromToken, toToken, fromAmount, fromChain, toChain, enableBoost } = parameters_
-  console.log('🚀 ~ parameters_:', parameters_)
+  const {
+    fromToken,
+    toToken,
+    fromAmount,
+    fromChain,
+    toChain,
+    enableBoost = true,
+  } = parameters_
 
   const [route, setRoute] = useState<RouteResponse['route']>()
   const [requestId, setRequestId] = useState<string>()
@@ -34,14 +40,16 @@ export function useGetSquidSwapRoute(parameters_: {
       toChain,
       toToken,
       toAddress: address,
-      enableBoost: enableBoost ?? true,
+      enableBoost,
     }
+    console.log('🚀 ~ useEffect ~ parameters:', parameters)
 
     async function getSwapRoute() {
       if (loading || !squid) return
 
       setIsPending(true)
       const { route: _route, requestId: _requestId } = await squid.getRoute(parameters)
+      console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
       setRoute(_route)
       setRequestId(_requestId)
 
