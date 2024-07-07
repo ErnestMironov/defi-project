@@ -22,7 +22,8 @@ import { useCheckAllowance } from './hooks/useCheckAllowance'
 import { useFullDepositFlow } from './hooks/useFullDepositFlow'
 
 export const DepositReviewModal = () => {
-  const { ActionButton, stepsState, resetStore, isSwapNeeded } = useFullDepositFlow()
+  const { ActionButton, stepsState, resetStore, isSwapNeeded, isNetworkArb } =
+    useFullDepositFlow()
   console.log('🚀 ~ stepsState:', stepsState)
 
   const {
@@ -127,8 +128,9 @@ export const DepositReviewModal = () => {
                     <p className="flex items-center">
                       <span
                         className={cn(
-                          stepsState.approve1.isSuccess && 'text-[#58CDAD]',
                           stepsState.approve1.error && 'text-red-100',
+                          stepsState.currentStep !== 'approve1' && 'text-gray-80',
+                          stepsState.approve1.isSuccess && 'text-[#58CDAD]',
                         )}
                       >
                         Approve {asset?.contract_ticker_symbol} spending
@@ -168,8 +170,9 @@ export const DepositReviewModal = () => {
                 <p className="flex items-center">
                   <span
                     className={cn(
-                      stepsState.swap.isSuccess && 'text-[#58CDAD]',
                       stepsState.swap.error && 'text-red-100',
+                      stepsState.currentStep !== 'swap' && 'text-gray-80',
+                      stepsState.swap.isSuccess && 'text-[#58CDAD]',
                     )}
                   >
                     Confirm swap
@@ -199,44 +202,51 @@ export const DepositReviewModal = () => {
 
           {/* SWITCH TO ARBITRUM  */}
 
-          <div className="flex items-center gap-3">
-            <EmptyWalletSquare
-              className={cn(
-                'size-8',
-                '[&_path]:fill-[#8763F326]',
-                (stepsState.currentStep === 'switchToArbitrum' ||
-                  stepsState.switchToArbitrum.isSuccess) &&
-                  '[&_path]:fill-[#8763F3B2]',
-              )}
-            />
-            <p className="flex items-center">
-              <span
-                className={cn(
-                  stepsState.switchToArbitrum.isSuccess && 'text-[#58CDAD]',
-                  stepsState.switchToArbitrum.error && 'text-red-100',
-                )}
-              >
-                Switch network to Arbitrum
-              </span>
-              {stepsState.switchToArbitrum?.isPending && (
-                <Lottie
-                  className="relative -left-4 h-8"
-                  animationData={lottieLoader}
-                  loop
+          {!isNetworkArb ||
+          stepsState.currentStep === 'switchToArbitrum' ||
+          stepsState.switchToArbitrum.isSuccess ? (
+            <>
+              <div className="flex items-center gap-3">
+                <EmptyWalletSquare
+                  className={cn(
+                    'size-8',
+                    '[&_path]:fill-[#8763F326]',
+                    (stepsState.currentStep === 'switchToArbitrum' ||
+                      stepsState.switchToArbitrum.isSuccess) &&
+                      '[&_path]:fill-[#8763F3B2]',
+                  )}
                 />
-              )}
-              {stepsState.switchToArbitrum.isSuccess ? (
-                <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
-              ) : null}
-              {stepsState.switchToArbitrum.error && (
-                <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
-                  {stepsState.switchToArbitrum.error}
-                </div>
-              )}
-            </p>
-          </div>
+                <p className="flex items-center">
+                  <span
+                    className={cn(
+                      stepsState.switchToArbitrum.error && 'text-red-100',
+                      stepsState.currentStep !== 'switchToArbitrum' && 'text-gray-80',
+                      stepsState.switchToArbitrum.isSuccess && 'text-[#58CDAD]',
+                    )}
+                  >
+                    Switch network to Arbitrum
+                  </span>
+                  {stepsState.switchToArbitrum?.isPending && (
+                    <Lottie
+                      className="relative -left-4 h-8"
+                      animationData={lottieLoader}
+                      loop
+                    />
+                  )}
+                  {stepsState.switchToArbitrum.isSuccess ? (
+                    <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
+                  ) : null}
+                  {stepsState.switchToArbitrum.error && (
+                    <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
+                      {stepsState.switchToArbitrum.error}
+                    </div>
+                  )}
+                </p>
+              </div>
 
-          <ArrowDown className="h-[1.125rem] w-8" />
+              <ArrowDown className="h-[1.125rem] w-8" />
+            </>
+          ) : null}
 
           {/* APPROVE FOR DEPOSIT STEP  */}
 
@@ -253,9 +263,9 @@ export const DepositReviewModal = () => {
             <p className="flex items-center">
               <span
                 className={cn({
-                  'text-[#58CDAD]': stepsState.approve2.isSuccess,
                   'text-red-100': stepsState.approve2.error,
                   'text-gray-80': stepsState.currentStep !== 'approve2',
+                  'text-[#58CDAD]': stepsState.approve2.isSuccess,
                 })}
               >
                 Approve {vault} spending

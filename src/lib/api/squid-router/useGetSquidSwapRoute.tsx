@@ -1,5 +1,6 @@
 import type { RouteResponse } from '@0xsquid/sdk/dist/types'
-import { useEffect, useState } from 'react'
+import { debounce } from 'lodash'
+import { useEffect, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import useSquidSDK from './useSquidSdk'
@@ -28,11 +29,8 @@ export function useGetSquidSwapRoute(parameters_: {
 
   const [isPending, setIsPending] = useState(false)
 
-  useEffect(() => {
-    if (!fromAmount) return
-    if (!fromToken || !toToken) return
-
-    const parameters = {
+  const parameters = useMemo(
+    () => ({
       fromAddress: address,
       fromChain,
       fromToken,
@@ -41,33 +39,51 @@ export function useGetSquidSwapRoute(parameters_: {
       toToken,
       toAddress: address,
       enableBoost,
-    }
+    }),
+    [address, fromChain, fromToken, fromAmount, toChain, toToken, enableBoost],
+  )
+
+  const debouncedGetSwapRoute = useMemo(
+    () =>
+      debounce(async (parameters__: typeof parameters) => {
+        console.log('🚀 ~ getSwapRoute ~ !!params.fromAmount:', !!parameters__.fromAmount)
+        const hasEmptyParameters = Object.values(parameters__).every(
+          (value) => value === '' || value === undefined,
+        )
+        if (
+          loading ||
+          !squid ||
+          Number(parameters__.fromAmount) === 0 ||
+          hasEmptyParameters
+        )
+          return
+
+        setIsPending(true)
+        console.log('🚀 ~ getSwapRoute ~ call squid.getRoute:')
+        const { route: _route, requestId: _requestId } =
+          await squid.getRoute(parameters__)
+        console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
+        setRoute(_route)
+        setRequestId(_requestId)
+
+        setIsPending(false)
+      }, 300),
+    [loading, squid],
+  )
+
+  useEffect(() => {
+    if (
+      !fromAmount ||
+      !fromToken ||
+      !toToken ||
+      parameters?.fromToken.toLowerCase() === parameters?.toToken.toLowerCase()
+    )
+      return
+
     console.log('🚀 ~ useEffect ~ parameters:', parameters)
 
-    async function getSwapRoute() {
-      if (loading || !squid) return
-
-      setIsPending(true)
-      const { route: _route, requestId: _requestId } = await squid.getRoute(parameters)
-      console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
-      setRoute(_route)
-      setRequestId(_requestId)
-
-      setIsPending(false)
-    }
-
-    getSwapRoute()
-  }, [
-    address,
-    enableBoost,
-    fromAmount,
-    fromChain,
-    fromToken,
-    loading,
-    squid,
-    toChain,
-    toToken,
-  ])
+    debouncedGetSwapRoute(parameters)
+  }, [parameters, loading, squid, fromAmount, fromToken, toToken, debouncedGetSwapRoute])
 
   return { route, requestId, isPending }
 }

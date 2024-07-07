@@ -8,7 +8,7 @@ import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import type { Address } from 'viem'
 import { parseEther, parseUnits } from 'viem'
-import { useSwitchChain } from 'wagmi'
+import { useChainId, useSwitchChain } from 'wagmi'
 
 import { useApproveDepositTransaction } from './useApproveDepositTransaction'
 import { useDepositTransaction } from './useDepositTransaction'
@@ -85,6 +85,7 @@ type IStepsAction = {
 
 export const useFullDepositFlow = () => {
   const { switchChain } = useSwitchChain()
+  const currentChainId = useChainId()
 
   // dispatch to store object with objects
   const [stepsState, dispatch] = useReducer(
@@ -148,23 +149,28 @@ export const useFullDepositFlow = () => {
   })
 
   const [isSwapNeeded, setIsSwapNeeded] = useState(false)
+  const [isNetworkArb, setIsNetworkArb] = useState(false)
+  console.log('🚀 ~ useFullDepositFlow ~ isNetworkArb:', isNetworkArb)
 
   useEffect(() => {
-    function isNetworkArb() {
-      return chainData?.chainId === 42_161
+    function areAddressesEqual() {
+      return asset?.contract_address?.toLowerCase() === vaultAddress?.toLowerCase()
     }
+    console.log('🚀 ~ areAddressesEqual ~ vaultAddress:', vaultAddress)
+    console.log(
+      '🚀 ~ areAddressesEqual ~ asset?.contract_address:',
+      asset?.contract_address,
+    )
 
-    function isSTABLE() {
-      return (
-        asset?.contract_ticker_symbol.toLowerCase() === 'usdc' ||
-        asset?.contract_ticker_symbol.toLowerCase() === 'usdt'
-      )
-    }
-
-    const IS_SWAP_NEEDED = !isNetworkArb() || !isSTABLE()
+    const IS_SWAP_NEEDED = !areAddressesEqual()
 
     setIsSwapNeeded(IS_SWAP_NEEDED)
-  }, [asset?.contract_ticker_symbol, chainData?.chainId, route?.transactionRequest])
+  }, [asset?.contract_address, vaultAddress])
+
+  useEffect(() => {
+    console.log('🚀 ~ useEffect ~ chainData?.chainId:', chainData?.chainId)
+    setIsNetworkArb(currentChainId === 42_161)
+  }, [chainData?.chainId, currentChainId])
 
   /*
    * 1. Approve tokens for swap
@@ -316,6 +322,42 @@ export const useFullDepositFlow = () => {
   }
 
   useEffect(() => {
+    if (approveDepositStatus === 'success') {
+      dispatch({
+        type: 'approve2',
+        isPending: false,
+        isSuccess: true,
+        error: '',
+      })
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'deposit',
+      })
+      return
+    }
+
+    if (swapStatus === 'success') {
+      dispatch({
+        type: 'swap',
+        isPending: false,
+        isSuccess: true,
+        error: '',
+      })
+      if (isNetworkArb) {
+        dispatch({
+          type: 'setCurrentStep',
+          currentStep: 'approve2',
+        })
+      } else {
+        dispatch({
+          type: 'setCurrentStep',
+          currentStep: 'switchToArbitrum',
+        })
+      }
+
+      return
+    }
+
     if (approveStatus === 'success') {
       dispatch({
         type: 'approve1',
@@ -328,56 +370,31 @@ export const useFullDepositFlow = () => {
         currentStep: 'swap',
       })
     }
+  }, [
+    approveDepositStatus,
+    approveStatus,
+    depositStatus,
+    isNetworkArb,
+    isSwapNeeded,
+    swapStatus,
+  ])
 
-    if (swapStatus === 'success') {
+  useEffect(() => {
+    if (!isSwapNeeded && isNetworkArb) {
       dispatch({
-        type: 'swap',
-        isPending: false,
-        isSuccess: true,
-        error: '',
+        type: 'setCurrentStep',
+        currentStep: 'approve2',
       })
+      return
+    }
+
+    if (!isSwapNeeded) {
       dispatch({
         type: 'setCurrentStep',
         currentStep: 'switchToArbitrum',
       })
     }
-
-    if (approveDepositStatus === 'success') {
-      dispatch({
-        type: 'approve2',
-        isPending: false,
-        isSuccess: true,
-        error: '',
-      })
-      dispatch({
-        type: 'setCurrentStep',
-        currentStep: 'deposit',
-      })
-    }
-
-    if (depositStatus === 'success') {
-      dispatch({
-        type: 'deposit',
-        isPending: false,
-        isSuccess: true,
-        error: '',
-      })
-      dispatch({
-        type: 'setCurrentStep',
-        currentStep: 'approve2',
-      })
-    }
-  }, [approveDepositStatus, approveStatus, depositStatus, isSwapNeeded, swapStatus])
-
-  // useEffect(() => {
-  //   console.log('🚀 ~ useEffect ~ isSwapNeeded:', isSwapNeeded)
-  //   if (!isSwapNeeded) {
-  //     dispatch({
-  //       type: 'setCurrentStep',
-  //       currentStep: 'switchToArbitrum',
-  //     })
-  //   }
-  // }, [isSwapNeeded])
+  }, [isNetworkArb, isSwapNeeded])
 
   function resetStore() {
     dispatch({
@@ -462,6 +479,7 @@ export const useFullDepositFlow = () => {
   return {
     stepsState,
     isSwapNeeded,
+    isNetworkArb,
     ActionButton,
     dispatch,
     resetStore,
