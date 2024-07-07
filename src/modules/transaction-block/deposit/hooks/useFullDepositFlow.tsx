@@ -7,7 +7,7 @@ import { useTokenAsset } from '@hooks/useTokenAsset'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import type { Address } from 'viem'
-import { parseEther, parseUnits } from 'viem'
+import { parseUnits } from 'viem'
 import { useChainId, useSwitchChain } from 'wagmi'
 
 import { useApproveDepositTransaction } from './useApproveDepositTransaction'
@@ -132,7 +132,7 @@ export const useFullDepositFlow = () => {
 
   const chainData = useTokenAsset(chain)
 
-  const vaultAddress = useMemo(() => {
+  const tokenAddrForVault = useMemo(() => {
     const depositTokenAsset = squid?.tokens.find(
       (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
     )
@@ -140,11 +140,11 @@ export const useFullDepositFlow = () => {
   }, [squid?.tokens, vault])
 
   const { route, requestId } = useGetSquidSwapRoute({
-    fromAmount: parseEther(amount).toString(),
+    fromAmount: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     fromChain: String(chainData?.chainId),
     fromToken: asset?.contract_address!,
     toChain: '42161',
-    toToken: vaultAddress,
+    toToken: tokenAddrForVault,
     enableBoost: true,
   })
 
@@ -154,18 +154,13 @@ export const useFullDepositFlow = () => {
 
   useEffect(() => {
     function areAddressesEqual() {
-      return asset?.contract_address?.toLowerCase() === vaultAddress?.toLowerCase()
+      return asset?.contract_address?.toLowerCase() === tokenAddrForVault?.toLowerCase()
     }
-    console.log('🚀 ~ areAddressesEqual ~ vaultAddress:', vaultAddress)
-    console.log(
-      '🚀 ~ areAddressesEqual ~ asset?.contract_address:',
-      asset?.contract_address,
-    )
 
     const IS_SWAP_NEEDED = !areAddressesEqual()
 
     setIsSwapNeeded(IS_SWAP_NEEDED)
-  }, [asset?.contract_address, vaultAddress])
+  }, [asset?.contract_address, tokenAddrForVault])
 
   useEffect(() => {
     console.log('🚀 ~ useEffect ~ chainData?.chainId:', chainData?.chainId)
@@ -177,7 +172,7 @@ export const useFullDepositFlow = () => {
    */
   const { approve: _approve, status: approveStatus } = useApproveDepositTransaction({
     tokenAddress: asset?.contract_address! as Address,
-    approveValue: parseEther(amount).toString(),
+    approveValue: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     transactionRequestTarget: route?.transactionRequest?.target!,
   })
 
@@ -266,7 +261,7 @@ export const useFullDepositFlow = () => {
 
   const { approve: _approveDeposit, status: approveDepositStatus } =
     useApproveDepositTransaction({
-      tokenAddress: vaultAddress as Address,
+      tokenAddress: tokenAddrForVault as Address,
       approveValue: approveValue.toString(),
       transactionRequestTarget: ARB_GATEWAY,
     })
@@ -296,7 +291,7 @@ export const useFullDepositFlow = () => {
    */
 
   const { deposit: _deposit, status: depositStatus } = useDepositTransaction({
-    address: vaultAddress as Address,
+    address: tokenAddrForVault as Address,
     amount: approveValue,
   })
   const deposit = () => {

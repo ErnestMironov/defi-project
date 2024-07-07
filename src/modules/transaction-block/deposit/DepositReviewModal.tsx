@@ -15,7 +15,7 @@ import { cn } from '@utils/cn'
 import { parseFloatLocale } from '@utils/formatValue'
 import Lottie from 'lottie-react'
 import { useMemo } from 'react'
-import { parseEther } from 'viem'
+import { parseUnits } from 'viem'
 
 import { useTxStore } from '../store/useDepositStore'
 import { useCheckAllowance } from './hooks/useCheckAllowance'
@@ -40,7 +40,7 @@ export const DepositReviewModal = () => {
 
   const { squid } = useSquidSDK()
 
-  const vaultAddress = useMemo(() => {
+  const tokenAddrForVault = useMemo(() => {
     const depositTokenAsset = squid?.tokens.find(
       (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
     )
@@ -48,11 +48,11 @@ export const DepositReviewModal = () => {
   }, [squid?.tokens, vault])
 
   const { route } = useGetSquidSwapRoute({
-    fromAmount: parseEther(amount).toString(),
+    fromAmount: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     fromChain: String(chainData?.chainId),
     fromToken: asset?.contract_address!,
     toChain: '42161',
-    toToken: vaultAddress,
+    toToken: tokenAddrForVault,
     enableBoost: true,
   })
 

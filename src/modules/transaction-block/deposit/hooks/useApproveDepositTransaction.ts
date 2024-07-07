@@ -13,6 +13,9 @@ export const useApproveDepositTransaction = ({
   tokenAddress: Address
   transactionRequestTarget: string
 }) => {
+  console.log('🚀 ~ approveValue:', approveValue)
+  console.log('🚀 useApp ~ transactionRequestTarget:', transactionRequestTarget)
+  console.log('🚀 useApp ~ tokenAddress:', tokenAddress)
   const { writeContract, ...rest } = useWriteContract()
 
   const approve = useCallback(() => {

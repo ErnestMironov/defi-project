@@ -1,7 +1,7 @@
 // Import Squid SDK
 
 import type { Squid } from '@0xsquid/sdk'
-import type { RouteResponse } from '@0xsquid/sdk/dist/types'
+import { type RouteResponse, SquidRouteType } from '@0xsquid/sdk/dist/types'
 import { useEthersSigner } from '@hooks/web3/useEthersSigner'
 import type { ethers } from 'ethers'
 // Import ethers library
@@ -131,6 +131,21 @@ export const useCrossChainSwap = ({
       })) as unknown as ethers.TransactionResponse
       const txReceipt = await tx.wait()
       console.log('🚀 ~ swapTokens ~ txReceipt:', txReceipt)
+
+      if (
+        route?.transactionRequest?.routeType === SquidRouteType.EVM_ONLY &&
+        txReceipt?.status === 1
+      ) {
+        console.log('Swap transaction executed:', txReceipt.hash)
+        setSwapStatus('success')
+
+        // Delay the reset of the swapStatus
+        setTimeout(() => {
+          setSwapStatus('waiting-for-swap')
+        }, 5000) // Adjust the delay as needed
+
+        return
+      }
 
       return await waitForSuccessStatus(squid, txReceipt!, setSwapStatus)
     } catch (error) {
