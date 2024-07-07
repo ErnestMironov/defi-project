@@ -14,7 +14,7 @@ import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { parseFloatLocale } from '@utils/formatValue'
 import Lottie from 'lottie-react'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { parseEther } from 'viem'
 
 import { useTxStore } from '../store/useDepositStore'
@@ -22,20 +22,18 @@ import { useCheckAllowance } from './hooks/useCheckAllowance'
 import { useFullDepositFlow } from './hooks/useFullDepositFlow'
 
 export const DepositReviewModal = () => {
-  const { ActionButton, stepsState, resetStore, isSwapNeeded, isNetworkArb } =
-    useFullDepositFlow()
+  const { ActionButton, stepsState, isSwapNeeded, isNetworkArb } = useFullDepositFlow()
   console.log('🚀 ~ stepsState:', stepsState)
 
   const {
     depositAsset: asset,
-    depositNetwork: chain,
     vault,
     inputValue: amount,
     currentModal,
     setCurrentModal,
     inputValueInUSD,
   } = useTxStore()
-  const chainData = useTokenAsset(chain)
+  const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
 
   const { isAllowed } = useCheckAllowance()
@@ -57,8 +55,6 @@ export const DepositReviewModal = () => {
     toToken: vaultAddress,
     enableBoost: true,
   })
-
-  useEffect(resetStore, [asset])
 
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>

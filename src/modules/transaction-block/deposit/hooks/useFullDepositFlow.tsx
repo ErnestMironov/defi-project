@@ -379,23 +379,6 @@ export const useFullDepositFlow = () => {
     swapStatus,
   ])
 
-  useEffect(() => {
-    if (!isSwapNeeded && isNetworkArb) {
-      dispatch({
-        type: 'setCurrentStep',
-        currentStep: 'approve2',
-      })
-      return
-    }
-
-    if (!isSwapNeeded) {
-      dispatch({
-        type: 'setCurrentStep',
-        currentStep: 'switchToArbitrum',
-      })
-    }
-  }, [isNetworkArb, isSwapNeeded])
-
   function resetStore() {
     dispatch({
       type: 'approve1',
@@ -432,6 +415,37 @@ export const useFullDepositFlow = () => {
       currentStep: 'approve1',
     })
   }
+
+  useEffect(() => {
+    resetStore()
+    console.log(
+      '🚀 ~ useEffect ~ isSwapNeeded && asset?.native_token:',
+      isSwapNeeded && asset?.native_token,
+    )
+    if (!isSwapNeeded && isNetworkArb) {
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'approve2',
+      })
+      return
+    }
+
+    if (!isSwapNeeded) {
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'switchToArbitrum',
+      })
+
+      return
+    }
+
+    if (isSwapNeeded && asset?.native_token) {
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'swap',
+      })
+    }
+  }, [asset, isNetworkArb, isSwapNeeded])
 
   const ActionButton = () => {
     switch (stepsState.currentStep) {

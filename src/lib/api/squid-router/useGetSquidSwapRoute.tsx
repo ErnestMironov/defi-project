@@ -47,7 +47,7 @@ export function useGetSquidSwapRoute(parameters_: {
     () =>
       debounce(async (parameters__: typeof parameters) => {
         console.log('🚀 ~ getSwapRoute ~ !!params.fromAmount:', !!parameters__.fromAmount)
-        const hasEmptyParameters = Object.values(parameters__).every(
+        const hasEmptyParameters = Object.values(parameters__).some(
           (value) => value === '' || value === undefined,
         )
         if (
