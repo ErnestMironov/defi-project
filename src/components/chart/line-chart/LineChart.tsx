@@ -49,7 +49,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
     let format: string = 'MMM'
     switch (frame) {
       case '1D': {
-        format = 'HH:MM'
+        format = 'HH:mm'
         break
       }
       case '1W': {

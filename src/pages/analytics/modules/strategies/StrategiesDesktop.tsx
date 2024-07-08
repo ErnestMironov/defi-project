@@ -55,7 +55,10 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
                         className="size-10"
                       />
                     </Table.Cell>
-                    <Table.Cell>{strategy.apy.toFixed(2)}%</Table.Cell>
+                    {/* // ! remove "* 5" when we have real data */}
+                    <Table.Cell>
+                      {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
+                    </Table.Cell>
                     <Table.Cell>
                       $
                       {formatAmountValue(

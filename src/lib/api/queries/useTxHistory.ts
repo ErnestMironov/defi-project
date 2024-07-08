@@ -108,7 +108,8 @@ export const useTxHistory = ({
         nonce: edge.node.id,
         txHash: edge.node.txhash,
         strategy: edge.node.data.strategyId,
-        apy: strategyApy,
+        // ! remove "* 5" when we have real data
+        apy: BigNumber(strategyApy).multipliedBy(5).toString(),
         tvl,
         protocol: strategy?.protocol,
         cursor: edge.cursor,

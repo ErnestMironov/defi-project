@@ -54,18 +54,18 @@ export const useOverview = () => {
   const deposited = data?.maatUserStats.balances
     .reduce((accumulator, item) => accumulator.plus(item.balance), BigNumber(0))
     .div(10 ** 6)
-  const yeald = data?.apies[0].apy
-    ? deposited
-        ?.multipliedBy(data?.apies[0].apy)
-        .div(100)
-        .div(12)
-        .toFixed(2)
+  // ! remove "* 5" when we have real data
+  const lastApy = BigNumber(data?.apies[0].apy || '0')
+    .multipliedBy(5)
+    .toString()
+  const yeald = lastApy
+    ? deposited?.multipliedBy(lastApy).div(100).div(12).toFixed(2)
     : '0'
   const formattedData = {
     userOverview: {
       deposited: formatAmountValue(deposited?.toString(), 2),
       yeald,
-      apy: formatAmountValue(data?.apies[0].apy, 2),
+      apy: formatAmountValue(lastApy, 2),
     },
     maatOverview: {
       tvl: formatAmountValue(tvl, 2),

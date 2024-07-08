@@ -21,7 +21,7 @@ export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties
   return (
     <div className="flex flex-col gap-1 rounded-2xl bg-cards px-[0.94rem] py-3 shadow-md lg:px-4">
       <div className="text-[0.75rem] text-gray-100 lg:text-[0.79863rem]">
-        {dayjs(data[0].timestamp).format('DD MMM HH:MM')}
+        {dayjs(data[0].timestamp).format('DD MMM HH:mm')}
       </div>
       <div className="flex flex-col gap-[0.38rem]">
         {data.map((item, i) => {
