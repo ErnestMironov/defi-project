@@ -23,6 +23,7 @@ export function useGetSquidSwapRoute(parameters_: {
   } = parameters_
 
   const [route, setRoute] = useState<RouteResponse['route']>()
+  console.log('🚀 ~ route:', route)
   const [requestId, setRequestId] = useState<string>()
   const { address } = useAccount()
   const { squid, loading } = useSquidSDK()
@@ -64,7 +65,7 @@ export function useGetSquidSwapRoute(parameters_: {
           await squid.getRoute(parameters__)
         console.log('🚀 ~ debounce ~ _route:', _route)
         console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
-        setRoute(_route)
+        if (_route) setRoute(_route)
         setRequestId(_requestId)
 
         setIsPending(false)
