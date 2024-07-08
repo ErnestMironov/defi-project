@@ -138,6 +138,8 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
     try {
       if (loading || !squid) return
 
+      setStatus('pending')
+
       console.log('swapping started')
 
       // Execute the swap transaction
@@ -157,9 +159,6 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
         onSuccessHandler?.()
 
         // Delay the reset of the status
-        setTimeout(() => {
-          setStatus('idle')
-        }, 5000)
 
         return
       }

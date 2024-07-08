@@ -48,7 +48,7 @@ export function useGetSquidSwapRoute(parameters_: {
       debounce(async (parameters__: typeof parameters) => {
         console.log('🚀 ~ getSwapRoute ~ !!params.fromAmount:', !!parameters__.fromAmount)
         const hasEmptyParameters = Object.values(parameters__).some(
-          (value) => value === '' || value === undefined || value === "undefined",
+          (value) => value === '' || value === undefined || value === 'undefined',
         )
         if (
           loading ||
@@ -62,6 +62,7 @@ export function useGetSquidSwapRoute(parameters_: {
         console.log('🚀 ~ getSwapRoute ~ call squid.getRoute:')
         const { route: _route, requestId: _requestId } =
           await squid.getRoute(parameters__)
+        console.log('🚀 ~ debounce ~ _route:', _route)
         console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
         setRoute(_route)
         setRequestId(_requestId)

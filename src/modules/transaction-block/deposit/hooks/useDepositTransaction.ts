@@ -4,7 +4,7 @@ import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { useCallback } from 'react'
 import type { Address } from 'viem'
-import { useWriteContract } from 'wagmi'
+import { useAccount, useWriteContract } from 'wagmi'
 
 import type { IDepositWizardHook } from '../interfaces'
 
@@ -20,28 +20,45 @@ export const useDepositTransaction = ({
 }: IProperties) => {
   const { writeContract, ...rest } = useWriteContract()
   const { depositAsset, setCurrentModal } = useTxStore()
+  const { address: userAddress } = useAccount()
 
   const deposit = useCallback(() => {
-
-    if (!depositAsset || !address) return
-    const tokenAddress = depositAsset.contract_address as Address
+    console.log(
+      '🚀 ~ deposit ~ address, amount, userAddress, ARB_EID:',
+      address,
+      amount,
+      userAddress,
+      ARB_EID,
+    )
+    if (!depositAsset || !address || !userAddress) return
 
     return writeContract(
       {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'deposit',
-        args: [tokenAddress, amount, address, ARB_EID],
+        args: [address, amount, userAddress, ARB_EID],
       },
       {
         onSuccess: () => {
           onSuccessHandler?.()
           setCurrentModal('done')
         },
-        onError: () => setCurrentModal('error'),
+        onError: (err) => {
+          console.error('Error depositing', err)
+          setCurrentModal('error')
+        },
       },
     )
-  }, [address, amount, depositAsset, onSuccessHandler, setCurrentModal, writeContract])
+  }, [
+    address,
+    amount,
+    depositAsset,
+    onSuccessHandler,
+    setCurrentModal,
+    userAddress,
+    writeContract,
+  ])
 
   return { deposit, ...rest }
 }

@@ -53,7 +53,7 @@ export const WizardStep = ({
           ) : null}
           {status === 'error' && (
             <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
-              {error}
+              {error?.slice(0, 30)}...
             </div>
           )}
         </p>
