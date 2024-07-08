@@ -8,7 +8,9 @@ import { parseFloatLocale } from '@utils/formatValue'
 import { useMemo } from 'react'
 
 import { useTxStore } from '../store/useDepositStore'
+import { NativeOnchainSwap } from './deposit-wizards/NativeOnchainSwap'
 import { OnchainSwap } from './deposit-wizards/OnchainSwap'
+import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
 import { useCheckAllowance } from './hooks/useCheckAllowance'
 
 export const DepositReviewModal = () => {
@@ -77,8 +79,8 @@ export const DepositReviewModal = () => {
         </div>
 
         {/* APPROVE FOR SWAP STEP  */}
-        {/* <SimpleDeposit />
-        <NativeOnchainSwap /> */}
+        <SimpleDeposit />
+        <NativeOnchainSwap />
         <OnchainSwap />
       </DialogContent>
     </Dialog>
