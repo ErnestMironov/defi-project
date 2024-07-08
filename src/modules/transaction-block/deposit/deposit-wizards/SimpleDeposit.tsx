@@ -88,6 +88,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             <TokenWithNetwork
               symbol={asset?.contract_ticker_symbol}
               network={asset?.chain_id}
+              width="2rem"
             />
           }
           activeStep={currentStep === 2}
