@@ -42,7 +42,10 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
           <TokenIconComponent symbol={strategy.protocol} className="size-6" />
         </div>
         <h6>Projected APY</h6>
-        <div className="font-bold">{strategy.apy.toFixed(2)}%</div>
+        {/* // ! remove "* 5" when we have real data */}
+        <div className="font-bold">
+          {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
+        </div>
         <h6>TVL</h6>
         <div>
           $
