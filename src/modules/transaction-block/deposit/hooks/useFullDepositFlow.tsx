@@ -1,6 +1,6 @@
-import { useCrossChainSwap } from '@api/squid-router/useCrossChainSwap'
 import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
+import { useSwap } from '@api/squid-router/useSwap'
 import { Button } from '@components/ui/button'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
@@ -10,7 +10,7 @@ import type { Address } from 'viem'
 import { parseUnits } from 'viem'
 import { useChainId, useSwitchChain } from 'wagmi'
 
-import { useApproveDepositTransaction } from './useApproveDepositTransaction'
+import { useApproveERC20 } from './useApproveERC20'
 import { useDepositTransaction } from './useDepositTransaction'
 
 type StepType = 'approve1' | 'swap' | 'approve2' | 'deposit' | 'switchToArbitrum'
@@ -170,7 +170,7 @@ export const useFullDepositFlow = () => {
   /*
    * 1. Approve tokens for swap
    */
-  const { approve: _approve, status: approveStatus } = useApproveDepositTransaction({
+  const { approve: _approve, status: approveStatus } = useApproveERC20({
     tokenAddress: asset?.contract_address! as Address,
     approveValue: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     transactionRequestTarget: route?.transactionRequest?.target!,
@@ -200,7 +200,7 @@ export const useFullDepositFlow = () => {
    * 2. Swap tokens
    */
 
-  const { swapTokens, swapStatus } = useCrossChainSwap({
+  const { swapTokens, status: swapStatus } = useSwap({
     route,
     requestId,
   })
@@ -259,12 +259,11 @@ export const useFullDepositFlow = () => {
     approveValue = parseUnits(inputValueInUSD, 6)
   }
 
-  const { approve: _approveDeposit, status: approveDepositStatus } =
-    useApproveDepositTransaction({
-      tokenAddress: tokenAddrForVault as Address,
-      approveValue: approveValue.toString(),
-      transactionRequestTarget: ARB_GATEWAY,
-    })
+  const { approve: _approveDeposit, status: approveDepositStatus } = useApproveERC20({
+    tokenAddress: tokenAddrForVault as Address,
+    approveValue: approveValue.toString(),
+    transactionRequestTarget: ARB_GATEWAY,
+  })
 
   const approveDeposit = async () => {
     try {

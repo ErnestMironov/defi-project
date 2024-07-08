@@ -6,13 +6,18 @@ import { useCallback } from 'react'
 import type { Address } from 'viem'
 import { useWriteContract } from 'wagmi'
 
+import type { IDepositWizardHook } from '../interfaces'
+
+interface IProperties extends IDepositWizardHook {
+  address: Address
+  amount: bigint
+}
+
 export const useDepositTransaction = ({
   address,
   amount,
-}: {
-  address: Address
-  amount: bigint
-}) => {
+  onSuccessHandler,
+}: IProperties) => {
   const { writeContract, ...rest } = useWriteContract()
   const { depositAsset, setCurrentModal } = useTxStore()
 
@@ -30,11 +35,14 @@ export const useDepositTransaction = ({
         args: [tokenAddress, amount, address, ARB_EID],
       },
       {
-        onSuccess: () => setCurrentModal('done'),
+        onSuccess: () => {
+          onSuccessHandler?.()
+          setCurrentModal('done')
+        },
         onError: () => setCurrentModal('error'),
       },
     )
-  }, [address, amount, depositAsset, setCurrentModal, writeContract])
+  }, [address, amount, depositAsset, onSuccessHandler, setCurrentModal, writeContract])
 
   return { deposit, ...rest }
 }
