@@ -74,11 +74,8 @@ export const useMaatTokensTvl = ({ from }: { from: number }) => {
       lastUv = uv
       lastPv = pv
     })
-    console.log(tvlDataArray)
     return tvlDataArray
   }, [data])
 
   return { data: chartData, ...rest }
 }
-
-console.log(dayjs(1_720_451_832_631).diff(dayjs(1_720_451_571_161), 'minute') <= 10)
