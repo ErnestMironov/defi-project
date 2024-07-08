@@ -1,23 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
+
 import { useRebalance } from '@api/queries/useRebalance'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg?url'
+import Base from '@assets/icons/networks/base.svg?url'
 import Aave from '@assets/icons/protocols/aave.svg?url'
 import Lendle from '@assets/icons/protocols/lendle.svg?url'
 import Mantle from '@assets/icons/protocols/mantle.svg?url'
 import Metis from '@assets/icons/protocols/metis.svg?url'
+import Yearn from '@assets/icons/protocols/yearn.svg?url'
+import type { StableType } from '@components/stable-switcher/StableSwitcher'
+import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Button } from '@components/ui/button'
+import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useDimensions } from '@hooks/useDimensions'
 import type { SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { D3TooltipComponent } from './D3Tooltip'
 
 type ObjectsData = {
   name: string
-  icon: string
+  apy?: string
 }
 export type NodeType = {
   id: string
@@ -33,104 +40,114 @@ export type SankeyChartDataType = {
   links: LinkType[]
 }
 
-export const mockData: SankeyChartDataType = {
-  nodes: [
-    {
-      id: '1',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '2',
-      objects: [
-        { name: 'Metis', icon: Metis },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '3',
-      objects: [
-        { name: 'Arbitrum', icon: Arbitrum },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '4',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '5',
-      objects: [
-        { name: 'Metis', icon: Metis },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '6',
-      objects: [
-        { name: 'Arbitrum', icon: Arbitrum },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '7',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '8',
-      objects: [
-        { name: 'Metis', icon: Metis },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '9',
-      objects: [
-        { name: 'Arbitrum', icon: Arbitrum },
-        { name: 'Aave V3', icon: Aave },
-      ],
-    },
-    {
-      id: '10',
-      objects: [
-        { name: 'Mantle', icon: Mantle },
-        { name: 'Lendle', icon: Lendle },
-      ],
-    },
-    {
-      id: '11',
-      objects: [
-        { name: 'Lendle', icon: Lendle },
-        { name: 'Metis', icon: Metis },
-      ],
-    },
-    {
-      id: '12',
-      objects: [
-        { name: 'Lendle', icon: Lendle },
-        { name: 'Arbitrum', icon: Arbitrum },
-      ],
-    },
-  ],
-  links: [
-    { source: '1', target: '11', value: 10 },
-    { source: '2', target: '7', value: 20 },
-    { source: '3', target: '12', value: 10 },
-    { source: '4', target: '9', value: 20 },
-    { source: '4', target: '8', value: 20 },
-    { source: '5', target: '8', value: 10 },
-    { source: '5', target: '10', value: 10 },
-    { source: '6', target: '7', value: 12 },
-  ],
-}
+const ICON_URLS_MAP = {
+  aave: Aave,
+  yearn: Yearn,
+  arbitrum: Arbitrum,
+  base: Base,
+  metis: Metis,
+  mantle: Mantle,
+  lendle: Lendle,
+} as const
+
+// export const mockData: SankeyChartDataType = {
+//   nodes: [
+//     {
+//       id: '1',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '2',
+//       objects: [
+//         { name: 'Metis', icon: Metis },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '3',
+//       objects: [
+//         { name: 'Arbitrum', icon: Arbitrum },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '4',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '5',
+//       objects: [
+//         { name: 'Metis', icon: Metis },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '6',
+//       objects: [
+//         { name: 'Arbitrum', icon: Arbitrum },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '7',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '8',
+//       objects: [
+//         { name: 'Metis', icon: Metis },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '9',
+//       objects: [
+//         { name: 'Arbitrum', icon: Arbitrum },
+//         { name: 'Aave V3', icon: Aave },
+//       ],
+//     },
+//     {
+//       id: '10',
+//       objects: [
+//         { name: 'Mantle', icon: Mantle },
+//         { name: 'Lendle', icon: Lendle },
+//       ],
+//     },
+//     {
+//       id: '11',
+//       objects: [
+//         { name: 'Lendle', icon: Lendle },
+//         { name: 'Metis', icon: Metis },
+//       ],
+//     },
+//     {
+//       id: '12',
+//       objects: [
+//         { name: 'Lendle', icon: Lendle },
+//         { name: 'Arbitrum', icon: Arbitrum },
+//       ],
+//     },
+//   ],
+//   links: [
+//     { source: '1', target: '11', value: 10 },
+//     { source: '2', target: '7', value: 20 },
+//     { source: '3', target: '12', value: 10 },
+//     { source: '4', target: '9', value: 20 },
+//     { source: '4', target: '8', value: 20 },
+//     { source: '5', target: '8', value: 10 },
+//     { source: '5', target: '10', value: 10 },
+//     { source: '6', target: '7', value: 12 },
+//   ],
+// }
 const COLORS = [
   'rgba(135, 99, 243, 0.30)',
   'rgba(254, 244, 154, 0.45)',
@@ -149,17 +166,14 @@ type Data = {
 
 type SankeyProperties = {
   data: Data
+  symbol: string
 }
 
-export const Sankey = ({ data }: SankeyProperties) => {
+export const Sankey = ({ data, symbol }: SankeyProperties) => {
   const containerReference = useRef<HTMLDivElement | null>(null)
   const tooltipReference = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [tooltip, setTooltip] = useState<{
-    content: string
-    x: number
-    y: number
-  } | null>(null)
+  const [tooltip, setTooltip] = useState<any>(null)
   useEffect(() => {
     if (tooltip) {
       const dimensions = tooltipReference.current?.getBoundingClientRect() as DOMRect
@@ -229,12 +243,13 @@ export const Sankey = ({ data }: SankeyProperties) => {
   //
   // Draw the links
   //
-  const allLinks = links.map((link, i) => {
+  const allLinks = links.map((link: any, i) => {
     const gradientId = `gradient-${i}`
     const linkGenerator = sankeyLinkHorizontal()
     const path = linkGenerator(link)
     const color1 = COLORS[Number((link.source as any).index) % COLORS.length]
     const color2 = COLORS[Number((link.target as any).index) % COLORS.length]
+
     return (
       <g key={i}>
         <defs>
@@ -259,10 +274,15 @@ export const Sankey = ({ data }: SankeyProperties) => {
           className="hover:animate-pulse hover:[stroke-opacity:_1]"
           // strokeLinecap="round"
           onMouseEnter={(e) => {
+            console.log(link)
+
             setIsOpen(true)
             setTooltip({
-              // content: `${(link.source as NodeType).id}->${(link.target as NodeType).id}`,
-              content: '200,220.20',
+              symbol,
+              value: link.value,
+              apies: [link.source.apy, link.target.apy],
+              timestamp: link.timestamp,
+              hash: link.txHash,
               x: e.clientX,
               y: e.clientY,
             })
@@ -284,7 +304,7 @@ export const Sankey = ({ data }: SankeyProperties) => {
       <D3TooltipComponent
         ref={tooltipReference}
         isOpen={isOpen}
-        tooltipContent={{ value: tooltip?.content }}
+        tooltipContent={tooltip}
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
       />
@@ -293,20 +313,40 @@ export const Sankey = ({ data }: SankeyProperties) => {
 }
 
 export const SankeyDiagramBasicDemo = () => {
-  const { data } = useRebalance()
-  // const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDC)
+  const { data, loading, error } = useRebalance({ symbol: activeStableType })
+  const navigate = useNavigate()
   const { isBelowDesktop } = useDeviceWidth()
+
+  const renderBody = () => {
+    switch (true) {
+      case loading:
+      case !!error: {
+        return <Skeleton className="h-[18.4375rem] rounded-3xl lg:h-[36.1875rem]" />
+      }
+      case !data?.links?.length: {
+        return (
+          <div className="flex h-[18.4375rem] items-center justify-center rounded-3xl bg-cards shadow-md lg:h-[36.1875rem]">
+            No rebalance data was found.
+          </div>
+        )
+      }
+      default: {
+        return <Sankey data={data} symbol={activeStableType} />
+      }
+    }
+  }
   return (
     <div className="mt-28 max-lg:mt-8 max-lg:px-4">
-      {/* <StableSwitcher
+      <StableSwitcher
         layoutId="stable-switcher-sankey"
         activeTab={activeStableType}
-        setActiveTab={setStableType}
+        onTabChange={(value) => setStableType(value)}
         className="mb-[2.13rem] mt-28 max-lg:mb-[1.47rem] max-lg:mt-8"
-      /> */}
-      {data && <Sankey data={mockData} />}
+      />
+      {renderBody()}
       {isBelowDesktop && (
-        <Button className="mt-8 w-full" size="lg">
+        <Button className="mt-8 w-full" size="lg" onClick={() => navigate('/')}>
           Deposit
         </Button>
       )}
@@ -326,13 +366,17 @@ const Node = ({
     return (
       <g key={node.index}>
         {node.objects.map((object, i) => {
+          const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
+            object.name.match(new RegExp(key, 'i')),
+          )?.[1]
+
           return (
             <Fragment key={i}>
               <image
-                href={object.icon}
+                href={assetUrl}
                 x={
                   (node.x0 as number) < dimensions.width / 2
-                    ? (node.x1 as number) + i * 40 + 0
+                    ? (node.x1 as number) + i * 40 + 6
                     : (node.x0 as number) - i * 40 - 30
                 }
                 y={((node.y1 as number) + (node.y0 as number)) / 2 - 12}
@@ -348,6 +392,10 @@ const Node = ({
   return (
     <g key={node.index}>
       {node.objects.map((object, i) => {
+        const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
+          object.name.match(new RegExp(key, 'i')),
+        )?.[1]
+
         return (
           <Fragment key={i}>
             <text
@@ -363,7 +411,7 @@ const Node = ({
               {object.name}
             </text>
             <image
-              href={object.icon}
+              href={assetUrl}
               x={
                 (node.x0 as number) < dimensions.width / 2
                   ? (node.x1 as number) + i * 170 + 10

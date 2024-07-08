@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Arrow from '@assets/icons/arrow.svg'
-import Usdt from '@assets/icons/tokens/usdt.svg'
+import { TokenIconComponent } from '@components/token-icon'
+import { getFromNow } from '@utils/get-day-difference'
 import clsx from 'clsx'
+import dayjs from 'dayjs'
 import { forwardRef } from 'react'
 
 type TooltipComponentProperties = {
@@ -14,6 +16,7 @@ type TooltipComponentProperties = {
 export const D3TooltipComponent = forwardRef(
   (props: TooltipComponentProperties, reference: any) => {
     const { isOpen, tooltipContent, ...rest } = props
+
     return (
       <div
         {...rest}
@@ -24,22 +27,28 @@ export const D3TooltipComponent = forwardRef(
         )}
       >
         <div className="flex items-center gap-2">
-          <Usdt className="size-6 overflow-visible" />
-          <p className="text-[1.375rem]">{tooltipContent?.value}</p>
+          <TokenIconComponent
+            symbol={tooltipContent?.symbol}
+            className="size-6 overflow-visible"
+          />
+          <p className="text-[1.375rem]">{tooltipContent?.value.toFixed(2)}</p>
         </div>
         <div className="text-base text-text-80">
           <div className="flex items-center">
-            <span>800.98%</span>
-            <Arrow className="mx-2" />
-            <span>834.71%</span>
+            <span>{tooltipContent?.apies?.[0]?.toFixed(2)}%</span>
+            <Arrow className="mx-2 [&_path]:fill-text" />
+            <span>{tooltipContent?.apies?.[1]?.toFixed(2)}%</span>
             <span className="ml-1">APY</span>
           </div>
           <div className="mt-2">
-            <span>5 days ago</span>
-            <span className="ml-2">(21.05.24 22:12)</span>
+            <span>{getFromNow(tooltipContent?.timestamp)}</span>
+            <span className="ml-2">
+              ({dayjs(tooltipContent?.timestamp).format('DD.MM.YY')}{' '}
+              {dayjs(tooltipContent?.timestamp).format('HH:MM')})
+            </span>
           </div>
         </div>
-        <div className="text-blue1">View on Explorer</div>
+        {/* <div className="text-blue1">View in Explorer</div> */}
       </div>
     )
   },

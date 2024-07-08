@@ -7,28 +7,29 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@components/ui/accordion'
+import { Skeleton } from '@components/ui/skeleton'
 import { AccordionHeader } from '@radix-ui/react-accordion'
 import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
 import type { ComponentProps } from 'react'
-
-import type { ITransaction } from './TransactionsHistory'
+import type { ITransaction } from 'src/lib/types/transaction'
 
 interface TransactionMobileItemProperties extends ComponentProps<'div'> {
   tx: ITransaction
   isLast?: boolean
+  txIndex: number
 }
 
 export const TransactionMobileItem = (props: TransactionMobileItemProperties) => {
-  const { tx, isLast } = props
+  const { tx, isLast, txIndex } = props
   return (
-    <AccordionItem value={tx.txHash}>
+    <AccordionItem value={`${tx.txHash}_${txIndex}`}>
       <AccordionTrigger>
         <ActionChip type={tx.action} />
       </AccordionTrigger>
       <AccordionHeader className="mt-4 text-base text-gray-100">
-        #12388 | {getFromNow(tx.timestamp)}
+        #{txIndex} | {getFromNow(tx.timestamp)}
       </AccordionHeader>
       <AccordionContent className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
         {tx.action === ActionType.Bridge ? (
@@ -37,12 +38,12 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
             <div>${formatAmountValue(tx.amount)}</div>
             <h6 className="flex items-center gap-2">
               from
-              <Arrow />
+              <Arrow className="[&_path]:fill-text" />
               To
             </h6>
             <div className="flex items-center gap-2">
               <TokenIconComponent symbol={tx.from} className="size-6 overflow-visible" />
-              <Arrow />
+              <Arrow className="[&_path]:fill-text" />
               <TokenIconComponent symbol={tx.to} className="size-6 overflow-visible" />
             </div>
             <h6>Tx Hash</h6>
@@ -75,3 +76,21 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
 }
 
 const Divider = () => <div className="my-[1.31rem] h-px bg-gray-50" />
+
+export const SkeletonTransactionMobileItem = (
+  props: Omit<TransactionMobileItemProperties, 'tx' | 'txIndex'>,
+) => {
+  const { isLast } = props
+  return (
+    <AccordionItem value="">
+      <AccordionTrigger>
+        <Skeleton className="h-9 w-[7.5rem]" />
+      </AccordionTrigger>
+      <AccordionHeader className="mt-4 flex items-center gap-1 text-base text-gray-100">
+        #<Skeleton className="h-6 w-10 rounded-md" /> |{' '}
+        <Skeleton className="h-6 w-20 rounded-md" />
+      </AccordionHeader>
+      {!isLast && <Divider />}
+    </AccordionItem>
+  )
+}

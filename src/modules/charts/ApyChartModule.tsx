@@ -51,11 +51,18 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
     }
   }
   const { data, loading, error } = useMaatTokensApy({ from: currentTimestamp })
-  if (loading)
-    return (
-      <Skeleton className="flex h-[21.75rem] w-full items-center justify-center rounded-[1.75rem] max-lg:h-72" />
-    )
-  if (error) return `Error! ${error.message}`
+
+  const renderBody = () => {
+    switch (true) {
+      case loading:
+      case !!error: {
+        return <Skeleton className="size-full rounded-3xl" />
+      }
+      default: {
+        return <LineChartComponent data={data} yPostfix="%" frame={currentFrame} />
+      }
+    }
+  }
 
   if (isBelowDesktop) {
     return (
@@ -87,9 +94,7 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
             )
           })}
         </div>
-        <div className="-ml-2 mt-[3.13rem] h-[10.5625rem]">
-          <LineChartComponent data={data} yPostfix="%" />
-        </div>
+        <div className="-ml-2 mt-[3.13rem] h-[10.5625rem]">{renderBody()}</div>
       </div>
     )
   }
@@ -113,9 +118,7 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
           onFrameChange={(frame) => onFrameChange(frame as FrameType)}
         />
       </div>
-      <div className="mt-6 h-72">
-        <LineChartComponent data={data as any} yPostfix="%" />
-      </div>
+      <div className="mt-6 h-72">{renderBody()}</div>
     </div>
   )
 }

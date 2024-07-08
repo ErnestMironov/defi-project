@@ -28,7 +28,6 @@ export const useMaatTokensTvl = ({ from }: { from: number }) => {
   const chartData = useMemo(() => {
     const tokensTvlApyData = data?.maatTvls
     if (!tokensTvlApyData) return
-    console.log(tokensTvlApyData)
 
     const stakedUsdc = tokensTvlApyData.find(
       (item) => item.token.symbol.toLowerCase() === 'usdc',

@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/default-param-last */
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { relayStylePagination } from '@apollo/client/utilities'
 import { queryClient } from '@configs/r-query'
 import { Web3ModalProvider } from '@configs/Web3ModalProvider'
 import { ThemeProvider } from '@modules/theme/ThemeProvider'
@@ -11,7 +13,19 @@ const GRAPHQL_URL = 'https://lumos-labs.squids.live/maat/v/v1/graphql'
 
 const client = new ApolloClient({
   uri: GRAPHQL_URL,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          maatActionsConnection: relayStylePagination([
+            ['where', ['token']],
+            'first',
+            // 'after',
+          ]),
+        },
+      },
+    },
+  }),
 })
 
 function App() {
