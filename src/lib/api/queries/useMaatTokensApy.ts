@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client'
 import { gql } from '@codegen/gql'
 import type { RechartDataType } from '@components/chart/line-chart/LineChart'
 import BigNumber from 'bignumber.js'
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 
 export const maatTokensApy = gql(`
@@ -48,6 +49,13 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
         ?.symbol
       const uv = symbol?.toLowerCase() === 'usdc' ? Number(apy) : lastUv
       const pv = symbol?.toLowerCase() === 'usdt' ? Number(apy) : lastPv
+
+      if (
+        apyDataArray.at(-1)?.timestamp &&
+        dayjs(timestamp).diff(dayjs(apyDataArray.at(-1)?.timestamp), 'minute') <= 10
+      ) {
+        apyDataArray.pop()
+      }
 
       apyDataArray.push({
         name: symbol || '',
