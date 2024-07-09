@@ -1,12 +1,38 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable react/no-unknown-property */
 import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
-import usdc from '@assets/images/usdc-3d.png'
-import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
+import { useFBX } from '@react-three/drei'
+import { Canvas, useFrame } from '@react-three/fiber'
 import dayjs from 'dayjs'
-import { useMemo, useState } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
+import type { Group } from 'three' // Import the Group class from three
+
+const ReactThreeWrapper = ({ children }) => {
+  return (
+    <div className="absolute -bottom-4 -right-4 size-32 max-lg:size-[5.86rem]">
+      <Canvas>
+        <ambientLight intensity={1} />
+        <directionalLight position={[0, 10, 5]} intensity={1} />
+        <Suspense fallback={null}>{children}</Suspense>
+      </Canvas>
+    </div>
+  )
+}
+
+const TokenModel = ({ model }: { model: string }) => {
+  const fbx = useFBX(model)
+  const fbxReference = useRef<Group>(null) // Use the imported Group class
+  useFrame(() => {
+    if (fbxReference.current) {
+      fbxReference.current.rotation.y += 0.01
+    }
+  })
+
+  return <primitive object={fbx} ref={fbxReference} scale={0.029} />
+}
 
 export const Deposit = () => {
   const [time] = useState(dayjs().subtract(1, 'month').valueOf())
@@ -37,22 +63,17 @@ export const Deposit = () => {
                 label="USDС APY"
                 value={usdcApy ? `${usdcApy}%` : '0.00%'}
               >
-                {/* <Canvas /> */}
-                <img
-                  src={usdc}
-                  alt="usdc"
-                  className="absolute bottom-0 right-0 size-32 max-lg:size-[5.86rem]"
-                />
+                <ReactThreeWrapper>
+                  <TokenModel model="/src/assets/3D/Tether_3D.fbx" />
+                </ReactThreeWrapper>
               </ShadowBoxWithValue>
               <ShadowBoxWithValue
                 label="USDT APY"
                 value={usdtApy ? `${usdtApy}%` : '0.00%'}
               >
-                <img
-                  src={usdt}
-                  alt="usdt"
-                  className="absolute bottom-0 right-0 size-32 max-lg:size-[5.86rem]"
-                />
+                <ReactThreeWrapper>
+                  <TokenModel model="/src/assets/3D/USD_Coin_3D.fbx" />
+                </ReactThreeWrapper>
               </ShadowBoxWithValue>
             </>
           )}
