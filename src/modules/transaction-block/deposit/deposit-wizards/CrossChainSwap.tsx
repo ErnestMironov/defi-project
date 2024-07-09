@@ -19,9 +19,7 @@ import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  successDepositHandler,
-}) => {
+export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
   const { depositAsset, vault, inputValue: amount } = useTxStore()

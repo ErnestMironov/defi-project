@@ -14,12 +14,10 @@ import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({
-  successDepositHandler,
-}) => {
+export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const { depositAsset: asset, vault, inputValue: amount, inputValueInUSD } = useTxStore()
+  const { depositAsset: asset, inputValue: amount } = useTxStore()
 
   function incrementStep() {
     setCurrentStep((previousStep) => previousStep + 1)

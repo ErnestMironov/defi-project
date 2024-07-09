@@ -18,9 +18,9 @@ import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  successDepositHandler,
-}) => {
+export const NativeOnchainSwap: React.FunctionComponent<
+  IDepositWizardProperties
+> = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
   const { vault, inputValue: amount } = useTxStore()

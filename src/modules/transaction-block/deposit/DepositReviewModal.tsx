@@ -14,7 +14,6 @@ import { NativeCrossChainSwap } from './deposit-wizards/NativeCrossChainSwap'
 import { NativeOnchainSwap } from './deposit-wizards/NativeOnchainSwap'
 import { OnchainSwap } from './deposit-wizards/OnchainSwap'
 import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
-import { useCheckAllowance } from './hooks/useCheckAllowance'
 
 export const DepositReviewModal = () => {
   // const { ActionButton, stepsState, isSwapNeeded, isNetworkArb } = useFullDepositFlow()
@@ -25,14 +24,11 @@ export const DepositReviewModal = () => {
     inputValue: amount,
     currentModal,
     setCurrentModal,
-    inputValueInUSD,
   } = useTxStore()
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
 
   const currentChainId = useChainId()
-
-  const { isAllowed } = useCheckAllowance()
 
   const { squid } = useSquidSDK()
 
