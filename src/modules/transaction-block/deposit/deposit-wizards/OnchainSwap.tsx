@@ -51,7 +51,6 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     toToken: tokenAddrForVault,
     enableBoost: true,
   })
-  console.log('🚀 ~ route:', route)
 
   const {
     approve: approveBeforeSwap,
@@ -60,14 +59,9 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: ARB_GATEWAY,
+    transactionRequestTarget: route?.transactionRequest?.target,
     onSuccessHandler: incrementStep,
   })
-  console.log(
-    '🚀 ~ amount, depositAsset?.contract_decimals:',
-    amount,
-    depositAsset?.contract_decimals,
-  )
 
   const {
     approve: approveAfterSwap,
@@ -98,7 +92,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'switch to Arbitrum')
+        console.info('��� ~ OnChainDeposit ~ currentStep:', 'switch to Arbitrum')
         return (
           <Button
             size="lg"
@@ -111,7 +105,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         )
       }
       case 2: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'approve')
+        console.info('��� ~ OnChainDeposit ~ currentStep:', 'approve')
         return (
           <Button
             size="lg"
@@ -124,7 +118,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         )
       }
       case 3: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'approve')
+        console.info('��� ~ OnChainDeposit ~ currentStep:', 'approve')
         return (
           <Button
             size="lg"
@@ -137,7 +131,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         )
       }
       case 4: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'approve')
+        console.info('��� ~ OnChainDeposit ~ currentStep:', 'approve')
         return (
           <Button
             size="lg"
@@ -150,7 +144,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         )
       }
       case 5: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'deposit')
+        console.info('��� ~ OnChainDeposit ~ currentStep:', 'deposit')
         return (
           <Button
             size="lg"

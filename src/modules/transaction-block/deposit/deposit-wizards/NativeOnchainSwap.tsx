@@ -71,9 +71,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
   } = useSwap({
     route,
     requestId,
-    onSuccessHandler: () => {
-      setCurrentStep(3)
-    },
+    onSuccessHandler: incrementStep,
   })
 
   const { deposit, status: depositStatus } = useDepositTransaction({
@@ -84,7 +82,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'switch to Arbitrum')
+        console.info('��� ~ NAtiveOnChainSwap ~ currentStep:', 'switch to Arbitrum')
         return (
           <Button
             size="lg"
@@ -97,7 +95,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
         )
       }
       case 2: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'approve')
+        console.info('��� ~ NAtiveOnChainSwap ~ currentStep:', 'approve')
         return (
           <Button
             size="lg"
@@ -110,7 +108,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
         )
       }
       case 3: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'approve')
+        console.info('��� ~ NAtiveOnChainSwap ~ currentStep:', 'approve')
         return (
           <Button size="lg" type="button" onClick={approve}>
             Approve
@@ -118,7 +116,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
         )
       }
       case 4: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'deposit')
+        console.info('��� ~ NAtiveOnChainSwap ~ currentStep:', 'deposit')
         return (
           <Button size="lg" type="button" onClick={deposit}>
             Deposit

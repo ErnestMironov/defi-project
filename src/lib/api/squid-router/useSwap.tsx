@@ -31,6 +31,7 @@ async function waitForSuccessStatus(
   squid: Squid,
   txReceipt: ethers.TransactionReceipt,
   changeStatusFunction: (status: STEP_STATUS) => void,
+  successHandler?: () => void,
   requestId?: string,
 ) {
   changeStatusFunction('pending')
@@ -69,11 +70,7 @@ async function waitForSuccessStatus(
       ) {
         console.log('Swap transaction executed:', txReceipt.hash)
         changeStatusFunction('success')
-
-        // Delay the reset of the status
-        setTimeout(() => {
-          changeStatusFunction('idle')
-        }, 5000)
+        successHandler?.()
 
         return
       }
@@ -163,7 +160,7 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
         return
       }
 
-      return await waitForSuccessStatus(squid, txReceipt!, setStatus)
+      return await waitForSuccessStatus(squid, txReceipt!, setStatus, onSuccessHandler)
     } catch (error_: unknown) {
       console.error(error_)
       if (error_ instanceof Error) {

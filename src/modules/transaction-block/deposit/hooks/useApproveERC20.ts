@@ -7,9 +7,9 @@ import { useWriteContract } from 'wagmi'
 import type { IDepositWizardHook } from '../interfaces'
 
 interface IProperties extends IDepositWizardHook {
-  approveValue: string
-  tokenAddress: Address
-  transactionRequestTarget: string
+  approveValue?: string
+  tokenAddress?: Address
+  transactionRequestTarget?: string
 }
 
 export const useApproveERC20 = ({
@@ -18,6 +18,13 @@ export const useApproveERC20 = ({
   transactionRequestTarget,
   onSuccessHandler,
 }: IProperties) => {
+  console.log(
+    '🚀 ~  approveValue',
+    approveValue,
+    tokenAddress,
+    transactionRequestTarget,
+    onSuccessHandler,
+  )
   const { writeContract, ...rest } = useWriteContract()
 
   const approve = useCallback(() => {

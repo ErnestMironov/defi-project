@@ -6,8 +6,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { parseFloatLocale } from '@utils/formatValue'
 import { useMemo } from 'react'
+import { useChainId } from 'wagmi'
 
 import { useTxStore } from '../store/useDepositStore'
+import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
+import { NativeCrossChainSwap } from './deposit-wizards/NativeCrossChainSwap'
 import { NativeOnchainSwap } from './deposit-wizards/NativeOnchainSwap'
 import { OnchainSwap } from './deposit-wizards/OnchainSwap'
 import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
@@ -27,6 +30,8 @@ export const DepositReviewModal = () => {
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
 
+  const currentChainId = useChainId()
+
   const { isAllowed } = useCheckAllowance()
 
   const { squid } = useSquidSDK()
@@ -37,6 +42,32 @@ export const DepositReviewModal = () => {
     )
     return depositTokenAsset?.address!
   }, [squid?.tokens, vault])
+
+  const depositFlow = useMemo(() => {
+    if (!asset || !chainData || !tokenAddrForVault) {
+      return null // Return null if any required data is missing
+    }
+
+    const assetContractAddress = asset.contract_address?.toLowerCase()
+    const vaultAddress = tokenAddrForVault.toLowerCase()
+
+    if (vaultAddress === assetContractAddress) {
+      return <SimpleDeposit />
+    }
+
+    if (currentChainId === chainData.chainId) {
+      if (asset.native_token) {
+        return <NativeOnchainSwap />
+      }
+      return <OnchainSwap />
+    }
+
+    if (asset.native_token) {
+      return <NativeCrossChainSwap />
+    }
+
+    return <CrossChainSwap />
+  }, [asset, chainData, currentChainId, tokenAddrForVault])
 
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>
@@ -77,11 +108,7 @@ export const DepositReviewModal = () => {
             1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>
           </p> */}
         </div>
-
-        {/* APPROVE FOR SWAP STEP  */}
-        <SimpleDeposit />
-        <NativeOnchainSwap />
-        <OnchainSwap />
+        {depositFlow}
       </DialogContent>
     </Dialog>
   )
