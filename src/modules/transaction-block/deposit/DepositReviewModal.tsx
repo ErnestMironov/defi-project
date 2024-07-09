@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { parseFloatLocale } from '@utils/formatValue'
 import { useMemo } from 'react'
-import { useChainId } from 'wagmi'
 
 import { useTxStore } from '../store/useDepositStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
@@ -27,8 +26,6 @@ export const DepositReviewModal = () => {
   } = useTxStore()
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
-
-  const currentChainId = useChainId()
 
   const { squid } = useSquidSDK()
 
@@ -51,7 +48,7 @@ export const DepositReviewModal = () => {
       return <SimpleDeposit />
     }
 
-    if (currentChainId === chainData.chainId) {
+    if (chainData.chainId === 42_161) {
       if (asset.native_token) {
         return <NativeOnchainSwap />
       }
@@ -63,7 +60,7 @@ export const DepositReviewModal = () => {
     }
 
     return <CrossChainSwap />
-  }, [asset, chainData, currentChainId, tokenAddrForVault])
+  }, [asset, chainData, tokenAddrForVault])
 
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>
