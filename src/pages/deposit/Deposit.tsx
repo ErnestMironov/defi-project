@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable react/no-unknown-property */
 import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
@@ -7,10 +5,11 @@ import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useFBX } from '@react-three/drei'
 import { Canvas, useFrame } from '@react-three/fiber'
 import dayjs from 'dayjs'
+import type { ReactNode } from 'react' // Import ReactNode type
 import { Suspense, useMemo, useRef, useState } from 'react'
 import type { Group } from 'three' // Import the Group class from three
 
-const ReactThreeWrapper = ({ children }) => {
+const ReactThreeWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <div className="absolute -bottom-4 -right-4 size-32 max-lg:size-[5.86rem]">
       <Canvas>
