@@ -96,6 +96,11 @@ export const SelectNetworkPopover = ({
               currentChain={currentChain}
             />
           ))}
+          <ChainItem
+            chain={null}
+            onNetworkChange={onNetworkChange}
+            currentChain={currentChain}
+          />
         </div>
       </PopoverContent>
     </Popover>

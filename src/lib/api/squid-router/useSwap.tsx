@@ -1,8 +1,10 @@
-// Import Squid SDK
-
 import type { Squid } from '@0xsquid/sdk'
-import type { RouteResponse } from '@0xsquid/sdk/dist/types'
+import { type RouteResponse, SquidRouteType } from '@0xsquid/sdk/dist/types'
 import { useEthersSigner } from '@hooks/web3/useEthersSigner'
+import type {
+  IDepositWizardHook,
+  STEP_STATUS,
+} from '@modules/transaction-block/deposit/interfaces'
 import type { ethers } from 'ethers'
 // Import ethers library
 import { useCallback, useState } from 'react'
@@ -16,12 +18,20 @@ const integratorId: string = process.env.INTEGRATOR_ID!
 const fromChainId = '56' // BNB chain ID
 const toChainId = '42161' // Arbitrum chain ID
 
-type SwapStatus = 'success' | 'pending' | 'error' | 'waiting-for-swap'
-
+/**
+ * Waits for the transaction to reach a success status.
+ *
+ * @param {Squid} squid - The Squid SDK instance.
+ * @param {ethers.TransactionReceipt} txReceipt - The transaction receipt.
+ * @param {(status: STEP_STATUS) => void} changeStatusFunction - Function to change the status of the step.
+ * @param {string} [requestId] - Optional request ID.
+ * @returns {Promise<void>} - A promise that resolves when the transaction reaches a success status.
+ */
 async function waitForSuccessStatus(
   squid: Squid,
   txReceipt: ethers.TransactionReceipt,
-  changeStatusFunction: (status: SwapStatus) => void,
+  changeStatusFunction: (status: STEP_STATUS) => void,
+  successHandler?: () => void,
   requestId?: string,
 ) {
   changeStatusFunction('pending')
@@ -60,11 +70,7 @@ async function waitForSuccessStatus(
       ) {
         console.log('Swap transaction executed:', txReceipt.hash)
         changeStatusFunction('success')
-
-        // Delay the reset of the swapStatus
-        setTimeout(() => {
-          changeStatusFunction('waiting-for-swap')
-        }, 5000) // Adjust the delay as needed
+        successHandler?.()
 
         return
       }
@@ -100,14 +106,21 @@ async function waitForSuccessStatus(
   return checkStatus()
 }
 
-export const useCrossChainSwap = ({
-  route,
-  requestId,
-}: {
+interface IProperties extends IDepositWizardHook {
   route?: RouteResponse['route']
   requestId?: string
-}) => {
-  const [swapStatus, setSwapStatus] = useState<SwapStatus>('waiting-for-swap')
+}
+
+/**
+ * Custom hook to handle token swapping using Squid SDK.
+ *
+ * @param {IProperties} props - The properties for the hook.
+ * @returns {{ swapTokens: () => Promise<void>, status: STEP_STATUS, error: string }} - The swap function, status, and error state.
+ */
+export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => {
+  const [status, setStatus] = useState<STEP_STATUS>('idle')
+  const [error, setError] = useState('')
+
   console.log('🚀 ~ requestId:', requestId)
   // Main function
   // Initialize Squid SDK
@@ -122,6 +135,8 @@ export const useCrossChainSwap = ({
     try {
       if (loading || !squid) return
 
+      setStatus('pending')
+
       console.log('swapping started')
 
       // Execute the swap transaction
@@ -132,11 +147,30 @@ export const useCrossChainSwap = ({
       const txReceipt = await tx.wait()
       console.log('🚀 ~ swapTokens ~ txReceipt:', txReceipt)
 
-      return await waitForSuccessStatus(squid, txReceipt!, setSwapStatus)
-    } catch (error) {
-      console.error(error)
-    }
-  }, [route, requestId, loading, squid, signer])
+      if (
+        route?.transactionRequest?.routeType === SquidRouteType.EVM_ONLY &&
+        txReceipt?.status === 1
+      ) {
+        console.log('Swap transaction executed:', txReceipt.hash)
+        setStatus('success')
+        onSuccessHandler?.()
 
-  return { swapTokens, swapStatus }
+        // Delay the reset of the status
+
+        return
+      }
+
+      return await waitForSuccessStatus(squid, txReceipt!, setStatus, onSuccessHandler)
+    } catch (error_: unknown) {
+      console.error(error_)
+      if (error_ instanceof Error) {
+        setError(error_.message)
+      } else {
+        setError('An unknown error occurred')
+      }
+      setStatus('error')
+    }
+  }, [route, requestId, loading, squid, signer, onSuccessHandler])
+
+  return { swapTokens, status, error }
 }

@@ -1,16 +1,16 @@
-import { useCrossChainSwap } from '@api/squid-router/useCrossChainSwap'
 import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
+import { useSwap } from '@api/squid-router/useSwap'
 import { Button } from '@components/ui/button'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import type { Address } from 'viem'
-import { parseEther, parseUnits } from 'viem'
-import { useSwitchChain } from 'wagmi'
+import { parseUnits } from 'viem'
+import { useChainId, useSwitchChain } from 'wagmi'
 
-import { useApproveDepositTransaction } from './useApproveDepositTransaction'
+import { useApproveERC20 } from './useApproveERC20'
 import { useDepositTransaction } from './useDepositTransaction'
 
 type StepType = 'approve1' | 'swap' | 'approve2' | 'deposit' | 'switchToArbitrum'
@@ -85,6 +85,7 @@ type IStepsAction = {
 
 export const useFullDepositFlow = () => {
   const { switchChain } = useSwitchChain()
+  const currentChainId = useChainId()
 
   // dispatch to store object with objects
   const [stepsState, dispatch] = useReducer(
@@ -131,7 +132,7 @@ export const useFullDepositFlow = () => {
 
   const chainData = useTokenAsset(chain)
 
-  const vaultAddress = useMemo(() => {
+  const tokenAddrForVault = useMemo(() => {
     const depositTokenAsset = squid?.tokens.find(
       (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
     )
@@ -139,39 +140,39 @@ export const useFullDepositFlow = () => {
   }, [squid?.tokens, vault])
 
   const { route, requestId } = useGetSquidSwapRoute({
-    fromAmount: parseEther(amount).toString(),
+    fromAmount: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     fromChain: String(chainData?.chainId),
     fromToken: asset?.contract_address!,
     toChain: '42161',
-    toToken: vaultAddress,
+    toToken: tokenAddrForVault,
     enableBoost: true,
   })
 
   const [isSwapNeeded, setIsSwapNeeded] = useState(false)
+  const [isNetworkArb, setIsNetworkArb] = useState(false)
+  console.log('🚀 ~ useFullDepositFlow ~ isNetworkArb:', isNetworkArb)
 
   useEffect(() => {
-    function isNetworkArb() {
-      return chainData?.chainId === 42_161
+    function areAddressesEqual() {
+      return asset?.contract_address?.toLowerCase() === tokenAddrForVault?.toLowerCase()
     }
 
-    function isSTABLE() {
-      return (
-        asset?.contract_ticker_symbol.toLowerCase() === 'usdc' ||
-        asset?.contract_ticker_symbol.toLowerCase() === 'usdt'
-      )
-    }
-
-    const IS_SWAP_NEEDED = !isNetworkArb() || !isSTABLE()
+    const IS_SWAP_NEEDED = !areAddressesEqual()
 
     setIsSwapNeeded(IS_SWAP_NEEDED)
-  }, [asset?.contract_ticker_symbol, chainData?.chainId, route?.transactionRequest])
+  }, [asset?.contract_address, tokenAddrForVault])
+
+  useEffect(() => {
+    console.log('🚀 ~ useEffect ~ chainData?.chainId:', chainData?.chainId)
+    setIsNetworkArb(currentChainId === 42_161)
+  }, [chainData?.chainId, currentChainId])
 
   /*
    * 1. Approve tokens for swap
    */
-  const { approve: _approve, status: approveStatus } = useApproveDepositTransaction({
+  const { approve: _approve, status: approveStatus } = useApproveERC20({
     tokenAddress: asset?.contract_address! as Address,
-    approveValue: parseEther(amount).toString(),
+    approveValue: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     transactionRequestTarget: route?.transactionRequest?.target!,
   })
 
@@ -199,7 +200,7 @@ export const useFullDepositFlow = () => {
    * 2. Swap tokens
    */
 
-  const { swapTokens, swapStatus } = useCrossChainSwap({
+  const { swapTokens, status: swapStatus } = useSwap({
     route,
     requestId,
   })
@@ -258,12 +259,11 @@ export const useFullDepositFlow = () => {
     approveValue = parseUnits(inputValueInUSD, 6)
   }
 
-  const { approve: _approveDeposit, status: approveDepositStatus } =
-    useApproveDepositTransaction({
-      tokenAddress: vaultAddress as Address,
-      approveValue: approveValue.toString(),
-      transactionRequestTarget: ARB_GATEWAY,
-    })
+  const { approve: _approveDeposit, status: approveDepositStatus } = useApproveERC20({
+    tokenAddress: tokenAddrForVault as Address,
+    approveValue: approveValue.toString(),
+    transactionRequestTarget: ARB_GATEWAY,
+  })
 
   const approveDeposit = async () => {
     try {
@@ -290,7 +290,7 @@ export const useFullDepositFlow = () => {
    */
 
   const { deposit: _deposit, status: depositStatus } = useDepositTransaction({
-    address: vaultAddress as Address,
+    address: tokenAddrForVault as Address,
     amount: approveValue,
   })
   const deposit = () => {
@@ -316,6 +316,42 @@ export const useFullDepositFlow = () => {
   }
 
   useEffect(() => {
+    if (approveDepositStatus === 'success') {
+      dispatch({
+        type: 'approve2',
+        isPending: false,
+        isSuccess: true,
+        error: '',
+      })
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'deposit',
+      })
+      return
+    }
+
+    if (swapStatus === 'success') {
+      dispatch({
+        type: 'swap',
+        isPending: false,
+        isSuccess: true,
+        error: '',
+      })
+      if (isNetworkArb) {
+        dispatch({
+          type: 'setCurrentStep',
+          currentStep: 'approve2',
+        })
+      } else {
+        dispatch({
+          type: 'setCurrentStep',
+          currentStep: 'switchToArbitrum',
+        })
+      }
+
+      return
+    }
+
     if (approveStatus === 'success') {
       dispatch({
         type: 'approve1',
@@ -328,56 +364,14 @@ export const useFullDepositFlow = () => {
         currentStep: 'swap',
       })
     }
-
-    if (swapStatus === 'success') {
-      dispatch({
-        type: 'swap',
-        isPending: false,
-        isSuccess: true,
-        error: '',
-      })
-      dispatch({
-        type: 'setCurrentStep',
-        currentStep: 'switchToArbitrum',
-      })
-    }
-
-    if (approveDepositStatus === 'success') {
-      dispatch({
-        type: 'approve2',
-        isPending: false,
-        isSuccess: true,
-        error: '',
-      })
-      dispatch({
-        type: 'setCurrentStep',
-        currentStep: 'deposit',
-      })
-    }
-
-    if (depositStatus === 'success') {
-      dispatch({
-        type: 'deposit',
-        isPending: false,
-        isSuccess: true,
-        error: '',
-      })
-      dispatch({
-        type: 'setCurrentStep',
-        currentStep: 'approve2',
-      })
-    }
-  }, [approveDepositStatus, approveStatus, depositStatus, isSwapNeeded, swapStatus])
-
-  // useEffect(() => {
-  //   console.log('🚀 ~ useEffect ~ isSwapNeeded:', isSwapNeeded)
-  //   if (!isSwapNeeded) {
-  //     dispatch({
-  //       type: 'setCurrentStep',
-  //       currentStep: 'switchToArbitrum',
-  //     })
-  //   }
-  // }, [isSwapNeeded])
+  }, [
+    approveDepositStatus,
+    approveStatus,
+    depositStatus,
+    isNetworkArb,
+    isSwapNeeded,
+    swapStatus,
+  ])
 
   function resetStore() {
     dispatch({
@@ -415,6 +409,37 @@ export const useFullDepositFlow = () => {
       currentStep: 'approve1',
     })
   }
+
+  useEffect(() => {
+    resetStore()
+    console.log(
+      '🚀 ~ useEffect ~ isSwapNeeded && asset?.native_token:',
+      isSwapNeeded && asset?.native_token,
+    )
+    if (!isSwapNeeded && isNetworkArb) {
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'approve2',
+      })
+      return
+    }
+
+    if (!isSwapNeeded) {
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'switchToArbitrum',
+      })
+
+      return
+    }
+
+    if (isSwapNeeded && asset?.native_token) {
+      dispatch({
+        type: 'setCurrentStep',
+        currentStep: 'swap',
+      })
+    }
+  }, [asset, isNetworkArb, isSwapNeeded])
 
   const ActionButton = () => {
     switch (stepsState.currentStep) {
@@ -462,6 +487,7 @@ export const useFullDepositFlow = () => {
   return {
     stepsState,
     isSwapNeeded,
+    isNetworkArb,
     ActionButton,
     dispatch,
     resetStore,

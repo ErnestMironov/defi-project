@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
+import type { Token } from '@0xsquid/squid-types'
+import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import Search from '@assets/icons/search.svg'
@@ -84,6 +86,13 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
 
+  const { squid } = useSquidSDK()
+
+  const supportedBySquidTokens = squid?.tokens as Token[]
+  const supportedTokensAddr = useMemo(() => {
+    return supportedBySquidTokens?.map((token) => token.address.toLowerCase())
+  }, [supportedBySquidTokens])
+
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
@@ -97,28 +106,39 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   }
 
   const filteredByChainTokens = useMemo(() => {
-    if (!userTokens) return []
+    if (!userTokens || !supportedTokensAddr || supportedBySquidTokens.length === 0)
+      return []
+
+    const filterTokens = (tokens: ITokenData[]) => {
+      return tokens.filter(
+        (token) => supportedTokensAddr?.includes(token.contract_address.toLowerCase()),
+      )
+    }
 
     if (chain) {
       if (searchValue) {
-        return userTokens[chain].filter((token) => {
-          return token.contract_name?.toLowerCase()?.includes(searchValue)
-        })
+        return filterTokens(
+          userTokens[chain].filter((token) => {
+            return token.contract_name?.toLowerCase()?.includes(searchValue)
+          }),
+        )
       }
 
-      return userTokens[chain] || []
+      return filterTokens(userTokens[chain] || [])
     }
 
     const fbcTokens = Object.values(userTokens).flat()
 
     if (searchValue) {
-      return fbcTokens.filter((token) => {
-        return token.contract_name?.toLowerCase()?.includes(searchValue)
-      })
+      return filterTokens(
+        fbcTokens.filter((token) => {
+          return token.contract_name?.toLowerCase()?.includes(searchValue)
+        }),
+      )
     }
 
-    return fbcTokens
-  }, [userTokens, chain, searchValue])
+    return filterTokens(fbcTokens)
+  }, [userTokens, chain, searchValue, supportedTokensAddr])
 
   console.log(
     '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',

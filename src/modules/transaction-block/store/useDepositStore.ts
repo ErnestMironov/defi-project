@@ -42,7 +42,7 @@ export const useTxStore = create<SelectedAssetState>()((set) => ({
   depositAsset: null,
   setDepositAsset: (by) => set({ depositAsset: by }),
   // network
-  depositNetwork: Chains.ARBITRUM_MAINNET,
+  depositNetwork: null,
   setDepositNetwork: (by) => set({ depositNetwork: by }),
   withdrawNetwork: Chains.ARBITRUM_MAINNET,
   setWithdrawNetwork: (by) => set({ withdrawNetwork: by }),
