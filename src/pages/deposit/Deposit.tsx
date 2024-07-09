@@ -37,6 +37,7 @@ export const Deposit = () => {
                 label="USDС APY"
                 value={usdcApy ? `${usdcApy}%` : '0.00%'}
               >
+                {/* <Canvas /> */}
                 <img
                   src={usdc}
                   alt="usdc"

@@ -15,8 +15,6 @@ import { OnchainSwap } from './deposit-wizards/OnchainSwap'
 import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
 
 export const DepositReviewModal = () => {
-  // const { ActionButton, stepsState, isSwapNeeded, isNetworkArb } = useFullDepositFlow()
-
   const {
     depositAsset: asset,
     vault,

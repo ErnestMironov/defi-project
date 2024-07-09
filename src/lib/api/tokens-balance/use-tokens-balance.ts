@@ -13,7 +13,7 @@ const DEFAULT_CHAINS = [
   Chains.MATIC_MAINNET,
   Chains.BSC_MAINNET,
   Chains.MANTLE_MAINNET,
-  Chains.BASE_MAINNET,
+  // Chains.BASE_MAINNET,
 ]
 
 interface UsePortfolioProperties {

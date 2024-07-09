@@ -1,6 +1,6 @@
 import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import { debounce } from 'lodash'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import useSquidSDK from './useSquidSdk'
@@ -22,8 +22,8 @@ export function useGetSquidSwapRoute(parameters_: {
     enableBoost = true,
   } = parameters_
 
-  const [route, setRoute] = useState<RouteResponse['route']>()
-  console.log('🚀 ~ route:', route)
+  const routeReference = useRef<RouteResponse['route']>()
+  console.log('🚀 ~ route:', routeReference.current)
   const [requestId, setRequestId] = useState<string>()
   const { address } = useAccount()
   const { squid, loading } = useSquidSDK()
@@ -65,7 +65,7 @@ export function useGetSquidSwapRoute(parameters_: {
           await squid.getRoute(parameters__)
         console.log('🚀 ~ debounce ~ _route:', _route)
         console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
-        if (_route) setRoute(_route)
+        if (_route) routeReference.current = _route
         setRequestId(_requestId)
 
         setIsPending(false)
@@ -87,5 +87,5 @@ export function useGetSquidSwapRoute(parameters_: {
     debouncedGetSwapRoute(parameters)
   }, [parameters, loading, squid, fromAmount, fromToken, toToken, debouncedGetSwapRoute])
 
-  return { route, requestId, isPending }
+  return { route: routeReference.current, requestId, isPending }
 }
