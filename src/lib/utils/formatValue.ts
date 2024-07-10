@@ -76,3 +76,16 @@ export const formatNumberWithCommas = (value: string | number): string => {
   if (!value) return '0'
   return value.toString().replaceAll(',', '.')
 }
+
+/**
+ * Trims trailing zeros from the fractional part of a number represented as a string.
+ * @param value - The number as a string.
+ * @returns The number as a string without trailing zeros in the fractional part.
+ */
+export function trimTrailingZeros(value: string): string {
+  if (value.includes('.') || value.includes(',')) {
+    // Remove trailing zeros in the fractional part
+    return value.replace(/([,.]\d*?[1-9])0+$/, '$1').replace(/[,.]0*$/, '')
+  }
+  return value
+}
