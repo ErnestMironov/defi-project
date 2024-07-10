@@ -31,6 +31,9 @@ interface SelectedAssetState {
 
   currentModal: ModalState | null
   setCurrentModal: (by: ModalState | null) => void
+
+  depositAmount: string
+  setDepositAmount: (value: string) => void
 }
 
 export const useTxStore = create<SelectedAssetState>()((set) => ({
@@ -56,4 +59,8 @@ export const useTxStore = create<SelectedAssetState>()((set) => ({
   // modal
   currentModal: null,
   setCurrentModal: (by) => set({ currentModal: by }),
+
+  // deposit amount
+  depositAmount: '',
+  setDepositAmount: (by) => set({ depositAmount: by }),
 }))

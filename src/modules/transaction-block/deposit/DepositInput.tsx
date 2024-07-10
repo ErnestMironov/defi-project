@@ -26,7 +26,6 @@ export const DepositInput = () => {
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
-  console.log('🚀 ~ DepositInput ~ assetBalance:', assetBalance)
 
   const [error, setError] = useState('')
   useEffect(() => {

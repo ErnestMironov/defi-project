@@ -4,9 +4,8 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import { useTokenAsset } from '@hooks/useTokenAsset'
-import { parseFloatLocale } from '@utils/formatValue'
+import { parseFloatLocale, trimTrailingZeros } from '@utils/formatValue'
 import { useMemo } from 'react'
-import { useChainId } from 'wagmi'
 
 import { useTxStore } from '../store/useDepositStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
@@ -16,19 +15,16 @@ import { OnchainSwap } from './deposit-wizards/OnchainSwap'
 import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
 
 export const DepositReviewModal = () => {
-  // const { ActionButton, stepsState, isSwapNeeded, isNetworkArb } = useFullDepositFlow()
-
   const {
     depositAsset: asset,
     vault,
     inputValue: amount,
     currentModal,
+    inputValueInUSD,
     setCurrentModal,
   } = useTxStore()
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
-
-  const currentChainId = useChainId()
 
   const { squid } = useSquidSDK()
 
@@ -51,7 +47,7 @@ export const DepositReviewModal = () => {
       return <SimpleDeposit />
     }
 
-    if (currentChainId === chainData.chainId) {
+    if (chainData.chainId === 42_161) {
       if (asset.native_token) {
         return <NativeOnchainSwap />
       }
@@ -63,7 +59,7 @@ export const DepositReviewModal = () => {
     }
 
     return <CrossChainSwap />
-  }, [asset, chainData, currentChainId, tokenAddrForVault])
+  }, [asset, chainData, tokenAddrForVault])
 
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>
@@ -79,7 +75,7 @@ export const DepositReviewModal = () => {
           <div className="rounded-[1.25rem] border border-stroke-100 p-6">
             <div className="flex items-center justify-between">
               <AmountInput
-                value={inputValue}
+                value={trimTrailingZeros(inputValue)}
                 after={asset?.contract_ticker_symbol}
                 readOnly
                 className="select-none"
@@ -91,14 +87,14 @@ export const DepositReviewModal = () => {
                 width="2.14288rem"
               />
             </div>
-            <p className="mt-4 text-gray-100">$ {parseFloatLocale(inputValue)}</p>
+            <p className="mt-4 text-gray-100">$ {parseFloatLocale(inputValueInUSD)}</p>
           </div>
           <div className="rounded-[1.25rem] border border-stroke-100 p-6">
             <div className="flex items-center justify-between">
-              <AmountInput value={inputValue} after={vault} readOnly />
+              <AmountInput value={inputValueInUSD} after={vault} readOnly />
               <TokenIconComponent symbol={vault} className="size-[2.14288rem]" />
             </div>
-            <p className="mt-4 text-gray-100">$ {parseFloatLocale(inputValue)}</p>
+            <p className="mt-4 text-gray-100">$ {parseFloatLocale(inputValueInUSD)}</p>
           </div>
           {/* <p className="text-base text-text-80">
             1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>

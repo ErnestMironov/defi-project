@@ -18,10 +18,10 @@ import { useTxStore } from './store/useDepositStore'
 export const DoneModal = () => {
   const navigate = useNavigate()
 
-  const { txType, vault, setCurrentModal, currentModal, withdrawNetwork, inputValue } =
+  const { txType, vault, setCurrentModal, currentModal, withdrawNetwork, depositAmount } =
     useTxStore()
 
-  const formattedAmount = formatAmountValue(inputValue)
+  const formattedAmount = formatAmountValue(depositAmount)
 
   const onClose = () => setCurrentModal(null)
 
