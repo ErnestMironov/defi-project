@@ -66,7 +66,7 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
       lastUv = uv
       lastPv = pv
     })
-    return apyDataArray
+    return apyDataArray.slice(1)
   }, [data])
 
   return { data: chartData, ...rest }
