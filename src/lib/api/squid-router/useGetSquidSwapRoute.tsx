@@ -1,9 +1,63 @@
-import type { RouteResponse } from '@0xsquid/sdk/dist/types'
-import { debounce } from 'lodash'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { getEthersProvider } from '@hooks/web3/useEthersProvider'
+import { useQuery } from '@tanstack/react-query'
+import { Token } from '@uniswap/sdk-core'
+import axios from 'axios'
+import { useMemo } from 'react'
 import { useAccount } from 'wagmi'
 
-import useSquidSDK from './useSquidSdk'
+import {
+  getPostHookForCrossChainSwapAndDeposit,
+  getPostHookForOneChainSwapAndDeposit,
+} from './postHook/postHook'
+
+const integratorId = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
+
+// Function to get the optimal route for the swap using Squid API
+const getRoute = async (_parameters: any, provider: any) => {
+  console.log('🚀 ~ getRoute ~ provider:', provider)
+  console.log('🚀 ~ getRoute ~ _parameters:', _parameters)
+
+  try {
+    const postHook = await (_parameters.fromChain === _parameters.toChain
+      ? getPostHookForOneChainSwapAndDeposit(
+          new Token(Number(_parameters.toChain), _parameters.toToken, 6),
+          _parameters.toAddress,
+        )
+      : getPostHookForCrossChainSwapAndDeposit(
+          new Token(Number(_parameters.toChain), _parameters.toToken, 6),
+          _parameters.toAddress,
+          Number('30102'),
+          provider,
+        ))
+
+    console.log('��� ~ postHook:', postHook)
+
+    const parameters = {
+      ..._parameters,
+      postHook,
+    }
+
+    const result = await axios.post(
+      'https://apiplus.squidrouter.com/v2/route',
+      parameters,
+      {
+        headers: {
+          'x-integrator-id': integratorId,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+    const requestId = result.headers['x-request-id'] // Retrieve request ID from response headers
+    return { data: result.data, requestId }
+  } catch (error) {
+    if (error.response) {
+      console.error('API error:', error.response.data)
+    }
+    console.error('Error with parameters:', _parameters)
+    console.error(error.message)
+    throw error
+  }
+}
 
 export function useGetSquidSwapRoute(parameters_: {
   fromChain: string
@@ -22,16 +76,28 @@ export function useGetSquidSwapRoute(parameters_: {
     enableBoost = true,
   } = parameters_
 
-  const routeReference = useRef<RouteResponse['route']>()
-  console.log('🚀 ~ route:', routeReference.current)
-  const [requestId, setRequestId] = useState<string>()
   const { address } = useAccount()
-  const { squid, loading } = useSquidSDK()
+  const provider = getEthersProvider({
+    chainId: Number(toChain),
+  })
 
-  const [isPending, setIsPending] = useState(false)
+  const parameters = useMemo(() => {
+    console.log('��� ~ getRouteParameters', provider, fromAmount, fromToken, toToken)
+    console.log(
+      '🚀 ~ parameters ~ !fromAmount || !fromToken || !toToken:',
+      !fromAmount || !fromToken || !toToken,
+    )
+    console.log('🚀 ~ parameters ~ toToken:', toToken)
+    console.log('🚀 ~ parameters ~ fromToken:', fromToken)
+    console.log('🚀 ~ parameters ~ fromAmount:', fromAmount)
+    console.log('🚀 ~ parameters ~ address:', address)
 
-  const parameters = useMemo(
-    () => ({
+    if (!provider) return
+    if (!fromAmount || !fromToken || !toToken) return
+    if (fromToken.toLowerCase() === toToken.toLowerCase()) return
+    if (!address) return
+
+    return {
       fromAddress: address,
       fromChain,
       fromToken,
@@ -40,52 +106,26 @@ export function useGetSquidSwapRoute(parameters_: {
       toToken,
       toAddress: address,
       enableBoost,
-    }),
-    [address, fromChain, fromToken, fromAmount, toChain, toToken, enableBoost],
-  )
+    }
+  }, [provider, fromAmount, fromToken, toToken, address, fromChain, toChain, enableBoost])
 
-  const debouncedGetSwapRoute = useMemo(
-    () =>
-      debounce(async (parameters__: typeof parameters) => {
-        console.log('🚀 ~ getSwapRoute ~ !!params.fromAmount:', !!parameters__.fromAmount)
-        const hasEmptyParameters = Object.values(parameters__).some(
-          (value) => value === '' || value === undefined || value === 'undefined',
-        )
-        if (
-          loading ||
-          !squid ||
-          Number(parameters__.fromAmount) === 0 ||
-          hasEmptyParameters
-        )
-          return
+  console.log('🚀 ~ parameters:', parameters)
 
-        setIsPending(true)
-        console.log('🚀 ~ getSwapRoute ~ call squid.getRoute:')
-        const { route: _route, requestId: _requestId } =
-          await squid.getRoute(parameters__)
-        console.log('🚀 ~ debounce ~ _route:', _route)
-        console.log('🚀 ~ getSwapRoute ~ _requestId:', _requestId)
-        if (_route) routeReference.current = _route
-        setRequestId(_requestId)
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['squidSwapRoute', parameters],
+    queryFn: async () => getRoute(parameters, provider),
+    enabled:
+      !!parameters && !!provider && fromToken.toLowerCase() !== toToken.toLowerCase(),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchInterval: 1000 * 60 * 5, // 5 minutes
+    refetchIntervalInBackground: true,
+    retry: false,
+  })
 
-        setIsPending(false)
-      }, 300),
-    [loading, squid],
-  )
-
-  useEffect(() => {
-    if (
-      !fromAmount ||
-      !fromToken ||
-      !toToken ||
-      parameters?.fromToken.toLowerCase() === parameters?.toToken.toLowerCase()
-    )
-      return
-
-    console.log('🚀 ~ useEffect ~ parameters:', parameters)
-
-    debouncedGetSwapRoute(parameters)
-  }, [parameters, loading, squid, fromAmount, fromToken, toToken, debouncedGetSwapRoute])
-
-  return { route: routeReference.current, requestId, isPending }
+  return {
+    route: data?.data?.route,
+    requestId: data?.requestId,
+    isPending: isLoading,
+    error,
+  }
 }

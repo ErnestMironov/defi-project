@@ -1,12 +1,11 @@
 import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
-import useSquidSDK from '@api/squid-router/useSquidSdk'
 import { useSwap } from '@api/squid-router/useSwap'
 import ArrangeSquare from '@assets/icons/arrange-square.svg'
 import EmptyWalletSquare from '@assets/icons/empty-wallet-square.svg'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
-import { ARB_GATEWAY } from '@constants/contract-address'
+import { ARB_GATEWAY, ARB_USDC, ARB_USDT } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { cn } from '@utils/cn'
@@ -44,14 +43,10 @@ export const NativeCrossChainSwap: React.FunctionComponent<
       onSuccessHandler: incrementStep,
     })
 
-  const { squid } = useSquidSDK()
-
   const tokenAddrForVault = useMemo(() => {
-    const depositTokenAsset = squid?.tokens.find(
-      (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
-    )
-    return depositTokenAsset?.address!
-  }, [squid?.tokens, vault])
+    return vault?.toLowerCase() === 'usdc' ? ARB_USDC : ARB_USDT
+  }, [vault])
+  console.log('🚀 ~ tokenAddrForVault ~ tokenAddrForVault:', tokenAddrForVault)
 
   const { route, requestId } = useGetSquidSwapRoute({
     fromAmount: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
