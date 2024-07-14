@@ -1,8 +1,11 @@
+import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
+import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { useQuery } from '@tanstack/react-query'
 import { Token } from '@uniswap/sdk-core'
 import axios from 'axios'
-import { useMemo } from 'react'
+import { formatUnits } from 'ethers'
+import { useEffect, useMemo } from 'react'
 import { useAccount } from 'wagmi'
 
 import {
@@ -26,7 +29,7 @@ const getRoute = async (_parameters: any, provider: any) => {
       : getPostHookForCrossChainSwapAndDeposit(
           new Token(Number(_parameters.toChain), _parameters.toToken, 6),
           _parameters.toAddress,
-          Number('30102'),
+          EIDS_BY_CHAIN_ID[Number(_parameters.fromChain)] as number, // Fixed line
           provider,
         ))
 
@@ -76,6 +79,8 @@ export function useGetSquidSwapRoute(parameters_: {
     enableBoost = true,
   } = parameters_
 
+  const { setDepositAmount } = useTxStore()
+
   const { address } = useAccount()
   const provider = getEthersProvider({
     chainId: Number(toChain),
@@ -121,6 +126,14 @@ export function useGetSquidSwapRoute(parameters_: {
     refetchIntervalInBackground: true,
     retry: false,
   })
+
+  useEffect(() => {
+    if (data?.data?.route?.estimate?.toAmountMin) {
+      const depositAmount = data?.data?.route?.estimate?.toAmountMin
+      console.log('🚀 ~ useEffect ~ depositAmount:', depositAmount)
+      setDepositAmount(formatUnits(depositAmount, 6).toString())
+    }
+  }, [data, setDepositAmount])
 
   return {
     route: data?.data?.route,

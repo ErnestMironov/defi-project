@@ -18,7 +18,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
 > = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const { vault, inputValue: amount } = useTxStore()
+  const { vault, inputValue: amount, setDepositAmount, setCurrentModal } = useTxStore()
 
   function incrementStep() {
     setCurrentStep((previousStep) => previousStep + 1)
@@ -55,7 +55,9 @@ export const NativeOnchainSwap: React.FunctionComponent<
   } = useSwap({
     route,
     requestId,
-    onSuccessHandler: incrementStep,
+    onSuccessHandler: () => {
+      setCurrentModal('done')
+    },
   })
 
   const ActionButton = () => {
@@ -83,7 +85,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
             onClick={swapAndDeposit}
             disabled={swapAndDepositStatus === 'pending'}
           >
-            {swapAndDepositStatus === 'error' ? 'Try Again' : 'Switch to Arbitrum'}
+            {swapAndDepositStatus === 'error' ? 'Try Again' : 'Deposit'}
           </Button>
         )
       }

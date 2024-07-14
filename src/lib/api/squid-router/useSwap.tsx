@@ -162,6 +162,8 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
   console.log('🚀 ~ useSwap ~ data:', data)
 
   const swapTokens = useCallback(async () => {
+    console.log('🚀 ~ swapTokens ~ route?.transactionRequest:', route?.transactionRequest)
+
     if (!route?.transactionRequest) return
     try {
       setStatus('pending')
