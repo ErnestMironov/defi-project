@@ -113,11 +113,12 @@ const StrategySkeletonDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = 
     <Table>
       <Table.Head>
         <Table.Row>
-          <Table.HeadCell className="w-48">Token</Table.HeadCell>
-          <Table.HeadCell className="w-48">Chain</Table.HeadCell>
+          <Table.HeadCell>Token</Table.HeadCell>
+          <Table.HeadCell>Chain</Table.HeadCell>
           <Table.HeadCell>Protocol</Table.HeadCell>
           <Table.HeadCell>Projected APY</Table.HeadCell>
-          <Table.HeadCell className="w-48">TVL</Table.HeadCell>
+          <Table.HeadCell>TVL</Table.HeadCell>
+          <Table.HeadCell>Strategy ID</Table.HeadCell>
         </Table.Row>
       </Table.Head>
       <Table.Body>
@@ -132,6 +133,9 @@ const StrategySkeletonDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = 
               </Table.Cell>
               <Table.Cell>
                 <Skeleton className="size-10 w-36" />
+              </Table.Cell>
+              <Table.Cell>
+                <Skeleton className="h-10 w-20" />
               </Table.Cell>
               <Table.Cell>
                 <Skeleton className="h-10 w-20" />

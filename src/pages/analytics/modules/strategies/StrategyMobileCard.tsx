@@ -98,6 +98,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             <div>9.83%</div> */}
             <h6>Projected APY</h6>
             <div className="font-bold">
+              {/* // ! remove "* 5" when we have real data */}
               {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
             </div>
             <h6>TVL</h6>
