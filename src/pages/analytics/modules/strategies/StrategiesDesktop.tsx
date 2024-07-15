@@ -5,9 +5,12 @@ import { IconWithLabelComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
 import { Skeleton } from '@components/ui/skeleton'
+import { useClipboard } from '@hooks/useClipboard'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
+import { shortenString } from '@utils/transform'
 import BigNumber from 'bignumber.js'
+import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
 export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
@@ -15,6 +18,7 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
 ) => {
   const navigate = useNavigate()
   const { data, loading, error } = useStrategies()
+  const { copyWithToast } = useClipboard()
   const renderBody = () => {
     switch (true) {
       case loading:
@@ -26,11 +30,12 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeadCell className="w-48">Token</Table.HeadCell>
-                <Table.HeadCell className="w-48">Chain</Table.HeadCell>
+                <Table.HeadCell>Token</Table.HeadCell>
+                <Table.HeadCell>Chain</Table.HeadCell>
                 <Table.HeadCell>Protocol</Table.HeadCell>
                 <Table.HeadCell>Projected APY</Table.HeadCell>
-                <Table.HeadCell className="w-48">TVL</Table.HeadCell>
+                <Table.HeadCell>TVL</Table.HeadCell>
+                <Table.HeadCell>Strategy ID</Table.HeadCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -67,6 +72,16 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
                           ?.toString(),
                         2,
                       )}
+                    </Table.Cell>
+                    <Table.Cell className="px-10 py-6">
+                      <motion.div
+                        onClick={() => copyWithToast(strategy.strategyId)}
+                        className="flex h-7 w-fit cursor-pointer justify-start transition"
+                        whileHover={{ scale: '1.05' }}
+                        whileTap={{ scale: '0.95' }}
+                      >
+                        <span className="">{shortenString(strategy.strategyId)}</span>
+                      </motion.div>
                     </Table.Cell>
                   </Table.Row>
                 )

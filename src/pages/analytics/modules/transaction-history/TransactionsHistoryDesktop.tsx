@@ -17,6 +17,7 @@ import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
+import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import type { ITransaction } from 'src/lib/types/transaction'
 
@@ -139,11 +140,15 @@ export const TransactionsHistoryDesktop: React.FC<
                   <Table.Cell>{tx.amount}</Table.Cell>
                   <Table.Cell>{renderStrategy(tx)}</Table.Cell>
                   <Table.Cell>{renderFromTo(tx)}</Table.Cell>
-                  <Table.Cell
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => copyWithToast(tx.txHash)}
-                  >
-                    {shortenString(tx.txHash)}
+                  <Table.Cell>
+                    <motion.div
+                      onClick={() => copyWithToast(tx.txHash)}
+                      className="flex h-7 w-fit cursor-pointer justify-start transition"
+                      whileHover={{ scale: '1.05' }}
+                      whileTap={{ scale: '0.95' }}
+                    >
+                      <span>{shortenString(tx.txHash)}</span>
+                    </motion.div>
                   </Table.Cell>
                   <Table.Cell>{getFromNow(Number(tx.timestamp))}</Table.Cell>
                   {totalCount && (

@@ -97,7 +97,9 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             <h6>Inception</h6>
             <div>9.83%</div> */}
             <h6>Projected APY</h6>
-            <div className="font-bold">{strategy.apy.toFixed(2)}%</div>
+            <div className="font-bold">
+              {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
+            </div>
             <h6>TVL</h6>
             <div>
               $
@@ -119,7 +121,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
               type="button"
               className="ml-2 size-5 overflow-visible"
               onClick={() => {
-                copyWithToast('50xBb287E6017d3DE50xBb287E6017d3DE')
+                copyWithToast(strategy.strategyId)
               }}
             />
           </div>
