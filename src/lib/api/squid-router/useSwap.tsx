@@ -6,6 +6,7 @@ import type {
 } from '@modules/transaction-block/deposit/interfaces'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
+import type { Address } from 'viem'
 import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi'
 
 const integratorId: string = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
@@ -41,6 +42,7 @@ async function waitForSuccessStatus(
   toChainId: string,
   changeStatusFunction: (status: STEP_STATUS) => void,
   successHandler?: () => void,
+  failHandler?: () => void,
   requestId?: string,
 ) {
   if (!txHash) {
@@ -72,15 +74,25 @@ async function waitForSuccessStatus(
 
   const handleStatus = async (status: any) => {
     if (
-      status?.squidTransactionStatus &&
-      completedStatuses.has(status.squidTransactionStatus)
+      !status?.squidTransactionStatus ||
+      !completedStatuses.has(status.squidTransactionStatus)
     ) {
+      return false
+    }
+
+    if (status.squidTransactionStatus === 'success') {
       console.log('Swap transaction executed:', txHash)
       changeStatusFunction('success')
       successHandler?.()
       return true
     }
-    return false
+
+    if (status.squidTransactionStatus === 'partial_success') {
+      console.log('Swap transaction executed:', txHash)
+      changeStatusFunction('success')
+      failHandler?.()
+      return true
+    }
   }
 
   const handleError = async (error: unknown) => {
@@ -146,10 +158,11 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
       onSuccess(data) {
         waitForSuccessStatus(
           data,
-          route?.params?.fromChain,
-          route?.params?.toChain,
+          route?.params?.fromChain!,
+          route?.params?.toChain!,
           setStatus,
           onSuccessHandler,
+          () => console.log('Swap transaction failed:', data),
           requestId,
         )
       },
@@ -169,11 +182,11 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
       setStatus('pending')
 
       sendTransaction({
-        to: route.transactionRequest.target,
-        data: route.transactionRequest.data,
-        value: route.transactionRequest.value,
-        gasPrice: route.transactionRequest.gasPrice,
-        gasLimit: route.transactionRequest.gasLimit,
+        to: route.transactionRequest.target as Address,
+        data: route.transactionRequest.data as Address,
+        value: BigInt(route.transactionRequest.value),
+        gasPrice: BigInt(route.transactionRequest.gasPrice ?? '1000000'),
+        gas: BigInt(route.transactionRequest.gasLimit ?? '21000'),
       })
     } catch (error_: unknown) {
       console.error(error_)

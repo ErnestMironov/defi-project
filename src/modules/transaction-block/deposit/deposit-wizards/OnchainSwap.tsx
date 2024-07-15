@@ -8,7 +8,7 @@ import { Button } from '@components/ui/button'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
-import { type Address, formatUnits, parseUnits } from 'viem'
+import { type Address, parseUnits } from 'viem'
 
 import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
@@ -18,13 +18,7 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const {
-    depositAsset,
-    vault,
-    inputValue: amount,
-    setDepositAmount,
-    setCurrentModal,
-  } = useTxStore()
+  const { depositAsset, vault, inputValue: amount, setCurrentModal } = useTxStore()
 
   function incrementStep() {
     setCurrentStep((previousStep) => previousStep + 1)

@@ -19,13 +19,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
 > = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const {
-    depositAsset,
-    vault,
-    inputValue: amount,
-    setDepositAmount,
-    setCurrentModal,
-  } = useTxStore()
+  const { depositAsset, vault, inputValue: amount, setCurrentModal } = useTxStore()
 
   function incrementStep() {
     setCurrentStep((previousStep) => previousStep + 1)

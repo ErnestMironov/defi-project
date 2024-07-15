@@ -94,7 +94,6 @@ async function quoteOftSend(
     return result[0] as bigint
   } catch (error) {
     console.error(error)
-    console.log('��� ~ error:', error.message)
     throw error
   }
 }

@@ -18,7 +18,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
 > = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const { vault, inputValue: amount, setDepositAmount, setCurrentModal } = useTxStore()
+  const { vault, inputValue: amount, setCurrentModal } = useTxStore()
 
   function incrementStep() {
     setCurrentStep((previousStep) => previousStep + 1)

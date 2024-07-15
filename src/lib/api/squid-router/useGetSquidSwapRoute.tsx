@@ -52,7 +52,7 @@ const getRoute = async (_parameters: any, provider: any) => {
     )
     const requestId = result.headers['x-request-id'] // Retrieve request ID from response headers
     return { data: result.data, requestId }
-  } catch (error) {
+  } catch (error: any) {
     if (error.response) {
       console.error('API error:', error.response.data)
     }
