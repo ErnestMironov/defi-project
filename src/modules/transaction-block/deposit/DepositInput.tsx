@@ -39,6 +39,16 @@ export const DepositInput = () => {
       setError('Exceeds balance')
       return
     }
+
+    if (
+      BigNumber(+inputValue)
+        .multipliedBy(BigNumber(asset?.quote ?? 1).div(BigNumber(assetBalance)))
+        .toNumber() < 1
+    ) {
+      setError('Deposit amount cannot be less than 1$')
+      return
+    }
+
     setError('')
   }, [asset?.quote, assetBalance, inputValue, setInputValueInUSD])
 

@@ -19,6 +19,9 @@ build:
     - docker push $IMAGE_NAME
   tags:
     - dev
+  only:
+    - main
+    - dev
 
 cleanup:
   stage: cleanup
