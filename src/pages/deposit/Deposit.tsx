@@ -1,4 +1,6 @@
 import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
+import usdc from '@assets/images/usdc-3d.png'
+import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
@@ -62,6 +64,11 @@ export const Deposit = () => {
                 label="USDС APY"
                 value={usdcApy ? `${usdcApy}%` : '0.00%'}
               >
+                <img
+                  src={usdc}
+                  alt="usdc"
+                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 max-lg:size-[5.86rem]"
+                />
                 {/* <ReactThreeWrapper>
                   <TokenModel model="/src/assets/3D/Tether_3D.fbx" />
                 </ReactThreeWrapper> */}
@@ -70,6 +77,11 @@ export const Deposit = () => {
                 label="USDT APY"
                 value={usdtApy ? `${usdtApy}%` : '0.00%'}
               >
+                <img
+                  src={usdt}
+                  alt="usdt"
+                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 max-lg:size-[5.86rem]"
+                />
                 {/* <ReactThreeWrapper>
                   <TokenModel model="/src/assets/3D/USD_Coin_3D.fbx" />
                 </ReactThreeWrapper> */}

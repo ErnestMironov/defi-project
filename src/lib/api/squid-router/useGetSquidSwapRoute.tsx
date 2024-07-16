@@ -111,6 +111,7 @@ export function useGetSquidSwapRoute(parameters_: {
       toToken,
       toAddress: address,
       enableBoost,
+      enableExpress: true,
     }
   }, [provider, fromAmount, fromToken, toToken, address, fromChain, toChain, enableBoost])
 
