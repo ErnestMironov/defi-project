@@ -1,6 +1,5 @@
 import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
-import { useSwap } from '@api/squid-router/useSwap'
 import EmptyWalletSquare from '@assets/icons/empty-wallet-square.svg'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
@@ -12,6 +11,7 @@ import { type Address, parseUnits } from 'viem'
 
 import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
+import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
