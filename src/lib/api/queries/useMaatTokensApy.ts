@@ -45,6 +45,16 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
     const apyDataArray = [] as RechartDataType[]
     apyData.forEach((item) => {
       const { timestamp, apy, token } = item
+      if (
+        BigNumber(apy)
+          .div(BigNumber(lastPv || apy))
+          .isGreaterThan(5) ||
+        BigNumber(apy)
+          .div(BigNumber(lastUv || apy))
+          .isGreaterThan(5)
+      ) {
+        return
+      }
       const symbol = data?.tokens?.find((_token) => _token.addresses.includes(token))
         ?.symbol
       const uv = symbol?.toLowerCase() === 'usdc' ? Number(apy) : lastUv
@@ -66,7 +76,7 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
       lastUv = uv
       lastPv = pv
     })
-    return apyDataArray.slice(1)
+    return apyDataArray.filter((item) => !!item.pv && !!item.uv)
   }, [data])
 
   return { data: chartData, ...rest }
