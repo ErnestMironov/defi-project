@@ -1,9 +1,9 @@
 import { type RouteResponse } from '@0xsquid/sdk/dist/types'
-import { getEthersProvider } from '@hooks/web3/useEthersProvider'
 import type {
   IDepositWizardHook,
   STEP_STATUS,
 } from '@modules/transaction-block/deposit/interfaces'
+import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
 import type { Address } from 'viem'
@@ -97,7 +97,6 @@ async function waitForSuccessStatus(
 
   const handleError = async (error: unknown) => {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
-      changeStatusFunction('error')
       retryCount++
       if (retryCount < maxRetries) {
         console.log('Transaction not found. Retrying...')
@@ -106,6 +105,7 @@ async function waitForSuccessStatus(
         console.error('Max retries reached. Transaction not found.')
       }
     } else {
+      changeStatusFunction('error')
       throw error
     }
   }
@@ -147,8 +147,8 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const [error, setError] = useState('')
 
-  const provider = getEthersProvider()
-  console.log('🚀 ~ useSwap ~ provider:', provider)
+  const { setCurrentModal } = useTxStore()
+
   const { sendTransaction, data: hash } = useSendTransaction({
     mutation: {
       onError(_error) {
@@ -162,7 +162,7 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
           route?.params?.toChain!,
           setStatus,
           onSuccessHandler,
-          () => console.log('Swap transaction failed:', data),
+          () => setCurrentModal('error'),
           requestId,
         )
       },
