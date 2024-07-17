@@ -67,7 +67,7 @@ export const Deposit = () => {
                 <img
                   src={usdc}
                   alt="usdc"
-                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 max-lg:size-[5.86rem]"
+                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
                 {/* <ReactThreeWrapper>
                   <TokenModel model="/src/assets/3D/Tether_3D.fbx" />
@@ -80,7 +80,7 @@ export const Deposit = () => {
                 <img
                   src={usdt}
                   alt="usdt"
-                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 max-lg:size-[5.86rem]"
+                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
                 {/* <ReactThreeWrapper>
                   <TokenModel model="/src/assets/3D/USD_Coin_3D.fbx" />
