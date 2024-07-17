@@ -22,10 +22,10 @@ export const GET_OVERVIEW = gql(`
   maatUserStats(address: $address) {
     balances {
       balance
-      vault
+      asset
     }
   }
-  maatEarnings
+  maatDeposited
   }
 `)
 
@@ -69,7 +69,13 @@ export const useOverview = () => {
     },
     maatOverview: {
       tvl: formatAmountValue(tvl, 2),
-      cumulativeEarnings: formatAmountValue(data?.maatEarnings, 2, false),
+      cumulativeEarnings: formatAmountValue(
+        BigNumber(tvl)
+          .minus(BigNumber(data?.maatDeposited || 0).div(10 ** 6))
+          .toString(),
+        2,
+        false,
+      ),
       strategies,
     },
   }
