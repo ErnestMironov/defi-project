@@ -28,6 +28,7 @@ import Wbtc from '@assets/icons/tokens/wbtc.svg'
 import Weth from '@assets/icons/tokens/weth.svg'
 import Xfi from '@assets/icons/tokens/xfi.svg'
 import Xusd from '@assets/icons/tokens/xusd.svg'
+import { useMemo } from 'react'
 
 interface ITokenAsset {
   TokenIcon: React.FC<React.SVGProps<SVGElement>>
@@ -194,11 +195,17 @@ const TOKENS: ITokenAsset[] = [
   },
 ]
 
-// by symbol
-export const useTokenAsset = (query?: string | null) => {
-  // console.log('🚀 ~ useTokenAsset ~ query:', query)
-  if (!query || typeof query !== 'string') return
-  return TOKENS.find(
-    (token) => query.toLowerCase()?.includes(token.symbol?.toLowerCase()),
-  )
+// by symbol or chainId
+export const useTokenAsset = (query?: string | number) => {
+  return useMemo(() => {
+    if (!query) return
+    if (typeof query === 'number') {
+      return TOKENS.find((token) => token.chainId === query)
+    }
+    if (typeof query === 'string') {
+      return TOKENS.find(
+        (token) => query.toLowerCase()?.includes(token.symbol?.toLowerCase()),
+      )
+    }
+  }, [query])
 }

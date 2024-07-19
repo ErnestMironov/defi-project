@@ -7,6 +7,7 @@ import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 // import { useFBX } from '@react-three/drei'
 // import { Canvas, useFrame } from '@react-three/fiber'
 import dayjs from 'dayjs'
+import { Widget } from 'msdk-test/dist/widget'
 // import type { ReactNode } from 'react' // Import ReactNode type
 import { useMemo, useState } from 'react'
 // import type { Group } from 'three' // Import the Group class from three
@@ -48,6 +49,7 @@ export const Deposit = () => {
   return (
     <div className="flex w-full justify-center">
       <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:gap-4">
+        <Widget />
         <div className="grid grid-cols-2 gap-3">
           {loading ? (
             <>
