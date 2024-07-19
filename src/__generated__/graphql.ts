@@ -170,8 +170,8 @@ export enum ActionType {
 
 export type Balance = {
   __typename?: 'Balance';
+  asset: Scalars['String']['output'];
   balance: Scalars['BigInt']['output'];
-  vault: Scalars['String']['output'];
 };
 
 export type Chain = {
@@ -677,7 +677,7 @@ export type Query = {
   maatActionByUniqueInput?: Maybe<MaatAction>;
   maatActions: Array<MaatAction>;
   maatActionsConnection: MaatActionsConnection;
-  maatEarnings: Scalars['String']['output'];
+  maatDeposited: Scalars['String']['output'];
   maatLastRebalanceTxIds: Array<RebalanceTxId>;
   maatTvlById?: Maybe<MaatTvl>;
   /** @deprecated Use maatTvlById */
@@ -702,6 +702,11 @@ export type Query = {
   tokenByUniqueInput?: Maybe<Token>;
   tokens: Array<Token>;
   tokensConnection: TokensConnection;
+  variables: Array<Variables>;
+  variablesById?: Maybe<Variables>;
+  /** @deprecated Use variablesById */
+  variablesByUniqueInput?: Maybe<Variables>;
+  variablesConnection: VariablesConnection;
 };
 
 
@@ -894,6 +899,32 @@ export type QueryTokensConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy: Array<TokenOrderByInput>;
   where?: InputMaybe<TokenWhereInput>;
+};
+
+
+export type QueryVariablesArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VariablesOrderByInput>>;
+  where?: InputMaybe<VariablesWhereInput>;
+};
+
+
+export type QueryVariablesByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryVariablesByUniqueInputArgs = {
+  where: WhereIdInput;
+};
+
+
+export type QueryVariablesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy: Array<VariablesOrderByInput>;
+  where?: InputMaybe<VariablesWhereInput>;
 };
 
 export type RebalanceTxId = {
@@ -1174,6 +1205,79 @@ export type UserData = {
   balances: Array<Balance>;
 };
 
+export type Variables = {
+  __typename?: 'Variables';
+  id: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
+export type VariablesConnection = {
+  __typename?: 'VariablesConnection';
+  edges: Array<VariablesEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type VariablesEdge = {
+  __typename?: 'VariablesEdge';
+  cursor: Scalars['String']['output'];
+  node: Variables;
+};
+
+export enum VariablesOrderByInput {
+  IdAsc = 'id_ASC',
+  IdAscNullsFirst = 'id_ASC_NULLS_FIRST',
+  IdAscNullsLast = 'id_ASC_NULLS_LAST',
+  IdDesc = 'id_DESC',
+  IdDescNullsFirst = 'id_DESC_NULLS_FIRST',
+  IdDescNullsLast = 'id_DESC_NULLS_LAST',
+  ValueAsc = 'value_ASC',
+  ValueAscNullsFirst = 'value_ASC_NULLS_FIRST',
+  ValueAscNullsLast = 'value_ASC_NULLS_LAST',
+  ValueDesc = 'value_DESC',
+  ValueDescNullsFirst = 'value_DESC_NULLS_FIRST',
+  ValueDescNullsLast = 'value_DESC_NULLS_LAST'
+}
+
+export type VariablesWhereInput = {
+  AND?: InputMaybe<Array<VariablesWhereInput>>;
+  OR?: InputMaybe<Array<VariablesWhereInput>>;
+  id_contains?: InputMaybe<Scalars['String']['input']>;
+  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_eq?: InputMaybe<Scalars['String']['input']>;
+  id_gt?: InputMaybe<Scalars['String']['input']>;
+  id_gte?: InputMaybe<Scalars['String']['input']>;
+  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  id_lt?: InputMaybe<Scalars['String']['input']>;
+  id_lte?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_not_eq?: InputMaybe<Scalars['String']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  value_contains?: InputMaybe<Scalars['String']['input']>;
+  value_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  value_endsWith?: InputMaybe<Scalars['String']['input']>;
+  value_eq?: InputMaybe<Scalars['String']['input']>;
+  value_gt?: InputMaybe<Scalars['String']['input']>;
+  value_gte?: InputMaybe<Scalars['String']['input']>;
+  value_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  value_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  value_lt?: InputMaybe<Scalars['String']['input']>;
+  value_lte?: InputMaybe<Scalars['String']['input']>;
+  value_not_contains?: InputMaybe<Scalars['String']['input']>;
+  value_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  value_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  value_not_eq?: InputMaybe<Scalars['String']['input']>;
+  value_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  value_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  value_startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type WhereIdInput = {
   id: Scalars['String']['input'];
 };
@@ -1197,7 +1301,7 @@ export type OverviewQueryVariables = Exact<{
 }>;
 
 
-export type OverviewQuery = { __typename?: 'Query', maatEarnings: string, apies: Array<{ __typename?: 'APY', apy: number }>, maatTvls: Array<{ __typename?: 'MaatTVL', staked: any, token: { __typename?: 'Token', decimals: number, symbol: string } }>, strategies: Array<{ __typename?: 'Strategy', id: string }>, maatUserStats: { __typename?: 'UserData', balances: Array<{ __typename?: 'Balance', balance: any, vault: string }> } };
+export type OverviewQuery = { __typename?: 'Query', maatDeposited: string, apies: Array<{ __typename?: 'APY', apy: number }>, maatTvls: Array<{ __typename?: 'MaatTVL', staked: any, token: { __typename?: 'Token', decimals: number, symbol: string } }>, strategies: Array<{ __typename?: 'Strategy', id: string }>, maatUserStats: { __typename?: 'UserData', balances: Array<{ __typename?: 'Balance', balance: any, asset: string }> } };
 
 export type RebalanceQueryVariables = Exact<{
   type_in?: InputMaybe<Array<ActionType> | ActionType>;
@@ -1235,7 +1339,7 @@ export type TxHistoryDesktopQuery = { __typename?: 'Query', maatActions: Array<{
 
 export const MaatTokensApyDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MaatTokensApy"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"from"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apies"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"protocol"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id_eq"},"value":{"kind":"StringValue","value":"maat","block":false}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"timestamp_gt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"from"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"apy"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tokens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addresses"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}}]}}]}}]} as unknown as DocumentNode<MaatTokensApyQuery, MaatTokensApyQueryVariables>;
 export const MaatTokensTvlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MaatTokensTvl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"from"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"maatTvls"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"timestamp_gt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"from"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"staked"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"token"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addresses"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}}]}}]}}]}}]} as unknown as DocumentNode<MaatTokensTvlQuery, MaatTokensTvlQueryVariables>;
-export const OverviewDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Overview"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apies"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"protocol"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id_eq"},"value":{"kind":"StringValue","value":"maat","block":false}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"id_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apy"}}]}},{"kind":"Field","name":{"kind":"Name","value":"maatTvls"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"id_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"staked"}},{"kind":"Field","name":{"kind":"Name","value":"token"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"strategies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"maatUserStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"address"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balance"}},{"kind":"Field","name":{"kind":"Name","value":"vault"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"maatEarnings"}}]}}]} as unknown as DocumentNode<OverviewQuery, OverviewQueryVariables>;
+export const OverviewDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Overview"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"address"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apies"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"protocol"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id_eq"},"value":{"kind":"StringValue","value":"maat","block":false}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"id_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apy"}}]}},{"kind":"Field","name":{"kind":"Name","value":"maatTvls"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"id_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"staked"}},{"kind":"Field","name":{"kind":"Name","value":"token"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"strategies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"maatUserStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"address"},"value":{"kind":"Variable","name":{"kind":"Name","value":"address"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balance"}},{"kind":"Field","name":{"kind":"Name","value":"asset"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"maatDeposited"}}]}}]} as unknown as DocumentNode<OverviewQuery, OverviewQueryVariables>;
 export const RebalanceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Rebalance"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type_in"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ActionType"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"maatLastRebalanceTxIds"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"txId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"maatActions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type_in"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"token"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"symbol_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"txhash"}},{"kind":"Field","name":{"kind":"Name","value":"txId"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"txId"}},{"kind":"Field","name":{"kind":"Name","value":"data"}}]}},{"kind":"Field","name":{"kind":"Name","value":"strategyStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"protocol"}},{"kind":"Field","name":{"kind":"Name","value":"apy"}},{"kind":"Field","name":{"kind":"Name","value":"chainName"}},{"kind":"Field","name":{"kind":"Name","value":"strategyId"}}]}}]}}]} as unknown as DocumentNode<RebalanceQuery, RebalanceQueryVariables>;
 export const MyQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"strategyStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apy"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"chainName"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"deposited"}},{"kind":"Field","name":{"kind":"Name","value":"protocol"}},{"kind":"Field","name":{"kind":"Name","value":"strategyId"}},{"kind":"Field","name":{"kind":"Name","value":"tokenAddress"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSymbol"}}]}}]}}]} as unknown as DocumentNode<MyQueryQuery, MyQueryQueryVariables>;
 export const TxHistoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TxHistory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type_in"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ActionType"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"maatActionsConnection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"timestamp_DESC"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type_in"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"token"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"symbol_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"hasPreviousPage"}},{"kind":"Field","name":{"kind":"Name","value":"startCursor"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"txhash"}},{"kind":"Field","name":{"kind":"Name","value":"txId"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"chain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"strategyStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"apy"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"chainName"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"deposited"}},{"kind":"Field","name":{"kind":"Name","value":"strategyId"}},{"kind":"Field","name":{"kind":"Name","value":"protocol"}},{"kind":"Field","name":{"kind":"Name","value":"tokenAddress"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSymbol"}}]}}]}}]} as unknown as DocumentNode<TxHistoryQuery, TxHistoryQueryVariables>;
