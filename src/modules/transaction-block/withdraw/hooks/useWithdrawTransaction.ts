@@ -37,7 +37,7 @@ export const useWithdrawTransaction = () => {
     setApproveHash(undefined)
   }
 
-  const { sharesBalance, tokenVaultAddress } = useVaultBalance(mtToken?.mtAddress)
+  const { sharesBalance } = useVaultBalance(mtToken?.mtAddress)
   console.log('🚀 ~ useWithdrawTransaction ~ mtToken?.mtAddress:', mtToken?.mtAddress)
   console.log('🚀 ~ useWithdrawTransaction ~ sharesBalance:', sharesBalance)
 

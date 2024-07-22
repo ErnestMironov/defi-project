@@ -4,6 +4,7 @@ import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import Search from '@assets/icons/search.svg'
+import WarnIcon from '@assets/icons/warn.svg'
 import { Select } from '@components/select/Select'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
@@ -193,6 +194,15 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
                 token={token}
               />
             ))}
+            {filteredByChainTokens?.length <= 0 && (
+              <div className="flex h-auto items-start gap-2 rounded-xl bg-orange-15 p-4">
+                <WarnIcon className="size-[2.14288rem] text-red-600" />
+                <p className="flex flex-col gap-2 font-[Arial] text-[1.25rem] leading-[150%]">
+                  Unknown token
+                  <span className="text-base leading-none">This token was not found</span>
+                </p>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </DialogContent>
