@@ -175,6 +175,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
             chain={chain}
             onChange={(_network) => setNetwork(_network)}
             trigger={<SelectChainTrigger />}
+            showAllNetworksOption
           />
         </div>
         <ScrollArea className="-mx-4 h-[19.5rem] px-4">

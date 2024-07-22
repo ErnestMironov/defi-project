@@ -13,6 +13,7 @@ interface SelectNetworkPopoverProperties {
   trigger: React.ReactNode
   onChange: (chain: Chains | null) => void
   chain?: Chains | null
+  showAllNetworksOption?: boolean
 }
 
 const ChainItem = ({
@@ -64,6 +65,7 @@ export const SelectNetworkPopover = ({
   trigger,
   onChange,
   chain: currentChain,
+  showAllNetworksOption = false,
 }: SelectNetworkPopoverProperties) => {
   const [isOpened, setIsOpened] = useState(false)
   const onNetworkChange = (chain: Chains | null) => {
@@ -96,11 +98,13 @@ export const SelectNetworkPopover = ({
               currentChain={currentChain}
             />
           ))}
-          <ChainItem
-            chain={null}
-            onNetworkChange={onNetworkChange}
-            currentChain={currentChain}
-          />
+          {showAllNetworksOption && (
+            <ChainItem
+              chain={null}
+              onNetworkChange={onNetworkChange}
+              currentChain={currentChain}
+            />
+          )}
         </div>
       </PopoverContent>
     </Popover>

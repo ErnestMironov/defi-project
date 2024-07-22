@@ -12,5 +12,6 @@ export const EIDS_BY_CHAIN_ID: Record<string, number> = {
 export const SUPPORTED_CHAINS_FOR_REP_TOKENS = [
   8453, // Base
   10, // Optimism
+  137, // Polygon
   42_161, // Arbitrum
 ]
