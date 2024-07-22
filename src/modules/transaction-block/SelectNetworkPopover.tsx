@@ -3,16 +3,17 @@ import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
+import type { ChainType } from '@constants/chains'
 import { CHAINS } from '@constants/chains'
-import type { Chains } from '@covalenthq/client-sdk'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 
 interface SelectNetworkPopoverProperties {
   trigger: React.ReactNode
-  onChange: (chain: Chains | null) => void
-  chain?: Chains | null
+  onChange: (chain: ChainType | null) => void
+  chain?: ChainType | null
+  showAllNetworksOption?: boolean
 }
 
 const ChainItem = ({
@@ -20,9 +21,9 @@ const ChainItem = ({
   chain,
   currentChain,
 }: {
-  onNetworkChange: (chain: Chains | null) => void
-  chain: Chains | null
-  currentChain: Chains | null | undefined
+  onNetworkChange: (chain: ChainType | null) => void
+  chain: ChainType | null
+  currentChain: ChainType | null | undefined
 }) => {
   const data = useTokenAsset(chain)
 
@@ -64,9 +65,10 @@ export const SelectNetworkPopover = ({
   trigger,
   onChange,
   chain: currentChain,
+  showAllNetworksOption = false,
 }: SelectNetworkPopoverProperties) => {
   const [isOpened, setIsOpened] = useState(false)
-  const onNetworkChange = (chain: Chains | null) => {
+  const onNetworkChange = (chain: ChainType | null) => {
     onChange(chain)
     setIsOpened(false)
   }
@@ -88,7 +90,7 @@ export const SelectNetworkPopover = ({
         className="pointer-events-auto inline-block w-auto rounded-2xl border px-2 py-4 !shadow-none"
       >
         <div className="flex flex-col gap-1 ">
-          {CHAINS.map((chain: Chains) => (
+          {CHAINS.map((chain) => (
             <ChainItem
               key={chain}
               onNetworkChange={onNetworkChange}
@@ -96,11 +98,13 @@ export const SelectNetworkPopover = ({
               currentChain={currentChain}
             />
           ))}
-          <ChainItem
-            chain={null}
-            onNetworkChange={onNetworkChange}
-            currentChain={currentChain}
-          />
+          {showAllNetworksOption && (
+            <ChainItem
+              chain={null}
+              onNetworkChange={onNetworkChange}
+              currentChain={currentChain}
+            />
+          )}
         </div>
       </PopoverContent>
     </Popover>

@@ -65,17 +65,8 @@ async function quoteOftSend(
   receiver: string,
   provider: Provider,
 ) {
-  console.log('🚀 ~ provider:', provider)
-  console.log('🚀 ~ receiver:', receiver)
   const tokenVault = new Contract(tokenVaultAddr, tokenVaultAbi, provider)
-  console.log('🚀 ~ tokenVault:', tokenVault)
   const extraOptions = Options.newOptions().addExecutorLzReceiveOption('250000', '0')
-  console.log('🚀 ~ extraOptions:', extraOptions)
-  console.log(
-    '🚀 ~  ethers.zeroPadBytes(receiver, 32),:',
-    ethers.zeroPadBytes(receiver, 32),
-  )
-  console.log('🚀 ~ extraOptions.toBytes():', extraOptions.toBytes())
 
   const parameters = [
     dstEid,
@@ -86,36 +77,21 @@ async function quoteOftSend(
     '0x',
     '0x',
   ]
-  console.log('🚀 ~ parameters postHook:', parameters)
 
-  try {
-    const result = await tokenVault.quoteSend(parameters, false)
-    console.log('🚀 ~ result:', result)
-    return result[0] as bigint
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
+  const result = await tokenVault.quoteSend(parameters, false)
+  return result[0] as bigint
 }
 
-/**
- * Sets up parameters for swapping tokens and depositing into Radiant lending pool.
- *
- * @param depositToken - The token to be deposited. Must be either USDC or USDT on Arbitrum.
- * @param user - The address of the user performing the deposit.
- * @param dstEid - The destination chain ID.
- * @param arbitrumProvider - The provider for interacting with the Arbitrum network.
- * @returns An object containing the setup parameters for the cross-chain swap and deposit.
- * @throws Will throw an error if the deposit token is not USDC or USDT on Arbitrum.
- * @throws Will throw an error if the destination chain ID is Arbitrum.
- */
+function grow(value: bigint, multiplier: bigint, divider: bigint) {
+  return (value * multiplier) / divider
+}
+
 export async function getPostHookForCrossChainSwapAndDeposit(
   depositToken: Token,
   user: string,
   dstEid: number,
   arbitrumProvider: Provider,
 ) {
-  console.log('🚀 ~ dstEid:', dstEid)
   if (
     depositToken.address !== USDC_TOKEN.address &&
     depositToken.address !== USDT_TOKEN.address
@@ -130,13 +106,15 @@ export async function getPostHookForCrossChainSwapAndDeposit(
       "This hook contractor doesn't support sending representation to Arbitrum",
     )
 
-  const nativeFee = await quoteOftSend(
+  const initialFee = await quoteOftSend(
     TOKEN_VAULT_ADDRESSES[depositToken.address],
     dstEid,
     user,
     arbitrumProvider,
   )
-  console.log('🚀 ~ nativeFee:', nativeFee)
+  console.log(initialFee)
+
+  const nativeFee = grow(initialFee, BigInt(2), BigInt(1))
 
   // Set up parameters for swapping tokens and depositing into Radiant lending pool
   return {
@@ -207,7 +185,7 @@ export async function getPostHookForCrossChainSwapAndDeposit(
           tokenAddress: depositToken.address,
           inputPos: 1,
         },
-        estimatedGas: '50000',
+        estimatedGas: dstEid === ARBITRUM_EID ? '150000' : '600000',
         chainType: ChainType.EVM,
       },
     ],
@@ -259,7 +237,7 @@ export async function getPostHookForOneChainSwapAndDeposit(
           tokenAddress: depositToken.address,
           inputPos: 1,
         },
-        estimatedGas: '70000',
+        estimatedGas: '150000',
         chainType: ChainType.EVM,
       },
     ],
@@ -269,3 +247,19 @@ export async function getPostHookForOneChainSwapAndDeposit(
       'https://pbs.twimg.com/profile_images/1548647667135291394/W2WOtKUq_400x400.jpg', // Add your product or application's logo here
   }
 }
+
+// const usdcArbitrumAddress: string =
+// 	"0xaf88d065e77c8cC2239327C5EDb3A432268e5831";
+// const dstEid = 30184;
+
+// getPostHookForCrossChainSwapAndDeposit(
+// 	new Token(42161, usdcArbitrumAddress, 6),
+// 	"0x0000000000000000000000000000000000000000",
+// 	dstEid,
+// 	getArbitrumProvider()
+// )
+// 	.then(() => process.exit(0))
+// 	.catch((err) => {
+// 		console.error(err);
+// 		process.exit(1);
+// 	});

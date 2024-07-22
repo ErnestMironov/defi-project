@@ -26,7 +26,7 @@ export const useVaultBalance = (token: Address) => {
 
   const { data: sharesBalance } = useReadContract({
     abi: TOKEN_VAULT,
-    address: tokenVaultAddress,
+    address: token,
     args: [address],
     functionName: 'balanceOf',
     query: {

@@ -18,10 +18,15 @@ import { useTxStore } from './store/useDepositStore'
 export const DoneModal = () => {
   const navigate = useNavigate()
 
-  const { txType, vault, setCurrentModal, currentModal, withdrawNetwork, depositAmount } =
-    useTxStore()
-
-  const formattedAmount = formatAmountValue(depositAmount)
+  const {
+    txType,
+    vault,
+    setCurrentModal,
+    currentModal,
+    withdrawNetwork,
+    depositAmount,
+    withdrawAmount,
+  } = useTxStore()
 
   const onClose = () => setCurrentModal(null)
 
@@ -38,6 +43,21 @@ export const DoneModal = () => {
       }
     }
   }, [txType])
+
+  const amount = useMemo(() => {
+    switch (txType) {
+      case 'deposit': {
+        return formatAmountValue(depositAmount)
+      }
+      case 'withdraw': {
+        return formatAmountValue(withdrawAmount)
+      }
+      default: {
+        return ''
+      }
+    }
+  }, [depositAmount, txType, withdrawAmount])
+
   return (
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
       <DialogOverlay className="backdrop-blur-xl" />
@@ -47,7 +67,7 @@ export const DoneModal = () => {
         </DialogHeader>
         <div className="relative mt-6 flex h-[14.5625rem] flex-col items-center justify-center overflow-hidden rounded-[2.5rem] bg-input-default shadow-shadow">
           <p className="text-xl text-gray-100">{title}</p>
-          <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">{formattedAmount}</p>
+          <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">{amount}</p>
           <div className="mt-[0.38rem] flex items-center gap-3">
             {txType === 'withdraw' ? (
               <TokenWithNetwork

@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import React from 'react'
 
 interface TokenIconProperties extends React.SVGProps<SVGElement> {
-  symbol?: string | null
+  symbol?: string | number | null
   tokenLogoFallback?: string
 }
 

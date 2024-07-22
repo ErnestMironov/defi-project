@@ -26,8 +26,7 @@ import Usdc from '@assets/icons/tokens/usdc.svg'
 import Usdt from '@assets/icons/tokens/usdt.svg'
 import Wbtc from '@assets/icons/tokens/wbtc.svg'
 import Weth from '@assets/icons/tokens/weth.svg'
-import Xfi from '@assets/icons/tokens/xfi.svg'
-import Xusd from '@assets/icons/tokens/xusd.svg'
+import { useMemo } from 'react'
 
 interface ITokenAsset {
   TokenIcon: React.FC<React.SVGProps<SVGElement>>
@@ -37,16 +36,6 @@ interface ITokenAsset {
 }
 
 const TOKENS: ITokenAsset[] = [
-  {
-    TokenIcon: Xfi,
-    symbol: 'XFI',
-    name: 'CrossFi Token',
-  },
-  {
-    TokenIcon: Xfi,
-    symbol: 'WXFI',
-    name: 'CrossFi  Token',
-  },
   {
     TokenIcon: Eth,
     symbol: 'ETH',
@@ -66,11 +55,6 @@ const TOKENS: ITokenAsset[] = [
     TokenIcon: Dai,
     symbol: 'DAI',
     name: 'DAI',
-  },
-  {
-    TokenIcon: Xusd,
-    symbol: 'XUSD',
-    name: 'XUSD',
   },
   {
     TokenIcon: Frax,
@@ -146,6 +130,12 @@ const TOKENS: ITokenAsset[] = [
     chainId: 5000,
     name: 'Mantle',
   },
+  {
+    TokenIcon: Metis,
+    symbol: 'metis-mainnet',
+    chainId: 1088,
+    name: 'Metis',
+  },
   // protocol icons
   {
     TokenIcon: Aave,
@@ -194,11 +184,17 @@ const TOKENS: ITokenAsset[] = [
   },
 ]
 
-// by symbol
-export const useTokenAsset = (query?: string | null) => {
-  // console.log('🚀 ~ useTokenAsset ~ query:', query)
-  if (!query || typeof query !== 'string') return
-  return TOKENS.find(
-    (token) => query.toLowerCase()?.includes(token.symbol?.toLowerCase()),
-  )
+// by symbol or chainId
+export const useTokenAsset = (query?: string | number | null) => {
+  return useMemo(() => {
+    if (!query) return
+    if (typeof query === 'number') {
+      return TOKENS.find((token) => token.chainId === query)
+    }
+    if (typeof query === 'string') {
+      return TOKENS.find(
+        (token) => query.toLowerCase()?.includes(token.symbol?.toLowerCase()),
+      )
+    }
+  }, [query])
 }

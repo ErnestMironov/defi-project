@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
+import { useMaatUserTokens } from '@api/queries/useMaatUserTokens'
 import { Select } from '@components/select/Select'
-import { TokenIconComponent } from '@components/token-icon'
+import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import {
   Dialog,
   DialogContent,
@@ -8,47 +9,99 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@components/ui/dialog'
+import { Skeleton } from '@components/ui/skeleton'
 import { formatAmountValue } from '@utils/formatValue'
-import BigNumber from 'bignumber.js'
 import { type ComponentProps, useState } from 'react'
+import type { Address } from 'viem'
+import { formatUnits } from 'viem'
+import { useSwitchChain } from 'wagmi'
 
-import type { Vault } from '../deposit/SelectVault'
-import { VAULTS } from '../deposit/SelectVault'
+import type { UserMTokenInfo } from '../interface'
 import { useTxStore } from '../store/useDepositStore'
-import { useVaultBalance, VAULT_ADDRESSES } from './hooks/useVaultBalance'
+import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
 
 interface SelectWithdrawAssetModalProperties extends ComponentProps<'div'> {}
 
+const WithdrawAssetItem = ({
+  token,
+  onChange,
+}: {
+  token: any
+  onChange: (token: any) => void
+}) => {
+  const tokenData = useGetMTokenInfo(token?.asset)
+
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        onChange({
+          ...token,
+          ...tokenData,
+        })
+      }
+      className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+    >
+      <TokenWithNetwork
+        className="size-8"
+        symbol={tokenData?.stable}
+        network={tokenData?.chainData?.chainId}
+      />
+      <div className="ml-3 flex flex-col items-start text-[1.25rem]/[1.75rem]">
+        {tokenData?.symbol}
+        <span className="font-[Arial] text-[0.9375rem] font-normal not-italic leading-none text-gray-80">
+          {tokenData?.chainData?.name}
+        </span>
+      </div>
+      <div className="ml-auto flex flex-col items-end gap-1">
+        <p className="text-base text-text">
+          {formatAmountValue(formatUnits(token.lpBalance, 6))} {tokenData?.symbol}
+        </p>
+        <p className="text-semi-base font-bold text-gray-80">
+          ${formatAmountValue(formatUnits(token.balance, 6), 2)}{' '}
+        </p>
+      </div>
+    </button>
+  )
+}
+
 export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalProperties) => {
-  const { vault, setVault } = useTxStore()
+  const { mtToken, setMToken } = useTxStore()
   const [opened, setOpened] = useState(false)
+  const { switchChain: _switchChain } = useSwitchChain()
 
-  const { tokenBalance: tokenBalanceUsdc } = useVaultBalance(VAULT_ADDRESSES.USDC)
-  const { tokenBalance: tokenBalanceUsdt } = useVaultBalance(VAULT_ADDRESSES.USDT)
-  const tokenBalanceUsdcUsd = formatAmountValue(
-    BigNumber((tokenBalanceUsdc as any) || 0)
-      .div(10 ** 6)
-      .toString(),
-  )
-  const tokenBalanceUsdtUsd = formatAmountValue(
-    BigNumber((tokenBalanceUsdt as any) || 0)
-      .div(10 ** 6)
-      .toString(),
-  )
+  const { data, loading: isLoading } = useMaatUserTokens()
+  // const tokenBalanceUsdcUsd = formatAmountValue(
+  //   BigNumber((tokenBalanceUsdc as any) || 0)
+  //     .div(10 ** 6)
+  //     .toString(),
+  // )
+  // const tokenBalanceUsdtUsd = formatAmountValue(
+  //   BigNumber((tokenBalanceUsdt as any) || 0)
+  //     .div(10 ** 6)
+  //     .toString(),
+  // )
 
-  const onChange = (_asset: Vault) => {
-    setVault(_asset)
+  const mtTokenData = useGetMTokenInfo(mtToken?.asset as Address)
+
+  const onChange = (_asset: UserMTokenInfo) => {
+    setMToken(_asset)
+    _switchChain({
+      chainId: _asset?.chainId,
+    })
     setOpened(false)
   }
+
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
         <Select
-          value={vault}
+          value={mtToken?.symbol}
           icon={
-            <TokenIconComponent
-              symbol={vault}
+            <TokenWithNetwork
               className="size-[2.14288rem] max-lg:size-[1.125rem]"
+              symbol={mtTokenData?.stable}
+              network={mtTokenData?.chainData?.chainId}
             />
           }
         />
@@ -58,28 +111,16 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
           <DialogTitle>Select asset</DialogTitle>
         </DialogHeader>
         <div className="space-y-2">
-          {VAULTS.map((vault) => {
-            const value = vault === 'USDC' ? tokenBalanceUsdcUsd : tokenBalanceUsdtUsd
-            return (
-              <button
-                key={vault}
-                type="button"
-                onClick={() => onChange(vault)}
-                className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
-              >
-                <TokenIconComponent symbol={vault} className="size-8" />
-                <div className="ml-3 flex flex-col items-start text-[1.25rem]/[1.75rem]">
-                  {vault}
-                </div>
-                <div className="ml-auto flex flex-col items-end gap-1">
-                  <p className="text-base text-text">
-                    {value} {vault}
-                  </p>
-                  <p className="text-semi-base font-bold text-gray-80">${value}</p>
-                </div>
-              </button>
-            )
-          })}
+          {isLoading &&
+            Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="flex h-[4.5rem] w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+              />
+            ))}
+          {data.map((token) => (
+            <WithdrawAssetItem key={token?.asset} token={token} onChange={onChange} />
+          ))}
         </div>
       </DialogContent>
     </Dialog>

@@ -9,6 +9,10 @@
 			font-size: 16px;
 		}
 
+		@media screen and (min-width: 2000px) {
+			font-size: 18px;
+		}
+
 		body {
 			@apply font-arial text-text bg-bg;
 		}
@@ -98,5 +102,5 @@
 }
 
 .animate-oscillate-smooth {
-	animation: oscillate-smooth 30s infinite linear;
+	animation: oscillate-smooth 20s infinite linear;
 }

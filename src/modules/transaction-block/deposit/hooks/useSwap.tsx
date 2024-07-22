@@ -6,15 +6,19 @@ import type {
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
+import toast from 'react-hot-toast'
 import type { Address } from 'viem'
 import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi'
 
-const integratorId: string = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
+const INTEGRATOR_ID = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
+const SQUID_API_URL = 'https://apiplus.squidrouter.com/v2/status'
+const AXELAR_SCAN_URL = 'https://axelarscan.io/gmp/'
+const MAX_RETRIES = 30
+const RETRY_DELAY = 5000
 
-// Function to get the status of the transaction using Squid API
 const getStatus = async (parameters: any) => {
   try {
-    const result = await axios.get('https://apiplus.squidrouter.com/v2/status', {
+    const result = await axios.get(SQUID_API_URL, {
       params: {
         transactionId: parameters.transactionId,
         requestId: parameters.requestId,
@@ -22,7 +26,7 @@ const getStatus = async (parameters: any) => {
         toChainId: parameters.toChainId,
       },
       headers: {
-        'x-integrator-id': integratorId,
+        'x-integrator-id': INTEGRATOR_ID,
       },
     })
     console.log('🚀 ~ getStatus ~ result:', result)
@@ -36,7 +40,7 @@ const getStatus = async (parameters: any) => {
   }
 }
 
-async function waitForSuccessStatus(
+const waitForSuccessStatus = async (
   txHash: string,
   fromChainId: string,
   toChainId: string,
@@ -44,21 +48,25 @@ async function waitForSuccessStatus(
   successHandler?: () => void,
   failHandler?: () => void,
   requestId?: string,
-) {
+) => {
   if (!txHash) {
     throw new Error('Transaction hash is required')
   }
 
   changeStatusFunction('pending')
-  const axelarScanLink = `https://axelarscan.io/gmp/${txHash}`
-  console.log(`Finished! Check Axelarscan for details: ${axelarScanLink}`)
+  console.log(`Finished! Check Axelarscan for details: ${AXELAR_SCAN_URL}${txHash}`)
+  toast(() => (
+    <span>
+      Check your transaction status on <a href={AXELAR_SCAN_URL}>Axelarscan</a>
+    </span>
+  ))
 
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
 
   const getStatusParameters = {
     transactionId: txHash,
     requestId,
-    integratorId,
+    integratorId: INTEGRATOR_ID,
     fromChainId,
     toChainId,
   }
@@ -69,10 +77,9 @@ async function waitForSuccessStatus(
     'needs_gas',
     'not_found',
   ])
-  const maxRetries = 30
   let retryCount = 0
 
-  const handleStatus = async (status: any) => {
+  const handleStatus = (status: any) => {
     if (
       !status?.squidTransactionStatus ||
       !completedStatuses.has(status.squidTransactionStatus)
@@ -98,7 +105,7 @@ async function waitForSuccessStatus(
   const handleError = async (error: unknown) => {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       retryCount++
-      if (retryCount < maxRetries) {
+      if (retryCount < MAX_RETRIES) {
         console.log('Transaction not found. Retrying...')
         await checkStatus()
       } else {
@@ -112,14 +119,14 @@ async function waitForSuccessStatus(
 
   const checkStatus = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 5000))
+      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
       const status = await getStatus(getStatusParameters)
       console.log(`Route status: ${status.squidTransactionStatus}`)
 
-      if (await handleStatus(status)) return
+      if (handleStatus(status)) return
 
       retryCount++
-      if (retryCount < maxRetries) {
+      if (retryCount < MAX_RETRIES) {
         await checkStatus()
       } else {
         console.error(
@@ -169,9 +176,7 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
     },
   })
 
-  const { data } = useWaitForTransactionReceipt({
-    hash,
-  })
+  const { data } = useWaitForTransactionReceipt({ hash })
   console.log('🚀 ~ useSwap ~ data:', data)
 
   const swapTokens = useCallback(async () => {

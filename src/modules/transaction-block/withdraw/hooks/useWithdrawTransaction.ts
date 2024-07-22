@@ -1,68 +1,91 @@
-// eslint-disable-next-line import/extensions
-
 import { GATEWAY_ABI } from '@abi/gateway'
 import { TOKEN_VAULT } from '@abi/token-vault'
-import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import { ARB_GATEWAY } from '@constants/contract-address'
+import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
-import BigNumber from 'bignumber.js'
+import { BigNumber } from 'bignumber.js'
+import { useState } from 'react'
 import type { Address } from 'viem'
 import { parseUnits } from 'viem'
-import { useAccount, useReadContract, useWriteContract } from 'wagmi'
+import {
+  useAccount,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi'
 
-import { useVaultBalance, VAULT_ADDRESSES } from './useVaultBalance'
+import { useVaultBalance } from './useVaultBalance'
 
 export const useWithdrawTransaction = () => {
   const { address } = useAccount()
-  const { setCurrentModal, inputValue, vault } = useTxStore()
+  const { setCurrentModal, inputValue, mtToken, withdrawNetwork } = useTxStore()
 
+  const [loading, setLoading] = useState(false)
+
+  const [approveHash, setApproveHash] = useState<Address | undefined>()
   const amount = parseUnits(inputValue, 6)
 
-  const { sharesBalance, tokenVaultAddress } = useVaultBalance(VAULT_ADDRESSES[vault])
-
-  const tokenAddress = VAULT_ADDRESSES[vault] as Address
-
-  const { data: sharesRequest } = useReadContract({
-    abi: TOKEN_VAULT,
-    address: tokenVaultAddress,
-    args: [amount],
-    functionName: 'previewWithdraw',
+  const { status: approveTxStatus } = useWaitForTransactionReceipt({
+    hash: approveHash,
     query: {
-      enabled: !!tokenVaultAddress,
+      enabled: !!approveHash,
     },
   })
 
-  const { data: sharesAllowed } = useReadContract({
+  if (approveTxStatus === 'success') {
+    setLoading(false)
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    setApproveHash(undefined)
+  }
+
+  const { sharesBalance } = useVaultBalance(mtToken?.mtAddress)
+
+  const { data: sharesAllowed, refetch: refetchSharesAllowed } = useReadContract({
     abi: TOKEN_VAULT,
-    address: tokenVaultAddress,
+    address: mtToken?.mtAddress,
     args: [address, ARB_GATEWAY],
     functionName: 'allowance',
     query: {
-      enabled: !!address && !!tokenVaultAddress,
+      enabled: !!address && !!mtToken?.mtAddress,
     },
   })
+  console.log('🚀 ~ useWithdrawTransaction ~ sharesAllowed:', sharesAllowed)
+  console.log('🚀 ~ isAllowed ~ inputValue:', inputValue)
 
   const isAllowed = (() => {
     if (!sharesAllowed) return
-    return BigNumber(sharesAllowed.toString())
-      .div(10 ** 6)
-      .isGreaterThanOrEqualTo(BigNumber(inputValue))
+    return BigNumber(sharesAllowed.toString()).isGreaterThanOrEqualTo(
+      BigNumber(parseUnits(inputValue, 6).toString()),
+    )
   })()
+  console.log(
+    '🚀 ~ isAllowed ~ parseUnits(inputValue, 6).toString():',
+    parseUnits(inputValue, 6).toString(),
+  )
+  console.log('🚀 ~ isAllowed ~ isAllowed:', isAllowed)
 
   const isEnoughSharesToWithdraw = (() => {
-    if (!sharesBalance || !sharesRequest) return
-    return sharesBalance >= sharesRequest
+    if (!sharesBalance || !amount) return
+    return (sharesBalance as bigint) >= amount
   })()
 
   const { writeContract, ...rest } = useWriteContract({})
 
   const withdraw = () => {
-    if (!address || !sharesRequest || !isEnoughSharesToWithdraw) return
+    if (!address || !amount || !isEnoughSharesToWithdraw) return
+
     return writeContract(
       {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'requestWithdraw',
-        args: [tokenAddress, sharesRequest as bigint, ARB_EID, address],
+        args: [
+          mtToken?.asset as Address,
+          amount as bigint,
+          EIDS_BY_CHAIN_ID[withdrawNetwork ?? CHAIN_IDS_BY_NAME.Arbitrum],
+          address,
+        ],
       },
       {
         onSuccess: () => setCurrentModal('done'),
@@ -70,16 +93,25 @@ export const useWithdrawTransaction = () => {
       },
     )
   }
-
   const approve = () => {
-    if (!tokenVaultAddress) return
-    return writeContract({
-      address: tokenVaultAddress,
-      abi: TOKEN_VAULT,
-      functionName: 'approve',
-      args: [ARB_GATEWAY, sharesBalance],
-    })
+    if (!mtToken?.asset) return
+    setLoading(true)
+    return writeContract(
+      {
+        address: mtToken?.mtAddress as Address,
+        abi: TOKEN_VAULT,
+        functionName: 'approve',
+        args: [ARB_GATEWAY, parseUnits(inputValue, 6)],
+      },
+      {
+        onSuccess: (data) => {
+          setApproveHash(data)
+          refetchSharesAllowed()
+        },
+        onError: () => setLoading(false),
+      },
+    )
   }
 
-  return { withdraw, approve, isEnoughSharesToWithdraw, isAllowed, ...rest }
+  return { withdraw, approve, isEnoughSharesToWithdraw, isAllowed, loading, ...rest }
 }

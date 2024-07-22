@@ -1,3 +1,4 @@
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { Chains } from '@covalenthq/client-sdk'
 import { useQuery } from '@tanstack/react-query'
 
@@ -16,12 +17,25 @@ const DEFAULT_CHAINS = [
   Chains.BASE_MAINNET,
 ]
 
+export const COVALENT_CHAINS_MAPPER = {
+  [Chains.ETH_MAINNET]: CHAIN_IDS_BY_NAME.Ethereum,
+  [Chains.ARBITRUM_MAINNET]: CHAIN_IDS_BY_NAME.Arbitrum,
+  [Chains.OPTIMISM_MAINNET]: CHAIN_IDS_BY_NAME.Optimism,
+  [Chains.MATIC_MAINNET]: CHAIN_IDS_BY_NAME.Polygon,
+  [Chains.BSC_MAINNET]: CHAIN_IDS_BY_NAME.BNB,
+  [Chains.MANTLE_MAINNET]: CHAIN_IDS_BY_NAME.Mantle,
+  [Chains.BASE_MAINNET]: CHAIN_IDS_BY_NAME.Base,
+} as const
+
 interface UsePortfolioProperties {
   address?: string
   chains?: Chains[]
 }
 
-type ChainPortfolio = Record<Chains, ITokenData[]>
+type ChainPortfolio = Record<
+  (typeof COVALENT_CHAINS_MAPPER)[keyof typeof COVALENT_CHAINS_MAPPER],
+  ITokenData[]
+>
 
 export const useTokensBalance = ({
   address,
@@ -33,9 +47,11 @@ export const useTokensBalance = ({
     queryFn: async () => {
       const portfolio: Partial<ChainPortfolio> = {}
       await Promise.all(
-        chains.map(async (chainId) => {
+        chains.map(async (chainId: (typeof DEFAULT_CHAINS)[number]) => {
           const tokens = await getTokenBalances(chainId, address)
-          portfolio[chainId] = tokens
+
+          // @ts-ignore
+          portfolio[COVALENT_CHAINS_MAPPER[chainId] as keyof ChainPortfolio] = tokens
         }),
       )
       return portfolio as ChainPortfolio

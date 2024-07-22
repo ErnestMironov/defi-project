@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query MaatTokensApy($from: Float!) {\n    apies(where: { protocol: { id_eq: \"maat\" }, timestamp_gt: $from }) {\n      timestamp\n      token\n      id\n      apy\n    }\n    tokens {\n      addresses\n      decimals\n      id\n      name\n      symbol\n    }\n  }\n": types.MaatTokensApyDocument,
     "\n  query MaatTokensTvl($from: Float!) {\n    maatTvls(where: {timestamp_gt: $from}) {\n    id\n    staked\n    timestamp\n    token {\n      addresses\n      decimals\n      id\n      name\n      symbol\n    }\n  }\n  }\n": types.MaatTokensTvlDocument,
+    "\n  query MaatUserTokens($address: String!) {\n  maatUserStats(address: $address) {\n    balances {\n      asset\n      balance\n      lpBalance\n    }\n  }\n  }\n": types.MaatUserTokensDocument,
     "\n  query Overview($address: String!) {\n    apies(where: { protocol: { id_eq: \"maat\" } }, limit: 1, orderBy: id_DESC) {\n      apy\n    }\n    maatTvls(orderBy: id_DESC) {\n    staked\n    token {\n      decimals\n      symbol\n    }\n  }\n  strategies {\n    id\n  }\n  maatUserStats(address: $address) {\n    balances {\n      balance\n      asset\n    }\n  }\n  maatDeposited\n  }\n": types.OverviewDocument,
     "\n  query Rebalance($type_in: [ActionType!], $symbol: String) {\n    maatLastRebalanceTxIds {\n    token\n    txId\n  }\n  maatActions(where: {type_in: $type_in, token: {symbol_eq: $symbol}}) {\n    type\n    txhash\n    txId\n    timestamp\n    txId\n    data\n  }\n  strategyStats {\n    protocol\n    apy\n    chainName\n    strategyId\n  }}\n": types.RebalanceDocument,
     "\n  query MyQuery {\n    strategyStats {\n      apy\n      chainId\n      chainName\n      decimals\n      deposited\n      protocol\n      strategyId\n      tokenAddress\n      tokenSymbol\n    }\n  }\n": types.MyQueryDocument,
@@ -44,6 +45,10 @@ export function gql(source: "\n  query MaatTokensApy($from: Float!) {\n    apies
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query MaatTokensTvl($from: Float!) {\n    maatTvls(where: {timestamp_gt: $from}) {\n    id\n    staked\n    timestamp\n    token {\n      addresses\n      decimals\n      id\n      name\n      symbol\n    }\n  }\n  }\n"): (typeof documents)["\n  query MaatTokensTvl($from: Float!) {\n    maatTvls(where: {timestamp_gt: $from}) {\n    id\n    staked\n    timestamp\n    token {\n      addresses\n      decimals\n      id\n      name\n      symbol\n    }\n  }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query MaatUserTokens($address: String!) {\n  maatUserStats(address: $address) {\n    balances {\n      asset\n      balance\n      lpBalance\n    }\n  }\n  }\n"): (typeof documents)["\n  query MaatUserTokens($address: String!) {\n  maatUserStats(address: $address) {\n    balances {\n      asset\n      balance\n      lpBalance\n    }\n  }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
