@@ -78,9 +78,7 @@ export const useWithdrawTransaction = () => {
         args: [
           mtToken?.asset as Address,
           amount as bigint,
-          EIDS_BY_CHAIN_ID[
-            withdrawNetwork ?? EIDS_BY_CHAIN_ID[CHAIN_IDS_BY_NAME.Arbitrum]
-          ],
+          EIDS_BY_CHAIN_ID[withdrawNetwork ?? CHAIN_IDS_BY_NAME.Arbitrum],
           address,
         ],
       },

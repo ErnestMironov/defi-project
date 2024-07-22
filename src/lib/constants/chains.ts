@@ -21,11 +21,11 @@ export const CHAIN_IDS_BY_NAME = {
 } as const
 
 export const CHAINS = [
-  CHAIN_IDS_BY_NAME.Ethereum,
+  // CHAIN_IDS_BY_NAME.Ethereum,
   CHAIN_IDS_BY_NAME.Arbitrum,
   CHAIN_IDS_BY_NAME.Optimism,
   CHAIN_IDS_BY_NAME.Polygon,
-  CHAIN_IDS_BY_NAME.BNB,
+  // CHAIN_IDS_BY_NAME.BNB,
   CHAIN_IDS_BY_NAME.Base,
   // Chains.MANTLE_MAINNET,
 ] as const

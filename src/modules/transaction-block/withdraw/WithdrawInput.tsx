@@ -1,3 +1,4 @@
+import { TOKEN_VAULT } from '@abi/token-vault'
 import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
@@ -5,7 +6,7 @@ import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import { useEffect, useState } from 'react'
 import { formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 
 import { useTxStore } from '../store/useDepositStore'
 import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
@@ -22,6 +23,16 @@ export const WithdrawInput = () => {
     withdraw,
     loading: isPending,
   } = useWithdrawTransaction()
+
+  const { data: balanceInUsd } = useReadContract({
+    abi: TOKEN_VAULT,
+    address: mtToken?.mtAddress,
+    args: [inputValue],
+    functionName: 'previewRedeem',
+    query: {
+      enabled: !!mtToken && !!inputValue,
+    },
+  })
 
   const [validationError, setValidationError] = useState('')
   useEffect(() => {
@@ -54,7 +65,7 @@ export const WithdrawInput = () => {
           {validationError ? (
             <p className="text-lg text-red-100 max-lg:text-xs">{validationError}</p>
           ) : (
-            <p className="text-lg text-gray-100 max-lg:text-xs">$ {inputValue || 0}</p>
+            <p className="text-lg text-gray-100 max-lg:text-xs">$ {balanceInUsd || 0}</p>
           )}
           <div className="flex items-center">
             <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
