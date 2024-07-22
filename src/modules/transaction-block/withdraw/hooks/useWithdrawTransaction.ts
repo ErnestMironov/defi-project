@@ -41,15 +41,7 @@ export const useWithdrawTransaction = () => {
   console.log('🚀 ~ useWithdrawTransaction ~ mtToken?.mtAddress:', mtToken?.mtAddress)
   console.log('🚀 ~ useWithdrawTransaction ~ sharesBalance:', sharesBalance)
 
-  const { data: sharesRequest } = useReadContract({
-    abi: TOKEN_VAULT,
-    address: mtToken?.mtAddress,
-    args: [amount],
-    functionName: 'previewWithdraw',
-    query: {
-      enabled: !!tokenVaultAddress,
-    },
-  })
+  console.log(amount)
 
   const { data: sharesAllowed, refetch: refetchSharesAllowed } = useReadContract({
     abi: TOKEN_VAULT,
@@ -71,23 +63,22 @@ export const useWithdrawTransaction = () => {
   console.log('🚀 ~ isAllowed ~ isAllowed:', isAllowed)
 
   const isEnoughSharesToWithdraw = (() => {
-    if (!sharesBalance || !sharesRequest) return
-    return sharesBalance >= sharesRequest
+    if (!sharesBalance || !amount) return
+    return (sharesBalance as bigint) >= amount
   })()
-  console.log('🚀 ~ isEnoughSharesToWithdraw ~ sharesRequest:', sharesRequest)
   console.log('🚀 ~ isEnoughSharesToWithdraw ~ sharesBalance:', sharesBalance)
 
   const { writeContract, ...rest } = useWriteContract({})
   console.log('��� ~ isEnoughSharesToWithdraw ~ isPending', rest?.isPending)
 
   const withdraw = () => {
-    if (!address || !sharesRequest || !isEnoughSharesToWithdraw) return
+    if (!address || !amount || !isEnoughSharesToWithdraw) return
     return writeContract(
       {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'requestWithdraw',
-        args: [mtToken?.asset as Address, sharesRequest as bigint, ARB_EID, address],
+        args: [mtToken?.asset as Address, amount as bigint, ARB_EID, address],
       },
       {
         onSuccess: () => setCurrentModal('done'),
