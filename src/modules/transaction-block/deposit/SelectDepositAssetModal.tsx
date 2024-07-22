@@ -117,6 +117,8 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     }
 
     if (chain) {
+      console.log('🚀 ~ filteredByChainTokens ~ chain:', chain)
+      console.log('🚀 ~ userTokens[chain].filter ~ userTokens:', userTokens)
       if (searchValue) {
         return filterTokens(
           userTokens[chain].filter((token) => {

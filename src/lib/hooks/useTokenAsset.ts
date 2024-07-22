@@ -185,7 +185,7 @@ const TOKENS: ITokenAsset[] = [
 ]
 
 // by symbol or chainId
-export const useTokenAsset = (query?: string | number) => {
+export const useTokenAsset = (query?: string | number | null) => {
   return useMemo(() => {
     if (!query) return
     if (typeof query === 'number') {

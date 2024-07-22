@@ -1,9 +1,9 @@
 import type { ITokenData } from '@api/tokens-balance/api'
 import Usdt from '@assets/icons/tokens/usdt.svg'
-import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import type { ChainType } from '@constants/chains'
+import { CHAIN_IDS_BY_NAME, CHAINS } from '@constants/chains'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
-import { Chains } from '@covalenthq/client-sdk'
 import { create } from 'zustand'
 
 import type { UserMTokenInfo } from '../interface'
@@ -16,11 +16,11 @@ interface SelectedAssetState {
   depositAsset: ITokenData | null
   setDepositAsset: (by: ITokenData | null) => void
 
-  depositNetwork: Chains | null
-  setDepositNetwork: (by: Chains | null) => void
+  depositNetwork: ChainType | null
+  setDepositNetwork: (by: ChainType | null) => void
 
-  withdrawNetwork: Chains | null
-  setWithdrawNetwork: (by: Chains | null) => void
+  withdrawNetwork: ChainType | null
+  setWithdrawNetwork: (by: ChainType | null) => void
 
   vault: Vault
   setVault: (by: Vault) => void
@@ -58,7 +58,7 @@ export const useTxStore = create<SelectedAssetState>()((set) => ({
   // network
   depositNetwork: null,
   setDepositNetwork: (by) => set({ depositNetwork: by }),
-  withdrawNetwork: Chains.ARBITRUM_MAINNET,
+  withdrawNetwork: CHAINS[0],
   setWithdrawNetwork: (by) => set({ withdrawNetwork: by }),
   // vault
   vault: 'USDT',

@@ -1,6 +1,8 @@
 import { GATEWAY_ABI } from '@abi/gateway'
 import { TOKEN_VAULT } from '@abi/token-vault'
-import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import { ARB_GATEWAY } from '@constants/contract-address'
+import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import BigNumber from 'bignumber.js'
 import { useState } from 'react'
@@ -17,7 +19,8 @@ import { useVaultBalance } from './useVaultBalance'
 
 export const useWithdrawTransaction = () => {
   const { address } = useAccount()
-  const { setCurrentModal, inputValue, mtToken, setWithdrawAmount } = useTxStore()
+  const { setCurrentModal, inputValue, mtToken, setWithdrawAmount, withdrawNetwork } =
+    useTxStore()
 
   const [loading, setLoading] = useState(false)
 
@@ -38,10 +41,6 @@ export const useWithdrawTransaction = () => {
   }
 
   const { sharesBalance } = useVaultBalance(mtToken?.mtAddress)
-  console.log('🚀 ~ useWithdrawTransaction ~ mtToken?.mtAddress:', mtToken?.mtAddress)
-  console.log('🚀 ~ useWithdrawTransaction ~ sharesBalance:', sharesBalance)
-
-  console.log(amount)
 
   const { data: sharesAllowed, refetch: refetchSharesAllowed } = useReadContract({
     abi: TOKEN_VAULT,
@@ -52,7 +51,6 @@ export const useWithdrawTransaction = () => {
       enabled: !!address && !!mtToken?.mtAddress,
     },
   })
-  console.log('🚀 ~ useWithdrawTransaction ~ sharesAllowed:', sharesAllowed)
 
   const isAllowed = (() => {
     if (!sharesAllowed) return
@@ -60,16 +58,13 @@ export const useWithdrawTransaction = () => {
       .div(10 ** 6)
       .isGreaterThanOrEqualTo(BigNumber(inputValue))
   })()
-  console.log('🚀 ~ isAllowed ~ isAllowed:', isAllowed)
 
   const isEnoughSharesToWithdraw = (() => {
     if (!sharesBalance || !amount) return
     return (sharesBalance as bigint) >= amount
   })()
-  console.log('🚀 ~ isEnoughSharesToWithdraw ~ sharesBalance:', sharesBalance)
 
   const { writeContract, ...rest } = useWriteContract({})
-  console.log('��� ~ isEnoughSharesToWithdraw ~ isPending', rest?.isPending)
 
   const withdraw = () => {
     if (!address || !amount || !isEnoughSharesToWithdraw) return
@@ -80,7 +75,14 @@ export const useWithdrawTransaction = () => {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'requestWithdraw',
-        args: [mtToken?.asset as Address, amount as bigint, ARB_EID, address],
+        args: [
+          mtToken?.asset as Address,
+          amount as bigint,
+          EIDS_BY_CHAIN_ID[
+            withdrawNetwork ?? EIDS_BY_CHAIN_ID[CHAIN_IDS_BY_NAME.Arbitrum]
+          ],
+          address,
+        ],
       },
       {
         onSuccess: () => setCurrentModal('done'),
