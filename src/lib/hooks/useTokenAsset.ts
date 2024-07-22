@@ -26,8 +26,6 @@ import Usdc from '@assets/icons/tokens/usdc.svg'
 import Usdt from '@assets/icons/tokens/usdt.svg'
 import Wbtc from '@assets/icons/tokens/wbtc.svg'
 import Weth from '@assets/icons/tokens/weth.svg'
-import Xfi from '@assets/icons/tokens/xfi.svg'
-import Xusd from '@assets/icons/tokens/xusd.svg'
 import { useMemo } from 'react'
 
 interface ITokenAsset {
@@ -38,16 +36,6 @@ interface ITokenAsset {
 }
 
 const TOKENS: ITokenAsset[] = [
-  {
-    TokenIcon: Xfi,
-    symbol: 'XFI',
-    name: 'CrossFi Token',
-  },
-  {
-    TokenIcon: Xfi,
-    symbol: 'WXFI',
-    name: 'CrossFi  Token',
-  },
   {
     TokenIcon: Eth,
     symbol: 'ETH',
@@ -67,11 +55,6 @@ const TOKENS: ITokenAsset[] = [
     TokenIcon: Dai,
     symbol: 'DAI',
     name: 'DAI',
-  },
-  {
-    TokenIcon: Xusd,
-    symbol: 'XUSD',
-    name: 'XUSD',
   },
   {
     TokenIcon: Frax,

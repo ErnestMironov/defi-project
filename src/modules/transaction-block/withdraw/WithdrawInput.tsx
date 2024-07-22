@@ -15,8 +15,13 @@ export const WithdrawInput = () => {
   const { isConnected } = useAccount()
   const { /* withdrawNetwork, */ inputValue, setInputValue, mtToken } = useTxStore()
   const tokenBalanceUsd = formatAmountValue(formatUnits(mtToken?.balance, 6))
-  const { approve, isAllowed, isEnoughSharesToWithdraw, withdraw } =
-    useWithdrawTransaction()
+  const {
+    approve,
+    isAllowed,
+    isEnoughSharesToWithdraw,
+    withdraw,
+    loading: isPending,
+  } = useWithdrawTransaction()
 
   const [validationError, setValidationError] = useState('')
   useEffect(() => {
@@ -81,7 +86,7 @@ export const WithdrawInput = () => {
         (isAllowed ? (
           <Button
             size="lg"
-            disabled={!inputValue || !!validationError}
+            disabled={!inputValue || !!validationError || isPending}
             className="mt-10 w-full max-lg:mt-6"
             onClick={withdraw}
           >
@@ -90,7 +95,7 @@ export const WithdrawInput = () => {
         ) : (
           <Button
             size="lg"
-            disabled={!inputValue || !!validationError}
+            disabled={!inputValue || !!validationError || isPending}
             className="mt-10 w-full max-lg:mt-6"
             onClick={approve}
           >
