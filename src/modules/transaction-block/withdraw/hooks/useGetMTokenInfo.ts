@@ -35,7 +35,7 @@ const TOKENS: {
     TokenIcon: Usdc,
     symbol: 'mtUSDC',
     stable: 'usdc',
-    chainId: CHAIN_IDS_BY_NAME.BNB,
+    chainId: CHAIN_IDS_BY_NAME.Base,
     mtAddress: '0x588f3B1ce9aF2F924f7f89577225c2cb5a5Ec578',
   },
   '0xbb06dca3ae6887fabf931640f67cab3e3a16f4dc': {
