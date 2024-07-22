@@ -4,7 +4,7 @@ import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
-import BigNumber from 'bignumber.js'
+import BigNumber, { BigNumber } from 'bignumber.js'
 import { useState } from 'react'
 import type { Address } from 'viem'
 import { parseUnits } from 'viem'
@@ -19,8 +19,7 @@ import { useVaultBalance } from './useVaultBalance'
 
 export const useWithdrawTransaction = () => {
   const { address } = useAccount()
-  const { setCurrentModal, inputValue, mtToken, setWithdrawAmount, withdrawNetwork } =
-    useTxStore()
+  const { setCurrentModal, inputValue, mtToken, withdrawNetwork } = useTxStore()
 
   const [loading, setLoading] = useState(false)
 
@@ -51,13 +50,20 @@ export const useWithdrawTransaction = () => {
       enabled: !!address && !!mtToken?.mtAddress,
     },
   })
+  console.log('🚀 ~ useWithdrawTransaction ~ sharesAllowed:', sharesAllowed)
+  console.log('🚀 ~ isAllowed ~ inputValue:', inputValue)
 
   const isAllowed = (() => {
     if (!sharesAllowed) return
-    return BigNumber(sharesAllowed.toString())
-      .div(10 ** 6)
-      .isGreaterThanOrEqualTo(BigNumber(inputValue))
+    return BigNumber(sharesAllowed.toString()).isGreaterThanOrEqualTo(
+      BigNumber(parseUnits(inputValue, 6).toString()),
+    )
   })()
+  console.log(
+    '🚀 ~ isAllowed ~ parseUnits(inputValue, 6).toString():',
+    parseUnits(inputValue, 6).toString(),
+  )
+  console.log('🚀 ~ isAllowed ~ isAllowed:', isAllowed)
 
   const isEnoughSharesToWithdraw = (() => {
     if (!sharesBalance || !amount) return
@@ -68,7 +74,6 @@ export const useWithdrawTransaction = () => {
 
   const withdraw = () => {
     if (!address || !amount || !isEnoughSharesToWithdraw) return
-    setWithdrawAmount(inputValue)
 
     return writeContract(
       {
