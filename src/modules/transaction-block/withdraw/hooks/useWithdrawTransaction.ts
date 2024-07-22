@@ -17,7 +17,7 @@ import { useVaultBalance } from './useVaultBalance'
 
 export const useWithdrawTransaction = () => {
   const { address } = useAccount()
-  const { setCurrentModal, inputValue, mtToken } = useTxStore()
+  const { setCurrentModal, inputValue, mtToken, setWithdrawAmount } = useTxStore()
 
   const [loading, setLoading] = useState(false)
 
@@ -73,6 +73,8 @@ export const useWithdrawTransaction = () => {
 
   const withdraw = () => {
     if (!address || !amount || !isEnoughSharesToWithdraw) return
+    setWithdrawAmount(inputValue)
+
     return writeContract(
       {
         address: ARB_GATEWAY,

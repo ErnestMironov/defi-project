@@ -42,6 +42,9 @@ interface SelectedAssetState {
 
   depositAmount: string
   setDepositAmount: (value: string) => void
+
+  withdrawAmount: string
+  setWithdrawAmount: (value: string) => void
 }
 
 export const useTxStore = create<SelectedAssetState>()((set) => ({
@@ -84,4 +87,8 @@ export const useTxStore = create<SelectedAssetState>()((set) => ({
   // deposit amount
   depositAmount: '',
   setDepositAmount: (by) => set({ depositAmount: by }),
+
+  // withdraw amount
+  withdrawAmount: '',
+  setWithdrawAmount: (by) => set({ withdrawAmount: by }),
 }))
