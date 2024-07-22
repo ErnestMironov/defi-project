@@ -32,7 +32,10 @@ interface UsePortfolioProperties {
   chains?: Chains[]
 }
 
-type ChainPortfolio = Record<Chains, ITokenData[]>
+type ChainPortfolio = Record<
+  (typeof COVALENT_CHAINS_MAPPER)[keyof typeof COVALENT_CHAINS_MAPPER],
+  ITokenData[]
+>
 
 export const useTokensBalance = ({
   address,
