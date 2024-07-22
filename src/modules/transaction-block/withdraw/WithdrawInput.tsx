@@ -3,25 +3,18 @@ import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
-import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
+import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { useTxStore } from '../store/useDepositStore'
-import { useVaultBalance, VAULT_ADDRESSES } from './hooks/useVaultBalance'
 import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 
 export const WithdrawInput = () => {
   const { isConnected } = useAccount()
-  const { vault } = useTxStore()
-  const { tokenBalance } = useVaultBalance(VAULT_ADDRESSES[vault])
-  const tokenBalanceUsd = formatAmountValue(
-    BigNumber((tokenBalance as any) || 0)
-      .div(10 ** 6)
-      .toString(),
-  )
-  const { /* withdrawNetwork, */ inputValue, setInputValue } = useTxStore()
+  const { /* withdrawNetwork, */ inputValue, setInputValue, mtToken } = useTxStore()
+  const tokenBalanceUsd = formatAmountValue(formatUnits(mtToken?.balance, 6))
   const { approve, isAllowed, isEnoughSharesToWithdraw, withdraw } =
     useWithdrawTransaction()
 

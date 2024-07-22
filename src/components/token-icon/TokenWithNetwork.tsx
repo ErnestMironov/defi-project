@@ -10,7 +10,7 @@ interface TokenWithNetworkProperties extends React.HTMLAttributes<HTMLDivElement
   /** The symbol of the token. */
   symbol?: string | null
   /** The network of the token. */
-  network?: string | null
+  network?: number | string | null
   /** The position of the network icon relative to the token icon. */
   position?: 'top' | 'bottom' | 'left' | 'right' | 'top-right' | 'bottom-right'
   /** Custom class names for the token and network icons. */

@@ -9,21 +9,21 @@ import type { Address } from 'viem'
 import { parseUnits } from 'viem'
 import { useAccount, useReadContract, useWriteContract } from 'wagmi'
 
-import { useVaultBalance, VAULT_ADDRESSES } from './useVaultBalance'
+import { useVaultBalance } from './useVaultBalance'
 
 export const useWithdrawTransaction = () => {
   const { address } = useAccount()
-  const { setCurrentModal, inputValue, vault } = useTxStore()
+  const { setCurrentModal, inputValue, mtToken, vault } = useTxStore()
 
   const amount = parseUnits(inputValue, 6)
 
-  const { sharesBalance, tokenVaultAddress } = useVaultBalance(VAULT_ADDRESSES[vault])
-
-  const tokenAddress = VAULT_ADDRESSES[vault] as Address
+  const { sharesBalance, tokenVaultAddress } = useVaultBalance(mtToken?.mtAddress)
+  console.log('🚀 ~ useWithdrawTransaction ~ mtToken?.mtAddress:', mtToken?.mtAddress)
+  console.log('🚀 ~ useWithdrawTransaction ~ sharesBalance:', sharesBalance)
 
   const { data: sharesRequest } = useReadContract({
     abi: TOKEN_VAULT,
-    address: tokenVaultAddress,
+    address: mtToken?.mtAddress,
     args: [amount],
     functionName: 'previewWithdraw',
     query: {
@@ -52,6 +52,8 @@ export const useWithdrawTransaction = () => {
     if (!sharesBalance || !sharesRequest) return
     return sharesBalance >= sharesRequest
   })()
+  console.log('🚀 ~ isEnoughSharesToWithdraw ~ sharesRequest:', sharesRequest)
+  console.log('🚀 ~ isEnoughSharesToWithdraw ~ sharesBalance:', sharesBalance)
 
   const { writeContract, ...rest } = useWriteContract({})
 
@@ -62,7 +64,7 @@ export const useWithdrawTransaction = () => {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'requestWithdraw',
-        args: [tokenAddress, sharesRequest as bigint, ARB_EID, address],
+        args: [mtToken?.asset as Address, sharesRequest as bigint, ARB_EID, address],
       },
       {
         onSuccess: () => setCurrentModal('done'),
@@ -72,9 +74,9 @@ export const useWithdrawTransaction = () => {
   }
 
   const approve = () => {
-    if (!tokenVaultAddress) return
+    if (!mtToken?.asset) return
     return writeContract({
-      address: tokenVaultAddress,
+      address: mtToken?.asset as Address,
       abi: TOKEN_VAULT,
       functionName: 'approve',
       args: [ARB_GATEWAY, sharesBalance],

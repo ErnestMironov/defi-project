@@ -147,6 +147,12 @@ const TOKENS: ITokenAsset[] = [
     chainId: 5000,
     name: 'Mantle',
   },
+  {
+    TokenIcon: Metis,
+    symbol: 'metis-mainnet',
+    chainId: 1088,
+    name: 'Metis',
+  },
   // protocol icons
   {
     TokenIcon: Aave,
