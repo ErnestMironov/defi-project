@@ -82,6 +82,10 @@ async function quoteOftSend(
   return result[0] as bigint
 }
 
+function grow(value: bigint, multiplier: bigint, divider: bigint) {
+  return (value * multiplier) / divider
+}
+
 export async function getPostHookForCrossChainSwapAndDeposit(
   depositToken: Token,
   user: string,
@@ -102,12 +106,15 @@ export async function getPostHookForCrossChainSwapAndDeposit(
       "This hook contractor doesn't support sending representation to Arbitrum",
     )
 
-  const nativeFee = await quoteOftSend(
+  const initialFee = await quoteOftSend(
     TOKEN_VAULT_ADDRESSES[depositToken.address],
     dstEid,
     user,
     arbitrumProvider,
   )
+  console.log(initialFee)
+
+  const nativeFee = grow(initialFee, BigInt(2), BigInt(1))
 
   // Set up parameters for swapping tokens and depositing into Radiant lending pool
   return {
@@ -178,7 +185,7 @@ export async function getPostHookForCrossChainSwapAndDeposit(
           tokenAddress: depositToken.address,
           inputPos: 1,
         },
-        estimatedGas: '50000',
+        estimatedGas: dstEid === ARBITRUM_EID ? '150000' : '600000',
         chainType: ChainType.EVM,
       },
     ],
@@ -230,7 +237,7 @@ export async function getPostHookForOneChainSwapAndDeposit(
           tokenAddress: depositToken.address,
           inputPos: 1,
         },
-        estimatedGas: '70000',
+        estimatedGas: '150000',
         chainType: ChainType.EVM,
       },
     ],
@@ -240,3 +247,19 @@ export async function getPostHookForOneChainSwapAndDeposit(
       'https://pbs.twimg.com/profile_images/1548647667135291394/W2WOtKUq_400x400.jpg', // Add your product or application's logo here
   }
 }
+
+// const usdcArbitrumAddress: string =
+// 	"0xaf88d065e77c8cC2239327C5EDb3A432268e5831";
+// const dstEid = 30184;
+
+// getPostHookForCrossChainSwapAndDeposit(
+// 	new Token(42161, usdcArbitrumAddress, 6),
+// 	"0x0000000000000000000000000000000000000000",
+// 	dstEid,
+// 	getArbitrumProvider()
+// )
+// 	.then(() => process.exit(0))
+// 	.catch((err) => {
+// 		console.error(err);
+// 		process.exit(1);
+// 	});
