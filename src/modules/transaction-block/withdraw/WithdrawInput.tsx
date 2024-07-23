@@ -1,12 +1,11 @@
-import { TOKEN_VAULT } from '@abi/token-vault'
 import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
-import { formatAmountValue } from '@utils/formatValue'
+import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
-import { formatUnits, parseUnits } from 'viem'
-import { useAccount, useReadContract } from 'wagmi'
+import { formatUnits } from 'viem'
+import { useAccount } from 'wagmi'
 
 import { useTxStore } from '../store/useDepositStore'
 import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
@@ -23,17 +22,6 @@ export const WithdrawInput = () => {
     loading: isPending,
   } = useWithdrawTransaction()
 
-  const { data: _balanceInUsd } = useReadContract({
-    abi: TOKEN_VAULT,
-    address: mtToken?.mtAddress,
-    args: [parseUnits(inputValue, 6)],
-    functionName: 'previewRedeem',
-    query: {
-      enabled: !!mtToken && !!inputValue,
-    },
-  })
-  console.log('🚀 ~ WithdrawInput ~ balanceInUsd:', _balanceInUsd)
-
   const [validationError, setValidationError] = useState('')
   useEffect(() => {
     if (isEnoughSharesToWithdraw === false) {
@@ -44,16 +32,25 @@ export const WithdrawInput = () => {
   }, [inputValue, isEnoughSharesToWithdraw])
 
   const maxBalance = formatUnits(BigInt(mtToken?.lpBalance), 6)
+  console.log('🚀 ~ WithdrawInput ~ mtToken:', mtToken)
 
-  const balanceInUsd = formatAmountValue(
-    formatUnits((_balanceInUsd ?? 0n) as bigint, 6),
-    2,
-  )
+  // Calculate the input value in USD
+  const inputValueBN = new BigNumber(inputValue || '0')
+  const lpBalanceBN = new BigNumber(mtToken?.lpBalance || '0')
+  const balanceBN = new BigNumber(mtToken?.balance || '0')
+
+  const inputValueInUSD = inputValueBN.div(lpBalanceBN).multipliedBy(balanceBN).toFixed(2)
 
   useEffect(() => {
-    if (!balanceInUsd) return
-    setWithdrawAmount(balanceInUsd)
-  }, [balanceInUsd, setWithdrawAmount])
+    if (!inputValueInUSD) return
+    setWithdrawAmount(inputValueInUSD)
+  }, [inputValueInUSD, setWithdrawAmount])
+
+  useEffect(() => {
+    if (+inputValueInUSD < 1) {
+      setValidationError('Withdraw amount cannot be less than 1$')
+    }
+  }, [inputValueInUSD])
 
   return (
     <div>
@@ -78,7 +75,9 @@ export const WithdrawInput = () => {
           {validationError ? (
             <p className="text-lg text-red-100 max-lg:text-xs">{validationError}</p>
           ) : (
-            <p className="text-lg text-gray-100 max-lg:text-xs">$ {balanceInUsd || 0}</p>
+            <p className="text-lg text-gray-100 max-lg:text-xs">
+              $ {inputValueInUSD || 0}
+            </p>
           )}
           <div className="flex items-center">
             <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
@@ -101,11 +100,6 @@ export const WithdrawInput = () => {
           </div>
         </div>
       </div>
-      {/* {isConnected && (
-        <p className="mt-4 text-base text-text-80 max-lg:mt-2 max-lg:text-xs">
-          1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>
-        </p>
-      )} */}
       {isConnected &&
         (isAllowed ? (
           <Button
