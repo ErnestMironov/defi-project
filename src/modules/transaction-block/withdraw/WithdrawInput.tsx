@@ -13,7 +13,8 @@ import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 
 export const WithdrawInput = () => {
   const { isConnected } = useAccount()
-  const { inputValue, setInputValue, mtToken, setWithdrawAmount } = useTxStore()
+  const { inputValue, setInputValue, mtToken, setWithdrawAmount, setCurrentModal } =
+    useTxStore()
   const {
     approve,
     isAllowed,

@@ -26,6 +26,7 @@ export const DoneModal = () => {
     withdrawNetwork,
     depositAmount,
     withdrawAmount,
+    mtToken,
   } = useTxStore()
 
   const onClose = () => setCurrentModal(null)
@@ -73,8 +74,8 @@ export const DoneModal = () => {
               <TokenWithNetwork
                 width="1.75rem"
                 position="bottom-right"
-                symbol={vault}
-                network={withdrawNetwork}
+                symbol={mtToken?.stable}
+                network={mtToken.chainId}
               />
             ) : (
               <TokenIconComponent symbol={vault} className="size-7" />
