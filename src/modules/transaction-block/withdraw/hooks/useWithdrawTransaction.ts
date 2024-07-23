@@ -7,6 +7,7 @@ import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { BigNumber } from 'bignumber.js'
+import type { Provider } from 'ethers'
 import { useState } from 'react'
 import type { Address } from 'viem'
 import { parseUnits } from 'viem'
@@ -22,7 +23,7 @@ import { useVaultBalance } from './useVaultBalance'
 
 export const useWithdrawTransaction = () => {
   const { address } = useAccount()
-  const { setCurrentModal, inputValue, mtToken, withdrawNetwork } = useTxStore()
+  const { setCurrentModal, inputValue, mtToken } = useTxStore()
 
   const [loading, setLoading] = useState(false)
 
@@ -82,19 +83,26 @@ export const useWithdrawTransaction = () => {
     const provider = getEthersProvider()
     console.log('🚀 ~ withdraw ~ provider:', provider)
 
-    const value = await quoteOftSend(
-      mtToken?.mtAddress,
-      EIDS_BY_CHAIN_ID[CHAIN_IDS_BY_NAME.Arbitrum],
-      address,
-      provider,
+    console.log(
+      '🚀 ~ withdraw ~ EIDS_BY_CHAIN_ID[mtToken?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum]:',
+      EIDS_BY_CHAIN_ID[mtToken?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum],
     )
+    let value = 0n
+    if (mtToken?.chainId !== CHAIN_IDS_BY_NAME.Arbitrum) {
+      value = await quoteOftSend(
+        mtToken?.mtAddress,
+        EIDS_BY_CHAIN_ID[CHAIN_IDS_BY_NAME.Arbitrum],
+        address,
+        provider as Provider,
+      )
+    }
     console.log('🚀 ~ withdraw ~ value:', value)
     return writeContract(
       {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'requestWithdraw',
-        value: value * BigInt(2),
+        value,
         args: [
           mtToken?.asset as Address,
           amount as bigint,
@@ -102,6 +110,7 @@ export const useWithdrawTransaction = () => {
           address,
         ],
       },
+
       {
         onSuccess: () => setCurrentModal('done'),
         onError: (e) => {
