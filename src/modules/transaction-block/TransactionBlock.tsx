@@ -11,7 +11,6 @@ import { DoneModal } from './DoneModal'
 import { FailModal } from './FailModal'
 import { useTxStore } from './store/useDepositStore'
 import { TxTypeSwitcher } from './TxTypeSwither'
-import { SelectWithdrawNetwork } from './withdraw/SelectWithdrawNetwork'
 import { WithdrawInput } from './withdraw/WithdrawInput'
 
 interface DepositBlockProperties extends ComponentProps<'div'> {}
@@ -35,7 +34,6 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
       >
         <div className="flex max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:mb-10 lg:items-center lg:justify-between">
           <TxTypeSwitcher />
-          {txType === TX_TYPE.WITHDRAW && <SelectWithdrawNetwork />}
         </div>
         {txType === TX_TYPE.DEPOSIT && <DepositInput />}
         {txType === TX_TYPE.WITHDRAW && <WithdrawInput />}
