@@ -13,6 +13,7 @@ import { parseUnits } from 'viem'
 import {
   useAccount,
   useReadContract,
+  useSwitchChain,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from 'wagmi'
@@ -27,6 +28,8 @@ export const useWithdrawTransaction = () => {
 
   const [approveHash, setApproveHash] = useState<Address | undefined>()
   const amount = parseUnits(inputValue, 6)
+
+  const { switchChain: _switchChain } = useSwitchChain()
 
   const { status: approveTxStatus } = useWaitForTransactionReceipt({
     hash: approveHash,
@@ -102,17 +105,6 @@ export const useWithdrawTransaction = () => {
       {
         onSuccess: () => setCurrentModal('done'),
         onError: (e) => {
-          console.log('start')
-          console.log('🚀 ~ withdraw ~ address:', ARB_GATEWAY)
-          console.log('🚀 ~ withdraw ~ abi:', GATEWAY_ABI)
-          console.log('🚀 ~ withdraw ~ functionName:', 'requestWithdraw')
-          console.log('🚀 ~ withdraw ~ args:', {
-            asset: mtToken?.asset as Address,
-            amount: amount as bigint,
-            eid: EIDS_BY_CHAIN_ID[withdrawNetwork ?? CHAIN_IDS_BY_NAME.Arbitrum],
-            userAddress: address,
-          })
-          console.log('end')
           console.error(e.message)
           setCurrentModal('error')
         },
@@ -122,6 +114,9 @@ export const useWithdrawTransaction = () => {
   const approve = () => {
     if (!mtToken?.asset) return
     setLoading(true)
+    _switchChain({
+      chainId: mtToken?.chainId,
+    })
     return writeContract(
       {
         address: mtToken?.mtAddress as Address,
