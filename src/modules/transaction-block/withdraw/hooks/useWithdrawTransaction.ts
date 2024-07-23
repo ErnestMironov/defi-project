@@ -81,7 +81,7 @@ export const useWithdrawTransaction = () => {
 
     const value = await quoteOftSend(
       mtToken?.mtAddress,
-      EIDS_BY_CHAIN_ID[withdrawNetwork ?? CHAIN_IDS_BY_NAME.Arbitrum],
+      EIDS_BY_CHAIN_ID[CHAIN_IDS_BY_NAME.Arbitrum],
       address,
       provider,
     )
@@ -91,7 +91,7 @@ export const useWithdrawTransaction = () => {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'requestWithdraw',
-        value,
+        value: value * BigInt(2),
         args: [
           mtToken?.asset as Address,
           amount as bigint,
