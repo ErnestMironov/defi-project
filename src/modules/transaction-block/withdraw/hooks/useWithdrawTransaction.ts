@@ -1,8 +1,10 @@
 import { GATEWAY_ABI } from '@abi/gateway'
 import { TOKEN_VAULT } from '@abi/token-vault'
+import { quoteOftSend } from '@api/squid-router/postHook/quoteOftSend'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
+import { getEthersProvider } from '@hooks/web3/useEthersProvider'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { BigNumber } from 'bignumber.js'
 import { useState } from 'react'
@@ -72,14 +74,24 @@ export const useWithdrawTransaction = () => {
 
   const { writeContract, ...rest } = useWriteContract({})
 
-  const withdraw = () => {
+  const withdraw = async () => {
     if (!address || !amount || !isEnoughSharesToWithdraw) return
+    const provider = getEthersProvider()
+    console.log('🚀 ~ withdraw ~ provider:', provider)
 
+    const value = await quoteOftSend(
+      mtToken?.mtAddress,
+      EIDS_BY_CHAIN_ID[withdrawNetwork ?? CHAIN_IDS_BY_NAME.Arbitrum],
+      address,
+      provider,
+    )
+    console.log('🚀 ~ withdraw ~ value:', value)
     return writeContract(
       {
         address: ARB_GATEWAY,
         abi: GATEWAY_ABI,
         functionName: 'requestWithdraw',
+        value,
         args: [
           mtToken?.asset as Address,
           amount as bigint,
@@ -89,7 +101,21 @@ export const useWithdrawTransaction = () => {
       },
       {
         onSuccess: () => setCurrentModal('done'),
-        onError: () => setCurrentModal('error'),
+        onError: (e) => {
+          console.log('start')
+          console.log('🚀 ~ withdraw ~ address:', ARB_GATEWAY)
+          console.log('🚀 ~ withdraw ~ abi:', GATEWAY_ABI)
+          console.log('🚀 ~ withdraw ~ functionName:', 'requestWithdraw')
+          console.log('🚀 ~ withdraw ~ args:', {
+            asset: mtToken?.asset as Address,
+            amount: amount as bigint,
+            eid: EIDS_BY_CHAIN_ID[withdrawNetwork ?? CHAIN_IDS_BY_NAME.Arbitrum],
+            userAddress: address,
+          })
+          console.log('end')
+          console.error(e.message)
+          setCurrentModal('error')
+        },
       },
     )
   }
