@@ -21,7 +21,7 @@ const chains = [
     ...optimism,
     rpcUrls: {
       default: {
-        http: ['https://opt-mainnet.g.alchemy.com/v2/Z86un8hEBvZ87IUWF6MPOsMvX8RZ3guv'],
+        http: ['https://optimism-mainnet.infura.io/v3/ec25fc33eb624f13a9012f6174f20d68'],
       },
     },
   },
