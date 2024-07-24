@@ -34,9 +34,11 @@ const SelectChainTrigger = () => {
 
   return (
     <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
-      <div className="overflow-hidden rounded-full">
-        <TokenIconComponent symbol={depositNetwork} className="size-4" />
-      </div>
+      {depositNetwork && (
+        <div className="overflow-hidden rounded-full">
+          <TokenIconComponent symbol={depositNetwork} className="size-4" />
+        </div>
+      )}
       <span>{chainData?.name || 'All networks'}</span>
     </div>
   )
@@ -106,42 +108,46 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     setOpened(false)
   }
 
+  const sortTokensByQuote = (tokens: ITokenData[]) => {
+    return tokens.sort((a, b) => b.quote - a.quote)
+  }
+
+  const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
+    return tokens.filter((token) =>
+      supportedTokensAddr.includes(token.contract_address.toLowerCase()),
+    )
+  }
+
+  const searchTokens = (tokens: ITokenData[], searchValue: string) => {
+    return tokens.filter(
+      (token) => token.contract_name?.toLowerCase().includes(searchValue.toLowerCase()),
+    )
+  }
+
   const filteredByChainTokens = useMemo(() => {
-    if (!userTokens || !supportedTokensAddr || supportedBySquidTokens.length === 0)
+    if (!userTokens || !supportedTokensAddr || supportedBySquidTokens?.length === 0)
       return []
 
-    const filterTokens = (tokens: ITokenData[]) => {
-      return tokens.filter(
-        (token) => supportedTokensAddr?.includes(token.contract_address.toLowerCase()),
-      )
-    }
-
     if (chain) {
-      console.log('🚀 ~ filteredByChainTokens ~ chain:', chain)
-      console.log('🚀 ~ userTokens[chain].filter ~ userTokens:', userTokens)
-      if (searchValue) {
-        return filterTokens(
-          userTokens[chain].filter((token) => {
-            return token.contract_name?.toLowerCase()?.includes(searchValue)
-          }),
-        )
-      }
-
-      return filterTokens(userTokens[chain] || [])
+      const chainTokens = userTokens[chain] || []
+      const filteredChainTokens = searchValue
+        ? searchTokens(chainTokens, searchValue)
+        : chainTokens
+      return sortTokensByQuote(filterTokens(filteredChainTokens, supportedTokensAddr))
     }
 
-    const fbcTokens = Object.values(userTokens).flat()
-
-    if (searchValue) {
-      return filterTokens(
-        fbcTokens.filter((token) => {
-          return token.contract_name?.toLowerCase()?.includes(searchValue)
-        }),
-      )
-    }
-
-    return filterTokens(fbcTokens)
-  }, [userTokens, chain, searchValue, supportedTokensAddr])
+    const allTokens = Object.values(userTokens).flat()
+    const filteredAllTokens = searchValue
+      ? searchTokens(allTokens, searchValue)
+      : allTokens
+    return sortTokensByQuote(filterTokens(filteredAllTokens, supportedTokensAddr))
+  }, [
+    userTokens,
+    supportedTokensAddr,
+    supportedBySquidTokens?.length,
+    chain,
+    searchValue,
+  ])
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
@@ -149,7 +155,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
         <Select
           value={asset?.contract_ticker_symbol || 'Any token'}
           icon={
-            asset && (
+            asset?.contract_ticker_symbol && (
               <TokenWithNetwork
                 symbol={asset?.contract_ticker_symbol}
                 network={asset?.chain_id}
@@ -197,7 +203,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
                 token={token}
               />
             ))}
-            {filteredByChainTokens?.length <= 0 && (
+            {filteredByChainTokens?.length <= 0 && searchValue && (
               <div className="flex h-auto items-start gap-2 rounded-xl bg-orange-15 p-4">
                 <WarnIcon className="size-[2.14288rem] text-red-600" />
                 <p className="flex flex-col gap-2 font-[Arial] text-[1.25rem] leading-[150%]">

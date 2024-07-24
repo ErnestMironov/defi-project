@@ -43,14 +43,6 @@ export const useWithdrawTransaction = () => {
     timeout: 60_000,
   })
 
-  if (approveTxStatus === 'success') {
-    setLoading(false)
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    setApproveHash(undefined)
-  }
-
-  const { sharesBalance } = useVaultBalance(mtToken?.mtAddress)
-
   const { data: sharesAllowed, refetch: refetchSharesAllowed } = useReadContract({
     abi: TOKEN_VAULT,
     address: mtToken?.mtAddress,
@@ -60,6 +52,15 @@ export const useWithdrawTransaction = () => {
       enabled: !!address && !!mtToken?.mtAddress,
     },
   })
+
+  if (approveTxStatus === 'success') {
+    setLoading(false)
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    setApproveHash(undefined)
+    refetchSharesAllowed()
+  }
+
+  const { sharesBalance } = useVaultBalance(mtToken?.mtAddress)
 
   const isAllowed = (() => {
     if (!sharesAllowed) return
@@ -128,7 +129,6 @@ export const useWithdrawTransaction = () => {
       {
         onSuccess: (data) => {
           setApproveHash(data)
-          refetchSharesAllowed()
         },
         onError: () => setLoading(false),
       },

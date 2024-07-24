@@ -1,4 +1,5 @@
 import { type RouteResponse } from '@0xsquid/sdk/dist/types'
+import { AXELAR_SCAN_URL } from '@constants/index'
 import type {
   IDepositWizardHook,
   STEP_STATUS,
@@ -6,13 +7,11 @@ import type {
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
-import toast from 'react-hot-toast'
 import type { Address } from 'viem'
-import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi'
+import { useSendTransaction } from 'wagmi'
 
 const INTEGRATOR_ID = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
 const SQUID_API_URL = 'https://apiplus.squidrouter.com/v2/status'
-const AXELAR_SCAN_URL = 'https://axelarscan.io/gmp/'
 const MAX_RETRIES = 30
 const RETRY_DELAY = 5000
 
@@ -55,11 +54,6 @@ const waitForSuccessStatus = async (
 
   changeStatusFunction('pending')
   console.log(`Finished! Check Axelarscan for details: ${AXELAR_SCAN_URL}${txHash}`)
-  toast(() => (
-    <span>
-      Check your transaction status on <a href={AXELAR_SCAN_URL}>Axelarscan</a>
-    </span>
-  ))
 
   await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
 
@@ -153,16 +147,18 @@ interface IProperties extends IDepositWizardHook {
 export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => {
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const [error, setError] = useState('')
+  const [depositHash, setDepositHash] = useState<string | null>(null)
 
   const { setCurrentModal } = useTxStore()
 
-  const { sendTransaction, data: hash } = useSendTransaction({
+  const { sendTransaction } = useSendTransaction({
     mutation: {
       onError(_error) {
         setError(_error.message)
         setStatus('error')
       },
       onSuccess(data) {
+        setDepositHash(data) // Set the deposit hash when the transaction is successful
         waitForSuccessStatus(
           data,
           route?.params?.fromChain!,
@@ -175,9 +171,6 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
       },
     },
   })
-
-  const { data } = useWaitForTransactionReceipt({ hash })
-  console.log('🚀 ~ useSwap ~ data:', data)
 
   const swapTokens = useCallback(async () => {
     console.log('🚀 ~ swapTokens ~ route?.transactionRequest:', route?.transactionRequest)
@@ -204,5 +197,5 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
     }
   }, [route, sendTransaction])
 
-  return { swapTokens, status, error }
+  return { swapTokens, status, error, depositHash }
 }

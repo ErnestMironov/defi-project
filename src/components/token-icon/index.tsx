@@ -1,6 +1,5 @@
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
-import clsx from 'clsx'
 import React from 'react'
 
 interface TokenIconProperties extends React.SVGProps<SVGElement> {
@@ -15,20 +14,30 @@ export const TokenIconComponent = ({
   ...rest
 }: TokenIconProperties) => {
   const asset = useTokenAsset(symbol)
-  if (!asset && !tokenLogoFallback) return null
+  if (!asset && !tokenLogoFallback)
+    return (
+      <div
+        className={cn(
+          'aspect-square rounded-full bg-gray-300 flex items-center justify-center leading-none size-8 text-base',
+          className,
+        )}
+      >
+        {String(symbol)[0]}
+      </div>
+    )
 
   if (!asset)
     return (
       <img
         src={tokenLogoFallback}
-        className={clsx(className, 'overflow-visible')}
+        className={cn(className, 'overflow-visible')}
         alt=""
         style={rest.style}
       />
     )
 
   const { TokenIcon } = asset
-  return <TokenIcon {...rest} className={clsx(className, 'overflow-visible')} />
+  return <TokenIcon {...rest} className={cn(className, 'overflow-visible')} />
 }
 
 export const IconWithLabelComponent = ({
@@ -42,7 +51,7 @@ export const IconWithLabelComponent = ({
   const { TokenIcon, symbol: assetSymbol } = asset
   return (
     <div className={cn('flex items-center gap-2 min-w-max', className)}>
-      <TokenIcon {...rest} className={clsx(className, 'overflow-visible')} />
+      <TokenIcon {...rest} className={cn(className, 'overflow-visible')} />
       <div className="leading-normal">{label || assetSymbol}</div>
     </div>
   )
