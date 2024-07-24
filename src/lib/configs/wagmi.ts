@@ -21,7 +21,7 @@ const chains = [
     ...optimism,
     rpcUrls: {
       default: {
-        http: ['https://optimism.llamarpc.com'],
+        http: ['https://optimism-mainnet.infura.io/v3/ec25fc33eb624f13a9012f6174f20d68'],
       },
     },
   },

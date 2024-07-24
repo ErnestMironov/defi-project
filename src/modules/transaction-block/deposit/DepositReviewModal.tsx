@@ -63,7 +63,7 @@ export const DepositReviewModal = () => {
 
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>
-      <DialogContent className="max-w-[38.75rem] gap-10 text-text">
+      <DialogContent className="max-w-[38.75rem] gap-10 text-text max-lg:z-[100] max-lg:max-w-[95vw]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             <span>Deposit Review</span>
