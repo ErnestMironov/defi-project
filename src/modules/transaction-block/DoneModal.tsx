@@ -23,7 +23,6 @@ export const DoneModal = () => {
     vault,
     setCurrentModal,
     currentModal,
-    withdrawNetwork,
     depositAmount,
     withdrawAmount,
     mtToken,
@@ -33,7 +32,7 @@ export const DoneModal = () => {
 
   const reset = () => {
     setDepositAsset(null)
-    setDepositAmount(0)
+    setDepositAmount('')
     setCurrentModal(null)
   }
 
