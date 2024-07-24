@@ -15,7 +15,23 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
 
-const chains = [mainnet, optimism, arbitrum, polygon, base, mantle, bsc] as const
+const chains = [
+  mainnet,
+  {
+    ...optimism,
+    rpcUrls: {
+      default: {
+        http: ['https://optimism.llamarpc.com'],
+      },
+    },
+  },
+  arbitrum,
+  polygon,
+  base,
+  mantle,
+  bsc,
+] as const
+console.log('🚀 ~ optimism:', optimism)
 
 export const wagmiConfig = defaultWagmiConfig({
   chains,
