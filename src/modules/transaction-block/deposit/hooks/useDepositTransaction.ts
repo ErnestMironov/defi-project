@@ -40,7 +40,7 @@ export const useDepositTransaction = ({
         args: [address, amount, userAddress, ARB_EID],
       },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           onSuccessHandler?.()
           setCurrentModal('done')
           setDepositAmount(formatUnits(amount, 6))
