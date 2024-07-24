@@ -23,12 +23,20 @@ export const DoneModal = () => {
     vault,
     setCurrentModal,
     currentModal,
-    withdrawNetwork,
     depositAmount,
     withdrawAmount,
+    mtToken,
+    setDepositAsset,
+    setDepositAmount,
   } = useTxStore()
 
-  const onClose = () => setCurrentModal(null)
+  const reset = () => {
+    setDepositAsset(null)
+    setDepositAmount('')
+    setCurrentModal(null)
+  }
+
+  const onClose = () => reset()
 
   const title = useMemo(() => {
     switch (txType) {
@@ -73,8 +81,8 @@ export const DoneModal = () => {
               <TokenWithNetwork
                 width="1.75rem"
                 position="bottom-right"
-                symbol={vault}
-                network={withdrawNetwork}
+                symbol={mtToken?.stable}
+                network={mtToken.chainId}
               />
             ) : (
               <TokenIconComponent symbol={vault} className="size-7" />

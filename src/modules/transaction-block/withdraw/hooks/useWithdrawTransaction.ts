@@ -56,8 +56,6 @@ export const useWithdrawTransaction = () => {
       enabled: !!address && !!mtToken?.mtAddress,
     },
   })
-  console.log('🚀 ~ useWithdrawTransaction ~ sharesAllowed:', sharesAllowed)
-  console.log('🚀 ~ isAllowed ~ inputValue:', inputValue)
 
   const isAllowed = (() => {
     if (!sharesAllowed) return
@@ -65,11 +63,6 @@ export const useWithdrawTransaction = () => {
       BigNumber(parseUnits(inputValue, 6).toString()),
     )
   })()
-  console.log(
-    '🚀 ~ isAllowed ~ parseUnits(inputValue, 6).toString():',
-    parseUnits(inputValue, 6).toString(),
-  )
-  console.log('🚀 ~ isAllowed ~ isAllowed:', isAllowed)
 
   const isEnoughSharesToWithdraw = (() => {
     if (!sharesBalance || !amount) return
@@ -81,22 +74,17 @@ export const useWithdrawTransaction = () => {
   const withdraw = async () => {
     if (!address || !amount || !isEnoughSharesToWithdraw) return
     const provider = getEthersProvider()
-    console.log('🚀 ~ withdraw ~ provider:', provider)
 
-    console.log(
-      '🚀 ~ withdraw ~ EIDS_BY_CHAIN_ID[mtToken?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum]:',
-      EIDS_BY_CHAIN_ID[mtToken?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum],
-    )
     let value = 0n
     if (mtToken?.chainId !== CHAIN_IDS_BY_NAME.Arbitrum) {
-      value = await quoteOftSend(
-        mtToken?.mtAddress,
-        EIDS_BY_CHAIN_ID[CHAIN_IDS_BY_NAME.Arbitrum],
-        address,
-        provider as Provider,
-      )
+      value =
+        (await quoteOftSend(
+          mtToken?.mtAddress,
+          EIDS_BY_CHAIN_ID[CHAIN_IDS_BY_NAME.Arbitrum],
+          address,
+          provider as Provider,
+        )) * 2n
     }
-    console.log('🚀 ~ withdraw ~ value:', value)
     return writeContract(
       {
         address: ARB_GATEWAY,
