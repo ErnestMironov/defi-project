@@ -52,6 +52,7 @@ module.exports = {
         'text-white': 'var(--text-white)',
         'text-90': 'var(--text-90)',
         'text-80': 'var(--text-80)',
+        'text-50': 'var(--text-50)',
         'error': 'var(--error)',
         'error-card-40': 'var(--error-card-40)',
         'violet-text': 'var(--violet-violet-text)',

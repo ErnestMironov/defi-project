@@ -9,6 +9,7 @@ import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
+import { InfoBlock } from '../components/InfoBlock'
 import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useSwap } from '../hooks/useSwap'
@@ -51,6 +52,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     swapTokens: swapAndDeposit,
     status: swapAndDepositStatus,
     error: swapAndDepositError,
+    depositHash,
   } = useSwap({
     route,
     requestId,
@@ -148,6 +150,9 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
           error={swapAndDepositError}
           showArrow
         />
+        {depositHash && (
+          <InfoBlock txHash={depositHash} className="mt-4" type="onChain" />
+        )}
       </div>
       {ActionButton()}
     </div>

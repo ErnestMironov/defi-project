@@ -125,7 +125,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   }
 
   const filteredByChainTokens = useMemo(() => {
-    if (!userTokens || !supportedTokensAddr || supportedBySquidTokens.length === 0)
+    if (!userTokens || !supportedTokensAddr || supportedBySquidTokens?.length === 0)
       return []
 
     if (chain) {
@@ -141,7 +141,13 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
       ? searchTokens(allTokens, searchValue)
       : allTokens
     return sortTokensByQuote(filterTokens(filteredAllTokens, supportedTokensAddr))
-  }, [userTokens, supportedTokensAddr, supportedBySquidTokens.length, chain, searchValue])
+  }, [
+    userTokens,
+    supportedTokensAddr,
+    supportedBySquidTokens?.length,
+    chain,
+    searchValue,
+  ])
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>

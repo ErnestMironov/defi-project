@@ -8,6 +8,7 @@ import { cn } from '@utils/cn'
 import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
+import { InfoBlock } from '../components/InfoBlock'
 import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useDepositTransaction } from '../hooks/useDepositTransaction'
@@ -35,7 +36,11 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     onSuccessHandler: incrementStep,
   })
 
-  const { deposit, status: depositStatus } = useDepositTransaction({
+  const {
+    deposit,
+    status: depositStatus,
+    data: depositHash,
+  } = useDepositTransaction({
     address: asset?.contract_address as Address,
     amount: BigInt(parseUnits(amount, 6)),
   })
@@ -101,6 +106,9 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           status={depositStatus}
           showArrow
         />
+        {depositHash && (
+          <InfoBlock txHash={depositHash} className="mt-4" type="onChain" />
+        )}
       </div>
       {ActionButton()}
     </div>

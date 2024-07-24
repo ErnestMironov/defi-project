@@ -9,6 +9,7 @@ import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
+import { InfoBlock } from '../components/InfoBlock'
 import { WizardStep } from '../components/WizardStep'
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
@@ -52,6 +53,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
     swapTokens: swapAndDeposit,
     status: swapAndDepositStatus,
     error: swapAndDepositError,
+    depositHash,
   } = useSwap({
     route,
     requestId,
@@ -116,6 +118,9 @@ export const NativeCrossChainSwap: React.FunctionComponent<
           status={swapAndDepositStatus}
           showArrow
         />
+        {depositHash && (
+          <InfoBlock txHash={depositHash} className="mt-4" type="crossChain" />
+        )}
       </div>
       {ActionButton()}
     </div>
