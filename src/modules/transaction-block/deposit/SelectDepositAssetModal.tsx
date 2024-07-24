@@ -34,9 +34,11 @@ const SelectChainTrigger = () => {
 
   return (
     <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
-      <div className="overflow-hidden rounded-full">
-        <TokenIconComponent symbol={depositNetwork} className="size-4" />
-      </div>
+      {depositNetwork && (
+        <div className="overflow-hidden rounded-full">
+          <TokenIconComponent symbol={depositNetwork} className="size-4" />
+        </div>
+      )}
       <span>{chainData?.name || 'All networks'}</span>
     </div>
   )
