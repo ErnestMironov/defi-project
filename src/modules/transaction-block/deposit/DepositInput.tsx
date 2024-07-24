@@ -28,23 +28,30 @@ export const DepositInput = () => {
     .toString()
 
   const [error, setError] = useState('')
-  useEffect(() => {
-    setInputValueInUSD(
-      BigNumber(+inputValue)
-        .multipliedBy(BigNumber(asset?.quote ?? 1).div(BigNumber(assetBalance)))
-        .toFixed(3),
-    )
 
-    if (BigNumber(inputValue).isGreaterThan(BigNumber(assetBalance))) {
+  useEffect(() => {
+    const inputValueBN = BigNumber(+inputValue)
+    const assetQuoteBN = BigNumber(asset?.quote ?? 1)
+    const assetBalanceBN = BigNumber(assetBalance)
+
+    if (assetBalanceBN.isZero() || inputValueBN.isNaN() || assetQuoteBN.isNaN()) {
+      setInputValueInUSD('0.00')
+      setError('Invalid input or balance')
+      return
+    }
+
+    const calculatedValueInUSD = inputValueBN
+      .multipliedBy(assetQuoteBN.div(assetBalanceBN))
+      .toFixed(3)
+
+    setInputValueInUSD(calculatedValueInUSD)
+
+    if (inputValueBN.isGreaterThan(assetBalanceBN)) {
       setError('Exceeds balance')
       return
     }
 
-    if (
-      BigNumber(+inputValue)
-        .multipliedBy(BigNumber(asset?.quote ?? 1).div(BigNumber(assetBalance)))
-        .toNumber() < 1
-    ) {
+    if (BigNumber(calculatedValueInUSD).toNumber() < 1) {
       setError('Deposit amount cannot be less than 1$')
       return
     }
