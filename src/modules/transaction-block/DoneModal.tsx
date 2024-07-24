@@ -27,9 +27,17 @@ export const DoneModal = () => {
     depositAmount,
     withdrawAmount,
     mtToken,
+    setDepositAsset,
+    setDepositAmount,
   } = useTxStore()
 
-  const onClose = () => setCurrentModal(null)
+  const reset = () => {
+    setDepositAsset(null)
+    setDepositAmount(0)
+    setCurrentModal(null)
+  }
+
+  const onClose = () => reset()
 
   const title = useMemo(() => {
     switch (txType) {
