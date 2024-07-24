@@ -31,3 +31,10 @@ export const CHAINS = [
 ] as const
 
 export type ChainType = (typeof CHAINS)[number]
+
+export const CONFIRMATIONS_NUMBER = {
+  [CHAIN_IDS_BY_NAME.Polygon]: 5,
+  [CHAIN_IDS_BY_NAME.Arbitrum]: 48,
+  [CHAIN_IDS_BY_NAME.Optimism]: 6,
+  [CHAIN_IDS_BY_NAME.Base]: 6,
+}
