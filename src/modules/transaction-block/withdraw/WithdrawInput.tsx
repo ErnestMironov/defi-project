@@ -103,8 +103,9 @@ export const WithdrawInput = () => {
       {isConnected &&
         (isAllowed ? (
           <Button
+            loading={isPending}
             size="lg"
-            disabled={!inputValue || !!validationError || isPending}
+            disabled={!inputValue || !!validationError}
             className="mt-10 w-full max-lg:mt-6"
             onClick={withdraw}
           >
@@ -112,8 +113,9 @@ export const WithdrawInput = () => {
           </Button>
         ) : (
           <Button
+            loading={isPending}
             size="lg"
-            disabled={!inputValue || !!validationError || isPending}
+            disabled={!inputValue || !!validationError}
             className="mt-10 w-full max-lg:mt-6"
             onClick={approve}
           >

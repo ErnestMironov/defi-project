@@ -1,7 +1,7 @@
 import { GATEWAY_ABI } from '@abi/gateway'
 import { TOKEN_VAULT } from '@abi/token-vault'
 import { quoteOftSend } from '@api/squid-router/postHook/quoteOftSend'
-import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
@@ -37,6 +37,10 @@ export const useWithdrawTransaction = () => {
     query: {
       enabled: !!approveHash,
     },
+    confirmations:
+      CONFIRMATIONS_NUMBER[mtToken?.chainId as keyof typeof CONFIRMATIONS_NUMBER],
+    chainId: mtToken?.chainId,
+    timeout: 60_000,
   })
 
   if (approveTxStatus === 'success') {
