@@ -13,7 +13,6 @@ export const getTokenBalances = async (chainId: Chain, address?: string) => {
   if (!address) {
     return []
   }
-
   const response = await client.BalanceService.getTokenBalancesForWalletAddress(
     chainId,
     address,
