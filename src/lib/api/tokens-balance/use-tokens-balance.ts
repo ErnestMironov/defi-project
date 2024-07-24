@@ -5,15 +5,10 @@ import { useQuery } from '@tanstack/react-query'
 import type { ITokenData } from './api'
 import { getTokenBalances } from './api'
 
-// mainnet, optimism, arbitrum, polygon, base, mantle, bsc
-
 const DEFAULT_CHAINS = [
-  Chains.ETH_MAINNET,
   Chains.ARBITRUM_MAINNET,
   Chains.OPTIMISM_MAINNET,
   Chains.MATIC_MAINNET,
-  Chains.BSC_MAINNET,
-  Chains.MANTLE_MAINNET,
   Chains.BASE_MAINNET,
 ]
 
