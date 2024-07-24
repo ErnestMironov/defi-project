@@ -21,7 +21,7 @@ const chains = [
     ...optimism,
     rpcUrls: {
       default: {
-        http: ['https://optimism.llamarpc.com'],
+        http: ['https://opt-mainnet.g.alchemy.com/v2/Z86un8hEBvZ87IUWF6MPOsMvX8RZ3guv'],
       },
     },
   },

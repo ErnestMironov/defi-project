@@ -46,7 +46,9 @@ export const WizardStep = ({
             {title}
           </span>
           {status === 'pending' && (
-            <Lottie className="relative -left-4 h-8" animationData={lottieLoader} loop />
+            <div className="flex w-8 items-center justify-center overflow-hidden">
+              <Lottie className=" h-8" animationData={lottieLoader} loop />
+            </div>
           )}
           {status === 'success' ? (
             <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />

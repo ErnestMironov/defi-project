@@ -6,7 +6,7 @@ import Lottie from 'lottie-react'
 import * as React from 'react'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-sm text-sm font-medium uppercase ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-sm text-sm font-medium uppercase ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 max-lg:text-center',
   {
     variants: {
       variant: {
@@ -60,7 +60,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
         {loading ? (
           <span className="flex items-center leading-none">
             Pending
-            <Lottie className="h-8" animationData={lottieLoader} loop />
+            <div className="flex w-8 items-center justify-center overflow-hidden">
+              <Lottie className="h-8" animationData={lottieLoader} loop />
+            </div>
           </span>
         ) : (
           children

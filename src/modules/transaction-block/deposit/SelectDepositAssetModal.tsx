@@ -33,14 +33,17 @@ const SelectChainTrigger = () => {
   const chainData = useTokenAsset(depositNetwork)
 
   return (
-    <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
+    <button
+      type="button"
+      className="flex items-center gap-[0.38rem] text-lg/[0] font-bold"
+    >
       {depositNetwork && (
         <div className="overflow-hidden rounded-full">
           <TokenIconComponent symbol={depositNetwork} className="size-4" />
         </div>
       )}
       <span>{chainData?.name || 'All networks'}</span>
-    </div>
+    </button>
   )
 }
 
@@ -57,7 +60,7 @@ function TokensListItem({
     <button
       type="button"
       onClick={() => onChange(token)}
-      className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+      className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default max-lg:items-start"
     >
       <TokenWithNetwork
         symbol={token.contract_ticker_symbol}
@@ -67,8 +70,10 @@ function TokensListItem({
         width="2.14288rem"
       />
 
-      <div className="ml-3 flex flex-col items-start">
-        <p className="text-[1.25rem]/[1.75rem] text-text">{token.contract_name}</p>
+      <div className="ml-3 flex flex-col items-start max-lg:items-start max-lg:text-left">
+        <p className="text-[1.25rem]/[1.75rem] text-text max-lg:max-w-[8.5rem] ">
+          {token.contract_name}
+        </p>
         <p className="text-[0.9375rem]/[1.125rem] text-gray-80">{chainData?.name}</p>
       </div>
       <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
@@ -120,7 +125,9 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
 
   const searchTokens = (tokens: ITokenData[], searchValue: string) => {
     return tokens.filter(
-      (token) => token.contract_name?.toLowerCase().includes(searchValue.toLowerCase()),
+      (token) =>
+        token.contract_name?.toLowerCase().includes(searchValue.toLowerCase()) ||
+        token.contract_ticker_symbol?.toLowerCase().includes(searchValue.toLowerCase()),
     )
   }
 
@@ -166,19 +173,21 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           }
         />
       </DialogTrigger>
-      <DialogContent className="gap-6 text-text">
+      <DialogContent className="gap-6 text-text max-lg:max-w-[95vw]">
         <DialogHeader>
           <DialogTitle>Select asset</DialogTitle>
         </DialogHeader>
-        <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4">
+        <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4 max-lg:max-w-full">
           <Search />
-          <input
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            type="text"
-            className="mx-3 grow bg-transparent text-lg placeholder:text-gray-100 focus:outline-none"
-            placeholder="Search"
-          />
+          <div className="mx-3 grow">
+            <input
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              type="text"
+              className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
+              placeholder="Search"
+            />
+          </div>
           <SelectNetworkPopover
             chain={chain}
             onChange={(_network) => setNetwork(_network)}
