@@ -1,8 +1,12 @@
+/* eslint-disable import/no-extraneous-dependencies */
+// @ts-ignore
+
 import 'winbox/dist/css/winbox.min.css'
 import 'winbox/dist/css/themes/modern.min.css'
 
 import { Button } from '@components/ui/button'
 import React from 'react'
+// @ts-ignore
 import WinBox from 'winbox/src/js/winbox'
 
 interface OpenLinkProperties {
@@ -11,13 +15,13 @@ interface OpenLinkProperties {
 
 export const OpenLink: React.FC<OpenLinkProperties> = ({ url }) => {
   const openInWinBox = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    url: string,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    _url: string,
   ) => {
     event.preventDefault()
     setTimeout(() => {
       new WinBox('New Tab', {
-        url,
+        url: _url,
         width: '90%',
         height: '100%',
         top: 60,
