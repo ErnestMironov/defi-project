@@ -74,6 +74,11 @@ export const DoneModal = () => {
           <DialogTitle className="flex items-center gap-3 uppercase">Done!</DialogTitle>
         </DialogHeader>
         <div className="relative mt-6 flex h-[14.5625rem] flex-col items-center justify-center overflow-hidden rounded-[2.5rem] bg-input-default shadow-shadow">
+          <img
+            src={Rainbow}
+            alt="Rainbow"
+            className="dark:opacity-1 absolute bottom-[-15.1rem] right-[-15.8rem] size-[27.9375rem] animate-[spin_20s_linear_infinite] opacity-50 "
+          />
           <p className="text-xl text-gray-100">{title}</p>
           <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">{amount}</p>
           <div className="mt-[0.38rem] flex items-center gap-3">
@@ -89,11 +94,6 @@ export const DoneModal = () => {
             )}
             <span className="text-2.5xl text-gray-100">{vault}</span>
           </div>
-          <img
-            src={Rainbow}
-            alt="Rainbow"
-            className="dark:opacity-1 absolute bottom-[-15.1rem] right-[-15.8rem] size-[27.9375rem] animate-[spin_20s_linear_infinite] opacity-50"
-          />
         </div>
         <Button
           onClick={() => navigate('/analytics')}

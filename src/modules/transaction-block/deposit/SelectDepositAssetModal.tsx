@@ -3,6 +3,7 @@ import type { Token } from '@0xsquid/squid-types'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
+import BigCloseBtn from '@assets/icons/big-close-btn.svg'
 import Search from '@assets/icons/search.svg'
 import WarnIcon from '@assets/icons/warn.svg'
 import { Select } from '@components/select/Select'
@@ -19,6 +20,7 @@ import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
+import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
 import { type ComponentProps, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -84,6 +86,53 @@ function TokensListItem({
         <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
       </div>
     </button>
+  )
+}
+
+interface ResponsiveDialogContentProperties
+  extends React.ComponentPropsWithoutRef<typeof DialogContent> {
+  opened: boolean
+  setOpened: (isOpen: boolean) => void
+}
+
+const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
+  className,
+  children,
+  opened,
+  setOpened,
+  ...props
+}) => {
+  const { isBelowDesktop } = useDeviceWidth()
+
+  if (isBelowDesktop && opened) {
+    return (
+      <div
+        className={cn(
+          'fixed h-screen w-screen top-0 left-0 bg-white z-10 pt-[5.5rem] pb-12 px-4 flex flex-col gap-6',
+          'active:bg-opacity-50',
+          className,
+        )}
+      >
+        {children}
+
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={() => {
+            setOpened(false)
+          }}
+          className="m-auto flex size-[4.125rem] shrink-0 items-center justify-center"
+        >
+          <BigCloseBtn className="size-full" />
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <DialogContent className="gap-6 text-text max-lg:max-w-[95vw]" {...props}>
+      {children}
+    </DialogContent>
   )
 }
 
@@ -173,29 +222,32 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           }
         />
       </DialogTrigger>
-      <DialogContent className="gap-6 text-text max-lg:max-w-[95vw]">
-        <DialogHeader>
-          <DialogTitle>Select asset</DialogTitle>
-        </DialogHeader>
-        <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4 max-lg:max-w-full">
-          <Search />
-          <div className="mx-3 grow">
-            <input
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              type="text"
-              className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
-              placeholder="Search"
+      <ResponsiveDialogContent opened={opened} setOpened={setOpened}>
+        <div className="flex flex-col gap-8 max-lg:gap-4">
+          <DialogHeader className="max-lg:text-left">
+            <DialogTitle>Select asset</DialogTitle>
+          </DialogHeader>
+          <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4 max-lg:max-w-full">
+            <Search />
+            <div className="mx-3 grow">
+              <input
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                type="text"
+                className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
+                placeholder="Search"
+              />
+            </div>
+            <SelectNetworkPopover
+              chain={chain}
+              onChange={(_network) => setNetwork(_network)}
+              trigger={<SelectChainTrigger />}
+              showAllNetworksOption
             />
           </div>
-          <SelectNetworkPopover
-            chain={chain}
-            onChange={(_network) => setNetwork(_network)}
-            trigger={<SelectChainTrigger />}
-            showAllNetworksOption
-          />
         </div>
-        <ScrollArea className="-mx-4 h-[19.5rem] px-4">
+
+        <ScrollArea className="-mx-4 h-[19.5rem] px-4 max-lg:h-auto max-lg:grow">
           <div className="space-y-2">
             {isLoading &&
               Array.from({ length: 4 }).map((_, i) => (
@@ -223,7 +275,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
             )}
           </div>
         </ScrollArea>
-      </DialogContent>
+      </ResponsiveDialogContent>
     </Dialog>
   )
 }
