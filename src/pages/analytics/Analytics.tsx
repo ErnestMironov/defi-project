@@ -14,7 +14,7 @@ export const Analytics = () => {
 
   return (
     <div className="max-lg:-mx-4">
-      <Overviews className="mb-8 mt-6 max-lg:px-4 lg:my-20" />
+      <Overviews className="mb-8 mt-[1.87rem] max-lg:px-4 lg:my-20" />
       <div className="mx-4 grid gap-4 max-lg:gap-8 lg:grid-cols-2">
         <ApyChartModule />
         <TvlChartModule />

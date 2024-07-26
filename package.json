@@ -64,6 +64,7 @@
 		"vaul": "^0.9.1",
 		"viem": "2.x",
 		"wagmi": "^2.8.6",
+		"winbox": "^0.2.82",
 		"zustand": "^4.5.2"
 	},
 	"devDependencies": {

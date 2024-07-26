@@ -1,3 +1,4 @@
+import { OpenLink } from '@components/open-link/OpenLink'
 import { ARBITRUM_SCAN_URL, AXELAR_SCAN_URL } from '@constants/index'
 import { cn } from '@utils/cn'
 
@@ -18,6 +19,7 @@ export const InfoBlock = ({ txHash, className, type = 'crossChain' }: IPropertie
       )}
     >
       Monitor your transaction on
+      <OpenLink url={`${scanner}${txHash}`} />
       <a
         target="_blank"
         href={`${scanner}${txHash}`}
