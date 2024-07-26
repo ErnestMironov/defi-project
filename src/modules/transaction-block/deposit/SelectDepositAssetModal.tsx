@@ -108,8 +108,8 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
     return (
       <div
         className={cn(
-          'fixed h-screen w-screen top-0 left-0 bg-white z-10 pt-[5.5rem] pb-12 px-4 flex flex-col gap-6',
-          'active:bg-opacity-50',
+          'fixed h-screen w-screen top-0 left-0 bg-white z-10 pt-[5.5rem] pb-12 px-4 flex flex-col gap-6 overscroll-none',
+          'animate-translateIn',
           className,
         )}
       >
@@ -121,7 +121,10 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
           onClick={() => {
             setOpened(false)
           }}
-          className="m-auto flex size-[4.125rem] shrink-0 items-center justify-center"
+          className={cn(
+            'm-auto flex size-[4.125rem] shrink-0 items-center justify-center',
+            'active:opacity-50',
+          )}
         >
           <BigCloseBtn className="size-full" />
         </button>
@@ -247,7 +250,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           </div>
         </div>
 
-        <ScrollArea className="-mx-4 h-[19.5rem] px-4 max-lg:h-auto max-lg:grow">
+        <ScrollArea className="-mx-4 h-[19.5rem] overscroll-none px-4 max-lg:h-auto max-lg:grow">
           <div className="space-y-2">
             {isLoading &&
               Array.from({ length: 4 }).map((_, i) => (

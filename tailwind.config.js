@@ -125,12 +125,17 @@ module.exports = {
           '50%': { transform: 'translate(10px, -10px) rotate(180deg)' },
           '100%': { transform: 'translate(0, 0) rotate(360deg)' },
         },
+        translateIn: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateX(0)' },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         moonArc: 'moonArc 0.3s ease-in-out forwards',
         sunArc: 'sunArc 0.3s ease-in-out forwards',
+        translateIn: 'translateIn 0.15s ease-in-out forwards',
       },
       fillOpacity: {
         '0': '0',

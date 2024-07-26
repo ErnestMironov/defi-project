@@ -38,7 +38,7 @@ export const Deposit = () => {
 
   return (
     <div className="flex w-full justify-center">
-      <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:gap-4">
+      <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:mt-[2.62rem] max-lg:gap-4">
         <div className="grid grid-cols-2 gap-3">
           {loading ? (
             <>
