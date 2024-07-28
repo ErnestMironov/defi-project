@@ -13,6 +13,7 @@ import { NativeCrossChainSwap } from './deposit-wizards/NativeCrossChainSwap'
 import { NativeOnchainSwap } from './deposit-wizards/NativeOnchainSwap'
 import { OnchainSwap } from './deposit-wizards/OnchainSwap'
 import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
+import { useTokenApy } from './hooks/useTokenApy'
 
 export const DepositReviewModal = () => {
   const {
@@ -25,6 +26,18 @@ export const DepositReviewModal = () => {
   } = useTxStore()
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
+
+  const { usdcApy, usdtApy } = useTokenApy()
+
+  const apy = useMemo(() => {
+    if (vault === 'USDC' && usdcApy) {
+      return `${usdcApy}%`
+    }
+    if (vault === 'USDT' && usdtApy) {
+      return `${usdtApy}%`
+    }
+    return '0.00%'
+  }, [usdcApy, usdtApy, vault])
 
   const { squid } = useSquidSDK()
 
@@ -94,7 +107,10 @@ export const DepositReviewModal = () => {
               <AmountInput value={inputValueInUSD} after={vault} readOnly />
               <TokenIconComponent symbol={vault} className="size-[2.14288rem]" />
             </div>
-            <p className="mt-4 text-gray-100">$ {parseFloatLocale(inputValueInUSD)}</p>
+            <div className="mt-4 flex justify-between text-gray-100">
+              <p>$ {parseFloatLocale(inputValueInUSD)}</p>
+              <p className="font-bold">{apy}</p>
+            </div>
           </div>
           {/* <p className="text-base text-text-80">
             1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>

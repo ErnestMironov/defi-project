@@ -1,14 +1,14 @@
-import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
+import { OpenLink } from '@components/open-link/OpenLink'
 import { Skeleton } from '@components/ui/skeleton'
+import { useTokenApy } from '@modules/transaction-block/deposit/hooks/useTokenApy'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
+
 // import { useFBX } from '@react-three/drei'
 // import { Canvas, useFrame } from '@react-three/fiber'
-import dayjs from 'dayjs'
 // import type { ReactNode } from 'react' // Import ReactNode type
-import { useMemo, useState } from 'react'
 // import type { Group } from 'three' // Import the Group class from three
 
 // const ReactThreeWrapper = ({ children }: { children: ReactNode }) => {
@@ -36,18 +36,11 @@ import { useMemo, useState } from 'react'
 // }
 
 export const Deposit = () => {
-  const [time] = useState(dayjs().subtract(1, 'month').valueOf())
-  const { data, loading } = useMaatTokensApy({ from: time })
-  const { usdcApy, usdtApy } = useMemo(() => {
-    const reversedArray = data?.slice().reverse()
-    const _usdcApy = reversedArray?.find((token) => token.name === 'USDC')?.uv?.toFixed(2)
-    const _usdtApy = reversedArray?.find((token) => token.name === 'USDT')?.pv?.toFixed(2)
-    return { usdcApy: _usdcApy, usdtApy: _usdtApy }
-  }, [data])
+  const { usdcApy, usdtApy, loading } = useTokenApy()
 
   return (
     <div className="flex w-full justify-center">
-      <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:gap-4">
+      <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:mt-[2.62rem] max-lg:gap-4">
         <div className="grid grid-cols-2 gap-3">
           {loading ? (
             <>
@@ -90,6 +83,8 @@ export const Deposit = () => {
           )}
         </div>
         <TransactionBlock />
+
+        <OpenLink url="https://axelarscan.io/gmp/0xf2a4ab70d9a4fc6b45a239c9c6a37ed381984ae0baa5aa2b38558497942bfaf7-120492" />
       </div>
     </div>
   )

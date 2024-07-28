@@ -46,8 +46,12 @@ export const WizardStep = ({
             {title}
           </span>
           {status === 'pending' && (
-            <div className="flex w-8 items-center justify-center overflow-hidden">
-              <Lottie className=" h-8" animationData={lottieLoader} loop />
+            <div className="relative flex size-8 items-center justify-center overflow-hidden">
+              <Lottie
+                className="absolute size-16 [&>svg]:size-full"
+                animationData={lottieLoader}
+                loop
+              />
             </div>
           )}
           {status === 'success' ? (
