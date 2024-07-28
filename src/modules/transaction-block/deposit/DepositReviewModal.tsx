@@ -27,7 +27,7 @@ export const DepositReviewModal = () => {
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
 
-  const { usdcApy, usdtApy, loading } = useTokenApy()
+  const { usdcApy, usdtApy } = useTokenApy()
 
   const apy = useMemo(() => {
     if (vault === 'USDC' && usdcApy) {
