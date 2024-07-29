@@ -9,11 +9,17 @@ interface SelectProperties extends ComponentProps<'div'> {
   value: string
   opened?: boolean
   icon?: ReactNode
+  className?: string
 }
 
-export const Select = ({ symbol, value, opened, icon }: SelectProperties) => {
+export const Select = ({ symbol, value, opened, icon, className }: SelectProperties) => {
   return (
-    <ShadowBox className="flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14">
+    <ShadowBox
+      className={cn(
+        'flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14',
+        className,
+      )}
+    >
       {icon ||
         (symbol && (
           <TokenIconComponent symbol={symbol} className="size-8 max-lg:size-5" />

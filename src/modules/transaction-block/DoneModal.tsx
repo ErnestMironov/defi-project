@@ -87,7 +87,7 @@ export const DoneModal = () => {
                 width="1.75rem"
                 position="bottom-right"
                 symbol={mtToken?.stable}
-                network={mtToken.chainId}
+                network={mtToken?.chainId}
               />
             ) : (
               <TokenIconComponent symbol={vault} className="size-7" />
