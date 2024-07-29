@@ -60,7 +60,7 @@ export const useWithdrawTransaction = () => {
     refetchSharesAllowed()
   }
 
-  const { sharesBalance } = useVaultBalance(mtToken?.mtAddress)
+  const { sharesBalance } = useVaultBalance(mtToken?.mtAddress || '0x')
 
   const isAllowed = (() => {
     if (!sharesAllowed) return
@@ -77,7 +77,7 @@ export const useWithdrawTransaction = () => {
   const { writeContract, ...rest } = useWriteContract({})
 
   const withdraw = async () => {
-    if (!address || !amount || !isEnoughSharesToWithdraw) return
+    if (!address || !amount || !isEnoughSharesToWithdraw || !mtToken) return
     const provider = getEthersProvider()
 
     let value = 0n
