@@ -23,7 +23,12 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
       <PopoverTrigger>
-        <Select value={vault} symbol={vault} opened={isOpened} />
+        <Select
+          className="min-w-[10.5rem]"
+          value={vault}
+          symbol={vault}
+          opened={isOpened}
+        />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-[34.75rem] text-text max-lg:w-screen">
         <div className="flex items-center justify-between">
