@@ -1,7 +1,6 @@
 import type { ITokenData } from '@api/tokens-balance/api'
-import Usdt from '@assets/icons/tokens/usdt.svg'
 import type { ChainType } from '@constants/chains'
-import { CHAIN_IDS_BY_NAME, CHAINS } from '@constants/chains'
+import { CHAINS } from '@constants/chains'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
 import { create } from 'zustand'
@@ -25,7 +24,7 @@ interface SelectedAssetState {
   vault: Vault
   setVault: (by: Vault) => void
 
-  mtToken: UserMTokenInfo
+  mtToken: UserMTokenInfo | null
   setMToken: (by: UserMTokenInfo) => void
 
   txType: TxType
@@ -64,17 +63,7 @@ export const useTxStore = create<SelectedAssetState>()((set) => ({
   vault: 'USDT',
   setVault: (by) => set({ vault: by }),
   // mtToken
-  mtToken: {
-    TokenIcon: Usdt,
-    symbol: 'mtUSDT',
-    stable: 'usdt',
-    chainId: CHAIN_IDS_BY_NAME.Arbitrum,
-    mtAddress: '0x0dac12432d034B3fd923709FDC097B84557d0Bb4',
-    __typename: 'Balance',
-    asset: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9',
-    balance: '0',
-    lpBalance: '0',
-  },
+  mtToken: null,
   setMToken: (by) => set({ mtToken: by }),
   // tx type
   txType: TX_TYPE.DEPOSIT,

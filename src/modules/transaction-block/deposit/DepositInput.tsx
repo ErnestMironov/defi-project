@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
+import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useDepositStore'
 import { DepositReviewModal } from './DepositReviewModal'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
@@ -93,7 +94,7 @@ export const DepositInput = () => {
             </p>
           )}
 
-          <SelectDepositAsset />
+          {isConnected ? <SelectDepositAsset /> : <SelectWithoutWalletPlaceholder />}
         </div>
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
