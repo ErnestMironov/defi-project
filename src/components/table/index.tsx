@@ -39,17 +39,19 @@ const TableBody = ({
 
 const TableRow = ({ children, ...rest }: React.HTMLAttributes<HTMLTableRowElement>) => {
   return (
-    <tr className="bg-cards text-text" {...rest}>
+    <tr {...rest} className={cn('bg-cards text-text', rest.className)}>
       {children}
     </tr>
   )
 }
-
 const TableCell = ({ children, ...rest }: React.HTMLAttributes<HTMLTableCellElement>) => {
   return (
     <td
-      className="bg-transparent px-10 py-6 text-left text-[1.25rem] leading-[140%] first:rounded-l-3xl last:rounded-r-3xl"
       {...rest}
+      className={cn(
+        'bg-transparent px-10 py-6 text-left text-[1.25rem] leading-[140%] first:rounded-l-[2rem] last:rounded-r-[2rem]',
+        rest.className,
+      )}
     >
       {children}
     </td>

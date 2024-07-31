@@ -7,6 +7,7 @@ type CopyFunction = (text: string) => Promise<boolean>
 
 export const useClipboard = () => {
   const [copiedText, setCopiedText] = useState<CopiedValue>(null)
+  const [isCopied, setIsCopied] = useState(false)
 
   const copy: CopyFunction = useCallback(async (text) => {
     if (!navigator?.clipboard) {
@@ -18,6 +19,8 @@ export const useClipboard = () => {
     try {
       await navigator.clipboard.writeText(text)
       setCopiedText(text)
+      setIsCopied(true)
+      setTimeout(() => setIsCopied(false), 500)
       return true
     } catch (error) {
       console.warn('Copy failed', error)
@@ -37,5 +40,5 @@ export const useClipboard = () => {
       })
   }
 
-  return { copiedText, copy, copyWithToast }
+  return { copiedText, isCopied, copy, copyWithToast }
 }

@@ -19,48 +19,12 @@
 }
 
 @font-face {
-	font-family: "Arial Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Italic"),
-		url("ARIALI 1.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Italic"),
-		url("ARIALI.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial Narrow Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Narrow Italic"),
-		url("ARIALNI.woff") format("woff");
-}
-
-@font-face {
 	font-family: "Arial Medium";
 	font-style: normal;
 	font-weight: normal;
 	src:
 		local("Arial Medium"),
 		url("ArialMdm.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial Medium Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Medium Italic"),
-		url("ArialMdmItl.woff") format("woff");
 }
 
 @font-face {
@@ -91,48 +55,12 @@
 }
 
 @font-face {
-	font-family: "Arial Bold Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Bold Italic"),
-		url("ARIALBI 1.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial Bold Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Bold Italic"),
-		url("ARIALBI.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial Narrow Bold Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Narrow Bold Italic"),
-		url("ARIALNBI.woff") format("woff");
-}
-
-@font-face {
 	font-family: "Arial Black";
 	font-style: normal;
 	font-weight: normal;
 	src:
 		local("Arial Black"),
 		url("ARIBLK.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial Black Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Black Italic"),
-		url("ARIALBLACKITALIC.woff") format("woff");
 }
 
 @font-face {
@@ -169,31 +97,4 @@
 	src:
 		local("Arial CE Bold"),
 		url("arialceb.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial Light Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial Light Italic"),
-		url("ARIALLGTITL.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial CE Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial CE Italic"),
-		url("ArialCEItalic.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Arial CE Bold Italic";
-	font-style: normal;
-	font-weight: normal;
-	src:
-		local("Arial CE Bold Italic"),
-		url("ArialCEBoldItalic.woff") format("woff");
 }

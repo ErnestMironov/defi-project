@@ -4,6 +4,7 @@ import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import BigCloseBtn from '@assets/icons/big-close-btn.svg'
+import BigCloseBtnDark from '@assets/icons/big-close-btn_dark.svg'
 import Search from '@assets/icons/search.svg'
 import WarnIcon from '@assets/icons/warn.svg'
 import { Select } from '@components/select/Select'
@@ -22,6 +23,7 @@ import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
+import BigNumber from 'bignumber.js'
 import { type ComponentProps, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
@@ -109,7 +111,7 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
       <div
         className={cn(
           'fixed h-screen w-screen top-0 left-0 bg-white z-10 pt-[5.5rem] pb-12 px-4 flex flex-col gap-6 overscroll-none',
-          'animate-translateIn',
+          'animate-translateIn bg-cards',
           className,
         )}
       >
@@ -126,7 +128,8 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
             'active:opacity-50',
           )}
         >
-          <BigCloseBtn className="size-full" />
+          <BigCloseBtn className="size-full dark:hidden" />
+          <BigCloseBtnDark className="hidden size-full dark:block" />
         </button>
       </div>
     )
@@ -170,8 +173,10 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   }
 
   const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
-    return tokens.filter((token) =>
-      supportedTokensAddr.includes(token.contract_address.toLowerCase()),
+    return tokens.filter(
+      (token) =>
+        supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
+        !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
     )
   }
 
@@ -212,6 +217,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
         <Select
+          className="min-w-[10.5rem]"
           value={asset?.contract_ticker_symbol || 'Any token'}
           icon={
             asset?.contract_ticker_symbol && (

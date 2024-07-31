@@ -5,7 +5,7 @@ export const SelectWithoutWalletPlaceholder = () => {
 
   return (
     <button
-      className="min-w-max rounded-[3rem] bg-[#FFF] px-7 py-4 text-[1.1875rem] leading-none [box-shadow:0px_2px_1px_0px_rgba(135,_99,_243,_0.12)]"
+      className="min-w-max rounded-[3rem] bg-cards px-7 py-4 text-[1.1875rem] leading-none shadow-shadow transition-all ease-in-out hover:shadow-shadow--hover dark:shadow-dark-shadow dark:hover:shadow-dark-shadow--hover"
       type="button"
       aria-label="Connect wallet"
       onClick={() => openConnectModal()}

@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 
 export const parseFloatLocale = (value?: string, decimals = 2): string | undefined => {
   if (!value) return
-  return Number.parseFloat(value).toLocaleString('ru-RU', {
+  return Number.parseFloat(value).toLocaleString('en', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   })
@@ -90,4 +90,16 @@ export function trimTrailingZeros(value: string): string {
     return value.replace(/([,.]\d*?[1-9])0+$/, '$1').replace(/[,.]0*$/, '')
   }
   return value
+}
+
+/**
+ * Replaces all commas in a string with dots.
+ *
+ * @param value - The input string in which commas will be replaced with dots.
+ * @returns A new string with all commas replaced by dots.
+ */
+export function replaceCommasWithDots(value: string): string {
+  if (!value) return value
+
+  return value.replaceAll(',', '.')
 }

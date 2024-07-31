@@ -100,7 +100,7 @@ export const WithdrawInput = () => {
                 </p>
                 <button
                   type="button"
-                  className="ml-[0.62rem] font-bold uppercase text-main-100 max-lg:text-xs"
+                  className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
                   onClick={() => maxBalance && setInputValue(maxBalance)}
                 >
                   Max

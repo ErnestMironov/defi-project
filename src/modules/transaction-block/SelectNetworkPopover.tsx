@@ -37,8 +37,8 @@ const ChainItem = ({
     <div
       onClick={() => onNetworkChange(chain)}
       className={cn(
-        'flex items-center justify-between rounded-[0.625rem] gap-2 px-3 py-1.5 cursor-pointer hover:bg-[#6160FF26]',
-        chain === currentChain && 'bg-[#6160FF26]',
+        'flex items-center justify-between rounded-[0.625rem] gap-2 px-3 py-1.5 cursor-pointer hover:bg-main-15',
+        chain === currentChain && 'bg-main-15',
       )}
     >
       <div className="flex  items-center gap-2">
