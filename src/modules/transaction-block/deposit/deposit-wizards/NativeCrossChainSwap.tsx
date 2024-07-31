@@ -1,6 +1,6 @@
 import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
-import EmptyWalletSquare from '@assets/icons/empty-wallet-square.svg'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
+import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { ARB_USDC, ARB_USDT } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
@@ -105,7 +105,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
     <div className="flex flex-col items-stretch gap-10">
       <div className="flex flex-col gap-2">
         <WizardStep
-          icon={<EmptyWalletSquare className={cn('size-8')} />}
+          icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
           activeStep={currentStep === 1}
           title={`Switch to ${depositAssetChain?.name}`}
           status={switchToAssetChainStatus}
@@ -114,7 +114,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
           icon={<ReceiveSquare className={cn('size-8')} />}
           activeStep={currentStep === 2}
           error={swapAndDepositError}
-          title="Deposit"
+          title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
           showArrow
         />

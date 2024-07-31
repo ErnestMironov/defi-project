@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
+import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useDepositStore'
 import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
@@ -31,23 +32,30 @@ export const WithdrawInput = () => {
     setValidationError('')
   }, [inputValue, isEnoughSharesToWithdraw])
 
-  const maxBalance = formatUnits(BigInt(mtToken?.lpBalance), 6)
-  console.log('🚀 ~ WithdrawInput ~ mtToken:', mtToken)
+  const maxBalance = mtToken?.lpBalance ? formatUnits(BigInt(mtToken?.lpBalance), 6) : 0
 
   // Calculate the input value in USD
   const inputValueBN = new BigNumber(inputValue || '0')
   const lpBalanceBN = new BigNumber(mtToken?.lpBalance || '0')
   const balanceBN = new BigNumber(mtToken?.balance || '0')
 
-  const inputValueInUSD = inputValueBN.div(lpBalanceBN).multipliedBy(balanceBN).toFixed(2)
+  let inputValueInUSD = '0.00'
+  if (lpBalanceBN.isZero()) {
+    console.warn('lpBalanceBN or balanceBN is zero, cannot calculate inputValueInUSD')
+  } else {
+    inputValueInUSD = inputValueBN.div(lpBalanceBN).multipliedBy(balanceBN).toFixed(2)
+  }
 
   useEffect(() => {
-    if (!inputValueInUSD) return
+    if (!inputValueInUSD || Number.isNaN(Number(inputValueInUSD))) {
+      console.warn('Invalid inputValueInUSD:', inputValueInUSD)
+      return
+    }
     setWithdrawAmount(inputValueInUSD)
   }, [inputValueInUSD, setWithdrawAmount])
 
   useEffect(() => {
-    if (+inputValueInUSD < 1) {
+    if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
       setValidationError('Withdraw amount cannot be less than 1$')
     }
   }, [inputValueInUSD])
@@ -69,7 +77,11 @@ export const WithdrawInput = () => {
             disabled={!isConnected}
           />
 
-          <SelectWithdrawAssetModal />
+          {isConnected ? (
+            <SelectWithdrawAssetModal />
+          ) : (
+            <SelectWithoutWalletPlaceholder />
+          )}
         </div>
         <div className="mt-3 flex w-full items-center justify-between">
           {validationError ? (
@@ -88,7 +100,7 @@ export const WithdrawInput = () => {
                 </p>
                 <button
                   type="button"
-                  className="ml-[0.62rem] font-bold uppercase text-main-100 max-lg:text-xs"
+                  className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
                   onClick={() => maxBalance && setInputValue(maxBalance)}
                 >
                   Max

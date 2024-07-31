@@ -2,11 +2,12 @@ import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
-import { formatTokenBalance } from '@utils/formatValue'
+import { formatAmountValue, formatTokenBalance } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
+import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useDepositStore'
 import { DepositReviewModal } from './DepositReviewModal'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
@@ -93,7 +94,7 @@ export const DepositInput = () => {
             </p>
           )}
 
-          <SelectDepositAsset />
+          {isConnected ? <SelectDepositAsset /> : <SelectWithoutWalletPlaceholder />}
         </div>
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
@@ -111,7 +112,7 @@ export const DepositInput = () => {
               </p>
               <button
                 type="button"
-                className="ml-[0.62rem] font-bold uppercase text-main-100 max-lg:text-xs"
+                className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
                 onClick={() => setInputValue(assetBalance)}
               >
                 Max
@@ -124,7 +125,7 @@ export const DepositInput = () => {
         <div className="flex w-full items-center justify-between">
           {isConnected && asset ? (
             <AmountInput
-              value={inputValueInUSD}
+              value={formatAmountValue(inputValueInUSD) ?? '0.00'}
               decimals={18}
               onChange={(value) => setInputValue(value)}
             />

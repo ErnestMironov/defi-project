@@ -69,7 +69,7 @@ export const DoneModal = () => {
   return (
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
       <DialogOverlay className="backdrop-blur-xl" />
-      <DialogContent className="max-w-[38.75rem] text-text">
+      <DialogContent className="max-w-[38.75rem] rounded-[2rem] text-text max-lg:max-w-[96%]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 uppercase">Done!</DialogTitle>
         </DialogHeader>
@@ -79,7 +79,7 @@ export const DoneModal = () => {
             alt="Rainbow"
             className="dark:opacity-1 absolute bottom-[-15.1rem] right-[-15.8rem] size-[27.9375rem] animate-[spin_20s_linear_infinite] opacity-50 "
           />
-          <p className="text-xl text-gray-100">{title}</p>
+          <p className="text-xl font-normal text-gray-100">{title}</p>
           <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">{amount}</p>
           <div className="mt-[0.38rem] flex items-center gap-3">
             {txType === 'withdraw' ? (
@@ -87,7 +87,7 @@ export const DoneModal = () => {
                 width="1.75rem"
                 position="bottom-right"
                 symbol={mtToken?.stable}
-                network={mtToken.chainId}
+                network={mtToken?.chainId}
               />
             ) : (
               <TokenIconComponent symbol={vault} className="size-7" />
@@ -97,13 +97,12 @@ export const DoneModal = () => {
         </div>
         <Button
           onClick={() => navigate('/analytics')}
-          size="lg"
           variant="outline"
-          className="mt-10"
+          className="mt-10 font-normal"
         >
           Go check analytics
         </Button>
-        <Button size="lg" onClick={onClose} className="mt-3">
+        <Button onClick={onClose} className="mt-3 font-normal">
           Close
         </Button>
       </DialogContent>

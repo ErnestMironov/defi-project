@@ -1,7 +1,6 @@
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
-import { OpenLink } from '@components/open-link/OpenLink'
 import { Skeleton } from '@components/ui/skeleton'
 import { useTokenApy } from '@modules/transaction-block/deposit/hooks/useTokenApy'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
@@ -83,8 +82,6 @@ export const Deposit = () => {
           )}
         </div>
         <TransactionBlock />
-
-        <OpenLink url="https://axelarscan.io/gmp/0xf2a4ab70d9a4fc6b45a239c9c6a37ed381984ae0baa5aa2b38558497942bfaf7-120492" />
       </div>
     </div>
   )

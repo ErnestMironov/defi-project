@@ -4,7 +4,11 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import { useTokenAsset } from '@hooks/useTokenAsset'
-import { parseFloatLocale, trimTrailingZeros } from '@utils/formatValue'
+import {
+  parseFloatLocale,
+  replaceCommasWithDots,
+  trimTrailingZeros,
+} from '@utils/formatValue'
 import { useMemo } from 'react'
 
 import { useTxStore } from '../store/useDepositStore'
@@ -88,7 +92,7 @@ export const DepositReviewModal = () => {
           <div className="rounded-[1.25rem] border border-stroke-100 p-6">
             <div className="flex items-center justify-between">
               <AmountInput
-                value={trimTrailingZeros(inputValue)}
+                value={replaceCommasWithDots(trimTrailingZeros(inputValue))}
                 after={asset?.contract_ticker_symbol}
                 readOnly
                 className="select-none"
@@ -96,7 +100,7 @@ export const DepositReviewModal = () => {
               <TokenWithNetwork
                 symbol={asset?.contract_ticker_symbol}
                 network={asset?.chain_id}
-                position="top-right"
+                position="bottom-right"
                 width="2.14288rem"
               />
             </div>

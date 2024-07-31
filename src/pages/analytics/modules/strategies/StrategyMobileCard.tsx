@@ -1,4 +1,5 @@
 import Copy from '@assets/icons/copy.svg'
+import ActiveCopy from '@assets/icons/copy_active.svg'
 import type { StrategyStats } from '@codegen/graphql'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import {
@@ -16,7 +17,7 @@ import { cn } from '@utils/cn'
 import { formatAmountValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
 import BigNumber from 'bignumber.js'
-import type { ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 
 interface StrategyMobileCardProperties extends ComponentProps<'div'> {
   strategy: StrategyStats
@@ -25,10 +26,11 @@ interface StrategyMobileCardProperties extends ComponentProps<'div'> {
 
 export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
   const { strategy, isLast, ...rest } = props
-  const { copyWithToast } = useClipboard()
+  const { copyWithToast, isCopied } = useClipboard()
   const description = Object.entries(PROTOCOL_DESCRIPTION).find(([key]) =>
     strategy.protocol.match(new RegExp(key, 'i')),
   )?.[1]
+
   return (
     <div {...rest}>
       <div className="flex items-center gap-3">
@@ -118,13 +120,17 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             <div className="ml-auto max-w-[10.75rem] truncate">
               {shortenString(strategy.strategyId)}
             </div>
-            <Copy
-              type="button"
-              className="ml-2 size-5 overflow-visible"
-              onClick={() => {
-                copyWithToast(strategy.strategyId)
-              }}
-            />
+            {isCopied ? (
+              <ActiveCopy type="button" className="ml-2 size-5 overflow-visible" />
+            ) : (
+              <Copy
+                type="button"
+                className="ml-2 size-5 overflow-visible"
+                onClick={() => {
+                  copyWithToast(strategy.strategyId)
+                }}
+              />
+            )}
           </div>
         </DrawerContent>
       </Drawer>
