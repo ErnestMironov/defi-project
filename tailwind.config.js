@@ -42,6 +42,13 @@ module.exports = {
         'card': 'var(--card)',
         'main-100': 'var(--main-100)',
         'main-30': 'var(--main-30)',
+        'main': {
+          100: 'var(--main-100)',
+          50: 'var(--main-50)',
+          30: 'var(--main-30)',
+          15: 'var(--main-15)',
+        },
+        'main-15': 'var(--main-15)',
         'logo': 'var(--logo)',
         'white': 'var(--white)',
         'bg': 'var(--bg)',

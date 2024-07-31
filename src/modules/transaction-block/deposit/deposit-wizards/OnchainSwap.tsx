@@ -1,9 +1,10 @@
 import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
-import EmptyWalletSquare from '@assets/icons/empty-wallet-square.svg'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
+import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
@@ -123,7 +124,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     <div className="flex flex-col items-stretch gap-10">
       <div className="flex flex-col gap-2">
         <WizardStep
-          icon={<EmptyWalletSquare className={cn('size-8')} />}
+          icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
           status={switchStatus}
@@ -145,7 +146,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
           activeStep={currentStep === 2}
-          title="Deposit"
+          title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
           error={swapAndDepositError}
           showArrow

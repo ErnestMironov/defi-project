@@ -19,7 +19,7 @@ export const ConnectWallet = ({ btnProps }: IConnectWalletProperties) => {
       type="button"
       {...btnProps}
       className={clsx(
-        'flex items-center gap-2  text-[1.25rem] font-normal uppercase not-italic leading-[120%] tracking-[-0.0125rem]',
+        'flex items-center gap-2  text-[1.25rem] font-normal uppercase leading-[120%] tracking-[-0.0125rem] hover:text-gray-100',
         btnProps?.className,
       )}
       onClick={() => openConnectModal()}

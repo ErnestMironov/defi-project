@@ -1,7 +1,8 @@
-import EmptyWalletSquare from '@assets/icons/empty-wallet-square.svg'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
+import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { cn } from '@utils/cn'
@@ -18,7 +19,7 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const { depositAsset: asset, inputValue: amount } = useTxStore()
+  const { depositAsset: asset, inputValue: amount, vault } = useTxStore()
 
   function incrementStep() {
     setCurrentStep((previousStep) => previousStep + 1)
@@ -81,7 +82,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     <div className="flex flex-col items-stretch gap-10">
       <div className="flex flex-col gap-2">
         <WizardStep
-          icon={<EmptyWalletSquare className={cn('size-8')} />}
+          icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
           status={switchStatus}
@@ -102,7 +103,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
           activeStep={currentStep === 3}
-          title="Deposit"
+          title={`Deposit ${vault}`}
           status={depositStatus}
           showArrow
         />
