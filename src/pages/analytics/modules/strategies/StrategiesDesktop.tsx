@@ -13,12 +13,54 @@ import BigNumber from 'bignumber.js'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
+interface StrategyRowProperties {
+  strategy: StrategyStats
+}
+
+const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
+  const { copyWithToast } = useClipboard()
+
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <IconWithLabelComponent symbol={strategy?.tokenSymbol} className="size-10" />
+      </Table.Cell>
+      <Table.Cell>
+        <IconWithLabelComponent symbol={strategy?.chainName} className="size-10" />
+      </Table.Cell>
+      <Table.Cell>
+        <IconWithLabelComponent symbol={strategy.protocol} className="size-10" />
+      </Table.Cell>
+      {/* // ! remove "* 5" when we have real data */}
+      <Table.Cell>{BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%</Table.Cell>
+      <Table.Cell>
+        $
+        {formatAmountValue(
+          BigNumber(strategy.deposited)
+            .div(10 ** strategy.decimals)
+            ?.toString(),
+          2,
+        )}
+      </Table.Cell>
+      <Table.Cell className="px-10 py-6">
+        <motion.div
+          onClick={() => copyWithToast(strategy.strategyId)}
+          className="flex h-7 w-fit cursor-pointer justify-start transition"
+          whileHover={{ scale: '1.05' }}
+          whileTap={{ scale: '0.95' }}
+        >
+          <span className="">{shortenString(strategy.strategyId)}</span>
+        </motion.div>
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+
 export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,
 ) => {
   const navigate = useNavigate()
   const { data, loading, error } = useStrategies()
-  const { copyWithToast } = useClipboard()
   const renderBody = () => {
     switch (true) {
       case loading:
@@ -40,51 +82,7 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
             </Table.Head>
             <Table.Body>
               {(data?.strategyStats as StrategyStats[])?.map((strategy, index) => {
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>
-                      <IconWithLabelComponent
-                        symbol={strategy?.tokenSymbol}
-                        className="size-10"
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <IconWithLabelComponent
-                        symbol={strategy?.chainName}
-                        className="size-10"
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <IconWithLabelComponent
-                        symbol={strategy.protocol}
-                        className="size-10"
-                      />
-                    </Table.Cell>
-                    {/* // ! remove "* 5" when we have real data */}
-                    <Table.Cell>
-                      {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
-                    </Table.Cell>
-                    <Table.Cell>
-                      $
-                      {formatAmountValue(
-                        BigNumber(strategy.deposited)
-                          .div(10 ** strategy.decimals)
-                          ?.toString(),
-                        2,
-                      )}
-                    </Table.Cell>
-                    <Table.Cell className="px-10 py-6">
-                      <motion.div
-                        onClick={() => copyWithToast(strategy.strategyId)}
-                        className="flex h-7 w-fit cursor-pointer justify-start transition"
-                        whileHover={{ scale: '1.05' }}
-                        whileTap={{ scale: '0.95' }}
-                      >
-                        <span className="">{shortenString(strategy.strategyId)}</span>
-                      </motion.div>
-                    </Table.Cell>
-                  </Table.Row>
-                )
+                return <StrategyRow key={index} strategy={strategy} />
               })}
             </Table.Body>
           </Table>
