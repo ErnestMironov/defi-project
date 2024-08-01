@@ -1,60 +1,13 @@
 import { useStrategies } from '@api/queries/useStrategies'
 import type { StrategyStats } from '@codegen/graphql'
 import { Table } from '@components/table'
-import { IconWithLabelComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
 import { Skeleton } from '@components/ui/skeleton'
-import { useClipboard } from '@hooks/useClipboard'
 import { cn } from '@utils/cn'
-import { formatAmountValue } from '@utils/formatValue'
-import { shortenString } from '@utils/transform'
-import BigNumber from 'bignumber.js'
-import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
-interface StrategyRowProperties {
-  strategy: StrategyStats
-}
-
-const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
-  const { copyWithToast } = useClipboard()
-
-  return (
-    <Table.Row>
-      <Table.Cell>
-        <IconWithLabelComponent symbol={strategy?.tokenSymbol} className="size-10" />
-      </Table.Cell>
-      <Table.Cell>
-        <IconWithLabelComponent symbol={strategy?.chainName} className="size-10" />
-      </Table.Cell>
-      <Table.Cell>
-        <IconWithLabelComponent symbol={strategy.protocol} className="size-10" />
-      </Table.Cell>
-      {/* // ! remove "* 5" when we have real data */}
-      <Table.Cell>{BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%</Table.Cell>
-      <Table.Cell>
-        $
-        {formatAmountValue(
-          BigNumber(strategy.deposited)
-            .div(10 ** strategy.decimals)
-            ?.toString(),
-          2,
-        )}
-      </Table.Cell>
-      <Table.Cell className="px-10 py-6">
-        <motion.div
-          onClick={() => copyWithToast(strategy.strategyId)}
-          className="flex h-7 w-fit cursor-pointer justify-start transition"
-          whileHover={{ scale: '1.05' }}
-          whileTap={{ scale: '0.95' }}
-        >
-          <span className="">{shortenString(strategy.strategyId)}</span>
-        </motion.div>
-      </Table.Cell>
-    </Table.Row>
-  )
-}
+import { StrategyRow } from './StrategiesDsktopRow'
 
 export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
   props,

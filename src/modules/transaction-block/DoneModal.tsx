@@ -2,13 +2,7 @@ import Rainbow from '@assets/images/rainbow-circle.png'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogOverlay,
-  DialogTitle,
-} from '@components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import { formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -68,7 +62,6 @@ export const DoneModal = () => {
 
   return (
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
-      <DialogOverlay className="backdrop-blur-xl" />
       <DialogContent className="max-w-[38.75rem] rounded-[2rem] text-text max-lg:max-w-[96%]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 uppercase">Done!</DialogTitle>
