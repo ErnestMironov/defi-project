@@ -13,7 +13,7 @@ interface IWizardStepProperties {
   showArrow?: boolean
   activeStep?: boolean
   status?: STEP_STATUS
-  error?: string
+  error?: string | null
 }
 
 export const WizardStep = ({

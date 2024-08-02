@@ -29,6 +29,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     chainId: 42_161, // Arb chain ID
     onSuccessHandler: incrementStep,
   })
+  console.log('🚀 ~ switchStatus:', switchStatus)
 
   const { approve, status: approveStatus } = useApproveERC20({
     approveValue: parseUnits(amount, 6).toString(),
@@ -51,16 +52,29 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
       case 1: {
         console.info('��� ~ SimpleDeposit ~ currentStep:', 'switch to Arbitrum')
         return (
-          <Button size="lg" type="button" onClick={switchChain}>
-            Switch to Arbitrum
+          <Button
+            disabled={switchStatus === 'confirm_in_wallet'}
+            size="lg"
+            type="button"
+            onClick={switchChain}
+          >
+            {switchStatus === 'confirm_in_wallet'
+              ? 'Confirm in wallet'
+              : 'Switch to Arbitrum'}
           </Button>
         )
       }
       case 2: {
         console.info('��� ~ SimpleDeposit ~ currentStep:', 'approve')
         return (
-          <Button size="lg" type="button" onClick={approve}>
-            Approve
+          <Button
+            loading={approveStatus === 'pending'}
+            size="lg"
+            type="button"
+            disabled={approveStatus === 'confirm_in_wallet'}
+            onClick={approve}
+          >
+            {approveStatus === 'confirm_in_wallet' ? 'Confirm in wallet' : 'Approve'}
           </Button>
         )
       }

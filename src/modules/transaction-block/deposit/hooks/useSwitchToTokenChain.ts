@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useChainId, useSwitchChain } from 'wagmi'
 
 import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
@@ -13,11 +13,23 @@ export function useSwitchToTokenChain({ chainId, onSuccessHandler }: IProperties
 
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const [error, setError] = useState<string | null>(null)
+  const hasCalledSuccessHandler = useRef(false)
+
+  useEffect(() => {
+    if (currentChainId === chainId && !hasCalledSuccessHandler.current) {
+      setStatus('success')
+      onSuccessHandler?.()
+      hasCalledSuccessHandler.current = true
+    }
+  }, [currentChainId, chainId, onSuccessHandler])
 
   const switchChain = useCallback(() => {
     if (currentChainId === chainId) {
       setStatus('success')
-      onSuccessHandler?.()
+      if (!hasCalledSuccessHandler.current) {
+        onSuccessHandler?.()
+        hasCalledSuccessHandler.current = true
+      }
       return
     }
 
@@ -26,8 +38,8 @@ export function useSwitchToTokenChain({ chainId, onSuccessHandler }: IProperties
       setError('Invalid chain ID')
       return
     }
-
-    setStatus('pending')
+    console.log('status', status)
+    setStatus('confirm_in_wallet')
     _switchChain(
       {
         chainId: Number(chainId),
@@ -35,17 +47,19 @@ export function useSwitchToTokenChain({ chainId, onSuccessHandler }: IProperties
       {
         onSuccess: () => {
           setStatus('success')
-          onSuccessHandler?.()
+          if (!hasCalledSuccessHandler.current) {
+            onSuccessHandler?.()
+            hasCalledSuccessHandler.current = true
+          }
         },
         onError: (err) => {
-          // Renamed the inner error variable to err
           setStatus('error')
           setError(err.message)
           console.error(err)
         },
       },
     )
-  }, [currentChainId, chainId, _switchChain, onSuccessHandler])
+  }, [currentChainId, chainId, status, _switchChain, onSuccessHandler])
 
   return {
     switchChain,
