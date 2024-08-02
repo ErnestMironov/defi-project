@@ -5,7 +5,7 @@ import type {
   ReactNode,
   RefAttributes,
 } from 'react'
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 
 // Определяем подкомпоненты
 const TableHead = forwardRef<
