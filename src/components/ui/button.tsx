@@ -1,8 +1,6 @@
-import lottieLoader from '@assets/lottie/deposit-steps-loader.json'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
-import Lottie from 'lottie-react'
 import * as React from 'react'
 
 const buttonVariants = cva(
@@ -57,16 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
         ref={reference}
         {...props}
       >
-        {loading ? (
-          <span className="flex items-center leading-none">
-            Pending
-            <div className="flex w-8 items-center justify-center overflow-hidden">
-              <Lottie className="h-8" animationData={lottieLoader} loop />
-            </div>
-          </span>
-        ) : (
-          children
-        )}
+        {loading ? 'Pending' : children}
       </Comp>
     )
   },

@@ -26,7 +26,11 @@ export const NativeOnchainSwap: React.FunctionComponent<
     setCurrentStep((previousStep) => previousStep + 1)
   }
 
-  const { status: switchStatus, switchChain } = useSwitchToTokenChain({
+  const {
+    status: switchStatus,
+    switchChain,
+    error: switchError,
+  } = useSwitchToTokenChain({
     chainId: 42_161, // Arb chain ID
     onSuccessHandler: incrementStep,
   })
@@ -74,7 +78,11 @@ export const NativeOnchainSwap: React.FunctionComponent<
             onClick={switchChain}
             disabled={switchStatus === 'pending'}
           >
-            {switchStatus === 'error' ? 'Try Again' : 'Switch to Arbitrum'}
+            {switchStatus === 'error'
+              ? 'Try Again'
+              : switchStatus === 'confirm_in_wallet'
+              ? 'Confirm in wallet'
+              : 'Switch to Arbitrum'}
           </Button>
         )
       }
@@ -106,6 +114,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
           status={switchStatus}
+          error={switchError}
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
