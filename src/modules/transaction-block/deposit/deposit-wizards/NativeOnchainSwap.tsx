@@ -5,6 +5,7 @@ import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
 import { parseEther } from 'viem'
@@ -78,11 +79,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
             onClick={switchChain}
             disabled={switchStatus === 'pending'}
           >
-            {switchStatus === 'error'
-              ? 'Try Again'
-              : switchStatus === 'confirm_in_wallet'
-              ? 'Confirm in wallet'
-              : 'Switch to Arbitrum'}
+            {getButtonContent(switchStatus, 'Switch to Arbitrum')}
           </Button>
         )
       }
@@ -96,7 +93,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
             onClick={swapAndDeposit}
             disabled={swapAndDepositStatus === 'pending'}
           >
-            {swapAndDepositStatus === 'error' ? 'Try Again' : 'Deposit'}
+            {getButtonContent(swapAndDepositStatus, 'Deposit')}
           </Button>
         )
       }

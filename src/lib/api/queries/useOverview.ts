@@ -64,6 +64,7 @@ export const useOverview = () => {
   const formattedData = {
     userOverview: {
       deposited: formatAmountValue(deposited?.toString(), 2),
+      depositedRaw: deposited?.toString(),
       yeald,
       apy: formatAmountValue(lastApy, 2),
     },

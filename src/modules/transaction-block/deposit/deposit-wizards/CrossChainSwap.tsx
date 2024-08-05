@@ -6,6 +6,7 @@ import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
@@ -90,9 +91,10 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
             onClick={switchToAssetChain}
             disabled={switchToAssetChainStatus === 'pending'}
           >
-            {switchToAssetChainStatus === 'error'
-              ? 'Try Again'
-              : `Switch to ${depositAssetChain?.name}`}
+            {getButtonContent(
+              switchToAssetChainStatus,
+              `Switch to ${depositAssetChain?.name}`,
+            )}
           </Button>
         )
       }
@@ -105,7 +107,10 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
             onClick={approveBeforeSwap}
             disabled={approveStatusBeforeSwap === 'pending'}
           >
-            {approveStatusBeforeSwap === 'error' ? 'Try Again' : 'Approve'}
+            {getButtonContent(
+              approveStatusBeforeSwap,
+              `Approve ${depositAsset?.contract_ticker_symbol}`,
+            )}
           </Button>
         )
       }
@@ -118,7 +123,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
             onClick={swapAndDeposit}
             disabled={swapAndDepositStatus === 'pending'}
           >
-            {swapAndDepositStatus === 'error' ? 'Try Again' : 'Deposit'}
+            {getButtonContent(swapAndDepositStatus, `Deposit ${vault}`)}
           </Button>
         )
       }

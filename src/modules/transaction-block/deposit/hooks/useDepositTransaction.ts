@@ -1,12 +1,14 @@
 // eslint-disable-next-line import/extensions
 import { GATEWAY_ABI } from '@abi/gateway'
+import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
-import { useCallback } from 'react'
+import { waitForTransactionReceipt } from '@wagmi/core'
+import { useCallback, useState } from 'react'
 import { type Address, formatUnits } from 'viem'
-import { useAccount, useWriteContract } from 'wagmi'
+import { useAccount, useConfig, useWriteContract } from 'wagmi'
 
-import type { IDepositWizardHook } from '../interfaces'
+import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
 
 interface IProperties extends IDepositWizardHook {
   address: Address
@@ -21,6 +23,8 @@ export const useDepositTransaction = ({
   const { writeContract, ...rest } = useWriteContract()
   const { setCurrentModal, setDepositAmount } = useTxStore()
   const { address: userAddress } = useAccount()
+  const [status, setStatus] = useState<STEP_STATUS>('idle')
+  const config = useConfig()
 
   const deposit = useCallback(() => {
     console.log(
@@ -31,6 +35,7 @@ export const useDepositTransaction = ({
       ARB_EID,
     )
     if (!address || !userAddress) return
+    setStatus('confirm_in_wallet')
 
     return writeContract(
       {
@@ -40,7 +45,25 @@ export const useDepositTransaction = ({
         args: [address, amount, userAddress, ARB_EID],
       },
       {
-        onSuccess: () => {
+        onSuccess: async (data) => {
+          setStatus('pending')
+          // setApproveHash(data)
+          console.log('simple_deposit_timer', data)
+          console.time('simple_deposit_timer')
+          await waitForTransactionReceipt(config, {
+            hash: data,
+            chainId: CHAIN_IDS_BY_NAME.Arbitrum,
+            confirmations: CONFIRMATIONS_NUMBER[CHAIN_IDS_BY_NAME.Arbitrum],
+            timeout: 60_000,
+          })
+
+          console.timeLog('simple_deposit_timer')
+          console.timeEnd('simple_deposit_timer')
+
+          console.log('🚀 ~ approve ~ timer: end', data)
+
+          setStatus('success')
+
           onSuccessHandler?.()
           setCurrentModal('done')
           setDepositAmount(formatUnits(amount, 6))
@@ -54,6 +77,7 @@ export const useDepositTransaction = ({
   }, [
     address,
     amount,
+    config,
     onSuccessHandler,
     setCurrentModal,
     setDepositAmount,
@@ -61,5 +85,5 @@ export const useDepositTransaction = ({
     writeContract,
   ])
 
-  return { deposit, ...rest }
+  return { deposit, ...rest, status }
 }

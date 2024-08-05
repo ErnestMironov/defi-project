@@ -5,6 +5,7 @@ import { Button } from '@components/ui/button'
 import { ARB_USDC, ARB_USDT } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
@@ -76,9 +77,10 @@ export const NativeCrossChainSwap: React.FunctionComponent<
             onClick={switchToAssetChain}
             disabled={switchToAssetChainStatus === 'pending'}
           >
-            {switchToAssetChainStatus === 'error'
-              ? 'Try Again'
-              : `Switch to ${depositAssetChain?.name}`}
+            {getButtonContent(
+              switchToAssetChainStatus,
+              `Switch to ${depositAssetChain?.name}`,
+            )}
           </Button>
         )
       }
@@ -91,7 +93,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
             onClick={swapAndDeposit}
             disabled={swapAndDepositStatus === 'pending'}
           >
-            {swapAndDepositStatus === 'error' ? 'Try Again' : 'Deposit'}
+            {getButtonContent(swapAndDepositStatus, 'Deposit')}
           </Button>
         )
       }

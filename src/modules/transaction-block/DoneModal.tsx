@@ -22,11 +22,13 @@ export const DoneModal = () => {
     mtToken,
     setDepositAsset,
     setDepositAmount,
+    setInputValue,
   } = useTxStore()
 
   const reset = () => {
     setDepositAsset(null)
     setDepositAmount('')
+    setInputValue('')
     setCurrentModal(null)
   }
 

@@ -10,10 +10,25 @@ import { useCallback, useState } from 'react'
 import type { Address } from 'viem'
 import { useSendTransaction } from 'wagmi'
 
+// ---------------------------------------
+// ------------ Constants ----------------
+// ---------------------------------------
+
 const INTEGRATOR_ID = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
 const SQUID_API_URL = 'https://apiplus.squidrouter.com/v2/status'
 const MAX_RETRIES = 30
 const RETRY_DELAY = 5000
+
+const completedStatuses = new Set([
+  'success',
+  'partial_success',
+  'needs_gas',
+  'not_found',
+])
+
+// ---------------------------------------
+// ------------ Helper Functions ----------
+// ---------------------------------------
 
 const getStatus = async (parameters: any) => {
   try {
@@ -39,6 +54,61 @@ const getStatus = async (parameters: any) => {
   }
 }
 
+const handleStatus = (
+  status: any,
+  txHash: string,
+  changeStatusFunction: (status: STEP_STATUS) => void,
+  successHandler?: () => void,
+  failHandler?: () => void,
+) => {
+  if (
+    !status?.squidTransactionStatus ||
+    !completedStatuses.has(status.squidTransactionStatus)
+  ) {
+    return false
+  }
+
+  if (status.squidTransactionStatus === 'success') {
+    console.log('Swap transaction executed:', txHash)
+    changeStatusFunction('success')
+    successHandler?.()
+    return true
+  }
+
+  if (status.squidTransactionStatus === 'partial_success') {
+    console.log('Swap transaction executed:', txHash)
+    changeStatusFunction('error')
+    failHandler?.()
+    return true
+  }
+
+  return false
+}
+
+const handleError = async (
+  error: unknown,
+  retryCount: number,
+  changeStatusFunction: (status: STEP_STATUS) => void,
+  checkStatus: () => Promise<void>,
+) => {
+  if (axios.isAxiosError(error) && error.response?.status === 404) {
+    retryCount++
+    if (retryCount < MAX_RETRIES) {
+      console.log('Transaction not found. Retrying...')
+      await checkStatus()
+    } else {
+      console.error('Max retries reached. Transaction not found.')
+    }
+  } else {
+    changeStatusFunction('error')
+    throw error
+  }
+}
+
+// ---------------------------------------
+// ------------ Status checker ------------
+// ---------------------------------------
+
 const waitForSuccessStatus = async (
   txHash: string,
   fromChainId: string,
@@ -52,7 +122,6 @@ const waitForSuccessStatus = async (
     throw new Error('Transaction hash is required')
   }
 
-  changeStatusFunction('pending')
   console.log(`Finished! Check Axelarscan for details: ${AXELAR_SCAN_URL}${txHash}`)
 
   await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
@@ -65,51 +134,7 @@ const waitForSuccessStatus = async (
     toChainId,
   }
 
-  const completedStatuses = new Set([
-    'success',
-    'partial_success',
-    'needs_gas',
-    'not_found',
-  ])
   let retryCount = 0
-
-  const handleStatus = (status: any) => {
-    if (
-      !status?.squidTransactionStatus ||
-      !completedStatuses.has(status.squidTransactionStatus)
-    ) {
-      return false
-    }
-
-    if (status.squidTransactionStatus === 'success') {
-      console.log('Swap transaction executed:', txHash)
-      changeStatusFunction('success')
-      successHandler?.()
-      return true
-    }
-
-    if (status.squidTransactionStatus === 'partial_success') {
-      console.log('Swap transaction executed:', txHash)
-      changeStatusFunction('success')
-      failHandler?.()
-      return true
-    }
-  }
-
-  const handleError = async (error: unknown) => {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      retryCount++
-      if (retryCount < MAX_RETRIES) {
-        console.log('Transaction not found. Retrying...')
-        await checkStatus()
-      } else {
-        console.error('Max retries reached. Transaction not found.')
-      }
-    } else {
-      changeStatusFunction('error')
-      throw error
-    }
-  }
 
   const checkStatus = async () => {
     try {
@@ -117,7 +142,8 @@ const waitForSuccessStatus = async (
       const status = await getStatus(getStatusParameters)
       console.log(`Route status: ${status.squidTransactionStatus}`)
 
-      if (handleStatus(status)) return
+      if (handleStatus(status, txHash, changeStatusFunction, successHandler, failHandler))
+        return
 
       retryCount++
       if (retryCount < MAX_RETRIES) {
@@ -132,12 +158,16 @@ const waitForSuccessStatus = async (
         )
       }
     } catch (error: unknown) {
-      await handleError(error)
+      await handleError(error, retryCount, changeStatusFunction, checkStatus)
     }
   }
 
   await checkStatus()
 }
+
+// ---------------------------------------
+// ------------ Hook Definition -----------
+// ---------------------------------------
 
 interface IProperties extends IDepositWizardHook {
   route?: RouteResponse['route']
@@ -158,6 +188,7 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
         setStatus('error')
       },
       onSuccess(data) {
+        setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful
         waitForSuccessStatus(
           data,
@@ -177,7 +208,7 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
 
     if (!route?.transactionRequest) return
     try {
-      setStatus('pending')
+      setStatus('confirm_in_wallet')
 
       sendTransaction({
         to: route.transactionRequest.target as Address,
