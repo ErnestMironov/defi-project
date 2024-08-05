@@ -2,7 +2,7 @@ import { useOverview } from '@api/queries/useOverview'
 import { Logo } from '@components/ui/logo'
 import { Skeleton } from '@components/ui/skeleton'
 import clsx from 'clsx'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export interface IOverviewCard {
   title: string
@@ -11,6 +11,30 @@ export interface IOverviewCard {
 }
 
 const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
+  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0 })
+  const tooltipReference = useRef<HTMLDivElement>(null)
+
+  const handleClick = (event: React.MouseEvent) => {
+    const { clientX, clientY } = event
+    setTooltip({
+      visible: !tooltip.visible,
+      x: clientX,
+      y: clientY,
+    })
+  }
+  useEffect(() => {
+    const handleClickOutside = (event: { target: any }) => {
+      if (tooltipReference.current && !tooltipReference.current.contains(event.target)) {
+        setTooltip({ ...tooltip, visible: false })
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [tooltip])
+
   return (
     <div className="flex snap-center flex-col gap-6 rounded-2xl bg-cards px-4 py-5 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] max-lg:min-w-[90vw] max-[370px]:min-w-max lg:flex-1 lg:gap-14 lg:rounded-[1.75rem] lg:px-12 lg:py-10">
       <h3 className="flex items-center gap-[0.69rem] text-base/[0] uppercase tracking-[0.015rem] lg:gap-4 lg:text-[1.5rem]">
@@ -22,7 +46,11 @@ const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
       </h3>
       <div className="gap-8 max-lg:grid max-lg:w-full max-lg:grid-cols-[repeat(3,4.9375rem)] lg:flex lg:gap-[4.5rem]">
         {data.stats.map((stat) => (
-          <div key={stat.title} className="flex flex-col gap-2 lg:tracking-[0.015rem]">
+          <div
+            onClick={handleClick}
+            key={stat.title}
+            className="flex flex-col gap-2 lg:tracking-[0.015rem]"
+          >
             <div className="text-[0.75rem] uppercase text-gray-100 max-lg:h-7 lg:text-lg">
               {stat.title}
             </div>
@@ -31,6 +59,19 @@ const Overview: React.FC<{ data: IOverviewCard }> = ({ data }) => {
               {stat.value}
               {stat?.postfix}
             </div>
+            {tooltip.visible && !!stat?.valueRaw && (
+              <div
+                ref={tooltipReference}
+                className="absolute rounded-md border border-stroke-100 bg-cards px-2 py-1 text-xl shadow-md"
+                style={{
+                  top: tooltip.y,
+                  left: tooltip.x,
+                }}
+              >
+                {stat.prefix}
+                {stat.valueRaw}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -49,6 +90,7 @@ export const Overviews: React.FC<React.ComponentProps<'div'>> = (props) => {
         {
           title: 'Deposited',
           value: data.userOverview.deposited,
+          valueRaw: data.userOverview.depositedRaw,
           prefix: '$',
         },
         {

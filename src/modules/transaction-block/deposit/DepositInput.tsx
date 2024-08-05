@@ -29,6 +29,7 @@ export const DepositInput = () => {
     .toString()
 
   const [error, setError] = useState('')
+  console.log('🚀 ~ DepositInput ~ error:', error)
 
   useEffect(() => {
     const inputValueBN = BigNumber(+inputValue)
@@ -48,6 +49,8 @@ export const DepositInput = () => {
     const calculatedValueInUSD = inputValueBN
       .multipliedBy(assetQuoteBN.div(assetBalanceBN))
       .toFixed(3)
+    console.log('🚀 ~ useEffect ~ inputValueBN:', inputValueBN.isZero())
+    console.log('🚀 ~ useEffect ~ inputValueBN:', inputValueBN.toString())
 
     setInputValueInUSD(calculatedValueInUSD)
 

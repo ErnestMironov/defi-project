@@ -1,9 +1,11 @@
 // eslint-disable-next-line import/extensions
 // eslint-disable-next-line import/extensions
+
 import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
+import { waitForTransactionReceipt } from '@wagmi/core'
 import { useCallback, useState } from 'react'
 import { type Address, erc20Abi } from 'viem'
-import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi'
+import { useConfig, useWriteContract } from 'wagmi'
 
 import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
 
@@ -21,41 +23,11 @@ export const useApproveERC20 = ({
   chainId,
   onSuccessHandler,
 }: IProperties) => {
-  console.log(
-    '🚀 ~  approveValue',
-    approveValue,
-    tokenAddress,
-    transactionRequestTarget,
-    onSuccessHandler,
-  )
   const { writeContract, ...rest } = useWriteContract()
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<STEP_STATUS>('idle')
 
-  const [approveHash, setApproveHash] = useState<Address | undefined>()
-
-  const { status: approveTxStatus } = useWaitForTransactionReceipt({
-    hash: approveHash,
-    query: {
-      enabled: !!approveHash,
-    },
-    confirmations:
-      CONFIRMATIONS_NUMBER[
-        (chainId as keyof typeof CONFIRMATIONS_NUMBER) ?? CHAIN_IDS_BY_NAME.Arbitrum
-      ],
-    chainId: chainId ?? CHAIN_IDS_BY_NAME.Arbitrum,
-    timeout: 60_000,
-  })
-
-  if (approveTxStatus === 'success') {
-    setLoading(false)
-    setStatus('success')
-    onSuccessHandler?.()
-    console.log('🚀 ~ approveTxStatus', approveTxStatus)
-
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    setApproveHash(undefined)
-  }
+  const config = useConfig()
 
   const approve = useCallback(() => {
     if (!approveValue || !tokenAddress || !transactionRequestTarget) return
@@ -71,9 +43,31 @@ export const useApproveERC20 = ({
         args: [transactionRequestTarget as `0x${string}`, BigInt(approveValue)],
       },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           setStatus('pending')
-          setApproveHash(data)
+          // setApproveHash(data)
+          console.log('approve_timer', data)
+          console.time('approve_timer')
+          // @ts-ignore
+          await waitForTransactionReceipt(config, {
+            hash: data,
+            chainId,
+            confirmations:
+              CONFIRMATIONS_NUMBER[
+                (chainId as keyof typeof CONFIRMATIONS_NUMBER) ??
+                  CHAIN_IDS_BY_NAME.Arbitrum
+              ],
+            timeout: 60_000,
+          })
+
+          console.timeLog('approve_timer')
+          console.timeEnd('approve_timer')
+
+          console.log('🚀 ~ approve ~ timer: end', data)
+
+          setLoading(false)
+          setStatus('success')
+          onSuccessHandler?.()
         },
         onError: () => {
           setLoading(false)
@@ -81,7 +75,15 @@ export const useApproveERC20 = ({
         },
       },
     )
-  }, [approveValue, tokenAddress, transactionRequestTarget, writeContract])
+  }, [
+    approveValue,
+    chainId,
+    config,
+    onSuccessHandler,
+    tokenAddress,
+    transactionRequestTarget,
+    writeContract,
+  ])
 
   return { ...rest, approve, loading, status }
 }

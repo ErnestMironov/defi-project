@@ -5,6 +5,7 @@ import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
@@ -50,7 +51,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'switch to Arbitrum')
+        console.info('🚀 ~ SimpleDeposit ~ currentStep:', 'switch to Arbitrum')
         return (
           <Button
             disabled={switchStatus === 'confirm_in_wallet'}
@@ -58,14 +59,12 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             type="button"
             onClick={switchChain}
           >
-            {switchStatus === 'confirm_in_wallet'
-              ? 'Confirm in wallet'
-              : 'Switch to Arbitrum'}
+            {getButtonContent(switchStatus, 'Switch to Arbitrum')}
           </Button>
         )
       }
       case 2: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'approve')
+        console.info('🚀 ~ SimpleDeposit ~ currentStep:', 'approve')
         return (
           <Button
             loading={approveStatus === 'pending'}
@@ -74,15 +73,21 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             disabled={approveStatus === 'confirm_in_wallet'}
             onClick={approve}
           >
-            {approveStatus === 'confirm_in_wallet' ? 'Confirm in wallet' : 'Approve'}
+            {getButtonContent(approveStatus, `Approve ${asset?.contract_ticker_symbol}`)}
           </Button>
         )
       }
       case 3: {
-        console.info('��� ~ SimpleDeposit ~ currentStep:', 'deposit')
+        console.info('🚀 ~ SimpleDeposit ~ currentStep:', 'deposit')
         return (
-          <Button size="lg" type="button" onClick={deposit}>
-            Deposit
+          <Button
+            loading={depositStatus === 'pending'}
+            disabled={depositStatus === 'confirm_in_wallet'}
+            size="lg"
+            type="button"
+            onClick={deposit}
+          >
+            {getButtonContent(depositStatus, 'Deposit')}
           </Button>
         )
       }
