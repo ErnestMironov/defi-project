@@ -14,7 +14,6 @@ import { Skeleton } from '@components/ui/skeleton'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
 import { useClipboard } from '@hooks/useClipboard'
 import { cn } from '@utils/cn'
-import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
 import { motion } from 'framer-motion'
@@ -59,6 +58,7 @@ export const TransactionsHistoryDesktop: React.FC<
   }
 
   const renderStrategy = (tx: ITransaction) => {
+    console.log('🚀 ~ renderStrategy ~ tx:', tx)
     switch (tx.action) {
       case ActionType.Bridge:
       case ActionType.WithdrawRequestFulfillment: {
@@ -71,7 +71,7 @@ export const TransactionsHistoryDesktop: React.FC<
               <TokenIconComponent symbol={tx?.from} className="size-10" />
               <TokenIconComponent symbol={tx.protocol} className="size-10" />
             </div>
-            /<span>{tx.apy}%</span>/<span>${formatAmountValue(tx.tvl)}</span>
+            /<span>{tx.apy}%</span>/<span>${tx.tvl}</span>
           </div>
         )
       }
