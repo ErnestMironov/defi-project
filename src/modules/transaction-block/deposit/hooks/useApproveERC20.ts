@@ -48,6 +48,7 @@ export const useApproveERC20 = ({
           // setApproveHash(data)
           console.log('approve_timer', data)
           console.time('approve_timer')
+          // @ts-ignore
           await waitForTransactionReceipt(config, {
             hash: data,
             chainId,

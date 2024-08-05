@@ -50,6 +50,7 @@ export const useDepositTransaction = ({
           // setApproveHash(data)
           console.log('simple_deposit_timer', data)
           console.time('simple_deposit_timer')
+          // @ts-ignore
           await waitForTransactionReceipt(config, {
             hash: data,
             chainId: CHAIN_IDS_BY_NAME.Arbitrum,
