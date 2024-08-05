@@ -9,7 +9,6 @@ import {
 } from '@components/ui/accordion'
 import { Skeleton } from '@components/ui/skeleton'
 import { AccordionHeader } from '@radix-ui/react-accordion'
-import { formatAmountValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
 import type { ComponentProps } from 'react'
@@ -35,7 +34,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
         {tx.action === ActionType.Bridge ? (
           <>
             <h6>Amount</h6>
-            <div>${formatAmountValue(tx.amount)}</div>
+            <div>${tx.amount}</div>
             <h6 className="flex items-center gap-2">
               from
               <Arrow className="[&_path]:fill-text" />
@@ -52,7 +51,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
         ) : (
           <>
             <h6>Amount</h6>
-            <div>${formatAmountValue(tx.amount)}</div>
+            <div>${tx.amount}</div>
             <h6>Strategy</h6>
             <div className="flex items-center space-x-[-0.44rem]">
               <TokenIconComponent symbol={tx.from} className="size-6 overflow-visible" />
@@ -64,7 +63,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
             <h6>Weekly APY</h6>
             <div>{tx.apy}%</div>
             <h6>TVL</h6>
-            <div>${formatAmountValue(tx.tvl)}</div>
+            <div>${tx.tvl}</div>
             <h6>Tx Hash</h6>
             <div>{shortenString(tx.txHash)}</div>
           </>
