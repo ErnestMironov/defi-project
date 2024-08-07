@@ -3,39 +3,25 @@ import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import { useTokenApy } from '@modules/transaction-block/deposit/hooks/useTokenApy'
+import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
-
-// import { useFBX } from '@react-three/drei'
-// import { Canvas, useFrame } from '@react-three/fiber'
-// import type { ReactNode } from 'react' // Import ReactNode type
-// import type { Group } from 'three' // Import the Group class from three
-
-// const ReactThreeWrapper = ({ children }: { children: ReactNode }) => {
-//   return (
-//     <div className="absolute -bottom-4 -right-4 size-32 max-lg:size-[5.86rem]">
-//       <Canvas>
-//         <ambientLight intensity={1} />
-//         <directionalLight position={[0, 10, 5]} intensity={1} />
-//         <Suspense fallback={null}>{children}</Suspense>
-//       </Canvas>
-//     </div>
-//   )
-// }
-
-// const TokenModel = ({ model }: { model: string }) => {
-//   const fbx = useFBX(model)
-//   const fbxReference = useRef<Group>(null) // Use the imported Group class
-//   useFrame(() => {
-//     if (fbxReference.current) {
-//       fbxReference.current.rotation.y += 0.01
-//     }
-//   })
-
-//   return <primitive object={fbx} ref={fbxReference} scale={0.029} />
-// }
+import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
   const { usdcApy, usdtApy, loading } = useTokenApy()
+  const { setVault } = useTxStore()
+  const vaultSet = useRef(false)
+
+  useEffect(() => {
+    if (!vaultSet.current && usdcApy && usdtApy) {
+      if (usdcApy > usdtApy) {
+        setVault('USDC')
+      } else if (usdtApy > usdcApy) {
+        setVault('USDT')
+      }
+      vaultSet.current = true
+    }
+  }, [usdcApy, usdtApy, setVault])
 
   return (
     <div className="flex w-full justify-center">
@@ -61,9 +47,6 @@ export const Deposit = () => {
                   alt="usdc"
                   className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
-                {/* <ReactThreeWrapper>
-                  <TokenModel model="/src/assets/3D/Tether_3D.fbx" />
-                </ReactThreeWrapper> */}
               </ShadowBoxWithValue>
               <ShadowBoxWithValue
                 label="USDT APY"
@@ -74,9 +57,6 @@ export const Deposit = () => {
                   alt="usdt"
                   className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
-                {/* <ReactThreeWrapper>
-                  <TokenModel model="/src/assets/3D/USD_Coin_3D.fbx" />
-                </ReactThreeWrapper> */}
               </ShadowBoxWithValue>
             </>
           )}

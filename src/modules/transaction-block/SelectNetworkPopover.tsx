@@ -92,6 +92,13 @@ export const SelectNetworkPopover = ({
         className="pointer-events-auto inline-block w-auto rounded-2xl border px-2 py-4 !shadow-none"
       >
         <div className="flex flex-col gap-1 ">
+          {showAllNetworksOption && (
+            <ChainItem
+              chain={null}
+              onNetworkChange={onNetworkChange}
+              currentChain={currentChain}
+            />
+          )}
           {CHAINS.map((chain) => (
             <ChainItem
               key={chain}
@@ -100,13 +107,6 @@ export const SelectNetworkPopover = ({
               currentChain={currentChain}
             />
           ))}
-          {showAllNetworksOption && (
-            <ChainItem
-              chain={null}
-              onNetworkChange={onNetworkChange}
-              currentChain={currentChain}
-            />
-          )}
         </div>
       </PopoverContent>
     </Popover>

@@ -40,7 +40,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
 
   const tokenAddrForVault = useMemo(() => {
     const depositTokenAsset = squid?.tokens.find(
-      (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
+      (token) => token.symbol?.toLowerCase() === vault?.toLowerCase(),
     )
     return depositTokenAsset?.address!
   }, [squid?.tokens, vault])

@@ -21,7 +21,7 @@ interface SelectedAssetState {
   withdrawNetwork: ChainType | null
   setWithdrawNetwork: (by: ChainType | null) => void
 
-  vault: Vault
+  vault?: Vault
   setVault: (by: Vault) => void
 
   mtToken: UserMTokenInfo | null
@@ -60,7 +60,7 @@ export const useTxStore = create<SelectedAssetState>()((set) => ({
   withdrawNetwork: CHAINS[0],
   setWithdrawNetwork: (by) => set({ withdrawNetwork: by }),
   // vault
-  vault: 'USDT',
+  vault: undefined,
   setVault: (by) => set({ vault: by }),
   // mtToken
   mtToken: null,

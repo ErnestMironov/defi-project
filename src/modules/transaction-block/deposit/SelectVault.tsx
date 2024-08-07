@@ -1,8 +1,10 @@
 import Close from '@assets/icons/close.svg'
+import { ShadowBox } from '@components/box/ShadowBox'
 import { Select } from '@components/select/Select'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { PopoverClose } from '@radix-ui/react-popover'
+import { cn } from '@utils/cn'
 import { useState } from 'react'
 
 import { useTxStore } from '../store/useDepositStore'
@@ -18,6 +20,18 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
   const onChange = (_vault: Vault) => {
     setVault(_vault)
     setIsOpened(false)
+  }
+
+  if (!vault) {
+    return (
+      <ShadowBox
+        className={cn(
+          'flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14 min-w-[10.5rem]',
+        )}
+      >
+        <div className="size-6 animate-pulse rounded-full border border-stroke-100" />
+      </ShadowBox>
+    )
   }
 
   return (
