@@ -6,6 +6,26 @@ import BigNumber from 'bignumber.js'
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
 
+function divideIntoGroups<T>(array: T[], groupLength = 10): T[][] {
+  const groups: T[][] = []
+  let temporaryGroup: T[] = []
+
+  for (const element of array) {
+    temporaryGroup.push(element)
+    if (temporaryGroup.length === groupLength) {
+      groups.push(temporaryGroup)
+      temporaryGroup = []
+    }
+  }
+
+  // Add any remaining elements
+  if (temporaryGroup.length > 0) {
+    groups.push(temporaryGroup)
+  }
+
+  return groups
+}
+
 export const maatTokensApy = gql(`
   query MaatTokensApy($from: Float!) {
     apies(where: { protocol: { id_eq: "maat" }, timestamp_gt: $from }) {
@@ -76,8 +96,27 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
       lastUv = uv
       lastPv = pv
     })
-    return apyDataArray.filter((item) => !!item.pv && !!item.uv)
-  }, [data])
+    const apyDataArrayWithBothLines = apyDataArray.filter(
+      (item) => !!item.pv && !!item.uv,
+    )
+    if (dayjs().subtract(1, 'month').valueOf() >= from) {
+      return divideIntoGroups(apyDataArrayWithBothLines).map((group) =>
+        group.reduce(
+          (accumulator, current) => {
+            return {
+              ...accumulator,
+              uv: Number(accumulator.uv) + Number(current.uv) / group.length,
+              pv: Number(accumulator.pv) + Number(current.pv) / group.length,
+              timestamp: accumulator.timestamp + current.timestamp / group.length,
+              name: current.name,
+            }
+          },
+          { pv: 0, uv: 0, timestamp: 0, name: '' },
+        ),
+      )
+    }
+    return apyDataArrayWithBothLines
+  }, [data, from])
 
   return { data: chartData, ...rest }
 }
