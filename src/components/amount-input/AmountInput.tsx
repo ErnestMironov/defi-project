@@ -8,13 +8,23 @@ interface AmountInputProperties extends Omit<ComponentProps<'input'>, 'onChange'
   decimals?: number
   value: string
   after?: string
+  wrapperClassName?: string
 }
 
 export const AmountInput = forwardRef(
   (props: AmountInputProperties, reference: React.Ref<HTMLInputElement>) => {
-    const { onChange, value, error, decimals = 18, after, className, ...rest } = props
+    const {
+      onChange,
+      value,
+      error,
+      decimals = 18,
+      after,
+      className,
+      wrapperClassName,
+      ...rest
+    } = props
     return (
-      <div className="relative size-full min-h-10">
+      <div className={cn('relative size-full min-h-10', wrapperClassName)}>
         {!props.readOnly && (
           <input
             {...rest}
