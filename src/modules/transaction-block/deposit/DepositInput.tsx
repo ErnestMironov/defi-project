@@ -150,7 +150,7 @@ export const DepositInput = () => {
               <button
                 type="button"
                 className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                onClick={() => setInputValue(assetBalance)}
+                onClick={() => handleAction('token', assetBalance)}
               >
                 Max
               </button>
