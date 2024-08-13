@@ -88,7 +88,7 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
       }
 
       apyDataArray.push({
-        name: symbol || '',
+        name: '',
         timestamp: Number(timestamp),
         uv,
         pv,
