@@ -11,7 +11,6 @@ type Vault = 'USDT' | 'USDC'
 
 type ModalState = 'review' | 'deposit' | 'withdraw' | 'done' | 'error'
 interface SelectedAssetState {
-  // TODO: Define the state
   depositAsset: ITokenData | null
   setDepositAsset: (by: ITokenData | null) => void
 
@@ -44,12 +43,21 @@ interface SelectedAssetState {
 
   withdrawAmount: string
   setWithdrawAmount: (value: string) => void
+
+  representationTokensChain: ChainType | null
+  setRepresentationTokensChain: (by: ChainType | null) => void
+
+  boostMode: boolean
+  setBoostMode: (by: boolean) => void
+
+  arrivalGas: string
+  setArrivalGas: (value: string) => void
 }
 
 export const useTxStore = create<SelectedAssetState>()((set) => ({
   inputValue: '',
   setInputValue: (by) => set({ inputValue: by }),
-  inputValueInUSD: '0',
+  inputValueInUSD: '',
   setInputValueInUSD: (by) => set({ inputValueInUSD: by }),
   // asset
   depositAsset: null,
@@ -80,4 +88,16 @@ export const useTxStore = create<SelectedAssetState>()((set) => ({
   // withdraw amount
   withdrawAmount: '',
   setWithdrawAmount: (by) => set({ withdrawAmount: by }),
+
+  // representation tokens chain
+  representationTokensChain: null,
+  setRepresentationTokensChain: (by) => set({ representationTokensChain: by }),
+
+  // boost mode
+  boostMode: false,
+  setBoostMode: (by) => set({ boostMode: by }),
+
+  // arrival gas
+  arrivalGas: '',
+  setArrivalGas: (by) => set({ arrivalGas: by }),
 }))

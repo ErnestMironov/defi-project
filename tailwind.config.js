@@ -98,6 +98,7 @@ module.exports = {
         'dark-cards-70': 'var(--dark-cards-70)',
         'dark-default-input-4': 'var(--dark-default-input-4)',
         'dark-some-button': 'var(--dark-some-button)',
+        'dark-blue-100': 'var(--dark-blue-100)',
         'mobile-dark-bg': 'var(--mobile-dark-bg)',
         'mobile-dark-white': 'var(--mobile-dark-white)',
         'mobile-dark-green': 'var(--mobile-dark-green)',

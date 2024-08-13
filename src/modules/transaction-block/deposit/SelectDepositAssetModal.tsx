@@ -2,7 +2,10 @@
 import type { Token } from '@0xsquid/squid-types'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
-import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
+import {
+  COVALENT_CHAINS_MAPPER,
+  useTokensBalance,
+} from '@api/tokens-balance/use-tokens-balance'
 import BigCloseBtn from '@assets/icons/big-close-btn.svg'
 import BigCloseBtnDark from '@assets/icons/big-close-btn_dark.svg'
 import Search from '@assets/icons/search.svg'
@@ -161,10 +164,14 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     setDepositAsset: setAsset,
     depositNetwork: chain,
     setDepositNetwork: setNetwork,
+    setRepresentationTokensChain,
   } = useTxStore()
   const [opened, setOpened] = useState(false)
   const onChange = (_asset: ITokenData) => {
     setAsset(_asset)
+    setRepresentationTokensChain(
+      COVALENT_CHAINS_MAPPER[_asset.chain_id as keyof typeof COVALENT_CHAINS_MAPPER],
+    )
     setOpened(false)
   }
 

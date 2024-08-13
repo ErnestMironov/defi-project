@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
-import { WizardStep } from '../components/WizardStep'
+import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'

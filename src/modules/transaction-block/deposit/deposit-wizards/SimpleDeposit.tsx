@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
-import { WizardStep } from '../components/WizardStep'
+import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'

@@ -13,6 +13,7 @@ import { useTxStore } from '../store/useDepositStore'
 import { DepositReviewModal } from './DepositReviewModal'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
+import ZapFee from './zap-fee/ZapFee.tsx'
 
 type InputType = 'usd' | 'token'
 
@@ -192,6 +193,8 @@ export const DepositInput = () => {
         )}
       </div>
 
+      <ZapFee className="mt-4" />
+
       {isConnected && (
         <Button
           size="lg"
@@ -199,7 +202,7 @@ export const DepositInput = () => {
           className="w-full max-lg:mt-6 lg:mt-10"
           onClick={() => setCurrentModal('review')}
         >
-          Deposit
+          {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}
         </Button>
       )}
       <DepositReviewModal />
