@@ -139,7 +139,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
         <Table.Cell>
           <IconWithLabelComponent symbol={strategy.protocol} className="size-10" />
         </Table.Cell>
-        {/* // ! remove "* 5" when we have real data */}
+        {/* // ! TODO: remove "* 5" when we have real data */}
         <Table.Cell>{BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%</Table.Cell>
         <Table.Cell>
           $

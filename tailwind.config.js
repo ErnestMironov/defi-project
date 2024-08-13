@@ -71,6 +71,7 @@ module.exports = {
         'input-active': 'var(--input-active)',
         'input-error': 'var(--input-error)',
         'blue1': 'var(--dark-blue-100)',
+        'dark-blue-15': 'var(--dark-blue-15)',
         'blue2': 'var(--blue-blue2)',
         'light-blue': {
           100: 'var(--light-blue-100)',
