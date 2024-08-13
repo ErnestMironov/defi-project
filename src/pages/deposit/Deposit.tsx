@@ -9,19 +9,27 @@ import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
   const { usdcApy, usdtApy, loading } = useTokenApy()
+
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
-
   useEffect(() => {
-    if (!vaultSet.current && usdcApy && usdtApy) {
-      if (usdcApy > usdtApy) {
+    if (!vaultSet.current && !loading) {
+      if (usdcApy !== undefined && usdtApy !== undefined) {
+        if (Number(usdcApy) > Number(usdtApy)) {
+          setVault('USDC')
+        } else if (Number(usdtApy) > Number(usdcApy)) {
+          setVault('USDT')
+        }
+      } else if (usdcApy === undefined) {
+        setVault('USDT')
+      } else if (usdtApy === undefined) {
         setVault('USDC')
-      } else if (usdtApy > usdcApy) {
+      } else {
         setVault('USDT')
       }
       vaultSet.current = true
     }
-  }, [usdcApy, usdtApy, setVault])
+  }, [usdcApy, usdtApy, setVault, loading])
 
   return (
     <div className="flex w-full justify-center">

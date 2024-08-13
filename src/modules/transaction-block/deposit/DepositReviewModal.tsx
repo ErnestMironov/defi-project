@@ -1,14 +1,15 @@
 import useSquidSDK from '@api/squid-router/useSquidSdk'
-import { AmountInput } from '@components/amount-input/AmountInput'
-import { TokenIconComponent } from '@components/token-icon'
+import BigLoader from '@assets/lottie/wizard-main-loader.json'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import { useTokenAsset } from '@hooks/useTokenAsset'
+import { cn } from '@utils/cn'
 import {
   parseFloatLocale,
   replaceCommasWithDots,
   trimTrailingZeros,
 } from '@utils/formatValue'
+import Lottie from 'lottie-react'
 import { useMemo } from 'react'
 
 import { useTxStore } from '../store/useDepositStore'
@@ -18,6 +19,52 @@ import { NativeOnchainSwap } from './deposit-wizards/NativeOnchainSwap'
 import { OnchainSwap } from './deposit-wizards/OnchainSwap'
 import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
 import { useTokenApy } from './hooks/useTokenApy'
+
+interface TokenInfoProperties {
+  type: 'input' | 'deposit'
+  amount: string
+  tokenInfo: {
+    symbol?: string
+    chain_id?: number | string
+  }
+  usdAmount?: string
+}
+
+const TokenInfo: React.FC<TokenInfoProperties> = ({
+  type,
+  amount,
+  tokenInfo,
+  usdAmount,
+}) => {
+  const { symbol, chain_id } = tokenInfo
+
+  return (
+    <div className="flex w-full flex-col gap-2 text-[1.125rem]">
+      <div className="flex w-full items-center justify-between">
+        <span>{type === 'input' ? 'You input' : 'You will deposit '} </span>
+        <div className="flex items-center gap-2">
+          <div
+            className={cn('rounded-[3rem] px-2 py-1', {
+              'bg-red-5 text-red-80': type === 'input',
+              'bg-green-15 text-green-100': type === 'deposit',
+            })}
+          >
+            {type === 'input' ? '-' : '+ '}
+            {amount}
+          </div>
+          <TokenWithNetwork
+            symbol={symbol}
+            network={chain_id}
+            position="bottom-right"
+            width="2.14288rem"
+          />
+          <span>{symbol}</span>
+        </div>
+      </div>
+      <p className="self-end text-base text-gray-100">$ {parseFloatLocale(usdAmount)}</p>
+    </div>
+  )
+}
 
 export const DepositReviewModal = () => {
   const {
@@ -80,46 +127,36 @@ export const DepositReviewModal = () => {
 
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={() => setCurrentModal(null)}>
-      <DialogContent className="max-w-[38.75rem] gap-10 text-text max-lg:z-[100] max-lg:max-w-[95vw]">
+      <DialogContent className="max-w-[38.75rem] gap-10 rounded-[2rem] text-text max-lg:z-[100] max-lg:max-w-[95vw] lg:px-8 lg:py-10">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-3">
-            <span>Deposit Review</span>
-            {/* <InfoCircle className="size-6" /> */}
+          <DialogTitle className="text-center lg:text-[1.5625rem]">
+            Deposit Review
           </DialogTitle>
         </DialogHeader>
+        <Lottie animationData={BigLoader} loop className="-scale-100" />
         {/* Amount input blocks */}
-        <div className="space-y-3">
-          <div className="rounded-[1.25rem] border border-stroke-100 p-6">
-            <div className="flex items-center justify-between">
-              <AmountInput
-                value={replaceCommasWithDots(trimTrailingZeros(inputValue))}
-                after={asset?.contract_ticker_symbol}
-                readOnly
-                className="select-none"
-              />
-              <TokenWithNetwork
-                symbol={asset?.contract_ticker_symbol}
-                network={asset?.chain_id}
-                position="bottom-right"
-                width="2.14288rem"
-              />
-            </div>
-            <p className="mt-4 text-gray-100">$ {parseFloatLocale(inputValueInUSD)}</p>
-          </div>
-          <div className="rounded-[1.25rem] border border-stroke-100 p-6">
-            <div className="flex items-center justify-between">
-              <AmountInput value={inputValueInUSD} after={vault} readOnly />
-              <TokenIconComponent symbol={vault} className="size-[2.14288rem]" />
-            </div>
-            <div className="mt-4 flex justify-between text-gray-100">
-              <p>$ {parseFloatLocale(inputValueInUSD)}</p>
-              <p className="font-bold">{apy}</p>
-            </div>
-          </div>
-          {/* <p className="text-base text-text-80">
-            1 USDT = 0.95723 USDC <span className="text-gray-100">($3,2382)</span>
-          </p> */}
+        <div className="flex flex-col items-start gap-4 self-stretch rounded-2xl border border-stroke-100 p-6">
+          <TokenInfo
+            type="input"
+            amount={replaceCommasWithDots(trimTrailingZeros(inputValue))}
+            tokenInfo={{
+              symbol: asset?.contract_ticker_symbol,
+              chain_id: asset?.chain_id,
+            }}
+            usdAmount={inputValueInUSD}
+          />
+          <div className="h-px w-full bg-stroke-100" />
+          <TokenInfo
+            type="deposit"
+            amount={inputValueInUSD}
+            tokenInfo={{
+              symbol: vault,
+              chain_id: asset?.chain_id,
+            }}
+            usdAmount={inputValueInUSD}
+          />
         </div>
+        {/* End of amount input blocks */}
         {depositFlow}
       </DialogContent>
     </Dialog>
