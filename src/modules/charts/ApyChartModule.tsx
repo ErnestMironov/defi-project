@@ -100,25 +100,30 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
   }
   return (
     <div>
-      <div className="flex items-center justify-between px-3">
-        <h2 className="flex-1 text-[1.5625rem] uppercase">APY</h2>
-        <div className="flex flex-[2] items-center justify-center gap-[3.56rem]">
-          {chartData.map((item) => {
-            return (
-              <div key={item.title} className="flex items-center gap-[0.56rem]">
-                <Dot className={getDotStyles(item.color)} />
-                <span className="text-[0.75rem]">{item.title}</span>
-              </div>
-            )
-          })}
-        </div>
+      <div className="flex items-center justify-between px-4">
+        <h2 className="flex-1 text-[2rem]/[2.4rem] uppercase">APY</h2>
         <FramesSelect
           frame={currentFrame}
           frames={FRAMES}
           onFrameChange={(frame) => onFrameChange(frame as FrameType)}
         />
       </div>
-      <div className="mt-6 h-72">{renderBody()}</div>
+      <div className="mt-4 flex items-center gap-4 px-4">
+        {chartData.map((item) => {
+          return (
+            <div key={item.title} className="flex items-center gap-[0.56rem]">
+              <Dot
+                className={cn(
+                  getDotStyles(item.color),
+                  'w-2.5 h-[0.625rem] overflow-visible',
+                )}
+              />
+              <span className="text-[0.875rem]/[1.05rem]">{item.title}</span>
+            </div>
+          )
+        })}
+      </div>
+      <div className="mt-4 h-72">{renderBody()}</div>
     </div>
   )
 }

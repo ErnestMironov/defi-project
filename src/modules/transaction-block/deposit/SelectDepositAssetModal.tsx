@@ -10,7 +10,7 @@ import BigCloseBtn from '@assets/icons/big-close-btn.svg'
 import BigCloseBtnDark from '@assets/icons/big-close-btn_dark.svg'
 import Search from '@assets/icons/search.svg'
 import WarnIcon from '@assets/icons/warn.svg'
-import { Select } from '@components/select/Select'
+import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import {
@@ -223,7 +223,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
-        <Select
+        <ChoiceBox
           className="min-w-[10.5rem]"
           value={asset?.contract_ticker_symbol || 'Any token'}
           icon={

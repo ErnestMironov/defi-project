@@ -12,4 +12,5 @@ export interface ITransaction {
   txHash: string
   timestamp: string | number
   nonce: string
+  symbol: string
 }

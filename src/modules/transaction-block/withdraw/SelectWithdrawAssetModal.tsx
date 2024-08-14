@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { useMaatUserTokens } from '@api/queries/useMaatUserTokens'
-import { Select } from '@components/select/Select'
+import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import {
   Dialog,
@@ -95,7 +95,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
-        <Select
+        <ChoiceBox
           value={mtToken?.symbol || 'Any token'}
           className="min-w-[11.5rem]"
           icon={

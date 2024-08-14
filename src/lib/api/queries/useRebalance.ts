@@ -52,7 +52,7 @@ export const useRebalance = ({ symbol }: { symbol?: StableType }) => {
       amount: BigNumber(action.data.amount)
         .div(10 ** 6)
         .toNumber(),
-      // ! remove "* 5" when we have real data
+      // ! TODO: remove "* 5" when we have real data
       apy: BigNumber(strategy?.apy || 0)
         .multipliedBy(10)
         .toNumber(),

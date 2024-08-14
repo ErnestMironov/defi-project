@@ -15,8 +15,11 @@ import { Button } from '@components/ui/button'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useDimensions } from '@hooks/useDimensions'
+import { SectionTitle } from '@pages/analytics/components/SectionTitle'
+import { cn } from '@utils/cn'
 import type { SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
+import type { ComponentProps } from 'react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -310,7 +313,10 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
   )
 }
 
-export const SankeyDiagramBasicDemo = () => {
+interface SankeyDiagramBasicDemoProperties extends ComponentProps<'div'> {}
+
+export const SankeyDiagramBasicDemo = (props: SankeyDiagramBasicDemoProperties) => {
+  const { className, ...rest } = props
   const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDC)
   const { data, loading, error } = useRebalance({ symbol: activeStableType })
   const navigate = useNavigate()
@@ -335,12 +341,13 @@ export const SankeyDiagramBasicDemo = () => {
     }
   }
   return (
-    <div className="mt-28 max-lg:mt-8 max-lg:px-4">
+    <section className={cn('max-lg:mt-8 max-lg:px-4', className)} {...rest}>
+      <SectionTitle>Check how we rebalance</SectionTitle>
       <StableSwitcher
-        layoutId="stable-switcher-sankey"
         activeTab={activeStableType}
         onTabChange={(value) => setStableType(value)}
-        className="mb-[2.13rem] mt-28 max-lg:mb-[1.47rem] max-lg:mt-8"
+        className="mb-4 mt-[3.06rem] max-lg:mb-[1.47rem] max-lg:mt-8"
+        classNames={{ tab: 'w-[12.5rem]' }}
       />
       {renderBody()}
       {isBelowDesktop && (
@@ -348,7 +355,7 @@ export const SankeyDiagramBasicDemo = () => {
           Deposit
         </Button>
       )}
-    </div>
+    </section>
   )
 }
 

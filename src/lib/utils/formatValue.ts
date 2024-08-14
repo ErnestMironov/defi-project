@@ -103,3 +103,37 @@ export function replaceCommasWithDots(value: string): string {
 
   return value.replaceAll(',', '.')
 }
+
+export const formatUsdValue = (
+  value: string | number,
+  options?: Intl.NumberFormatOptions,
+) => {
+  const parsedValue = Number.parseFloat(value.toString())
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    ...options,
+  }).format(parsedValue)
+}
+
+export const formatAmount = (
+  value: string | number,
+  options?: Intl.NumberFormatOptions,
+) => {
+  const parsedValue = Number.parseFloat(value.toString())
+  return new Intl.NumberFormat('en-US', {
+    ...options,
+  }).format(parsedValue)
+}
+
+export const formatPercentValue = (
+  value: string | number,
+  options?: Intl.NumberFormatOptions,
+) => {
+  const parsedValue = Number.parseFloat(value.toString())
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    maximumFractionDigits: 2,
+    ...options,
+  }).format(parsedValue)
+}

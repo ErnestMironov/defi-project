@@ -1,29 +1,20 @@
 import { SankeyDiagramBasicDemo } from '@components/chart/sankey/SankeyD3'
-import useDeviceWidth from '@hooks/useDeviceWidth'
-import { MobileFooter } from '@layouts/footer/MobileFooter'
-import { ApyChartModule } from '@modules/charts/ApyChartModule'
-import { TvlChartModule } from '@modules/charts/TvlChartModule'
+import { Footer } from '@layouts/footer/Footer'
 
-import { DocumentationLinks } from './modules/DocsLinks'
-import { Overviews } from './modules/Overviews'
 import { Strategies } from './modules/strategies/Strategies'
+import { TokenOverview } from './modules/token-overview/TokenOverview'
+import { TokenCharts } from './modules/tokens/Tokens'
 import { TransactionsHistory } from './modules/transaction-history/TransactionsHistory'
 
 export const Analytics = () => {
-  const { isBelowDesktop } = useDeviceWidth()
-
   return (
     <div className="max-lg:-mx-4">
-      <Overviews className="mb-8 mt-[1.87rem] max-lg:px-4 lg:my-20" />
-      <div className="mx-4 grid gap-4 max-lg:gap-8 lg:grid-cols-2">
-        <ApyChartModule />
-        <TvlChartModule />
-      </div>
-      <DocumentationLinks className="mt-32 max-lg:mt-12" />
-      <SankeyDiagramBasicDemo />
-      <Strategies className="mt-[8.75rem] max-lg:mt-14 max-lg:px-4" />
+      <TokenCharts className="mt-[5.31rem]" />
+      <TokenOverview className="mt-12 max-lg:px-4" />
+      <Strategies className="mt-[6.25rem] max-lg:mt-14 max-lg:px-4" />
+      <SankeyDiagramBasicDemo className="mt-[6.25rem]" />
       <TransactionsHistory className="mt-28 max-lg:mt-14" />
-      {isBelowDesktop && <MobileFooter className="mb-[4.55rem] mt-[4.5rem]" />}
+      <Footer className="mt-[7.5rem] max-lg:mb-[4.55rem] max-lg:mt-[4.5rem]" />
     </div>
   )
 }

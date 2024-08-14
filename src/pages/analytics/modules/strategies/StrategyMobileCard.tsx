@@ -44,7 +44,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
           <TokenIconComponent symbol={strategy.protocol} className="size-6" />
         </div>
         <h6>Projected APY</h6>
-        {/* // ! remove "* 5" when we have real data */}
+        {/* // ! TODO: remove "* 5" when we have real data */}
         <div className="font-bold">
           {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
         </div>
@@ -100,7 +100,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             <div>9.83%</div> */}
             <h6>Projected APY</h6>
             <div className="font-bold">
-              {/* // ! remove "* 5" when we have real data */}
+              {/* // ! TODO: remove "* 5" when we have real data */}
               {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
             </div>
             <h6>TVL</h6>

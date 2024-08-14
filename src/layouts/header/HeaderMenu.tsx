@@ -14,7 +14,7 @@ export const HeaderMenu = ({ className, callback, ...rest }: HeaderMenuPropertie
   const location = useLocation()
 
   return (
-    <ul className={cn('flex items-center gap-[5rem]', className)} {...rest}>
+    <ul className={cn('flex items-center gap-[3.69rem]', className)} {...rest}>
       {menu.map((menuItem) => (
         <Link
           onClick={callback}

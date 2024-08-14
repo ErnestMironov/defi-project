@@ -25,6 +25,18 @@ export const useMenu = (): IMenu => {
         href: ROUTES.ANALYTICS,
         label: 'Analytics',
       },
+      tokens: {
+        href: ROUTES.TOKENS,
+        label: 'Tokens',
+      },
+      strategies: {
+        href: ROUTES.STRATEGIES,
+        label: 'Strategies',
+      },
+      transactions: {
+        href: ROUTES.TRANSACTIONS,
+        label: 'Transactions',
+      },
       docs: {
         href: 'https://docs.maat.finance/',
         label: 'Docs',

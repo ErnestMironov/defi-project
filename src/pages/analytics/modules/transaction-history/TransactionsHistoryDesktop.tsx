@@ -1,31 +1,31 @@
 import { useTxHistoryDesktop } from '@api/queries/useTxHistoryDesktop'
 import Arrow from '@assets/icons/arrow.svg'
-import LogoIcon from '@assets/icons/logo.svg'
-import ProfileIcon from '@assets/icons/profile-circle.svg'
-import { ActionType } from '@codegen/graphql'
+import Sort from '@assets/icons/sort.svg'
+import { SearchInput } from '@components/input/SearchInput'
 import { Pagination } from '@components/pagination/Pagination'
-import type { StableType } from '@components/stable-switcher/StableSwitcher'
-import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
+import { Select } from '@components/select/Select'
 import { Table } from '@components/table'
-import { TokenIconComponent } from '@components/token-icon'
-import { ActionChip } from '@components/transaction-type-badge'
-import { Logo } from '@components/ui/logo'
 import { Skeleton } from '@components/ui/skeleton'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
-import { useClipboard } from '@hooks/useClipboard'
+import { SectionTitle } from '@pages/analytics/components/SectionTitle'
+import {
+  SELECT_ACTIONS,
+  SELECT_CHAINS,
+  SELECT_STATUSES,
+} from '@pages/analytics/constants/select-constant'
 import { cn } from '@utils/cn'
-import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
-import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import type { ITransaction } from 'src/lib/types/transaction'
+
+import { TransactionHistoryRow } from './TransactionHistoryRow'
 
 export const TransactionsHistoryDesktop: React.FC<
   React.HTMLAttributes<HTMLDivElement>
 > = (props) => {
-  const { copyWithToast } = useClipboard()
+  const [searchValue, setSearchValue] = useState('')
+  const [selectAction, setSelectAction] = useState(SELECT_ACTIONS[0])
+  const [selectStatus, setSelectStatus] = useState(SELECT_STATUSES[0])
+  const [selectChains, setSelectChains] = useState(SELECT_CHAINS[0])
 
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
   const [currentPage, setCurrentPage] = useState(1)
   const [perPage, setPerPage] = useState<(typeof PER_PAGE_ARRAY)[number]>(
     PER_PAGE_ARRAY[0],
@@ -34,7 +34,6 @@ export const TransactionsHistoryDesktop: React.FC<
   const { data, loading, error, totalCount } = useTxHistoryDesktop({
     perPage,
     page: currentPage,
-    symbol: activeStableType,
   })
   const [totalCountMemo, setTotalCountMemo] = useState<number | undefined>()
   useEffect(() => {
@@ -52,59 +51,6 @@ export const TransactionsHistoryDesktop: React.FC<
     setPerPage(_perPage)
   }
 
-  const onStableChange = (value: StableType) => {
-    setCurrentPage(1)
-    setStableType(value)
-  }
-
-  const renderStrategy = (tx: ITransaction) => {
-    console.log('🚀 ~ renderStrategy ~ tx:', tx)
-    switch (tx.action) {
-      case ActionType.Bridge:
-      case ActionType.WithdrawRequestFulfillment: {
-        return '-'
-      }
-      default: {
-        return (
-          <div className="flex items-center gap-4">
-            <div className="flex -space-x-2">
-              <TokenIconComponent symbol={tx?.from} className="size-10" />
-              <TokenIconComponent symbol={tx.protocol} className="size-10" />
-            </div>
-            /<span>{tx.apy}%</span>/<span>${tx.tvl}</span>
-          </div>
-        )
-      }
-    }
-  }
-  const renderFromTo = (tx: ITransaction) => {
-    switch (tx.action) {
-      case ActionType.Bridge: {
-        return (
-          <div className="flex items-center gap-2">
-            <TokenIconComponent symbol={tx.from} className="size-10" />
-            <Arrow className="[&_path]:fill-text" />
-            <TokenIconComponent symbol={tx.to} className="size-10" />
-          </div>
-        )
-      }
-      case ActionType.WithdrawRequestFulfillment: {
-        return (
-          <div className="flex items-center gap-2">
-            <div className="flex size-10 items-center justify-center rounded-full border border-text dark:bg-white">
-              <LogoIcon className="size-5 [&_path]:fill-black" />
-            </div>
-            <Arrow className="[&_path]:fill-text" />
-            <ProfileIcon className="size-10" />
-          </div>
-        )
-      }
-      default: {
-        return '-'
-      }
-    }
-  }
-
   const renderBody = () => {
     switch (true) {
       case loading:
@@ -117,46 +63,27 @@ export const TransactionsHistoryDesktop: React.FC<
             <Table.Head>
               <Table.Row>
                 <Table.HeadCell>Action</Table.HeadCell>
-                <Table.HeadCell>Amount</Table.HeadCell>
-                <Table.HeadCell>Strategy / Weekly APY / TVL</Table.HeadCell>
+                <Table.HeadCell>Status</Table.HeadCell>
                 <Table.HeadCell>
-                  <div className="flex items-center gap-2">
-                    From
-                    <Arrow className="[&_path]:fill-text" />
-                    To
+                  <div className="flex items-center gap-[0.79rem]">
+                    <span>Amount</span>
+                    <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
                   </div>
                 </Table.HeadCell>
+                <Table.HeadCell>Chain</Table.HeadCell>
+                <Table.HeadCell>From</Table.HeadCell>
                 <Table.HeadCell>Tx Hash</Table.HeadCell>
-                <Table.HeadCell>Created</Table.HeadCell>
-                <Table.HeadCell>Nonce</Table.HeadCell>
+                <Table.HeadCell>
+                  <div className="flex items-center gap-[0.79rem]">
+                    <span>Created</span>
+                    <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+                  </div>
+                </Table.HeadCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
               {data?.map((tx, index) => (
-                <Table.Row key={index}>
-                  <Table.Cell>
-                    <ActionChip type={tx.action} />
-                  </Table.Cell>
-                  <Table.Cell>{tx.amount}</Table.Cell>
-                  <Table.Cell>{renderStrategy(tx)}</Table.Cell>
-                  <Table.Cell>{renderFromTo(tx)}</Table.Cell>
-                  <Table.Cell>
-                    <motion.div
-                      onClick={() => copyWithToast(tx.txHash)}
-                      className="flex h-7 w-fit cursor-pointer justify-start transition"
-                      whileHover={{ scale: '1.05' }}
-                      whileTap={{ scale: '0.95' }}
-                    >
-                      <span>{shortenString(tx.txHash)}</span>
-                    </motion.div>
-                  </Table.Cell>
-                  <Table.Cell>{getFromNow(Number(tx.timestamp))}</Table.Cell>
-                  {totalCount && (
-                    <Table.Cell>
-                      #{totalCount - (currentPage - 1) * perPage - index}
-                    </Table.Cell>
-                  )}
-                </Table.Row>
+                <TransactionHistoryRow key={index} transaction={tx} />
               ))}
             </Table.Body>
           </Table>
@@ -165,17 +92,34 @@ export const TransactionsHistoryDesktop: React.FC<
     }
   }
   return (
-    <div {...props} className={cn('flex flex-col', props.className)}>
-      <h2 className="flex items-center gap-6 text-[2.1875rem] font-normal uppercase not-italic leading-[100%]">
-        <Logo />
-        Transactions History
-      </h2>
-      <StableSwitcher
-        layoutId="stable-switcher-transactions-history"
-        activeTab={activeStableType}
-        onTabChange={onStableChange}
-        className="mb-6 mt-12"
-      />
+    <div {...props} className={cn('', props.className)}>
+      <SectionTitle className="mb-8">Events</SectionTitle>
+      {/* filters/search */}
+      <div className="mb-2 mt-8 grid grid-cols-[1fr_repeat(3,0.3fr)] gap-4 rounded-3xl bg-cards p-6">
+        <SearchInput
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder="Name / Address / ID"
+        />
+        <Select
+          options={SELECT_ACTIONS}
+          value={selectAction}
+          onChange={(option) => setSelectAction(option)}
+          placeholder="Select an action"
+        />
+        <Select
+          options={SELECT_STATUSES}
+          value={selectStatus}
+          onChange={(option) => setSelectStatus(option)}
+          placeholder="Select a protocol"
+        />
+        <Select
+          options={SELECT_CHAINS}
+          value={selectChains}
+          onChange={(option) => setSelectChains(option)}
+          placeholder="Select a chain"
+        />
+      </div>
       {renderBody()}
       {totalCountMemo && (
         <Pagination

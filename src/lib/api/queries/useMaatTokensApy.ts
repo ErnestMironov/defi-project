@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from '@apollo/client'
 import { gql } from '@codegen/gql'
@@ -47,7 +48,7 @@ export const maatTokensApy = gql(`
 export const useMaatTokensApy = ({ from }: { from: number }) => {
   const { data, ...rest } = useQuery(maatTokensApy, { variables: { from } })
 
-  // ! remove "* 5" when we have real data
+  // ! TODO: remove "* 5" when we have real data
   const chartData = useMemo(() => {
     const apyData = data?.apies.map((apy) => ({
       ...apy,
