@@ -1,6 +1,6 @@
 import Close from '@assets/icons/close.svg'
+import { ChoiceBox } from '@components/box/ChoiceBox'
 import { ShadowBox } from '@components/box/ShadowBox'
-import { Select } from '@components/select/Select'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { PopoverClose } from '@radix-ui/react-popover'
@@ -37,7 +37,7 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
       <PopoverTrigger>
-        <Select
+        <ChoiceBox
           className="min-w-[10.5rem]"
           value={vault}
           symbol={vault}

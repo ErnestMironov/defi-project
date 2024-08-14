@@ -1,10 +1,10 @@
-import { Arrow } from '@radix-ui/react-popover'
+import Arrow from '@assets/icons/curve-arrow-down.svg'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 
-import { BaseContainer } from './BaseContainer'
+import { BaseContainer } from '../../components/BaseContainer'
 
 interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   color: string
@@ -12,10 +12,22 @@ interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   apy: string
   tvl: string
   rebalancingVolume: string
+  img: string
+  imageClassName?: string
 }
 
 export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
-  const { className, color, ...rest } = props
+  const {
+    className,
+    color,
+    apy,
+    tvl,
+    rebalancingVolume,
+    img,
+    imageClassName,
+    tokenName,
+    ...rest
+  } = props
   return (
     <div
       className={cn(
@@ -25,11 +37,14 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
       {...rest}
     >
       <BaseContainer>
-        <h6>USDC Apy</h6>
+        <h6>{tokenName} Apy</h6>
+
         <p className="text-3xl">
-          {formatPercentValue('3.84', {
-            maximumFractionDigits: 2,
-          })}
+          <Suspense fallback="loading...">
+            {formatPercentValue(apy, {
+              maximumFractionDigits: 2,
+            })}
+          </Suspense>
           <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
             {formatPercentValue('0.271', {
               maximumFractionDigits: 0,
@@ -39,9 +54,9 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
         </p>
       </BaseContainer>
       <BaseContainer>
-        <h6>USDC tvl</h6>
+        <h6>{tokenName} tvl</h6>
         <p className="text-3xl">
-          {formatUsdValue('567.83', { notation: 'compact', minimumFractionDigits: 2 })}
+          {formatUsdValue(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
           <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
             {formatPercentValue('0.271', {
               maximumFractionDigits: 0,
@@ -53,19 +68,25 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
       <BaseContainer>
         <h6>Rebalancing volume</h6>
         <p className="text-3xl">
-          {formatUsdValue('4586.74', { notation: 'compact', minimumFractionDigits: 2 })}
+          {formatUsdValue(rebalancingVolume, {
+            notation: 'compact',
+            minimumFractionDigits: 2,
+          })}
         </p>
         <Link
           to="#"
-          className="group absolute bottom-[1.34rem] inline-flex items-center gap-1 text-semi-base font-bold uppercase text-main-100"
+          className="group absolute bottom-[1.34rem] flex items-center gap-0.5 text-semi-base font-bold uppercase text-main-100"
         >
-          <span>Go to USDC</span>
-          <Arrow className="h-fit w-4 transition group-hover:translate-x-2 [&_*]:stroke-main-100" />
+          <span>Go to {tokenName}</span>
+          <Arrow className="h-fit w-5 -rotate-90 transition group-hover:translate-x-1 [&_*]:stroke-main-100" />
         </Link>
         <img
-          src={usdc}
-          alt="usdc"
-          className="absolute bottom-[-5.4rem] right-[-8.5rem] size-[20.8125rem] rotate-[5.207deg] opacity-20"
+          src={img}
+          alt={tokenName}
+          className={cn(
+            'absolute bottom-[-5.4rem] right-[-8.5rem] size-[20.8125rem] opacity-20',
+            imageClassName,
+          )}
         />
       </BaseContainer>
     </div>

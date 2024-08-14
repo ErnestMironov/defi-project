@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from '@apollo/client'
 import { gql } from '@codegen/gql'

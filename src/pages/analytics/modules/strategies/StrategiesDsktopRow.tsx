@@ -1,17 +1,18 @@
 import Copy from '@assets/icons/copy.svg'
 import ActiveCopy from '@assets/icons/copy_active.svg'
+import Scan from '@assets/icons/scan.svg'
 import type { StrategyStats } from '@codegen/graphql'
+import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Dialog as BaseDialog, DialogContent } from '@components/ui/dialog'
 import { PROTOCOL_DESCRIPTION } from '@constants/protocol-description'
 import { useClipboard } from '@hooks/useClipboard'
-import { formatAmountValue } from '@utils/formatValue'
+import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
-import BigNumber from 'bignumber.js'
-import { motion } from 'framer-motion'
 import type { FC } from 'react'
 import { useState } from 'react'
+import { formatUnits } from 'viem'
 
 interface DialogProperties {
   open: boolean
@@ -120,8 +121,6 @@ interface StrategyRowProperties {
 }
 
 export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
-  const { copyWithToast } = useClipboard()
-
   const [isOpen, setIsOpen] = useState(false)
 
   const openModal = () => setIsOpen(true)
@@ -130,35 +129,40 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
   return (
     <>
       <Table.Row className="cursor-pointer" onClick={openModal}>
-        <Table.Cell>
-          <IconWithLabelComponent symbol={strategy?.tokenSymbol} className="size-10" />
+        <Table.Cell className="px-10 py-6">
+          <div className="flex items-center">
+            <p className="w-[7.9rem]">{shortenString(strategy.strategyId, 5)}</p>
+            <CopyButton text={strategy.strategyId} />
+          </div>
         </Table.Cell>
         <Table.Cell>
-          <IconWithLabelComponent symbol={strategy?.chainName} className="size-10" />
+          <IconWithLabelComponent
+            symbol={strategy?.tokenSymbol}
+            className="size-9 gap-4"
+          />
         </Table.Cell>
         <Table.Cell>
-          <IconWithLabelComponent symbol={strategy.protocol} className="size-10" />
+          <IconWithLabelComponent symbol={strategy?.chainName} className="size-9 gap-4" />
+        </Table.Cell>
+        <Table.Cell>
+          <IconWithLabelComponent symbol={strategy.protocol} className="size-9 gap-4" />
         </Table.Cell>
         {/* // ! TODO: remove "* 5" when we have real data */}
-        <Table.Cell>{BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%</Table.Cell>
-        <Table.Cell>
-          $
-          {formatAmountValue(
-            BigNumber(strategy.deposited)
-              .div(10 ** strategy.decimals)
-              ?.toString(),
-            2,
-          )}
+        <Table.Cell className="font-bold">
+          {formatPercentValue((strategy.apy / 100) * 5)}
         </Table.Cell>
-        <Table.Cell className="px-10 py-6">
-          <motion.div
-            onClick={() => copyWithToast(strategy.strategyId)}
-            className="flex h-7 w-fit cursor-pointer justify-start transition"
-            whileHover={{ scale: '1.05' }}
-            whileTap={{ scale: '0.95' }}
-          >
-            <span className="">{shortenString(strategy.strategyId)}</span>
-          </motion.div>
+        <Table.Cell>
+          {formatUsdValue(formatUnits(strategy.deposited, strategy.decimals), {
+            notation: 'compact',
+            maximumFractionDigits: 2,
+          })}
+        </Table.Cell>
+        <Table.Cell className="max-w-[12.1rem]">
+          <div className="flex w-full items-center">
+            <p className="w-[6.9rem]">{shortenString(strategy.strategyId, 5)}</p>
+            <CopyButton text={strategy.strategyId} className="ml-4 size-6 shrink-0" />
+            <Scan className="ml-3 size-5 shrink-0" />
+          </div>
         </Table.Cell>
       </Table.Row>
       <Dialog open={isOpen} onClose={closeModal} strategy={strategy} />

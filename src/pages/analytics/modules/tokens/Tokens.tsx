@@ -6,7 +6,7 @@ import type { ComponentProps } from 'react'
 
 interface TokensProperties extends ComponentProps<'div'> {}
 
-export const Tokens = (props: TokensProperties) => {
+export const TokenCharts = (props: TokensProperties) => {
   const { className, ...rest } = props
   return (
     <section className={cn(className, '')} {...rest}>
