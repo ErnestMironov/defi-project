@@ -92,7 +92,6 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
         </h2>
       </div>
       <StableSwitcher
-        layoutId="stable-switcher-transactions-history"
         activeTab={activeStableType}
         onTabChange={onStableChange}
         className="mb-6 mt-8"
