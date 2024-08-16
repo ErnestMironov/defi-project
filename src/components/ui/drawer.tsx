@@ -35,11 +35,11 @@ const DrawerContent = React.forwardRef<
   }
 >(({ className, children, withDraggable = true, ...props }, reference) => (
   <DrawerPortal>
-    <DrawerOverlay />
+    <DrawerOverlay className="bg-transparent" />
     <DrawerPrimitive.Content
       ref={reference}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-3xl bg-cards',
+        'fixed inset-y-0 right-0 z-50 flex h-full w-1/2 flex-col rounded-l-3xl bg-cards focus:outline-none',
         className,
       )}
       {...props}
@@ -72,7 +72,7 @@ const DrawerTitle = React.forwardRef<
 >(({ className, ...props }, reference) => (
   <DrawerPrimitive.Title
     ref={reference}
-    className={cn('text-lg font-semibold leading-none tracking-tight', className)}
+    className={cn('text-[1.5625rem] font-normal', className)}
     {...props}
   />
 ))

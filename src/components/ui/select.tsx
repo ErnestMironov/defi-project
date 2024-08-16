@@ -105,22 +105,28 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, reference) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+    Icon?: React.FC<React.SVGProps<SVGElement>>
+  }
+>(({ className, children, Icon, ...props }, reference) => (
   <SelectPrimitive.Item
     ref={reference}
     className={cn(
-      'relative flex w-full cursor-pointer select-none items-center text-lg outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      'hover:before:bg-main-15 before:h-[calc(100%+1rem)] before:w-[calc(100%+1rem)] before:rounded-xl before:absolute before:-top-2 before:-left-2 before:transition-width before:duration-200 before:ease-in-out before:group-hover:w-full',
+      'group relative flex w-full cursor-pointer select-none items-center text-lg outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'hover:before:bg-main-15 before:pointer-events-none before:h-[calc(100%+1rem)] before:w-[calc(100%+1rem)] before:rounded-xl before:absolute before:-top-2 before:-left-2 before:transition-width before:duration-200 before:ease-in-out before:group-hover:w-full',
       className,
     )}
     {...props}
   >
     {children}
     <span className="absolute right-2 flex size-3.5 items-center justify-center">
-      <SelectPrimitive.ItemIndicator>
-        <Check className="size-[1.125rem]" />
-      </SelectPrimitive.ItemIndicator>
+      {Icon ? (
+        <Icon className="size-[1.125rem] group-data-[state=checked]:[&_path]:fill-main-100" />
+      ) : (
+        <SelectPrimitive.ItemIndicator>
+          <Check className="size-[1.125rem]" />
+        </SelectPrimitive.ItemIndicator>
+      )}
     </span>
   </SelectPrimitive.Item>
 ))

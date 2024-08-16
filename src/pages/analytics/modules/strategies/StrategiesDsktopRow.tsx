@@ -149,7 +149,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
         </Table.Cell>
         {/* // ! TODO: remove "* 5" when we have real data */}
         <Table.Cell className="font-bold">
-          {formatPercentValue((strategy.apy / 100) * 5)}
+          {formatPercentValue(strategy.apy * 5)}
         </Table.Cell>
         <Table.Cell>
           {formatUsdValue(formatUnits(strategy.deposited, strategy.decimals), {

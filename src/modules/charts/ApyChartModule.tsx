@@ -3,11 +3,11 @@ import Dot from '@assets/icons/dot.svg'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
+import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
-import dayjs from 'dayjs'
-import { type ComponentProps, useState } from 'react'
+import { type ComponentProps } from 'react'
 
 interface LineChartModuleProperties extends ComponentProps<'div'> {}
 
@@ -15,41 +15,10 @@ const chartData: { title: string; color: '#6160FF' | '#A6C1FF' }[] = [
   { title: 'USDC', color: '#6160FF' },
   { title: 'USDT', color: '#A6C1FF' },
 ]
-export const FRAMES = ['1D', '1W', '1M', '3M', 'MAX']
-export type FrameType = (typeof FRAMES)[number]
 
 export const ApyChartModule = (_props: LineChartModuleProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
-  const [currentTimestamp, setCurrentTimestamp] = useState<number>(1)
-  const [currentFrame, setCurrentFrame] = useState<FrameType>('MAX')
-  const onFrameChange = (frame: FrameType) => {
-    setCurrentFrame(frame)
-    switch (frame) {
-      case '1D': {
-        setCurrentTimestamp(dayjs().subtract(1, 'day').valueOf())
-        break
-      }
-      case '1W': {
-        setCurrentTimestamp(dayjs().subtract(1, 'week').valueOf())
-        break
-      }
-      case '1M': {
-        setCurrentTimestamp(dayjs().subtract(1, 'month').valueOf())
-        break
-      }
-      case '3M': {
-        setCurrentTimestamp(dayjs().subtract(3, 'month').valueOf())
-        break
-      }
-      case 'MAX': {
-        setCurrentTimestamp(1)
-        break
-      }
-      default: {
-        break
-      }
-    }
-  }
+  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect()
   const { data, loading, error } = useMaatTokensApy({ from: currentTimestamp })
 
   const renderBody = () => {
@@ -71,8 +40,8 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
           <h2 className="flex-1 text-2xl uppercase lg:text-[1.5625rem]">APY</h2>
           <FramesSelect
             frame={currentFrame}
-            frames={FRAMES}
-            onFrameChange={(frame) => onFrameChange(frame as FrameType)}
+            frames={frames}
+            onFrameChange={onFrameChange}
           />
         </div>
         <div className="mt-[0.81rem] flex flex-col justify-center gap-2">
@@ -104,8 +73,8 @@ export const ApyChartModule = (_props: LineChartModuleProperties) => {
         <h2 className="flex-1 text-[2rem]/[2.4rem] uppercase">APY</h2>
         <FramesSelect
           frame={currentFrame}
-          frames={FRAMES}
-          onFrameChange={(frame) => onFrameChange(frame as FrameType)}
+          frames={frames}
+          onFrameChange={onFrameChange}
         />
       </div>
       <div className="mt-4 flex items-center gap-4 px-4">

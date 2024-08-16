@@ -127,13 +127,14 @@ export const formatAmount = (
 }
 
 export const formatPercentValue = (
-  value: string | number,
+  value?: string | number,
   options?: Intl.NumberFormatOptions,
 ) => {
+  if (!value) return 'N/A'
   const parsedValue = Number.parseFloat(value.toString())
   return new Intl.NumberFormat('en-US', {
     style: 'percent',
     maximumFractionDigits: 2,
     ...options,
-  }).format(parsedValue)
+  }).format(parsedValue / 100)
 }

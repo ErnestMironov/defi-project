@@ -3,13 +3,11 @@ import Dot from '@assets/icons/dot.svg'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
+import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { cn } from '@utils/cn'
-import dayjs from 'dayjs'
-import { type ComponentProps, useState } from 'react'
-
-import { FRAMES, type FrameType } from './ApyChartModule'
+import { type ComponentProps } from 'react'
 
 interface LineChartModuleProperties extends ComponentProps<'div'> {}
 
@@ -21,39 +19,10 @@ const chartData: { title: string; color: '#6160FF' | '#A6C1FF' }[] = [
 export const TvlChartModule = (_props: LineChartModuleProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
 
-  const [currentTimestamp, setCurrentTimestamp] = useState<number>(1)
-  const [currentFrame, setCurrentFrame] = useState<FrameType>('MAX')
+  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect()
 
   const { data, loading, error } = useMaatTokensTvl({ from: currentTimestamp })
 
-  const onFrameChange = (frame: FrameType) => {
-    setCurrentFrame(frame)
-    switch (frame) {
-      case '1D': {
-        setCurrentTimestamp(dayjs().subtract(1, 'day').valueOf())
-        break
-      }
-      case '1W': {
-        setCurrentTimestamp(dayjs().subtract(1, 'week').valueOf())
-        break
-      }
-      case '1M': {
-        setCurrentTimestamp(dayjs().subtract(1, 'month').valueOf())
-        break
-      }
-      case '3M': {
-        setCurrentTimestamp(dayjs().subtract(3, 'month').valueOf())
-        break
-      }
-      case 'MAX': {
-        setCurrentTimestamp(1)
-        break
-      }
-      default: {
-        break
-      }
-    }
-  }
   const renderBody = () => {
     switch (true) {
       case loading:
@@ -72,8 +41,8 @@ export const TvlChartModule = (_props: LineChartModuleProperties) => {
           <h2 className="flex-1 text-2xl uppercase lg:text-[1.5625rem]">TVL</h2>
           <FramesSelect
             frame={currentFrame}
-            frames={FRAMES}
-            onFrameChange={(frame) => onFrameChange(frame as FrameType)}
+            frames={frames}
+            onFrameChange={onFrameChange}
           />
         </div>
         <div className="mt-[0.81rem] flex flex-col justify-center gap-2">
@@ -105,8 +74,8 @@ export const TvlChartModule = (_props: LineChartModuleProperties) => {
         <h2 className="flex-1 text-[2rem]/[2.4rem] uppercase">TVL</h2>
         <FramesSelect
           frame={currentFrame}
-          frames={FRAMES}
-          onFrameChange={(frame) => onFrameChange(frame as FrameType)}
+          frames={frames}
+          onFrameChange={onFrameChange}
         />
       </div>
       <div className="mt-4 flex items-center gap-4 px-4">

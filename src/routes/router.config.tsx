@@ -25,6 +25,16 @@ export const routes = createRoutesFromElements(
           }
         }}
       />
+      <Route
+        path={ROUTES.STRATEGIES}
+        lazy={async () => {
+          const { Strategies } = await import('@pages/strategies/Strategies')
+          console.log('🚀 ~ lazy={ ~ Landing:', Strategies)
+          return {
+            Component: Strategies,
+          }
+        }}
+      />
     </Route>
 
     <Route

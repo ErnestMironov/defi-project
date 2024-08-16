@@ -6,8 +6,15 @@ import {
 } from '@components/ui/select'
 import { type SelectProps, SelectValue } from '@radix-ui/react-select'
 import { cn } from '@utils/cn'
+import type { FC, SVGProps } from 'react'
 
-export type OptionType = { value: string; label: React.ReactNode | string }
+export type OptionType = {
+  value: string
+  label: React.ReactNode | string
+  Icon?: FC<SVGProps<SVGElement>>
+  onSelect?: () => void
+  callback?: () => void
+}
 
 interface SelectProperties extends Omit<React.FC<SelectProps>, 'value'> {
   className?: string
@@ -15,6 +22,7 @@ interface SelectProperties extends Omit<React.FC<SelectProps>, 'value'> {
   value: OptionType
   onChange: (value: OptionType) => void
   placeholder?: string
+  disabled?: boolean
 }
 
 export const Select = (props: SelectProperties) => {
@@ -33,7 +41,7 @@ export const Select = (props: SelectProperties) => {
       <SelectContent>
         {options.map((option) => {
           return (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem key={option.value} value={option.value} Icon={option?.Icon}>
               {typeof option === 'string' ? option : option.label}
             </SelectItem>
           )
