@@ -1,6 +1,6 @@
 import { EIDS_BY_CHAIN_ID, SUPPORTED_CHAINS_FOR_REP_TOKENS } from '@constants/eids'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { useQuery } from '@tanstack/react-query'
 import { Token } from '@uniswap/sdk-core'
 import axios from 'axios'

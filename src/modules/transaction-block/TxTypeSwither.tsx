@@ -3,7 +3,7 @@ import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
 import type { ComponentProps } from 'react'
 
-import { useTxStore } from './store/useDepositStore'
+import { useTxStore } from './store/useTxStore'
 
 interface TxTypeSwitcherProperties extends ComponentProps<'div'> {}
 

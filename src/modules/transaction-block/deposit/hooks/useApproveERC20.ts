@@ -45,9 +45,6 @@ export const useApproveERC20 = ({
       {
         onSuccess: async (data) => {
           setStatus('pending')
-          // setApproveHash(data)
-          console.log('approve_timer', data)
-          console.time('approve_timer')
           // @ts-ignore
           await waitForTransactionReceipt(config, {
             hash: data,
@@ -59,11 +56,6 @@ export const useApproveERC20 = ({
               ],
             timeout: 60_000,
           })
-
-          console.timeLog('approve_timer')
-          console.timeEnd('approve_timer')
-
-          console.log('🚀 ~ approve ~ timer: end', data)
 
           setLoading(false)
           setStatus('success')

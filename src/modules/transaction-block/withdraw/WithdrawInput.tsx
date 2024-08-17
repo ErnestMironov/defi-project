@@ -3,46 +3,35 @@ import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
 import BigNumber from 'bignumber.js'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
-import { useTxStore } from '../store/useDepositStore'
-import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
+import { useTxStore } from '../store/useTxStore'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 
 export const WithdrawInput = () => {
   const { isConnected } = useAccount()
-  const { inputValue, setInputValue, mtToken, setWithdrawAmount } = useTxStore()
-  const {
-    approve,
-    isAllowed,
-    isEnoughSharesToWithdraw,
-    withdraw,
-    loading: isPending,
-  } = useWithdrawTransaction()
+  const { inputValue, setInputValue, mtToken, setWithdrawAmount, setCurrentModal } =
+    useTxStore()
 
   const [validationError, setValidationError] = useState('')
-  useEffect(() => {
-    if (isEnoughSharesToWithdraw === false) {
-      setValidationError('Exceeds balance')
-      return
-    }
-    setValidationError('')
-  }, [inputValue, isEnoughSharesToWithdraw])
 
   const maxBalance = mtToken?.lpBalance ? formatUnits(BigInt(mtToken?.lpBalance), 6) : 0
 
-  // Calculate the input value in USD
-  const inputValueBN = new BigNumber(inputValue || '0')
-  const lpBalanceBN = new BigNumber(mtToken?.lpBalance || '0')
-  const balanceBN = new BigNumber(mtToken?.balance || '0')
+  const inputValueBN = useMemo(() => new BigNumber(inputValue || '0'), [inputValue])
+  const lpBalanceBN = useMemo(
+    () => new BigNumber(mtToken?.lpBalance || '0'),
+    [mtToken?.lpBalance],
+  )
+  const balanceBN = useMemo(
+    () => new BigNumber(mtToken?.balance || '0'),
+    [mtToken?.balance],
+  )
 
   let inputValueInUSD = '0.00'
-  if (lpBalanceBN.isZero()) {
-    console.warn('lpBalanceBN or balanceBN is zero, cannot calculate inputValueInUSD')
-  } else {
+  if (!lpBalanceBN.isZero()) {
     inputValueInUSD = inputValueBN.div(lpBalanceBN).multipliedBy(balanceBN).toFixed(2)
   }
 
@@ -55,10 +44,18 @@ export const WithdrawInput = () => {
   }, [inputValueInUSD, setWithdrawAmount])
 
   useEffect(() => {
-    if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
+    if (inputValueBN.isGreaterThan(lpBalanceBN)) {
+      setValidationError('Exceeds balance')
+    } else if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
       setValidationError('Withdraw amount cannot be less than 1$')
+    } else {
+      setValidationError('')
     }
-  }, [inputValueInUSD])
+  }, [inputValueBN, lpBalanceBN, inputValueInUSD])
+
+  const handleReview = () => {
+    setCurrentModal('review')
+  }
 
   return (
     <div>
@@ -112,28 +109,16 @@ export const WithdrawInput = () => {
           </div>
         </div>
       </div>
-      {isConnected &&
-        (isAllowed ? (
-          <Button
-            loading={isPending}
-            size="lg"
-            disabled={!inputValue || !!validationError}
-            className="mt-10 w-full max-lg:mt-6"
-            onClick={withdraw}
-          >
-            Withdraw
-          </Button>
-        ) : (
-          <Button
-            loading={isPending}
-            size="lg"
-            disabled={!inputValue || !!validationError}
-            className="mt-10 w-full max-lg:mt-6"
-            onClick={approve}
-          >
-            Approve
-          </Button>
-        ))}
+      {isConnected && (
+        <Button
+          size="lg"
+          disabled={!inputValue || !!validationError}
+          className="mt-10 w-full max-lg:mt-6"
+          onClick={handleReview}
+        >
+          Withdraw
+        </Button>
+      )}
     </div>
   )
 }

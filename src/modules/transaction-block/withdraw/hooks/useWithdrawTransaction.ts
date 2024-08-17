@@ -5,7 +5,9 @@ import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
+import { convertBigIntToString } from '@utils/formatValue'
 import { BigNumber } from 'bignumber.js'
 import type { Provider } from 'ethers'
 import { useState } from 'react'
@@ -23,11 +25,20 @@ import { useVaultBalance } from './useVaultBalance'
 
 export const useWithdrawTransaction = () => {
   const { address } = useAccount()
-  const { setCurrentModal, inputValue, mtToken } = useTxStore()
+  const {
+    setCurrentModal,
+    inputValue,
+    mtToken,
+    setTransactionCanBeCollapsed,
+    getFullState,
+  } = useTxStore()
+
+  const { addTransaction } = useTransactionStore()
 
   const [loading, setLoading] = useState(false)
 
   const [approveHash, setApproveHash] = useState<Address | undefined>()
+  const [withdrawHash, setWithdrawHash] = useState<Address | null>(null)
   const amount = parseUnits(inputValue, 6)
 
   const { switchChain: _switchChain } = useSwitchChain()
@@ -36,6 +47,17 @@ export const useWithdrawTransaction = () => {
     hash: approveHash,
     query: {
       enabled: !!approveHash,
+    },
+    confirmations:
+      CONFIRMATIONS_NUMBER[mtToken?.chainId as keyof typeof CONFIRMATIONS_NUMBER],
+    chainId: mtToken?.chainId,
+    timeout: 60_000,
+  })
+
+  const { status: withdrawTxStatus } = useWaitForTransactionReceipt({
+    hash: withdrawHash as Address,
+    query: {
+      enabled: !!withdrawHash,
     },
     confirmations:
       CONFIRMATIONS_NUMBER[mtToken?.chainId as keyof typeof CONFIRMATIONS_NUMBER],
@@ -58,6 +80,11 @@ export const useWithdrawTransaction = () => {
     // eslint-disable-next-line unicorn/no-useless-undefined
     setApproveHash(undefined)
     refetchSharesAllowed()
+  }
+
+  if (withdrawTxStatus === 'success') {
+    setWithdrawHash(null)
+    setCurrentModal('done')
   }
 
   const { sharesBalance } = useVaultBalance(mtToken?.mtAddress || '0x')
@@ -105,7 +132,19 @@ export const useWithdrawTransaction = () => {
       },
 
       {
-        onSuccess: () => setCurrentModal('done'),
+        onSuccess: (data) => {
+          const txState = getFullState()
+          const txStateWithStringBigInt = convertBigIntToString(txState)
+          // @ts-ignore
+          addTransaction({
+            ...txStateWithStringBigInt,
+            id: data,
+            status: 'pending',
+            timestamp: Date.now(),
+          })
+          setTransactionCanBeCollapsed(true)
+          setWithdrawHash(data)
+        },
         onError: (e) => {
           console.error(e.message)
           setCurrentModal('error')

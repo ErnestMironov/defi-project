@@ -24,9 +24,13 @@ interface UsePortfolioProperties {
   chains?: Chains[]
 }
 
+type MappedTokenData = Omit<ITokenData, 'chain_id'> & {
+  chain_id: (typeof COVALENT_CHAINS_MAPPER)[keyof typeof COVALENT_CHAINS_MAPPER]
+}
+
 type ChainPortfolio = Record<
   (typeof COVALENT_CHAINS_MAPPER)[keyof typeof COVALENT_CHAINS_MAPPER],
-  ITokenData[]
+  MappedTokenData[]
 >
 
 export const useTokensBalance = ({
@@ -41,9 +45,15 @@ export const useTokensBalance = ({
       await Promise.all(
         chains.map(async (chainId: (typeof DEFAULT_CHAINS)[number]) => {
           const tokens = await getTokenBalances(chainId, address)
+          const mappedTokens = tokens.map((token) => ({
+            ...token,
+            chain_id:
+              COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER],
+          }))
 
-          // @ts-ignore
-          portfolio[COVALENT_CHAINS_MAPPER[chainId] as keyof ChainPortfolio] = tokens
+          portfolio[
+            COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER]
+          ] = mappedTokens
         }),
       )
       return portfolio as ChainPortfolio

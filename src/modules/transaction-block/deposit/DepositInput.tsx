@@ -9,11 +9,10 @@ import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput.tsx'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
-import { useTxStore } from '../store/useDepositStore'
-import { DepositReviewModal } from './DepositReviewModal'
+import { useTxStore } from '../store/useTxStore.ts'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
-import ZapFee from './zap-fee/ZapFee.tsx'
+import ZapFee from './zap-fee/ZapFee'
 
 type InputType = 'usd' | 'token'
 
@@ -205,7 +204,6 @@ export const DepositInput = () => {
           {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}
         </Button>
       )}
-      <DepositReviewModal />
     </div>
   )
 }

@@ -7,7 +7,7 @@ import { formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useTxStore } from './store/useDepositStore'
+import { useTxStore } from './store/useTxStore'
 
 export const DoneModal = () => {
   const navigate = useNavigate()
@@ -20,15 +20,11 @@ export const DoneModal = () => {
     depositAmount,
     withdrawAmount,
     mtToken,
-    setDepositAsset,
-    setDepositAmount,
-    setInputValue,
+    resetStore,
   } = useTxStore()
 
   const reset = () => {
-    setDepositAsset(null)
-    setDepositAmount('')
-    setInputValue('')
+    resetStore()
     setCurrentModal(null)
   }
 

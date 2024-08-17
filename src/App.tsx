@@ -3,7 +3,9 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 import { relayStylePagination } from '@apollo/client/utilities'
 import { queryClient } from '@configs/r-query'
 import { Web3ModalProvider } from '@configs/Web3ModalProvider'
+import { PendingTransactions } from '@modules/pending-transactions/PendingTransactions'
 import { ThemeProvider } from '@modules/theme/ThemeProvider'
+import { TxReviewModal } from '@modules/transaction-block/TxReviewModal'
 import { router } from '@routes/router.config'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
@@ -36,6 +38,8 @@ function App() {
           <Web3ModalProvider>
             <QueryClientProvider client={queryClient}>
               <RouterProvider router={router} />
+              <PendingTransactions />
+              <TxReviewModal />
             </QueryClientProvider>
           </Web3ModalProvider>
         </ApolloProvider>

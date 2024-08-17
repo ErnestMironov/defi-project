@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi'
 import { DepositInput } from './deposit/DepositInput'
 import { DoneModal } from './DoneModal'
 import { FailModal } from './FailModal'
-import { useTxStore } from './store/useDepositStore'
+import { useTxStore } from './store/useTxStore'
 import { TxTypeSwitcher } from './TxTypeSwither'
 import { WithdrawInput } from './withdraw/WithdrawInput'
 

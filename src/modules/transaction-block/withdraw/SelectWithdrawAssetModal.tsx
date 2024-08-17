@@ -17,7 +17,7 @@ import { formatUnits } from 'viem'
 import { useSwitchChain } from 'wagmi'
 
 import type { UserMTokenInfo } from '../interface'
-import { useTxStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useTxStore'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
 
 interface SelectWithdrawAssetModalProperties extends ComponentProps<'div'> {}

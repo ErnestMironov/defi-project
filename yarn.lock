@@ -12357,6 +12357,11 @@ zod@3.22.4:
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
   integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==
 
+zukeeper@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/zukeeper/-/zukeeper-1.0.2.tgz#7e5ff289af39001566b885a842e180b0e16860b8"
+  integrity sha512-mffz8JpzC96B3Gpoixklfl2/wY4KsYxZvgPRLFMIqAvEQeMPTjLYG8oUWXm9eoItU/nQ5Lt0G2b0GcZRDGzVgA==
+
 zustand@4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.4.1.tgz#0cd3a3e4756f21811bd956418fdc686877e8b3b0"

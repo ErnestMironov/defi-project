@@ -2,7 +2,9 @@
 import { GATEWAY_ABI } from '@abi/gateway'
 import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
+import { convertBigIntToString } from '@utils/formatValue'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { useCallback, useState } from 'react'
 import { type Address, formatUnits } from 'viem'
@@ -21,19 +23,20 @@ export const useDepositTransaction = ({
   onSuccessHandler,
 }: IProperties) => {
   const { writeContract, ...rest } = useWriteContract()
-  const { setCurrentModal, setDepositAmount } = useTxStore()
+  const {
+    setCurrentModal,
+    setDepositAmount,
+    vault,
+    depositAsset,
+    getFullState,
+    setTransactionCanBeCollapsed,
+  } = useTxStore()
   const { address: userAddress } = useAccount()
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const config = useConfig()
+  const { addTransaction } = useTransactionStore()
 
   const deposit = useCallback(() => {
-    console.log(
-      '🚀 ~ deposit ~ address, amount, userAddress, ARB_EID:',
-      address,
-      amount,
-      userAddress,
-      ARB_EID,
-    )
     if (!address || !userAddress) return
     setStatus('confirm_in_wallet')
 
@@ -47,9 +50,19 @@ export const useDepositTransaction = ({
       {
         onSuccess: async (data) => {
           setStatus('pending')
-          // setApproveHash(data)
-          console.log('simple_deposit_timer', data)
-          console.time('simple_deposit_timer')
+
+          const txState = getFullState()
+          const txStateWithStringBigInt = convertBigIntToString(txState)
+          // @ts-ignore
+          addTransaction({
+            ...txStateWithStringBigInt,
+            id: data,
+            status: 'pending',
+            timestamp: Date.now(),
+          })
+
+          setTransactionCanBeCollapsed(true)
+
           // @ts-ignore
           await waitForTransactionReceipt(config, {
             hash: data,
@@ -57,11 +70,6 @@ export const useDepositTransaction = ({
             confirmations: CONFIRMATIONS_NUMBER[CHAIN_IDS_BY_NAME.Arbitrum],
             timeout: 60_000,
           })
-
-          console.timeLog('simple_deposit_timer')
-          console.timeEnd('simple_deposit_timer')
-
-          console.log('🚀 ~ approve ~ timer: end', data)
 
           setStatus('success')
 
@@ -78,12 +86,15 @@ export const useDepositTransaction = ({
   }, [
     address,
     amount,
+    userAddress,
+    writeContract,
+    addTransaction,
+    vault,
+    depositAsset,
     config,
     onSuccessHandler,
     setCurrentModal,
     setDepositAmount,
-    userAddress,
-    writeContract,
   ])
 
   return { deposit, ...rest, status }
