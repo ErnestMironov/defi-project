@@ -3,6 +3,7 @@ import Collapse from '@assets/icons/collapse.svg'
 import BigLoader from '@assets/lottie/wizard-main-loader.json'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import Lottie from 'lottie-react'
+import { cloneElement } from 'react'
 
 import { CountdownTimer } from './components/CountDownTimer'
 import { DepositReviewContent } from './deposit/DepositReviewContent'
@@ -16,6 +17,7 @@ export const TxReviewModal = () => {
     isTransactionCanBeCollapsed,
     txType,
     resetStore,
+    isTransactionFromStore,
   } = useTxStore()
 
   const handleCountdownComplete = () => {
@@ -24,7 +26,7 @@ export const TxReviewModal = () => {
   }
 
   const handleClose = () => {
-    resetStore()  
+    resetStore()
     setCurrentModal(null)
   }
 
@@ -36,17 +38,14 @@ export const TxReviewModal = () => {
   }
 
   const renderContent = () => {
-    switch (txType) {
-      case 'deposit': {
-        return <DepositReviewContent />
-      }
-      case 'withdraw': {
-        return <WithdrawReviewContent />
-      }
-      default: {
-        return null
-      }
+    const content =
+      txType === 'deposit' ? <DepositReviewContent /> : <WithdrawReviewContent />
+
+    if (isTransactionFromStore) {
+      return cloneElement(content, { allStepsCompleted: true })
     }
+
+    return content
   }
 
   return (

@@ -16,9 +16,9 @@ import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const NativeOnchainSwap: React.FunctionComponent<
-  IDepositWizardProperties
-> = ({}) => {
+export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
   const {
     vault,
     inputValue: amount,
@@ -111,7 +111,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
           icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
-          status={switchStatus}
+          status={allStepsCompleted ? 'success' : switchStatus}
           error={switchError}
         />
         <WizardStep

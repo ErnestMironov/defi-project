@@ -15,7 +15,11 @@ import { NativeOnchainSwap } from './deposit-wizards/NativeOnchainSwap'
 import { OnchainSwap } from './deposit-wizards/OnchainSwap'
 import { SimpleDeposit } from './deposit-wizards/SimpleDeposit'
 
-export const DepositReviewContent = () => {
+export const DepositReviewContent = ({
+  allStepsCompleted,
+}: {
+  allStepsCompleted?: boolean
+}) => {
   const { depositAsset: asset, vault, inputValue: amount, inputValueInUSD } = useTxStore()
 
   const chainData = useTokenAsset(asset?.chain_id)
@@ -31,30 +35,37 @@ export const DepositReviewContent = () => {
   }, [squid?.tokens, vault])
 
   const depositFlow = useMemo(() => {
+    console.log(
+      '🚀 ~ depositFlow ~ !asset || !chainData || !tokenAddrForVault:',
+      !asset || !chainData || !tokenAddrForVault,
+    )
     if (!asset || !chainData || !tokenAddrForVault) {
       return null
     }
 
     const assetContractAddress = asset.contract_address?.toLowerCase()
+    console.log('🚀 ~ depositFlow ~ assetContractAddress:', assetContractAddress)
     const vaultAddress = tokenAddrForVault.toLowerCase()
+    console.log('🚀 ~ depositFlow ~ vaultAddress:', vaultAddress)
 
     if (vaultAddress === assetContractAddress) {
-      return <SimpleDeposit />
+      return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
     }
 
     if (chainData.chainId === 42_161) {
       if (asset.native_token) {
-        return <NativeOnchainSwap />
+        return <NativeOnchainSwap allStepsCompleted={allStepsCompleted} />
       }
-      return <OnchainSwap />
+      return <OnchainSwap allStepsCompleted={allStepsCompleted} />
     }
 
     if (asset.native_token) {
-      return <NativeCrossChainSwap />
+      return <NativeCrossChainSwap allStepsCompleted={allStepsCompleted} />
     }
 
-    return <CrossChainSwap />
-  }, [asset, chainData, tokenAddrForVault])
+    return <CrossChainSwap allStepsCompleted={allStepsCompleted} />
+  }, [asset, chainData, tokenAddrForVault, allStepsCompleted])
+  console.log('🚀 ~ depositFlow ~ depositFlow:', depositFlow)
 
   return (
     <>

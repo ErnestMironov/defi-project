@@ -18,7 +18,9 @@ import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
+export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
   const {
     depositAsset,
     vault,
@@ -141,7 +143,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
           activeStep={currentStep === 1}
           title={`Switch to ${depositAssetChain?.name}`}
-          status={switchToAssetChainStatus}
+          status={allStepsCompleted ? 'success' : switchToAssetChainStatus}
         />
         <WizardStep
           icon={
@@ -153,7 +155,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           }
           activeStep={currentStep === 2}
           title="Approve"
-          status={approveStatusBeforeSwap}
+          status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
           error={approveErrorBeforeSwap?.message}
           showArrow
         />

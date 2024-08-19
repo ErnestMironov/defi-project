@@ -16,7 +16,9 @@ import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
+export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
   const {
     depositAsset: asset,
     inputValue: amount,
@@ -106,7 +108,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
-          status={switchStatus}
+          status={allStepsCompleted ? 'success' : switchStatus}
         />
         <WizardStep
           icon={
@@ -118,7 +120,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           }
           activeStep={currentStep === 2}
           title="Approve"
-          status={approveStatus}
+          status={allStepsCompleted ? 'success' : approveStatus}
           showArrow
         />
         <WizardStep

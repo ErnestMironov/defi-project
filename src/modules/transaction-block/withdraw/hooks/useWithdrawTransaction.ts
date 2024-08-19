@@ -1,25 +1,18 @@
 import { GATEWAY_ABI } from '@abi/gateway'
-import { TOKEN_VAULT } from '@abi/token-vault'
 import { quoteOftSend } from '@api/squid-router/postHook/quoteOftSend'
-import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
+import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
-import { BigNumber } from 'bignumber.js'
 import type { Provider } from 'ethers'
 import { useState } from 'react'
 import type { Address } from 'viem'
 import { parseUnits } from 'viem'
-import {
-  useAccount,
-  useReadContract,
-  useSwitchChain,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from 'wagmi'
+import { useAccount, useWriteContract } from 'wagmi'
 
 import { useVaultBalance } from './useVaultBalance'
 
@@ -35,66 +28,10 @@ export const useWithdrawTransaction = () => {
 
   const { addTransaction } = useTransactionStore()
 
-  const [loading, setLoading] = useState(false)
-
-  const [approveHash, setApproveHash] = useState<Address | undefined>()
-  const [withdrawHash, setWithdrawHash] = useState<Address | null>(null)
+  const [status, setStatus] = useState<STEP_STATUS>('idle')
   const amount = parseUnits(inputValue, 6)
 
-  const { switchChain: _switchChain } = useSwitchChain()
-
-  const { status: approveTxStatus } = useWaitForTransactionReceipt({
-    hash: approveHash,
-    query: {
-      enabled: !!approveHash,
-    },
-    confirmations:
-      CONFIRMATIONS_NUMBER[mtToken?.chainId as keyof typeof CONFIRMATIONS_NUMBER],
-    chainId: mtToken?.chainId,
-    timeout: 60_000,
-  })
-
-  const { status: withdrawTxStatus } = useWaitForTransactionReceipt({
-    hash: withdrawHash as Address,
-    query: {
-      enabled: !!withdrawHash,
-    },
-    confirmations:
-      CONFIRMATIONS_NUMBER[mtToken?.chainId as keyof typeof CONFIRMATIONS_NUMBER],
-    chainId: mtToken?.chainId,
-    timeout: 60_000,
-  })
-
-  const { data: sharesAllowed, refetch: refetchSharesAllowed } = useReadContract({
-    abi: TOKEN_VAULT,
-    address: mtToken?.mtAddress,
-    args: [address, ARB_GATEWAY],
-    functionName: 'allowance',
-    query: {
-      enabled: !!address && !!mtToken?.mtAddress,
-    },
-  })
-
-  if (approveTxStatus === 'success') {
-    setLoading(false)
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    setApproveHash(undefined)
-    refetchSharesAllowed()
-  }
-
-  if (withdrawTxStatus === 'success') {
-    setWithdrawHash(null)
-    setCurrentModal('done')
-  }
-
   const { sharesBalance } = useVaultBalance(mtToken?.mtAddress || '0x')
-
-  const isAllowed = (() => {
-    if (!sharesAllowed) return
-    return BigNumber(sharesAllowed.toString()).isGreaterThanOrEqualTo(
-      BigNumber(parseUnits(inputValue, 6).toString()),
-    )
-  })()
 
   const isEnoughSharesToWithdraw = (() => {
     if (!sharesBalance || !amount) return
@@ -105,6 +42,7 @@ export const useWithdrawTransaction = () => {
 
   const withdraw = async () => {
     if (!address || !amount || !isEnoughSharesToWithdraw || !mtToken) return
+    setStatus('confirm_in_wallet')
     const provider = getEthersProvider()
 
     let value = 0n
@@ -133,6 +71,7 @@ export const useWithdrawTransaction = () => {
 
       {
         onSuccess: (data) => {
+          setStatus('pending')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore
@@ -143,36 +82,15 @@ export const useWithdrawTransaction = () => {
             timestamp: Date.now(),
           })
           setTransactionCanBeCollapsed(true)
-          setWithdrawHash(data)
         },
         onError: (e) => {
           console.error(e.message)
           setCurrentModal('error')
+          setStatus('error')
         },
-      },
-    )
-  }
-  const approve = () => {
-    if (!mtToken?.asset) return
-    setLoading(true)
-    _switchChain({
-      chainId: mtToken?.chainId,
-    })
-    return writeContract(
-      {
-        address: mtToken?.mtAddress as Address,
-        abi: TOKEN_VAULT,
-        functionName: 'approve',
-        args: [ARB_GATEWAY, parseUnits(inputValue, 6)],
-      },
-      {
-        onSuccess: (data) => {
-          setApproveHash(data)
-        },
-        onError: () => setLoading(false),
       },
     )
   }
 
-  return { withdraw, approve, isEnoughSharesToWithdraw, isAllowed, loading, ...rest }
+  return { withdraw, isEnoughSharesToWithdraw, ...rest, status }
 }

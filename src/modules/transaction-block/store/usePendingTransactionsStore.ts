@@ -5,6 +5,7 @@ import type { TxType } from '@constants/txTypes'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
+import type { STEP_STATUS } from '../deposit/interfaces'
 import type { Vault } from '../deposit/SelectVault'
 import type { UserMTokenInfo } from '../interface'
 
@@ -12,7 +13,7 @@ export interface IPendingTransactionData {
   id: string
   inputValue: string
   inputValueInUsd: string
-  status: 'pending' | 'completed' | 'failed'
+  status: STEP_STATUS
   timestamp: number
   vault: Vault
   depositAsset: ITokenData
@@ -26,12 +27,13 @@ export interface IPendingTransactionData {
   boostMode: boolean
   arrivalGas: string
   currentStep: number
+  isTransactionFromStore: boolean
 }
 
 interface TransactionState {
   transactions: IPendingTransactionData[]
   addTransaction: (transaction: IPendingTransactionData) => void
-  updateTransaction: (id: string, status: 'pending' | 'completed' | 'failed') => void
+  updateTransaction: (id: string, status: STEP_STATUS) => void
   clearTransactions: () => void
   removeTransaction: (id: string) => void
   isTransactionExist: (hash: string) => boolean // Переименованный метод
@@ -44,7 +46,10 @@ export const useTransactionStore = create<TransactionState>()(
         transactions: [],
         addTransaction: (transaction) => {
           set((state) => ({
-            transactions: [...state.transactions, transaction],
+            transactions: [
+              ...state.transactions,
+              { ...transaction, isTransactionFromStore: true },
+            ],
           }))
         },
         updateTransaction: (id, status) => {

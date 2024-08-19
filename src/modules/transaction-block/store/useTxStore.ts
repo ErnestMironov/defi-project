@@ -62,6 +62,9 @@ interface SelectedAssetState {
   isTransactionCanBeCollapsed: boolean
   setTransactionCanBeCollapsed: (value: boolean) => void
 
+  isTransactionFromStore: boolean
+  setTransactionFromStore: (value: boolean) => void
+
   setTransactionData: (transaction: IPendingTransactionData) => void
 
   getFullState: () => Partial<SelectedAssetState>
@@ -128,6 +131,9 @@ export const useTxStore = create<SelectedAssetState>()(
       setTransactionCanBeCollapsed: (value) =>
         set({ isTransactionCanBeCollapsed: value }),
 
+      isTransactionFromStore: false,
+      setTransactionFromStore: (value) => set({ isTransactionFromStore: value }),
+
       setTransactionData: (transaction: IPendingTransactionData) =>
         set((state) => ({
           ...state,
@@ -162,6 +168,7 @@ export const useTxStore = create<SelectedAssetState>()(
           arrivalGas: '',
           currentStep: 1,
           isTransactionCanBeCollapsed: false,
+          isTransactionFromStore: false,
           transactionHash: null,
         }),
     }),

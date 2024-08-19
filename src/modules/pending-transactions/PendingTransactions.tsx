@@ -15,6 +15,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Lottie from 'lottie-react'
 import React, { useState } from 'react'
 
+import { useTransactionStatusChecker } from './useTransactionStatusTracker'
+
 interface CollapsedTransactionProperties {
   transaction: IPendingTransactionData
   onClick: (transaction: IPendingTransactionData) => void
@@ -24,11 +26,10 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
   transaction,
   onClick,
 }) => {
-  console.log('🚀 ~ transaction:', transaction)
   const statusText = {
     pending: 'in progress',
-    completed: 'is done!',
-    failed: 'failed',
+    success: 'is done!',
+    error: 'failed',
   }
 
   const renderTransactionInfo = () => {
@@ -78,7 +79,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
       className={cn(
         'relative flex w-[17.5rem] cursor-pointer flex-col items-start gap-4 overflow-hidden rounded-2xl bg-[#FFF] p-6 pt-4',
         {
-          'bg-[#F7EDF1]': transaction.status === 'failed',
+          'bg-[#F7EDF1]': transaction.status === 'error',
         },
       )}
       onClick={() => onClick(transaction)}
@@ -88,13 +89,13 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
           className={cn(
             'flex items-center gap-2 text-center text-[1.125rem] leading-[120%] text-text-90',
             {
-              'text-red-100': transaction.status === 'failed',
+              'text-red-100': transaction.status === 'error',
             },
           )}
         >
-          {transaction.status === 'failed' && <ErrorCircle className="size-6" />}
+          {transaction.status === 'error' && <ErrorCircle className="size-6" />}
           <span>{transaction.txType === 'deposit' ? 'Deposit' : 'Withdraw'} </span>
-          <span>{statusText[transaction.status]}</span>
+          <span>{statusText[transaction.status as keyof typeof statusText]}</span>
         </h3>
         <Expand className="size-6" />
       </div>
@@ -119,7 +120,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
 export const PendingTransactions: React.FC = () => {
   const { transactions } = useTransactionStore()
   const { setCurrentModal, setTransactionData } = useTxStore()
-
+  useTransactionStatusChecker()
   const [isHovered, setIsHovered] = useState(false)
 
   const handleTransactionClick = (transaction: IPendingTransactionData) => {
@@ -130,11 +131,11 @@ export const PendingTransactions: React.FC = () => {
         setCurrentModal('review')
         break
       }
-      case 'completed': {
+      case 'success': {
         setCurrentModal('done')
         break
       }
-      case 'failed': {
+      case 'error': {
         setCurrentModal('error')
         break
       }

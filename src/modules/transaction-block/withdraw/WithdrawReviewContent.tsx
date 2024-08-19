@@ -5,31 +5,38 @@ import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { parseFloatLocale } from '@utils/formatValue'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { parseUnits } from 'viem'
 
 import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../deposit/hooks/useApproveERC20'
 import { useSwitchToTokenChain } from '../deposit/hooks/useSwitchToTokenChain'
+import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { getButtonContent } from '../utils/getButtonText'
+import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
 
-export const WithdrawReviewContent = () => {
+export const WithdrawReviewContent = ({
+  allStepsCompleted,
+}: {
+  allStepsCompleted?: boolean
+}) => {
   const {
     inputValue: amount,
     withdrawAmount: withdrawAmountInUSD,
     mtToken,
     currentStep,
     setCurrentStep,
+    setCurrentModal,
   } = useTxStore()
-
-  function incrementStep() {
-    setCurrentStep(currentStep + 1)
-  }
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
     chainId: mtToken?.chainId ?? 1,
-    onSuccessHandler: incrementStep,
+    onSuccessHandler: () => {
+      if (currentStep <= 1) {
+        setCurrentStep(2)
+      }
+    },
   })
 
   const {
@@ -40,8 +47,27 @@ export const WithdrawReviewContent = () => {
     approveValue: parseUnits(amount, 6).toString(),
     tokenAddress: mtToken?.mtAddress,
     transactionRequestTarget: ARB_GATEWAY,
-    onSuccessHandler: incrementStep,
+    onSuccessHandler: () => {
+      if (currentStep === 2) {
+        setCurrentStep(3)
+      }
+    },
   })
+
+  const {
+    withdraw,
+    status: currentWithdrawStatus,
+    error: withdrawError,
+  } = useWithdrawTransaction()
+
+  const withdrawStatus = useTransactionStatus(currentWithdrawStatus)
+  console.log('🚀 ~ withdrawStatus:', withdrawStatus)
+
+  useEffect(() => {
+    if (withdrawStatus === 'success') {
+      setCurrentModal('done')
+    }
+  }, [setCurrentModal, withdrawStatus])
 
   const ActionButton = useMemo(() => {
     switch (currentStep) {
@@ -77,8 +103,14 @@ export const WithdrawReviewContent = () => {
       }
       case 3: {
         return (
-          <Button size="lg" type="button">
-            Withdraw
+          <Button
+            loading={withdrawStatus === 'pending'}
+            size="lg"
+            type="button"
+            disabled={withdrawStatus === 'pending' || withdrawStatus === 'success'}
+            onClick={withdraw}
+          >
+            {getButtonContent(withdrawStatus, 'Withdraw')}
           </Button>
         )
       }
@@ -86,7 +118,16 @@ export const WithdrawReviewContent = () => {
         throw new Error('unknown action type')
       }
     }
-  }, [currentStep, switchStatus, approveStatus, mtToken, switchChain, approve])
+  }, [
+    currentStep,
+    switchStatus,
+    approveStatus,
+    withdrawStatus,
+    mtToken,
+    switchChain,
+    approve,
+    withdraw,
+  ])
 
   return (
     <div className="flex flex-col items-stretch gap-10">
@@ -116,7 +157,7 @@ export const WithdrawReviewContent = () => {
           title={`Switch network to ${
             CHAIN_NAMES_BY_ID[mtToken?.chainId as keyof typeof CHAIN_NAMES_BY_ID]
           }`}
-          status={switchStatus}
+          status={allStepsCompleted ? 'success' : switchStatus}
         />
         <WizardStep
           icon={
@@ -128,7 +169,7 @@ export const WithdrawReviewContent = () => {
           }
           activeStep={currentStep === 2}
           title={`Approve ${mtToken?.symbol} spending`}
-          status={approveStatus}
+          status={allStepsCompleted ? 'success' : approveStatus}
           error={approveError?.message}
           showArrow
         />
@@ -136,7 +177,8 @@ export const WithdrawReviewContent = () => {
           icon={<ReceiveSquare className="size-8" />}
           activeStep={currentStep === 3}
           title={`Withdraw ${mtToken?.symbol}`}
-          status="idle"
+          status={withdrawStatus}
+          error={withdrawError?.message}
           showArrow
         />
       </div>

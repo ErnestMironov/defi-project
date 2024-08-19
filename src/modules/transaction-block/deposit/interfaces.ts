@@ -1,5 +1,6 @@
 export interface IDepositWizardProperties {
   successDepositHandler?: () => void
+  allStepsCompleted?: boolean
 }
 
 export type STEP_STATUS = 'idle' | 'pending' | 'success' | 'error' | 'confirm_in_wallet'
