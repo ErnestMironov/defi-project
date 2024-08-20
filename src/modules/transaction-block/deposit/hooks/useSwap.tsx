@@ -4,7 +4,7 @@ import type {
   IDepositWizardHook,
   STEP_STATUS,
 } from '@modules/transaction-block/deposit/interfaces'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
 import type { Address } from 'viem'

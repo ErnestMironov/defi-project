@@ -31,7 +31,7 @@ import { type ComponentProps, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
-import { useTxStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useTxStore'
 
 interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 

@@ -4,27 +4,31 @@ import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { parseEther } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
-import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const NativeOnchainSwap: React.FunctionComponent<
-  IDepositWizardProperties
-> = ({}) => {
-  const [currentStep, setCurrentStep] = useState(1)
-
-  const { vault, inputValue: amount, setCurrentModal } = useTxStore()
+export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
+  const {
+    vault,
+    inputValue: amount,
+    setCurrentModal,
+    currentStep,
+    setCurrentStep,
+  } = useTxStore()
 
   function incrementStep() {
-    setCurrentStep((previousStep) => previousStep + 1)
+    setCurrentStep(currentStep + 1)
   }
 
   const {
@@ -53,7 +57,6 @@ export const NativeOnchainSwap: React.FunctionComponent<
     toToken: tokenAddrForVault,
     enableBoost: true,
   })
-  console.log('🚀 ~ route:', route)
 
   const {
     swapTokens: swapAndDeposit,
@@ -71,7 +74,6 @@ export const NativeOnchainSwap: React.FunctionComponent<
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
-        console.info('��� ~ NAtiveOnChainSwap ~ currentStep:', 'switch to Arbitrum')
         return (
           <Button
             size="lg"
@@ -85,7 +87,6 @@ export const NativeOnchainSwap: React.FunctionComponent<
       }
 
       case 2: {
-        console.info('��� ~ NAtiveOnChainSwap ~ currentStep:', 'deposit')
         return (
           <Button
             size="lg"
@@ -110,7 +111,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
           icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
-          status={switchStatus}
+          status={allStepsCompleted ? 'success' : switchStatus}
           error={switchError}
         />
         <WizardStep

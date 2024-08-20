@@ -3,7 +3,7 @@ import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import { useTokenApy } from '@modules/transaction-block/deposit/hooks/useTokenApy'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
 

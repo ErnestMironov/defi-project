@@ -5,7 +5,7 @@ import { cn } from '@utils/cn'
 import Lottie from 'lottie-react'
 import type { ReactNode } from 'react'
 
-import type { STEP_STATUS } from '../interfaces'
+import type { STEP_STATUS } from '../deposit/interfaces'
 
 interface IWizardStepProperties {
   icon: ReactNode

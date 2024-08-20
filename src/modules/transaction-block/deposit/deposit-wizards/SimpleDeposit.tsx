@@ -4,33 +4,37 @@ import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
-import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
-  const [currentStep, setCurrentStep] = useState(1)
-
-  const { depositAsset: asset, inputValue: amount, vault } = useTxStore()
+export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
+  const {
+    depositAsset: asset,
+    inputValue: amount,
+    vault,
+    currentStep,
+    setCurrentStep,
+  } = useTxStore()
 
   function incrementStep() {
-    setCurrentStep((previousStep) => previousStep + 1)
+    setCurrentStep(currentStep + 1)
   }
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
     chainId: 42_161, // Arb chain ID
     onSuccessHandler: incrementStep,
   })
-  console.log('🚀 ~ switchStatus:', switchStatus)
 
   const { approve, status: approveStatus } = useApproveERC20({
     approveValue: parseUnits(amount, 6).toString(),
@@ -104,7 +108,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
-          status={switchStatus}
+          status={allStepsCompleted ? 'success' : switchStatus}
         />
         <WizardStep
           icon={
@@ -116,7 +120,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           }
           activeStep={currentStep === 2}
           title="Approve"
-          status={approveStatus}
+          status={allStepsCompleted ? 'success' : approveStatus}
           showArrow
         />
         <WizardStep

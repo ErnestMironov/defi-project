@@ -7,7 +7,7 @@ import { PopoverClose } from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 
-import { useTxStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useTxStore'
 
 interface SelectAssetPopoverProperties {}
 

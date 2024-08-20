@@ -4,11 +4,19 @@ import { Button } from '@components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import { useNavigate } from 'react-router-dom'
 
-import { useTxStore } from './store/useDepositStore'
+import { useTransactionStore } from './store/usePendingTransactionsStore'
+import { useTxStore } from './store/useTxStore'
 
 export const FailModal = () => {
-  const { currentModal, setCurrentModal } = useTxStore()
-  const close = () => setCurrentModal(null)
+  const { currentModal, setCurrentModal, resetStore, transactionHash } = useTxStore()
+  const { removeTransaction } = useTransactionStore()
+  const close = () => {
+    if (transactionHash) {
+      removeTransaction(transactionHash)
+    }
+    resetStore()
+    setCurrentModal(null)
+  }
 
   const navigate = useNavigate()
 

@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/extensions
 // eslint-disable-next-line import/extensions
 import { ARB_GATEWAY } from '@constants/contract-address'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import BigNumber from 'bignumber.js'
 import { useEffect } from 'react'
 import { type Address, erc20Abi } from 'viem'

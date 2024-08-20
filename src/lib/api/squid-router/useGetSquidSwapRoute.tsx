@@ -1,6 +1,5 @@
-import { EIDS_BY_CHAIN_ID, SUPPORTED_CHAINS_FOR_REP_TOKENS } from '@constants/eids'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { useQuery } from '@tanstack/react-query'
 import { Token } from '@uniswap/sdk-core'
 import axios from 'axios'
@@ -8,10 +7,7 @@ import { formatUnits } from 'ethers'
 import { useEffect, useMemo } from 'react'
 import { useAccount } from 'wagmi'
 
-import {
-  getPostHookForCrossChainSwapAndDeposit,
-  getPostHookForOneChainSwapAndDeposit,
-} from './postHook/postHook'
+import { getDepositPostHook } from './postHook/postHook'
 
 const integratorId = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
 
@@ -19,21 +15,12 @@ const integratorId = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
 const getRoute = async (_parameters: any, provider: any) => {
   console.log('🚀 ~ getRoute ~ provider:', provider)
   console.log('🚀 ~ getRoute ~ _parameters:', _parameters)
-  const EID = SUPPORTED_CHAINS_FOR_REP_TOKENS.includes(Number(_parameters.fromChain))
-    ? EIDS_BY_CHAIN_ID[Number(_parameters.fromChain)]
-    : EIDS_BY_CHAIN_ID[42_161]
+
   try {
-    const postHook = await (_parameters.fromChain === _parameters.toChain
-      ? getPostHookForOneChainSwapAndDeposit(
-          new Token(Number(_parameters.toChain), _parameters.toToken, 6),
-          _parameters.toAddress,
-        )
-      : getPostHookForCrossChainSwapAndDeposit(
-          new Token(Number(_parameters.toChain), _parameters.toToken, 6),
-          _parameters.toAddress,
-          EID as number, // Fixed line
-          provider,
-        ))
+    const postHook = await getDepositPostHook(
+      new Token(Number(_parameters.toChain), _parameters.toToken, 6),
+      _parameters.toAddress,
+    )
 
     console.log('��� ~ postHook:', postHook)
 

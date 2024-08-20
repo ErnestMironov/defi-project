@@ -4,41 +4,41 @@ import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { ARB_USDC, ARB_USDT } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
-import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const NativeCrossChainSwap: React.FunctionComponent<
-  IDepositWizardProperties
-> = ({}) => {
-  const [currentStep, setCurrentStep] = useState(1)
-
-  const { depositAsset, vault, inputValue: amount, setCurrentModal } = useTxStore()
-
-  function incrementStep() {
-    setCurrentStep((previousStep) => previousStep + 1)
-  }
+export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
+  const {
+    depositAsset,
+    vault,
+    inputValue: amount,
+    setCurrentModal,
+    currentStep,
+    setCurrentStep,
+  } = useTxStore()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
   const { status: switchToAssetChainStatus, switchChain: switchToAssetChain } =
     useSwitchToTokenChain({
-      chainId: depositAssetChain?.chainId ?? 1, // Arb chain ID
-      onSuccessHandler: incrementStep,
+      chainId: depositAssetChain?.chainId ?? 1,
+      onSuccessHandler: () => setCurrentStep(currentStep + 1),
     })
 
   const tokenAddrForVault = useMemo(() => {
     return vault?.toLowerCase() === 'usdc' ? ARB_USDC : ARB_USDT
   }, [vault])
-  console.log('🚀 ~ tokenAddrForVault ~ tokenAddrForVault:', tokenAddrForVault)
 
   const { route, requestId } = useGetSquidSwapRoute({
     fromAmount: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
@@ -48,7 +48,6 @@ export const NativeCrossChainSwap: React.FunctionComponent<
     toToken: tokenAddrForVault,
     enableBoost: true,
   })
-  console.log('🚀 ~ route:', route)
 
   const {
     swapTokens: swapAndDeposit,
@@ -66,10 +65,6 @@ export const NativeCrossChainSwap: React.FunctionComponent<
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
-        console.info(
-          '��� ~ NativeCrossChainSwap ~ currentStep:',
-          `Switch to ${depositAssetChain?.name}`,
-        )
         return (
           <Button
             size="lg"
@@ -85,7 +80,6 @@ export const NativeCrossChainSwap: React.FunctionComponent<
         )
       }
       case 2: {
-        console.info('��� ~ NativeCrossChainSwap ~ currentStep:', 'deposit')
         return (
           <Button
             size="lg"
@@ -110,7 +104,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
           icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
           activeStep={currentStep === 1}
           title={`Switch to ${depositAssetChain?.name}`}
-          status={switchToAssetChainStatus}
+          status={allStepsCompleted ? 'success' : switchToAssetChainStatus}
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}

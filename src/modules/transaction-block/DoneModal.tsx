@@ -7,10 +7,13 @@ import { formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useTxStore } from './store/useDepositStore'
+import { useTransactionStore } from './store/usePendingTransactionsStore'
+import { useTxStore } from './store/useTxStore'
 
 export const DoneModal = () => {
   const navigate = useNavigate()
+
+  const { removeTransaction } = useTransactionStore()
 
   const {
     txType,
@@ -20,19 +23,17 @@ export const DoneModal = () => {
     depositAmount,
     withdrawAmount,
     mtToken,
-    setDepositAsset,
-    setDepositAmount,
-    setInputValue,
+    resetStore,
+    transactionHash,
   } = useTxStore()
 
-  const reset = () => {
-    setDepositAsset(null)
-    setDepositAmount('')
-    setInputValue('')
+  const onClose = () => {
+    if (transactionHash) {
+      removeTransaction(transactionHash)
+    }
+    resetStore()
     setCurrentModal(null)
   }
-
-  const onClose = () => reset()
 
   const title = useMemo(() => {
     switch (txType) {
