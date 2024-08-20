@@ -7,6 +7,7 @@ import {
 import { type SelectProps, SelectValue } from '@radix-ui/react-select'
 import { cn } from '@utils/cn'
 import type { FC, SVGProps } from 'react'
+import { size } from 'viem'
 
 export type OptionType = {
   value: string
@@ -23,10 +24,14 @@ interface SelectProperties extends Omit<React.FC<SelectProps>, 'value'> {
   onChange: (value: OptionType) => void
   placeholder?: string
   disabled?: boolean
+  classNames?: {
+    content?: string
+    trigger?: string
+  }
 }
 
 export const Select = (props: SelectProperties) => {
-  const { className, options, value, onChange, placeholder, ...rest } = props
+  const { className, options, value, onChange, placeholder, classNames, ...rest } = props
   return (
     <SelectPrimitive
       {...rest}
@@ -35,10 +40,10 @@ export const Select = (props: SelectProperties) => {
         onChange(options.find((option) => option.value === _value) as OptionType)
       }}
     >
-      <SelectTrigger className={cn('size-full', className)}>
+      <SelectTrigger className={cn('size-full', className, classNames?.trigger)}>
         <SelectValue placeholder={placeholder}>{value.label}</SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent data-size={size} className={cn('w-full', classNames?.content)}>
         {options.map((option) => {
           return (
             <SelectItem key={option.value} value={option.value} Icon={option?.Icon}>

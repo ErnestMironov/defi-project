@@ -44,6 +44,7 @@ module.exports = {
         'main-30': 'var(--main-30)',
         'main': {
           100: 'var(--main-100)',
+          80: 'var(--main-80)',
           50: 'var(--main-50)',
           30: 'var(--main-30)',
           15: 'var(--main-15)',

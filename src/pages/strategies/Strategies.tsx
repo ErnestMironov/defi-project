@@ -1,13 +1,17 @@
-import { FramesSelect } from '@components/frames-select/FramesSelect'
-import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import type { OptionType } from '@components/select/Select'
-import { ScrollArea } from '@components/ui/scroll-area'
+import { Footer } from '@layouts/footer/Footer'
+import { Strategies as StrategiesTable } from '@modules/strategies/Strategies'
+import { StrategiesChart } from '@modules/strategies/StrategiesChart'
+import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
+import {
+  SELECT_ACTIONS,
+  SELECT_CHAINS,
+  SELECT_MAAT_ACTIONS,
+  SELECT_STATUSES,
+  SELECT_TOKENS,
+} from '@pages/analytics/constants/select-constant'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useState } from 'react'
-
-import { StrategyRow } from './components/StrategyRow'
-import { COLORS, MultiColoredLineChart } from './modules/charts/MultiColoredLineChart'
-import { SelectPopover } from './modules/strategies/SelectMenu'
+import { type ComponentProps } from 'react'
 
 const MOCK_APY_DATA = [
   {
@@ -32,7 +36,7 @@ const MOCK_APY_DATA = [
   },
 ]
 
-const MOCK_STRATEGIES = [
+export const MOCK_STRATEGIES = [
   {
     symbol: 'USDT',
     chain: 'Arbitrum',
@@ -59,10 +63,7 @@ const MOCK_STRATEGIES = [
     protocol: 'Aave',
   },
 ]
-
-interface StrategiesProperties extends ComponentProps<'div'> {}
-
-const SELECT_STRATEGIES: OptionType[] = [
+export const SELECT_STRATEGIES: OptionType[] = [
   { label: 'Top 5 strategies', value: 'Top 5 strategies' },
   {
     label: 'Custom',
@@ -72,51 +73,45 @@ const SELECT_STRATEGIES: OptionType[] = [
   },
 ]
 
+interface StrategiesProperties extends ComponentProps<'div'> {}
+
 export const Strategies = (props: StrategiesProperties) => {
   const { className, ...rest } = props
-  const [strategies, setStrategies] = useState(SELECT_STRATEGIES[0])
-
-  const {
-    currentFrame,
-    currentTimestamp: _currentTimestamp,
-    frames,
-    onFrameChange,
-  } = useFrameSelect()
 
   return (
-    <div className={cn(className, '')} {...rest}>
-      <div className="mt-[5.31rem] flex w-full gap-5">
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <h2 className="text-[2rem]/[2.4rem]">APY</h2>
-            <FramesSelect
-              frame={currentFrame}
-              frames={frames}
-              onFrameChange={onFrameChange}
-            />
-          </div>
-          <MultiColoredLineChart
-            className="mt-6 h-[26.5625rem]"
-            data={MOCK_APY_DATA}
-            yPostfix="%"
-            frame="MAX"
-          />
-        </div>
-        <div className="w-[27.0625rem] rounded-3xl bg-cards px-5 py-6">
-          <SelectPopover
-            options={SELECT_STRATEGIES}
-            value={strategies}
-            onChange={(option) => setStrategies(option)}
-          />
-          <ScrollArea className="-mx-4 mt-8 px-4">
-            <div className="max-h-[22.75rem] space-y-3 ">
-              {MOCK_STRATEGIES.map((strategy, index) => (
-                <StrategyRow color={COLORS[index]} {...strategy} />
-              ))}
-            </div>
-          </ScrollArea>
-        </div>
-      </div>
+    <div className={cn(className, 'mt-[5.31rem]')} {...rest}>
+      <StrategiesChart
+        title="APY"
+        yAxisType="percent"
+        selectStrategies={SELECT_STRATEGIES}
+        chartData={MOCK_APY_DATA}
+        strategies={MOCK_STRATEGIES}
+      />
+      <StrategiesChart
+        title="TVL"
+        yAxisType="usd"
+        selectStrategies={SELECT_STRATEGIES}
+        chartData={MOCK_APY_DATA}
+        strategies={MOCK_STRATEGIES}
+        className="mt-[6.25rem]"
+      />
+      <StrategiesTable className="mt-[6.25rem]" />
+      <TransactionHistory
+        className="mt-[6.25rem]"
+        maatFilters={{
+          search: '',
+          action: { items: SELECT_MAAT_ACTIONS, value: SELECT_MAAT_ACTIONS[0] },
+          status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
+          token: { items: SELECT_TOKENS, value: SELECT_TOKENS[0] },
+          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+        }}
+        incentivesFilters={{
+          search: '',
+          action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
+          status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
+        }}
+      />
+      <Footer className="mt-[7.5rem] max-lg:mb-[4.55rem] max-lg:mt-[4.5rem]" />
     </div>
   )
 }

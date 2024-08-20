@@ -36,9 +36,9 @@ export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivEle
     setIsLoadingMore(false)
   }
 
-  const onStableChange = (value: StableType) => {
+  const onStableChange = (value: string) => {
     setCurrentPage(1)
-    setStableType(value)
+    setStableType(value as StableType)
   }
 
   const renderBody = () => {

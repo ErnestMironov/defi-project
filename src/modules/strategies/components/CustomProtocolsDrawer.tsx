@@ -8,8 +8,8 @@ import {
 } from '@components/ui/drawer'
 import type { Drawer as DrawerPrimitive } from 'vaul'
 
-import { COLORS } from '../charts/MultiColoredLineChart'
 import { CustomProtocolDrawerItem } from './CustomProtocolDrawerItem'
+import { COLORS } from './MultiColoredLineChart'
 
 interface CustomProtocolsDrawerProperties {
   className?: string

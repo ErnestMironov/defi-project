@@ -1,30 +1,36 @@
 import { useTxHistoryDesktop } from '@api/queries/useTxHistoryDesktop'
-import Arrow from '@assets/icons/arrow.svg'
 import Sort from '@assets/icons/sort.svg'
 import { SearchInput } from '@components/input/SearchInput'
 import { Pagination } from '@components/pagination/Pagination'
+import type { OptionType } from '@components/select/Select'
 import { Select } from '@components/select/Select'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
-import { SectionTitle } from '@pages/analytics/components/SectionTitle'
-import {
-  SELECT_ACTIONS,
-  SELECT_CHAINS,
-  SELECT_STATUSES,
-} from '@pages/analytics/constants/select-constant'
 import { cn } from '@utils/cn'
+import type { ComponentProps } from 'react'
 import { useEffect, useState } from 'react'
 
-import { TransactionHistoryRow } from './TransactionHistoryRow'
+import { MaatTransactionHistoryRow } from './MaatTransactionHistoryRow'
 
-export const TransactionsHistoryDesktop: React.FC<
-  React.HTMLAttributes<HTMLDivElement>
-> = (props) => {
-  const [searchValue, setSearchValue] = useState('')
-  const [selectAction, setSelectAction] = useState(SELECT_ACTIONS[0])
-  const [selectStatus, setSelectStatus] = useState(SELECT_STATUSES[0])
-  const [selectChains, setSelectChains] = useState(SELECT_CHAINS[0])
+type SelectOption = { items: OptionType[]; value: OptionType }
+export type MaatTransactionFilters = {
+  search?: string
+  action?: SelectOption
+  token?: SelectOption
+  status?: SelectOption
+  chain?: SelectOption
+}
+
+interface TransactionsHistoryProperties extends ComponentProps<'div'> {
+  filters: MaatTransactionFilters
+}
+
+export const MaatTransactionsHistory: React.FC<TransactionsHistoryProperties> = (
+  props,
+) => {
+  const { filters: initialFilters, ...rest } = props
+  const [filters, setFilters] = useState<MaatTransactionFilters>(initialFilters)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [perPage, setPerPage] = useState<(typeof PER_PAGE_ARRAY)[number]>(
@@ -34,6 +40,7 @@ export const TransactionsHistoryDesktop: React.FC<
   const { data, loading, error, totalCount } = useTxHistoryDesktop({
     perPage,
     page: currentPage,
+    ...filters,
   })
   const [totalCountMemo, setTotalCountMemo] = useState<number | undefined>()
   useEffect(() => {
@@ -71,7 +78,6 @@ export const TransactionsHistoryDesktop: React.FC<
                   </div>
                 </Table.HeadCell>
                 <Table.HeadCell>Chain</Table.HeadCell>
-                <Table.HeadCell>From</Table.HeadCell>
                 <Table.HeadCell>Tx Hash</Table.HeadCell>
                 <Table.HeadCell>
                   <div className="flex items-center gap-[0.79rem]">
@@ -83,7 +89,7 @@ export const TransactionsHistoryDesktop: React.FC<
             </Table.Head>
             <Table.Body>
               {data?.map((tx, index) => (
-                <TransactionHistoryRow key={index} transaction={tx} />
+                <MaatTransactionHistoryRow key={index} transaction={tx} />
               ))}
             </Table.Body>
           </Table>
@@ -93,32 +99,68 @@ export const TransactionsHistoryDesktop: React.FC<
   }
   return (
     <div {...props} className={cn('', props.className)}>
-      <SectionTitle className="mb-8">Events</SectionTitle>
       {/* filters/search */}
-      <div className="mb-2 mt-8 grid grid-cols-[1fr_repeat(3,0.3fr)] gap-4 rounded-3xl bg-cards p-6">
-        <SearchInput
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Name / Address / ID"
-        />
-        <Select
-          options={SELECT_ACTIONS}
-          value={selectAction}
-          onChange={(option) => setSelectAction(option)}
-          placeholder="Select an action"
-        />
-        <Select
-          options={SELECT_STATUSES}
-          value={selectStatus}
-          onChange={(option) => setSelectStatus(option)}
-          placeholder="Select a protocol"
-        />
-        <Select
-          options={SELECT_CHAINS}
-          value={selectChains}
-          onChange={(option) => setSelectChains(option)}
-          placeholder="Select a chain"
-        />
+      <div className="mb-2 mt-8 flex items-center gap-4 rounded-3xl bg-cards p-6 *:w-[15.625rem]">
+        {filters.action && (
+          <SearchInput
+            className="grow"
+            value={filters.search}
+            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            placeholder="Tx Hash"
+          />
+        )}
+        {filters.action && (
+          <Select
+            options={filters.action.items}
+            value={filters.action.value}
+            onChange={(option) =>
+              setFilters({
+                ...filters,
+                action: { items: filters.action?.items || [], value: option },
+              })
+            }
+            placeholder="Select an action"
+          />
+        )}
+        {filters.status && (
+          <Select
+            options={filters.status.items}
+            value={filters.status.value}
+            onChange={(option) =>
+              setFilters({
+                ...filters,
+                status: { items: filters.status?.items || [], value: option },
+              })
+            }
+            placeholder="Select a status"
+          />
+        )}
+        {filters.token && (
+          <Select
+            options={filters.token.items}
+            value={filters.token.value}
+            onChange={(option) =>
+              setFilters({
+                ...filters,
+                token: { items: filters.token?.items || [], value: option },
+              })
+            }
+            placeholder="Select a token"
+          />
+        )}
+        {filters.chain && (
+          <Select
+            options={filters.chain.items}
+            value={filters.chain.value}
+            onChange={(option) =>
+              setFilters({
+                ...filters,
+                chain: { items: filters.chain?.items || [], value: option },
+              })
+            }
+            placeholder="Select a chain"
+          />
+        )}
       </div>
       {renderBody()}
       {totalCountMemo && (
@@ -145,13 +187,6 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
           <Table.HeadCell>Action</Table.HeadCell>
           <Table.HeadCell>Amount</Table.HeadCell>
           <Table.HeadCell>Strategy / Weekly APY / TVL</Table.HeadCell>
-          <Table.HeadCell>
-            <div className="flex items-center gap-2">
-              From
-              <Arrow className="[&_path]:fill-text" />
-              To
-            </div>
-          </Table.HeadCell>
           <Table.HeadCell>Tx Hash</Table.HeadCell>
           <Table.HeadCell>Created</Table.HeadCell>
           <Table.HeadCell>Nonce</Table.HeadCell>
@@ -168,9 +203,6 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
             </Table.Cell>
             <Table.Cell>
               <Skeleton className="h-12 w-60 rounded-xl" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton className="w-30 h-12 rounded-xl" />
             </Table.Cell>
             <Table.Cell>
               <Skeleton className="w-30 h-12 rounded-xl" />

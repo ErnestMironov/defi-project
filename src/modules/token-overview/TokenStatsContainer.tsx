@@ -1,10 +1,9 @@
 import Arrow from '@assets/icons/curve-arrow-down.svg'
+import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { type ComponentProps, Suspense } from 'react'
+import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
-
-import { BaseContainer } from '../../components/BaseContainer'
 
 interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   color: string
@@ -14,6 +13,7 @@ interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   rebalancingVolume: string
   img: string
   imageClassName?: string
+  withLink?: boolean
 }
 
 export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
@@ -26,6 +26,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
     img,
     imageClassName,
     tokenName,
+    withLink = true,
     ...rest
   } = props
   return (
@@ -40,13 +41,11 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
         <h6>{tokenName} Apy</h6>
 
         <p className="text-3xl">
-          <Suspense fallback="loading...">
-            {formatPercentValue(apy, {
-              maximumFractionDigits: 2,
-            })}
-          </Suspense>
+          {formatPercentValue(apy, {
+            maximumFractionDigits: 2,
+          })}
           <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
-            {formatPercentValue('0.271', {
+            {formatPercentValue('27', {
               maximumFractionDigits: 0,
               signDisplay: 'exceptZero',
             })}
@@ -58,7 +57,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
         <p className="text-3xl">
           {formatUsdValue(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
           <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
-            {formatPercentValue('0.271', {
+            {formatPercentValue('27', {
               maximumFractionDigits: 0,
               signDisplay: 'exceptZero',
             })}
@@ -73,13 +72,15 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
             minimumFractionDigits: 2,
           })}
         </p>
-        <Link
-          to="#"
-          className="group absolute bottom-[1.34rem] flex items-center gap-0.5 text-semi-base font-bold uppercase text-main-100"
-        >
-          <span>Go to {tokenName}</span>
-          <Arrow className="h-fit w-5 -rotate-90 transition group-hover:translate-x-1 [&_*]:stroke-main-100" />
-        </Link>
+        {withLink && (
+          <Link
+            to="#"
+            className="group absolute bottom-[1.34rem] flex items-center gap-0.5 text-semi-base font-bold uppercase text-main-100"
+          >
+            <span>Go to {tokenName}</span>
+            <Arrow className="h-fit w-5 -rotate-90 transition group-hover:translate-x-1 [&_*]:stroke-main-100" />
+          </Link>
+        )}
         <img
           src={img}
           alt={tokenName}

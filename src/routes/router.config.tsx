@@ -1,5 +1,10 @@
 import { BaseLayout } from '@layouts/BaseLayout'
-import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom'
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  redirect,
+  Route,
+} from 'react-router-dom'
 
 import { ROUTES } from './routes'
 
@@ -32,6 +37,38 @@ export const routes = createRoutesFromElements(
           console.log('🚀 ~ lazy={ ~ Landing:', Strategies)
           return {
             Component: Strategies,
+          }
+        }}
+      />
+      <Route
+        path={ROUTES.STRATEGY}
+        lazy={async () => {
+          const { Strategy } = await import('@pages/strategy/Strategy')
+          return {
+            Component: Strategy,
+          }
+        }}
+      />
+      <Route
+        path={ROUTES.TOKENS}
+        lazy={async () => {
+          return {
+            loader: ({ request }) => {
+              const url = new URL(request.url)
+              if (url.pathname === ROUTES.TOKENS) {
+                return redirect('/tokens/USDC')
+              }
+              return null
+            },
+          }
+        }}
+      />
+      <Route
+        path={ROUTES.TOKEN}
+        lazy={async () => {
+          const { Tokens } = await import('@pages/tokens/Tokens')
+          return {
+            Component: Tokens,
           }
         }}
       />

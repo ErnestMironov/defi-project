@@ -1,6 +1,6 @@
+import { SectionTitle } from '@components/section/SectionTitle'
 import { ApyChartModule } from '@modules/charts/ApyChartModule'
 import { TvlChartModule } from '@modules/charts/TvlChartModule'
-import { SectionTitle } from '@pages/analytics/components/SectionTitle'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 

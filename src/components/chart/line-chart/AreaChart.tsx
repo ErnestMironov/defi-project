@@ -1,10 +1,11 @@
+import { TooltipComponent } from '@components/chart/line-chart/TooltipComponent'
 import type { FrameType } from '@components/frames-select/useFrameSelect'
 import { cn } from '@utils/cn'
-import { formatAmountValue, formatPercentValue } from '@utils/formatValue'
+import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import dayjs from 'dayjs'
 import {
   Area,
-  AreaChart,
+  AreaChart as AreaChartComponent,
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
@@ -12,28 +13,26 @@ import {
   YAxis,
 } from 'recharts'
 
-import { StrategyTooltipComponent } from './StrategyTooltipComponent'
-
-export const COLORS = ['#6160FF', '#FFD74B', '#6A97FF', '#FF4057', '#79DEC2']
-
+export const COLORS = ['#6160FF', '#A6C1FF'] as const
+type ColorType = (typeof COLORS)[number]
 export type RechartDataType = {
   name: string
   timestamp: number
-  values: (number | null)[]
+  value: number | null
 }
 
-interface AreaChartComponentProperties {
+export interface AreaChartComponentProperties {
   data?: RechartDataType[]
-  yPrefix?: string
-  yPostfix?: string
   frame?: FrameType
   className?: string
+  yAxisType?: 'percent' | 'usd'
+  color: ColorType
 }
 
-export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
-  const { data, yPrefix = '', yPostfix = '', frame, className } = props
-  const tooltipFormatter = (value?: string) =>
-    `${yPrefix}${formatAmountValue(value, 2)}${yPostfix}`
+export const AreaChart = (props: AreaChartComponentProperties) => {
+  const { data, frame, className, yAxisType, color } = props
+  const tooltipFormatter = (value: string) =>
+    yAxisType === 'usd' ? formatUsdValue(value) : formatPercentValue(value)
 
   const tickFormatter = (value: string) => {
     let format: string = 'MMM'
@@ -61,7 +60,7 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
         height="100%"
         className="[&_.recharts-cartesian-axis-line]:stroke-slate-500/20  [&_.recharts-cartesian-grid-horizontal_line:first-child]:opacity-0 [&_.recharts-cartesian-grid-horizontal_line:last-child]:translate-y-[0.05rem]"
       >
-        <AreaChart
+        <AreaChartComponent
           data={data}
           margin={{
             top: 0,
@@ -91,11 +90,11 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
           <Tooltip
             content={({ active, payload, coordinate }) => {
               if (active && payload && payload.length > 0 && coordinate) {
-                console.log('payload', payload)
                 return (
-                  <StrategyTooltipComponent
-                    timestamp={payload[0].payload.timestamp}
+                  <TooltipComponent
+                    formatter={tooltipFormatter}
                     data={payload.map((item) => ({
+                      timestamp: payload[0].payload.timestamp,
                       symbol: 'USDT',
                       chain: 'BASE',
                       protocol: 'Beefy',
@@ -111,32 +110,21 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
               return null
             }}
           />
-          {COLORS.map((color, index) => (
-            <Area
-              key={color}
-              type="monotone"
-              connectNulls
-              dataKey={`values[${index}]`}
-              stroke={color}
-              fill={`url(#color${index})`}
-            />
-          ))}
+          <Area
+            key={color}
+            type="monotone"
+            connectNulls
+            dataKey="value"
+            stroke={color}
+            fill={`url(#color-${color})`}
+          />
           <defs>
-            {COLORS.map((color, index) => (
-              <linearGradient
-                key={color}
-                id={`color${index}`}
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="45%" stopColor={color} stopOpacity={0.25} />
-                <stop offset="100%" stopColor={color} stopOpacity={0} />
-              </linearGradient>
-            ))}
+            <linearGradient key={color} id={`color-${color}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="45%" stopColor={color} stopOpacity={0.45} />
+              <stop offset="100%" stopColor={color} stopOpacity={0.01} />
+            </linearGradient>
           </defs>
-        </AreaChart>
+        </AreaChartComponent>
       </ResponsiveContainer>
     </div>
   )

@@ -12,6 +12,7 @@ import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
 import type { FC } from 'react'
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { formatUnits } from 'viem'
 
 interface DialogProperties {
@@ -122,13 +123,22 @@ interface StrategyRowProperties {
 
 export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
 
   return (
     <>
-      <Table.Row className="cursor-pointer" onClick={openModal}>
+      <Table.Row
+        className="cursor-pointer"
+        onClick={() =>
+          location.pathname === '/strategies'
+            ? navigate(`/strategies/${strategy.strategyId}`)
+            : openModal()
+        }
+      >
         <Table.Cell className="px-10 py-6">
           <div className="flex items-center">
             <p className="w-[7.9rem]">{shortenString(strategy.strategyId, 5)}</p>

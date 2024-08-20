@@ -3,12 +3,12 @@ import Sort from '@assets/icons/sort.svg'
 import type { StrategyStats } from '@codegen/graphql'
 import { SearchInput } from '@components/input/SearchInput'
 import { Pagination } from '@components/pagination/Pagination'
+import { SectionTitle } from '@components/section/SectionTitle'
 import type { OptionType } from '@components/select/Select'
 import { Select } from '@components/select/Select'
 import { Table } from '@components/table'
 import { Button } from '@components/ui/button'
 import { Skeleton } from '@components/ui/skeleton'
-import { SectionTitle } from '@pages/analytics/components/SectionTitle'
 import {
   SELECT_CHAINS,
   SELECT_PROTOCOLS,

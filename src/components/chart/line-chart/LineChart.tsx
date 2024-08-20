@@ -1,4 +1,4 @@
-import type { FrameType } from '@modules/charts/ApyChartModule'
+import type { FrameType } from '@components/frames-select/useFrameSelect'
 import { formatAmountValue } from '@utils/formatValue'
 import dayjs from 'dayjs'
 import {
@@ -25,10 +25,11 @@ interface AreaChartComponentProperties {
   yPrefix?: string
   yPostfix?: string
   frame?: FrameType
+  color?: string
 }
 
 export const LineChartComponent = (props: AreaChartComponentProperties) => {
-  const { data, yPrefix = '', yPostfix = '', frame } = props
+  const { data, yPrefix = '', yPostfix = '', frame, color = '#6160FF' } = props
   const tooltipFormatter = (value?: string) =>
     `${yPrefix}${formatAmountValue(value, 2)}${yPostfix}`
 

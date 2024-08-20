@@ -15,7 +15,7 @@ import { Button } from '@components/ui/button'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useDimensions } from '@hooks/useDimensions'
-import { SectionTitle } from '@pages/analytics/components/SectionTitle'
+import { SectionTitle } from '@components/section/SectionTitle'
 import { cn } from '@utils/cn'
 import type { SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
@@ -345,7 +345,7 @@ export const SankeyDiagramBasicDemo = (props: SankeyDiagramBasicDemoProperties) 
       <SectionTitle>Check how we rebalance</SectionTitle>
       <StableSwitcher
         activeTab={activeStableType}
-        onTabChange={(value) => setStableType(value)}
+        onTabChange={(value) => setStableType(value as StableType)}
         className="mb-4 mt-[3.06rem] max-lg:mb-[1.47rem] max-lg:mt-8"
         classNames={{ tab: 'w-[12.5rem]' }}
       />
