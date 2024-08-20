@@ -97,7 +97,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
       <DialogTrigger>
         <ChoiceBox
           value={mtToken?.symbol || 'Any token'}
-          className="min-w-[11.5rem]"
+          className="min-w-[10.5rem]"
           icon={
             <TokenWithNetwork
               className="size-[2.14288rem] max-lg:size-[1.125rem]"

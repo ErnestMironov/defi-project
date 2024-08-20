@@ -151,7 +151,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
-          activeStep={currentStep === 2}
+          activeStep={currentStep === 3}
           title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
           error={swapAndDepositError}

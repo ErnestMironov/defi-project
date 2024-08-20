@@ -1,4 +1,6 @@
-import useSquidSDK from '@api/squid-router/useSquidSdk'
+import { USDC_TOKENS } from '@api/squid-router/postHook/data/USDC'
+import { USDT_TOKENS } from '@api/squid-router/postHook/data/USDT'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import {
   parseFloatLocale,
@@ -25,47 +27,52 @@ export const DepositReviewContent = ({
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
 
-  const { squid } = useSquidSDK()
-
   const tokenAddrForVault = useMemo(() => {
-    const depositTokenAsset = squid?.tokens.find(
-      (token) => token.symbol?.toLowerCase() === vault?.toLowerCase(),
-    )
-    return depositTokenAsset?.address!
-  }, [squid?.tokens, vault])
+    switch (vault) {
+      case 'USDC': {
+        return USDC_TOKENS.find((token) => token.chainId === asset?.chain_id)?.address
+      }
+      case 'USDT': {
+        return USDT_TOKENS.find((token) => token.chainId === asset?.chain_id)?.address
+      }
+      default: {
+        return vault
+      }
+    }
+  }, [vault, asset?.chain_id])
 
   const depositFlow = useMemo(() => {
-    console.log(
-      '🚀 ~ depositFlow ~ !asset || !chainData || !tokenAddrForVault:',
-      !asset || !chainData || !tokenAddrForVault,
-    )
-    if (!asset || !chainData || !tokenAddrForVault) {
+    if (!asset || !chainData) {
       return null
     }
 
     const assetContractAddress = asset.contract_address?.toLowerCase()
-    console.log('🚀 ~ depositFlow ~ assetContractAddress:', assetContractAddress)
-    const vaultAddress = tokenAddrForVault.toLowerCase()
-    console.log('🚀 ~ depositFlow ~ vaultAddress:', vaultAddress)
+    const vaultAddress = tokenAddrForVault?.toLowerCase()
 
-    if (vaultAddress === assetContractAddress) {
-      return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
-    }
-
-    if (chainData.chainId === 42_161) {
-      if (asset.native_token) {
-        return <NativeOnchainSwap allStepsCompleted={allStepsCompleted} />
+    try {
+      if (
+        vaultAddress === assetContractAddress &&
+        asset.chain_id === CHAIN_IDS_BY_NAME.Arbitrum
+      ) {
+        return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
       }
-      return <OnchainSwap allStepsCompleted={allStepsCompleted} />
-    }
 
-    if (asset.native_token) {
-      return <NativeCrossChainSwap allStepsCompleted={allStepsCompleted} />
-    }
+      if (asset.chain_id === CHAIN_IDS_BY_NAME.Arbitrum) {
+        if (asset.native_token) {
+          return <NativeOnchainSwap allStepsCompleted={allStepsCompleted} />
+        }
+        return <OnchainSwap allStepsCompleted={allStepsCompleted} />
+      }
 
-    return <CrossChainSwap allStepsCompleted={allStepsCompleted} />
+      if (asset.native_token) {
+        return <NativeCrossChainSwap allStepsCompleted={allStepsCompleted} />
+      }
+
+      return <CrossChainSwap allStepsCompleted={allStepsCompleted} />
+    } catch {
+      return null
+    }
   }, [asset, chainData, tokenAddrForVault, allStepsCompleted])
-  console.log('🚀 ~ depositFlow ~ depositFlow:', depositFlow)
 
   return (
     <>

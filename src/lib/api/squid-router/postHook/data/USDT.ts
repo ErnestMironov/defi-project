@@ -52,16 +52,16 @@ export const USDT_TOKENS_RAW = [
   },
 ]
 
-export const USDC_TOKENS: Token[] = USDT_TOKENS_RAW.map((usdt) => {
+export const USDT_TOKENS: Token[] = USDT_TOKENS_RAW.map((usdt) => {
   return new Token(usdt.chainId, usdt.addr, usdt.decimals, usdt.symbol, usdt.name)
 })
 
-export const STARGATE_SUPPORTED_CHAINS_WITH_USDC = USDC_TOKENS.map(
+export const STARGATE_SUPPORTED_CHAINS_WITH_USDC = USDT_TOKENS.map(
   (token) => token.chainId,
 )
 
 export function isSupportedUSDT(token: Token): boolean {
-  return USDC_TOKENS.some(
+  return USDT_TOKENS.some(
     (usdt) => usdt.address === token.address && usdt.chainId === token.chainId,
   )
 }

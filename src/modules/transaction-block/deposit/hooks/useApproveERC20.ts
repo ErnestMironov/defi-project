@@ -1,6 +1,3 @@
-// eslint-disable-next-line import/extensions
-// eslint-disable-next-line import/extensions
-
 import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { useCallback, useState } from 'react'
@@ -45,21 +42,30 @@ export const useApproveERC20 = ({
       {
         onSuccess: async (data) => {
           setStatus('pending')
-          // @ts-ignore
-          await waitForTransactionReceipt(config, {
-            hash: data,
-            chainId,
-            confirmations:
-              CONFIRMATIONS_NUMBER[
-                (chainId as keyof typeof CONFIRMATIONS_NUMBER) ??
-                  CHAIN_IDS_BY_NAME.Arbitrum
-              ],
-            timeout: 60_000,
-          })
 
-          setLoading(false)
-          setStatus('success')
-          onSuccessHandler?.()
+          try {
+            // @ts-ignore
+            await waitForTransactionReceipt(config, {
+              hash: data,
+              chainId,
+              confirmations:
+                CONFIRMATIONS_NUMBER[
+                  (chainId as keyof typeof CONFIRMATIONS_NUMBER) ??
+                    CHAIN_IDS_BY_NAME.Arbitrum
+                ],
+              timeout: 60_000,
+            })
+
+            setLoading(false)
+            setStatus('success')
+
+            if (onSuccessHandler) {
+              onSuccessHandler()
+            }
+          } catch {
+            setLoading(false)
+            setStatus('error')
+          }
         },
         onError: () => {
           setLoading(false)
