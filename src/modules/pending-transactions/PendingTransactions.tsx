@@ -6,6 +6,7 @@ import rainbow from '@assets/images/rainbow-circle.png'
 import loader from '@assets/lottie/wizard-main-loader.json'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import useDeviceWidth from '@hooks/useDeviceWidth'
 import type { IPendingTransactionData } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -118,10 +119,15 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
 }
 
 export const PendingTransactions: React.FC = () => {
+  const { isBelowDesktop } = useDeviceWidth()
   const { transactions } = useTransactionStore()
   const { setCurrentModal, setTransactionData } = useTxStore()
   useTransactionStatusChecker()
   const [isHovered, setIsHovered] = useState(false)
+
+  if (isBelowDesktop) {
+    return null
+  }
 
   const handleTransactionClick = (transaction: IPendingTransactionData) => {
     setTransactionData(transaction)

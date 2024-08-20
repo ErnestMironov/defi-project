@@ -61,7 +61,6 @@ export const WithdrawReviewContent = ({
   } = useWithdrawTransaction()
 
   const withdrawStatus = useTransactionStatus(currentWithdrawStatus)
-  console.log('🚀 ~ withdrawStatus:', withdrawStatus)
 
   useEffect(() => {
     if (withdrawStatus === 'success') {

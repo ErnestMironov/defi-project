@@ -6,16 +6,17 @@ interface DollarInputProperties {
   value: string
   onValueChange: (value: string) => void
   error?: boolean
+  disabled?: boolean
 }
 
 const DollarInput: React.FC<DollarInputProperties> = ({
   value,
   onValueChange,
   error,
+  disabled,
 }) => {
   const valueSpanReference = React.useRef<HTMLSpanElement>(null)
   const [valueWidth, setValueWidth] = React.useState(0)
-  console.log('🚀 ~ DollarInput ~ valueWidth', valueWidth)
 
   React.useEffect(() => {
     setValueWidth(valueSpanReference.current?.offsetWidth || 0)
@@ -46,6 +47,7 @@ const DollarInput: React.FC<DollarInputProperties> = ({
         value={value}
         decimals={2}
         onChange={onValueChange}
+        disabled={disabled}
       />
     </div>
   )
