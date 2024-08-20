@@ -140,17 +140,15 @@ export const WithdrawInput = () => {
             <SelectWithoutWalletPlaceholder />
           )}
         </div>
-        <div className="mt-3 flex w-full items-center justify-between">
-          {mtToken ? (
+        {mtToken ? (
+          <div className="mt-3 flex w-full items-center justify-between">
             <DollarInput
               disabled={!mtToken || !isConnected}
               value={inputValueInUSD}
               onValueChange={(value) => handleAction('usd', value)}
               error={!!validationError}
             />
-          ) : null}
 
-          {isConnected && mtToken ? (
             <div className="flex items-center">
               <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
@@ -164,8 +162,8 @@ export const WithdrawInput = () => {
                 Max
               </button>
             </div>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
         {validationError && (
           <p className="mt-3 text-lg text-red-100 max-lg:text-xs">{validationError}</p>
         )}

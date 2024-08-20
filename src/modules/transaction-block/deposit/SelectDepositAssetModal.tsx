@@ -2,10 +2,7 @@
 import type { Token } from '@0xsquid/squid-types'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
-import {
-  COVALENT_CHAINS_MAPPER,
-  useTokensBalance,
-} from '@api/tokens-balance/use-tokens-balance'
+import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import BigCloseBtn from '@assets/icons/big-close-btn.svg'
 import BigCloseBtnDark from '@assets/icons/big-close-btn_dark.svg'
 import Search from '@assets/icons/search.svg'
@@ -22,6 +19,7 @@ import {
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
+import type { ChainType } from '@constants/chains'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
@@ -169,9 +167,7 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const [opened, setOpened] = useState(false)
   const onChange = (_asset: ITokenData) => {
     setAsset(_asset)
-    setRepresentationTokensChain(
-      COVALENT_CHAINS_MAPPER[_asset.chain_id as keyof typeof COVALENT_CHAINS_MAPPER],
-    )
+    setRepresentationTokensChain(_asset.chain_id as ChainType)
     setOpened(false)
   }
 

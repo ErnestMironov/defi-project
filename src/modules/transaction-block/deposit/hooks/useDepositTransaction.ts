@@ -26,8 +26,6 @@ export const useDepositTransaction = ({
   const {
     setCurrentModal,
     setDepositAmount,
-    vault,
-    depositAsset,
     getFullState,
     setTransactionCanBeCollapsed,
   } = useTxStore()
@@ -89,12 +87,12 @@ export const useDepositTransaction = ({
     userAddress,
     writeContract,
     addTransaction,
-    vault,
-    depositAsset,
     config,
     onSuccessHandler,
     setCurrentModal,
     setDepositAmount,
+    setTransactionCanBeCollapsed,
+    getFullState,
   ])
 
   return { deposit, ...rest, status }

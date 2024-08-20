@@ -11,6 +11,7 @@
 		"watch": "graphql-codegen -w"
 	},
 	"dependencies": {
+		"@0xsquid/sdk": "^2.8.23",
 		"@0xsquid/squid-types": "^0.1.84",
 		"@amcharts/amcharts5": "^5.9.11",
 		"@apollo/client": "^3.10.6",

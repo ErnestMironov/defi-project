@@ -61,15 +61,18 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
   })
 
   const {
-    approve: approveBeforeSwap,
-    status: approveStatusBeforeSwap,
-    error: approveErrorBeforeSwap,
+    approve,
+    status: approveStatus,
+    error: approveError,
   } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
     transactionRequestTarget: route?.transactionRequest?.target,
+    chainId: depositAssetChain?.chainId,
     onSuccessHandler: incrementStep,
   })
+
+  console.log('approve status', approveStatus)
 
   const {
     swapTokens: swapAndDeposit,
@@ -108,11 +111,11 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           <Button
             size="lg"
             type="button"
-            onClick={approveBeforeSwap}
-            disabled={approveStatusBeforeSwap === 'pending'}
+            onClick={approve}
+            disabled={approveStatus === 'pending'}
           >
             {getButtonContent(
-              approveStatusBeforeSwap,
+              approveStatus,
               `Approve ${depositAsset?.contract_ticker_symbol}`,
             )}
           </Button>
@@ -155,8 +158,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           }
           activeStep={currentStep === 2}
           title="Approve"
-          status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
-          error={approveErrorBeforeSwap?.message}
+          status={allStepsCompleted ? 'success' : approveStatus}
+          error={approveError?.message}
           showArrow
         />
         <WizardStep
