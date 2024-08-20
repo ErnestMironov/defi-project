@@ -13,14 +13,20 @@ const TABS = [
 ]
 
 export const TxTypeSwitcher = (props: TxTypeSwitcherProperties) => {
-  const { txType, setTxType } = useTxStore()
+  const { txType, setTxType, resetStore } = useTxStore()
+
+  const handleTabChange = (value: TxType) => {
+    resetStore()
+    setTxType(value)
+  }
+
   return (
     <AnimatedTabs
       {...props}
       layoutId="tx-type-switcher"
       tabs={TABS}
       activeTab={txType}
-      onTabChange={(value) => setTxType(value as TxType)}
+      onTabChange={(value) => handleTabChange(value as TxType)}
       classNames={{
         tab: 'w-[9.125rem] max-lg:w-1/2 max-lg:py-[0.62rem] max-lg:text-base',
         container: 'max-lg:w-full max-lg:p-1',
