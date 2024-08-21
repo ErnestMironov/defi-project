@@ -1,8 +1,9 @@
 import { SectionTitle } from '@components/section/SectionTitle'
-import { ApyChartModule } from '@modules/charts/ApyChartModule'
-import { TvlChartModule } from '@modules/charts/TvlChartModule'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
+
+import { ApyChartModule } from './charts/ApyChartModule'
+import { TvlChartModule } from './charts/TvlChartModule'
 
 interface TokensProperties extends ComponentProps<'div'> {}
 

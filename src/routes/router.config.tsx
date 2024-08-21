@@ -4,13 +4,23 @@ import {
   createRoutesFromElements,
   redirect,
   Route,
+  ScrollRestoration,
 } from 'react-router-dom'
 
 import { ROUTES } from './routes'
 
+function Root() {
+  return (
+    <>
+      <ScrollRestoration />
+      <BaseLayout />
+    </>
+  )
+}
+
 export const routes = createRoutesFromElements(
   <Route path="/">
-    <Route Component={BaseLayout}>
+    <Route Component={Root}>
       <Route
         path={ROUTES.DEPOSIT}
         lazy={async () => {
@@ -33,7 +43,9 @@ export const routes = createRoutesFromElements(
       <Route
         path={ROUTES.STRATEGIES}
         lazy={async () => {
-          const { Strategies } = await import('@pages/strategies/Strategies')
+          const { StrategiesPage: Strategies } = await import(
+            '@pages/strategies/Strategies'
+          )
           console.log('🚀 ~ lazy={ ~ Landing:', Strategies)
           return {
             Component: Strategies,

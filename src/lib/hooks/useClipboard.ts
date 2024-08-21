@@ -33,7 +33,6 @@ export const useClipboard = () => {
     copy(text)
       .then(() => {
         toast.success('Copied!')
-        console.log('addScaleCorrector')
       })
       .catch(() => {
         toast.error('Failed to copy.')

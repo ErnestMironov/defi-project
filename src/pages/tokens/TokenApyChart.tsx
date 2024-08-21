@@ -8,6 +8,7 @@ import {
   SELECT_CHAINS,
   SELECT_PROTOCOLS,
 } from '@pages/analytics/constants/select-constant'
+import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
 interface TokenApyChartProperties extends ComponentProps<'div'> {}
@@ -36,7 +37,7 @@ export const TokenApyChart = (props: TokenApyChartProperties) => {
   const [currentChain, setCurrentChain] = useState<OptionType>(SELECT_CHAINS[0])
   const [currentProtocol, setCurrentProtocol] = useState<OptionType>(SELECT_PROTOCOLS[0])
   return (
-    <div className="flex flex-col gap-8">
+    <div className={cn('flex flex-col gap-8', className)} {...rest}>
       <div className="flex items-center justify-between">
         <h3 className="text-[2rem]/[2.4rem]">APY</h3>
         <div className="flex items-center gap-3">

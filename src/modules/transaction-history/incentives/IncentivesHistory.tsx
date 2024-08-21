@@ -1,9 +1,8 @@
 import { useTxHistoryDesktop } from '@api/queries/useTxHistoryDesktop'
 import Sort from '@assets/icons/sort.svg'
-import { SearchInput } from '@components/input/SearchInput'
+import type { TableFiltersType } from '@components/filters/TableFilters'
+import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
-import type { OptionType } from '@components/select/Select'
-import { Select } from '@components/select/Select'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
@@ -13,24 +12,13 @@ import { useEffect, useState } from 'react'
 
 import { IncentiveRow } from './IncentiveRow'
 
-type SelectOption = { items: OptionType[]; value: OptionType }
-export type IncentiveFilters = {
-  search?: string
-  action?: SelectOption
-  from?: SelectOption
-  token?: SelectOption
-  status?: SelectOption
-  chain?: SelectOption
-}
-
 interface IncentivesHistoryProperties extends ComponentProps<'div'> {
-  filters: IncentiveFilters
+  filters: TableFiltersType
 }
 
 export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) => {
   const { filters: initialFilters, className } = props
-  const [filters, setFilters] = useState<IncentiveFilters>(initialFilters)
-
+  const [filters, setFilters] = useState(initialFilters)
   const [currentPage, setCurrentPage] = useState(1)
   const [perPage, setPerPage] = useState<(typeof PER_PAGE_ARRAY)[number]>(
     PER_PAGE_ARRAY[0],
@@ -90,82 +78,7 @@ export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) 
   }
   return (
     <div {...props} className={cn('', className)}>
-      {/* filters/search */}
-      <div className="mb-2 mt-8 flex items-center gap-4 rounded-3xl bg-cards p-6 *:w-[15.625rem]">
-        {filters.action && (
-          <SearchInput
-            className="grow"
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-            placeholder="Tx Hash"
-          />
-        )}
-        {filters.action && (
-          <Select
-            options={filters.action.items}
-            value={filters.action.value}
-            onChange={(option) =>
-              setFilters({
-                ...filters,
-                action: { items: filters.action?.items || [], value: option },
-              })
-            }
-            placeholder="Select an action"
-          />
-        )}
-        {filters.status && (
-          <Select
-            options={filters.status.items}
-            value={filters.status.value}
-            onChange={(option) =>
-              setFilters({
-                ...filters,
-                status: { items: filters.status?.items || [], value: option },
-              })
-            }
-            placeholder="Select a status"
-          />
-        )}
-        {filters.token && (
-          <Select
-            options={filters.token.items}
-            value={filters.token.value}
-            onChange={(option) =>
-              setFilters({
-                ...filters,
-                token: { items: filters.token?.items || [], value: option },
-              })
-            }
-            placeholder="Select a token"
-          />
-        )}
-        {filters.from && (
-          <Select
-            options={filters.from.items}
-            value={filters.from.value}
-            onChange={(option) =>
-              setFilters({
-                ...filters,
-                from: { items: filters.from?.items || [], value: option },
-              })
-            }
-            placeholder="Select a from"
-          />
-        )}
-        {filters.chain && (
-          <Select
-            options={filters.chain.items}
-            value={filters.chain.value}
-            onChange={(option) =>
-              setFilters({
-                ...filters,
-                chain: { items: filters.chain?.items || [], value: option },
-              })
-            }
-            placeholder="Select a chain"
-          />
-        )}
-      </div>
+      <TableFilters filters={filters} setFilters={setFilters} />
       {renderBody()}
       {totalCountMemo && (
         <Pagination

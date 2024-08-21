@@ -3,11 +3,10 @@ import type { StrategyStats } from '@codegen/graphql'
 import { Logo } from '@components/ui/logo'
 import { cn } from '@utils/cn'
 
+import type { StrategiesProperties } from './Strategies'
 import { SkeletonStrategyMobileCard, StrategyMobileCard } from './StrategyMobileCard'
 
-export const StrategiesMobile: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  props,
-) => {
+export const StrategiesMobile: React.FC<StrategiesProperties> = (props) => {
   const { data, loading, error } = useStrategies()
   const renderBody = () => {
     switch (true) {

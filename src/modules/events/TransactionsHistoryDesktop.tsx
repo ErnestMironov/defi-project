@@ -1,29 +1,20 @@
 import { useTxHistoryDesktop } from '@api/queries/useTxHistoryDesktop'
 import Sort from '@assets/icons/sort.svg'
-import { SearchInput } from '@components/input/SearchInput'
+import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
-import { Select } from '@components/select/Select'
+import { SectionTitle } from '@components/section/SectionTitle'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
-import { SectionTitle } from '@components/section/SectionTitle'
-import {
-  SELECT_ACTIONS,
-  SELECT_CHAINS,
-  SELECT_STATUSES,
-} from '@pages/analytics/constants/select-constant'
 import { cn } from '@utils/cn'
 import { useEffect, useState } from 'react'
 
+import type { EventsProperties } from './Events'
 import { TransactionHistoryRow } from './TransactionHistoryRow'
 
-export const TransactionsHistoryDesktop: React.FC<
-  React.HTMLAttributes<HTMLDivElement>
-> = (props) => {
-  const [searchValue, setSearchValue] = useState('')
-  const [selectAction, setSelectAction] = useState(SELECT_ACTIONS[0])
-  const [selectStatus, setSelectStatus] = useState(SELECT_STATUSES[0])
-  const [selectChains, setSelectChains] = useState(SELECT_CHAINS[0])
+export const TransactionsHistoryDesktop = (props: EventsProperties) => {
+  const { filters: initialFilters, className } = props
+  const [filters, setFilters] = useState(initialFilters)
 
   const [currentPage, setCurrentPage] = useState(1)
   const [perPage, setPerPage] = useState<(typeof PER_PAGE_ARRAY)[number]>(
@@ -91,34 +82,9 @@ export const TransactionsHistoryDesktop: React.FC<
     }
   }
   return (
-    <div {...props} className={cn('', props.className)}>
+    <div {...props} className={cn('', className)}>
       <SectionTitle>Events</SectionTitle>
-      {/* filters/search */}
-      <div className="mb-2 mt-8 grid grid-cols-[1fr_repeat(3,0.3fr)] gap-4 rounded-3xl bg-cards p-6">
-        <SearchInput
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Name / Address / ID"
-        />
-        <Select
-          options={SELECT_ACTIONS}
-          value={selectAction}
-          onChange={(option) => setSelectAction(option)}
-          placeholder="Select an action"
-        />
-        <Select
-          options={SELECT_STATUSES}
-          value={selectStatus}
-          onChange={(option) => setSelectStatus(option)}
-          placeholder="Select a protocol"
-        />
-        <Select
-          options={SELECT_CHAINS}
-          value={selectChains}
-          onChange={(option) => setSelectChains(option)}
-          placeholder="Select a chain"
-        />
-      </div>
+      <TableFilters filters={filters} setFilters={setFilters} />
       {renderBody()}
       {totalCountMemo && (
         <Pagination

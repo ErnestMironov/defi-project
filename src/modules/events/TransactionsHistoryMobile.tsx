@@ -8,14 +8,13 @@ import { Accordion } from '@radix-ui/react-accordion'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 
+import type { EventsProperties } from './Events'
 import {
   SkeletonTransactionMobileItem,
   TransactionMobileItem,
 } from './TransactionMobileItem'
 
-export const TransactionsHistoryMobile: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  props,
-) => {
+export const TransactionsHistoryMobile = (props: EventsProperties) => {
   const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
 
   const [currentPage, setCurrentPage] = useState(1)

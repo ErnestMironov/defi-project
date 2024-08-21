@@ -30,7 +30,7 @@ export const StrategyInfo = (props: StrategyInfoProperties) => {
       </div>
       <div className="flex flex-col items-start justify-center gap-[0.62rem]">
         <h6 className="text-lg text-gray-100">APY</h6>
-        <p className=" flex items-start gap-2 text-3xl">
+        <p className="flex items-start gap-2 text-3xl">
           {formatPercentValue(384)}
           <span className="text-lg text-main-80">
             {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
@@ -38,7 +38,7 @@ export const StrategyInfo = (props: StrategyInfoProperties) => {
         </p>
       </div>
       <div className="row-span-2 flex flex-col gap-6 px-10 py-8">
-        <h6 className="text-3xl text-black">Protocol Info</h6>
+        <h6 className="text-3xl text-text-100">Protocol Info</h6>
         <p className="text-lg text-text-80">
           Lorem ipsum dolor sit amet consectetur. Feugiat lectus elementum faucibus odio
           vel mus. Libero euismod quis lobortis aliquam semper felis id. In nulla congue
@@ -47,21 +47,21 @@ export const StrategyInfo = (props: StrategyInfoProperties) => {
         </p>
         <div className="flex items-center justify-between">
           <p className="text-lg text-gray-100">Strategy ID</p>
-          <p className="flex items-center gap-2 text-lg/[1.35rem] text-black">
+          <div className="flex items-center gap-2 text-lg/[1.35rem] text-text-100">
             <span>{shortenString(id ?? '', 7)}</span>
             <CopyButton text={id ?? ''} />
-          </p>
+          </div>
         </div>
       </div>
       <div className="row-span-2 flex flex-col gap-6 px-10 py-8">
-        <h6 className="text-3xl text-black">Strategy Info</h6>
+        <h6 className="text-3xl text-text-100">Strategy Info</h6>
         <p className="text-lg text-text-80">
           Lorem ipsum dolor sit amet consectetur. Congue morbi suspendisse mattis
           malesuada. Tempus eget sapien adipiscing eget pulvinar
         </p>
         <div className="flex items-center justify-between">
           <p className="text-lg text-gray-100">Link to protocol</p>
-          <p className="flex items-center gap-2 text-lg text-black">
+          <p className="flex items-center gap-2 text-lg text-text-100">
             <Planet className="size-6" />
             <span>suspxvcendisse.rew</span>
           </p>

@@ -13,7 +13,7 @@ interface TokenHeaderProperties extends ComponentProps<'div'> {}
 export const TokenHeader = (props: TokenHeaderProperties) => {
   const { className, ...rest } = props
   const { symbol } = useParams()
-  const [isOpen, { toggle, open, close }] = useDisclosure(false)
+  const [isOpen, { toggle, close }] = useDisclosure(false)
   return (
     <div className={cn('mt-10 flex items-center', className)} {...rest}>
       <TokenIconComponent symbol={symbol} className="size-[2.8125rem]" />
@@ -27,7 +27,7 @@ export const TokenHeader = (props: TokenHeaderProperties) => {
         </p>
         <Popover open={isOpen} onOpenChange={toggle}>
           <PopoverTrigger>
-            <ArrowDown className="size-8" />
+            <ArrowDown className={cn('size-8 transition', isOpen && 'rotate-180')} />
           </PopoverTrigger>
           <PopoverContent align="start" className="flex w-[15.625rem] flex-col gap-3 p-6">
             {VAULTS.map((vault) => (

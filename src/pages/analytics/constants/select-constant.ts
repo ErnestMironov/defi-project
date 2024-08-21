@@ -1,5 +1,9 @@
 import type { OptionType } from '@components/select/Select'
-import { SelectItemWithIcon } from '@components/select/SelectItemWithIcon'
+import {
+  SelectChainWithIcon,
+  SelectItemWithIcon,
+} from '@components/select/SelectItemWithIcon'
+import { CHAIN_NAMES_BY_ID, CHAINS } from '@constants/chains'
 
 export const SELECT_TOKENS: OptionType[] = [
   { label: 'All Tokens', value: 'All Tokens' },
@@ -12,41 +16,17 @@ export const SELECT_TOKENS: OptionType[] = [
     value: 'usdt',
   },
 ]
+
 export const SELECT_CHAINS: OptionType[] = [
   { label: 'All Chains', value: 'All Chains' },
-  {
-    label: SelectItemWithIcon({ symbol: 'Base' }),
-    value: 'Base',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Polygon' }),
-    value: 'Polygon',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Arbitrum' }),
-    value: 'Arbitrum',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Mantle' }),
-    value: 'Mantle',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Optimism' }),
-    value: 'Optimism',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Avalanche' }),
-    value: 'Avalanche',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'BNB' }),
-    value: 'BNB',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Fantom' }),
-    value: 'Fantom',
-  },
+  ...Object.entries(CHAIN_NAMES_BY_ID)
+    .filter(([key]) => CHAINS.includes(Number(key) as (typeof CHAINS)[number]))
+    .map(([key, value]) => ({
+      label: SelectChainWithIcon({ chainId: Number(key) }),
+      value,
+    })),
 ]
+
 export const SELECT_PROTOCOLS: OptionType[] = [
   { label: 'All Protocols', value: 'All Protocols' },
   {

@@ -31,12 +31,12 @@ export const Strategy = (props: StrategyProperties) => {
       </div>
       <TransactionHistory
         maatFilters={{
-          search: '',
+          search: { value: '', placeholder: 'Tx Hash' },
           action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
           status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
         }}
         incentivesFilters={{
-          search: '',
+          search: { value: '', placeholder: 'Tx Hash' },
           action: {
             items: SELECT_INCENTIVES_ACTIONS,
             value: SELECT_INCENTIVES_ACTIONS[0],

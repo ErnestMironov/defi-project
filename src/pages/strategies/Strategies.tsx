@@ -1,12 +1,13 @@
 import type { OptionType } from '@components/select/Select'
 import { Footer } from '@layouts/footer/Footer'
-import { Strategies as StrategiesTable } from '@modules/strategies/Strategies'
+import { Strategies } from '@modules/strategies/Strategies'
 import { StrategiesChart } from '@modules/strategies/StrategiesChart'
 import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
 import {
   SELECT_ACTIONS,
   SELECT_CHAINS,
   SELECT_MAAT_ACTIONS,
+  SELECT_PROTOCOLS,
   SELECT_STATUSES,
   SELECT_TOKENS,
 } from '@pages/analytics/constants/select-constant'
@@ -75,7 +76,7 @@ export const SELECT_STRATEGIES: OptionType[] = [
 
 interface StrategiesProperties extends ComponentProps<'div'> {}
 
-export const Strategies = (props: StrategiesProperties) => {
+export const StrategiesPage = (props: StrategiesProperties) => {
   const { className, ...rest } = props
 
   return (
@@ -95,18 +96,26 @@ export const Strategies = (props: StrategiesProperties) => {
         strategies={MOCK_STRATEGIES}
         className="mt-[6.25rem]"
       />
-      <StrategiesTable className="mt-[6.25rem]" />
+      <Strategies
+        filters={{
+          search: { value: '', placeholder: 'Name / Address / ID' },
+          token: { items: SELECT_TOKENS, value: SELECT_TOKENS[0] },
+          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+          protocol: { items: SELECT_PROTOCOLS, value: SELECT_PROTOCOLS[0] },
+        }}
+        className="mt-[6.25rem]"
+      />
       <TransactionHistory
         className="mt-[6.25rem]"
         maatFilters={{
-          search: '',
+          search: { value: '', placeholder: 'Tx Hash' },
           action: { items: SELECT_MAAT_ACTIONS, value: SELECT_MAAT_ACTIONS[0] },
           status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
           token: { items: SELECT_TOKENS, value: SELECT_TOKENS[0] },
           chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
         }}
         incentivesFilters={{
-          search: '',
+          search: { value: '', placeholder: 'Tx Hash' },
           action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
           status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
         }}

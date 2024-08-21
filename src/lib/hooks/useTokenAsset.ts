@@ -2,6 +2,7 @@
 // network icons
 import Binance from '@assets/icons/bnb.svg'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg'
+import Avalanche from '@assets/icons/networks/avalanche.svg'
 import Base from '@assets/icons/networks/base.svg'
 import Bsc from '@assets/icons/networks/bsc.svg'
 import Ethereum from '@assets/icons/networks/ethereum.svg'
@@ -111,6 +112,12 @@ const TOKENS: ITokenAsset[] = [
     symbol: 'matic',
     chainId: 137,
     name: 'Polygon',
+  },
+  {
+    TokenIcon: Avalanche,
+    symbol: 'avalanche-mainnet',
+    chainId: 43_114,
+    name: 'Avalanche',
   },
   {
     TokenIcon: Polygon,

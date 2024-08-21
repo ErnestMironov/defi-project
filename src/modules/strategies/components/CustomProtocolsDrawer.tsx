@@ -69,7 +69,7 @@ export const CustomProtocolsDrawer = (
         className="w-[34.625rem] items-center justify-center space-y-9 px-6 py-16"
       >
         <DrawerHeader className="flex w-full items-center justify-between">
-          <DrawerTitle className="">Graph customization</DrawerTitle>
+          <DrawerTitle >Graph customization</DrawerTitle>
           <DrawerClose>
             <X className="size-7 [&_path]:fill-text" />
           </DrawerClose>

@@ -12,7 +12,7 @@ import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
 import type { FC } from 'react'
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { formatUnits } from 'viem'
 
 interface DialogProperties {
@@ -119,13 +119,15 @@ const Dialog: FC<DialogProperties> = ({ open, strategy, onClose }) => {
 
 interface StrategyRowProperties {
   strategy: StrategyStats
+  rowType?: 'link' | 'modal'
 }
 
-export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
+export const StrategyRow: React.FC<StrategyRowProperties> = ({
+  strategy,
+  rowType = 'link',
+}) => {
   const [isOpen, setIsOpen] = useState(false)
-  const location = useLocation()
   const navigate = useNavigate()
-
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
 
@@ -134,7 +136,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       <Table.Row
         className="cursor-pointer"
         onClick={() =>
-          location.pathname === '/strategies'
+          rowType === 'link'
             ? navigate(`/strategies/${strategy.strategyId}`)
             : openModal()
         }

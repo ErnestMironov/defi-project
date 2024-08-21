@@ -1,33 +1,25 @@
 import { useStrategies } from '@api/queries/useStrategies'
 import Sort from '@assets/icons/sort.svg'
 import type { StrategyStats } from '@codegen/graphql'
-import { SearchInput } from '@components/input/SearchInput'
+import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { SectionTitle } from '@components/section/SectionTitle'
-import type { OptionType } from '@components/select/Select'
-import { Select } from '@components/select/Select'
 import { Table } from '@components/table'
 import { Button } from '@components/ui/button'
 import { Skeleton } from '@components/ui/skeleton'
-import {
-  SELECT_CHAINS,
-  SELECT_PROTOCOLS,
-  SELECT_TOKENS,
-} from '@pages/analytics/constants/select-constant'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { StrategyRow } from './StrategiesDsktopRow'
+import type { StrategiesProperties } from './Strategies'
+import { StrategyRow } from './StrategiesDesktopRow'
 
-export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  props,
-) => {
+interface StrategiesDesktopProperties extends StrategiesProperties {}
+
+export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) => {
+  const { filters: initialFilters, className, withLink = false, rowType = 'link' } = props
+  const [filters, setFilters] = useState(initialFilters)
   const navigate = useNavigate()
-  const [searchValue, setSearchValue] = useState('')
-  const [selectToken, setSelectToken] = useState(SELECT_TOKENS[0])
-  const [selectChains, setSelectChains] = useState(SELECT_CHAINS[0])
-  const [selectProtocols, setSelectProtocols] = useState(SELECT_PROTOCOLS[0])
   const { data, loading, error } = useStrategies()
 
   const renderBody = () => {
@@ -62,7 +54,7 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
             </Table.Head>
             <Table.Body>
               {(data?.strategyStats as StrategyStats[])?.map((strategy, index) => {
-                return <StrategyRow key={index} strategy={strategy} />
+                return <StrategyRow key={index} strategy={strategy} rowType={rowType} />
               })}
             </Table.Body>
           </Table>
@@ -71,37 +63,14 @@ export const StrategiesDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> =
     }
   }
   return (
-    <section {...props} className={cn('', props.className)}>
+    <section {...props} className={cn('', className)}>
       <div className="flex items-center justify-between">
         <SectionTitle>Strategies</SectionTitle>
-        <Button onClick={() => navigate('/')}>Go to strategies</Button>
+        {withLink && (
+          <Button onClick={() => navigate('/strategies')}>Go to strategies</Button>
+        )}
       </div>
-      {/* filters/search */}
-      <div className="mb-2 mt-8 grid grid-cols-[1fr_repeat(3,0.3fr)] gap-4 rounded-3xl bg-cards p-6">
-        <SearchInput
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Name / Address / ID"
-        />
-        <Select
-          options={SELECT_TOKENS}
-          value={selectToken}
-          onChange={(option) => setSelectToken(option as OptionType)}
-          placeholder="Select an option"
-        />
-        <Select
-          options={SELECT_CHAINS}
-          value={selectChains}
-          onChange={(option) => setSelectChains(option as OptionType)}
-          placeholder="Select a chain"
-        />
-        <Select
-          options={SELECT_PROTOCOLS}
-          value={selectProtocols}
-          onChange={(option) => setSelectProtocols(option as OptionType)}
-          placeholder="Select a protocol"
-        />
-      </div>
+      <TableFilters filters={filters} setFilters={setFilters} />
       {renderBody()}
       <Pagination
         className="mt-8"
