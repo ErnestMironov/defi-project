@@ -6,7 +6,9 @@ export const useTransactionStatus = (currentStatus: STEP_STATUS) => {
   const { transactions } = useTransactionStore()
   const { transactionHash } = useTxStore()
 
-  const storedTransaction = transactions.find((tx) => tx.id === transactionHash)
+  const storedTransaction = transactions.find(
+    (tx) => tx.transactionHash === transactionHash,
+  )
 
   if (storedTransaction) {
     return storedTransaction.status

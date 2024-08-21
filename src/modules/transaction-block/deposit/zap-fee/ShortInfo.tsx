@@ -12,8 +12,8 @@ const ShortInfo: React.FC<ShortInfoProperties> = ({ openHandler, ...props }) => 
     <div
       {...props}
       onClick={openHandler}
-      className="flex cursor-pointer items-center justify-between gap-3 self-stretch rounded-xl border border-main-15
-      px-6 py-4"
+      className="flex cursor-pointer items-center justify-between gap-3 self-stretch rounded-xl border border-main-15 px-6
+      py-4 dark:border-stroke-100"
     >
       <div className="flex flex-col gap-1 text-gray-100">
         <b>$0.05</b>

@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/extensions
-import { GATEWAY_ABI } from '@abi/gateway'
-import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
+import { tokenVaultAbi } from '@constants/abi/token-vault'
+import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
@@ -18,10 +18,13 @@ interface IProperties extends IDepositWizardHook {
 export const useDepositTransaction = ({ address, amount }: IProperties) => {
   const { writeContract, ...rest } = useWriteContract()
   const {
+    depositAsset: asset,
     setCurrentModal,
     getFullState,
     setTransactionCanBeCollapsed,
     setDepositAmount,
+    setTransactionHash,
+    vault,
   } = useTxStore()
   const { address: userAddress } = useAccount()
   const [status, setStatus] = useState<STEP_STATUS>('idle')
@@ -32,17 +35,20 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
     setDepositAmount(amount ? formatUnits(amount, 6) : '0')
     setStatus('confirm_in_wallet')
 
+    const vaultAddress = vault === 'USDC' ? USDC_VAULT_ADDRESS : USDT_VAULT_ADDRESS
+
     return writeContract(
       {
-        address: ARB_GATEWAY,
-        abi: GATEWAY_ABI,
+        address: vaultAddress,
+        abi: tokenVaultAbi,
+        chainId: asset?.chain_id,
         functionName: 'deposit',
-        args: [address, amount, userAddress, ARB_EID],
+        args: [amount, userAddress],
       },
       {
         onSuccess: async (data) => {
           setStatus('pending')
-
+          setTransactionHash(data)
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore
@@ -64,10 +70,12 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
   }, [
     address,
     userAddress,
-    writeContract,
-    amount,
-    getFullState,
     setDepositAmount,
+    amount,
+    vault,
+    writeContract,
+    asset?.chain_id,
+    getFullState,
     addTransaction,
     setTransactionCanBeCollapsed,
     setCurrentModal,

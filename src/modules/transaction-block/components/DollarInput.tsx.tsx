@@ -25,7 +25,7 @@ const DollarInput: React.FC<DollarInputProperties> = ({
   return (
     <div
       className={cn(
-        'rounded-xl bg-[rgba(97,_96,_255,_0.05)] px-3 py-2 lg:text-[1.25rem]',
+        'rounded-xl bg-[rgba(97,_96,_255,_0.05)] dark:bg-[rgba(97,_96,_255,_0.15)] px-3 py-2 lg:text-[1.25rem]',
         {
           'bg-red-5 text-red-100': error,
         },

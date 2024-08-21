@@ -21,6 +21,7 @@ export const useWithdrawTransaction = () => {
     mtToken,
     setTransactionCanBeCollapsed,
     getFullState,
+    setTransactionHash,
   } = useTxStore()
 
   const { addTransaction } = useTransactionStore()
@@ -57,12 +58,12 @@ export const useWithdrawTransaction = () => {
       {
         onSuccess: (data) => {
           setStatus('pending')
+          setTransactionHash(data)
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore
           addTransaction({
             ...txStateWithStringBigInt,
-            id: data,
             status: 'pending',
             timestamp: Date.now(),
           })

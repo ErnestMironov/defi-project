@@ -1,3 +1,4 @@
+import { SupportedChainsByVault, Tokens } from '@api/squid-router/postHook/constants'
 import { USDC_TOKENS } from '@api/squid-router/postHook/data/USDC'
 import { USDT_TOKENS } from '@api/squid-router/postHook/data/USDT'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
@@ -10,6 +11,7 @@ import {
 import { useMemo } from 'react'
 
 import { TokenInfo } from '../components/TokenInfo'
+import { useTransactionStore } from '../store/usePendingTransactionsStore'
 import { useTxStore } from '../store/useTxStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
 import { NativeCrossChainSwap } from './deposit-wizards/NativeCrossChainSwap'
@@ -22,24 +24,19 @@ export const DepositReviewContent = ({
 }: {
   allStepsCompleted?: boolean
 }) => {
-  const { depositAsset: asset, vault, inputValue: amount, inputValueInUSD } = useTxStore()
+  const {
+    depositAsset: asset,
+    vault,
+    inputValue: amount,
+    inputValueInUSD,
+    transactionHash,
+    setCurrentModal,
+  } = useTxStore()
+
+  const { transactions } = useTransactionStore()
 
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
-
-  const tokenAddrForVault = useMemo(() => {
-    switch (vault) {
-      case 'USDC': {
-        return USDC_TOKENS.find((token) => token.chainId === asset?.chain_id)?.address
-      }
-      case 'USDT': {
-        return USDT_TOKENS.find((token) => token.chainId === asset?.chain_id)?.address
-      }
-      default: {
-        return vault
-      }
-    }
-  }, [vault, asset?.chain_id])
 
   const depositFlow = useMemo(() => {
     if (!asset || !chainData) {
@@ -47,12 +44,26 @@ export const DepositReviewContent = ({
     }
 
     const assetContractAddress = asset.contract_address?.toLowerCase()
-    const vaultAddress = tokenAddrForVault?.toLowerCase()
 
     try {
       if (
-        vaultAddress === assetContractAddress &&
-        asset.chain_id === CHAIN_IDS_BY_NAME.Arbitrum
+        vault === 'USDC' &&
+        SupportedChainsByVault[Tokens.USDC].includes(asset.chain_id) &&
+        assetContractAddress ===
+          USDC_TOKENS.find(
+            (token) => token.chainId === asset.chain_id,
+          )?.address.toLowerCase()
+      ) {
+        return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
+      }
+
+      if (
+        vault === 'USDT' &&
+        SupportedChainsByVault[Tokens.USDT].includes(asset.chain_id) &&
+        assetContractAddress ===
+          USDT_TOKENS.find(
+            (token) => token.chainId === asset.chain_id,
+          )?.address.toLowerCase()
       ) {
         return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
       }
@@ -72,7 +83,7 @@ export const DepositReviewContent = ({
     } catch {
       return null
     }
-  }, [asset, chainData, tokenAddrForVault, allStepsCompleted])
+  }, [asset, chainData, vault, allStepsCompleted])
 
   return (
     <>

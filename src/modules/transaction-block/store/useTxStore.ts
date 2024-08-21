@@ -10,9 +10,9 @@ import { devtools } from 'zustand/middleware'
 import type { UserMTokenInfo } from '../interface'
 import type { IPendingTransactionData } from './usePendingTransactionsStore'
 
-type Vault = 'USDT' | 'USDC'
+export type Vault = 'USDT' | 'USDC'
 
-type ModalState = 'review' | 'deposit' | 'withdraw' | 'done' | 'error'
+export type ModalState = 'review' | 'deposit' | 'withdraw' | 'done' | 'error'
 interface SelectedAssetState {
   depositAsset: ITokenData | null
   setDepositAsset: (by: ITokenData | null) => void
@@ -71,6 +71,9 @@ interface SelectedAssetState {
 
   transactionHash: string | null
   setTransactionHash: (hash: string | null) => void
+
+  txDifficulty: 'simple' | 'withSwap'
+  setTxDifficulty: (value: 'simple' | 'withSwap') => void
 
   resetStore: () => void
 }
@@ -138,7 +141,6 @@ export const useTxStore = create<SelectedAssetState>()(
         set((state) => ({
           ...state,
           ...transaction,
-          transactionHash: transaction.id,
         })),
 
       getFullState: (): Partial<SelectedAssetState> => {
@@ -150,6 +152,9 @@ export const useTxStore = create<SelectedAssetState>()(
 
       transactionHash: null,
       setTransactionHash: (hash) => set({ transactionHash: hash }),
+
+      txDifficulty: 'simple',
+      setTxDifficulty: (value) => set({ txDifficulty: value }),
 
       resetStore: () =>
         set({
@@ -170,6 +175,7 @@ export const useTxStore = create<SelectedAssetState>()(
           isTransactionCanBeCollapsed: false,
           isTransactionFromStore: false,
           transactionHash: null,
+          txDifficulty: 'simple',
         }),
     }),
     {

@@ -155,7 +155,7 @@ export const PendingTransactions: React.FC = () => {
 
   return (
     <motion.div
-      className="fixed bottom-0 right-0 h-full overflow-y-auto overflow-x-hidden px-10 backdrop-blur-sm"
+      className="fixed bottom-0 right-0 z-[1000] h-full overflow-y-auto overflow-x-hidden px-10 backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{
         opacity: isHovered ? 1 : 0.7,
@@ -170,7 +170,7 @@ export const PendingTransactions: React.FC = () => {
         <AnimatePresence>
           {transactions.map((tx) => (
             <CollapsedTransaction
-              key={tx.id}
+              key={tx.transactionHash}
               transaction={tx}
               onClick={handleTransactionClick}
             />

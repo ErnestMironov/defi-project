@@ -10,7 +10,7 @@ import type { Vault } from '../deposit/SelectVault'
 import type { UserMTokenInfo } from '../interface'
 
 export interface IPendingTransactionData {
-  id: string
+  transactionHash: string
   inputValue: string
   inputValueInUsd: string
   status: STEP_STATUS
@@ -52,25 +52,29 @@ export const useTransactionStore = create<TransactionState>()(
             ],
           }))
         },
-        updateTransaction: (id, status) => {
+        updateTransaction: (hash, status) => {
           set((state) => ({
             transactions: state.transactions.map((transaction) =>
-              transaction.id === id ? { ...transaction, status } : transaction,
+              transaction.transactionHash === hash
+                ? { ...transaction, status }
+                : transaction,
             ),
           }))
         },
         clearTransactions: () => {
           set({ transactions: [] })
         },
-        removeTransaction: (id) => {
+        removeTransaction: (hash) => {
           set((state) => ({
             transactions: state.transactions.filter(
-              (transaction) => transaction.id !== id,
+              (transaction) => transaction.transactionHash !== hash,
             ),
           }))
         },
         isTransactionExist: (hash) => {
-          return get().transactions.some((transaction) => transaction.id === hash)
+          return get().transactions.some(
+            (transaction) => transaction.transactionHash === hash,
+          )
         },
       }),
       {

@@ -41,6 +41,7 @@ export const useApproveERC20 = ({
       },
       {
         onSuccess: async (data) => {
+          console.log('🚀 ~ onSuccess: ~ data:', data)
           setStatus('pending')
 
           try {

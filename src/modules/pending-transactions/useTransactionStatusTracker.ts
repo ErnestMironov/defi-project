@@ -17,20 +17,20 @@ export const useTransactionStatusChecker = () => {
               tx.txType === 'deposit' ? tx.depositAsset?.chain_id : tx.withdrawNetwork
 
             await waitForTransactionReceipt(config, {
-              hash: tx.id as `0x${string}`,
+              hash: tx.transactionHash as `0x${string}`,
               chainId: network as number,
               confirmations:
                 CONFIRMATIONS_NUMBER[network as keyof typeof CONFIRMATIONS_NUMBER],
               timeout: 60_000,
             })
-            updateTransaction(tx.id, 'success')
+            updateTransaction(tx.transactionHash, 'success')
 
             setTimeout(() => {
-              removeTransaction(tx.id)
+              removeTransaction(tx.transactionHash)
             }, 30_000)
           } catch (error) {
             console.error('Error checking transaction status:', error)
-            updateTransaction(tx.id, 'error')
+            updateTransaction(tx.transactionHash, 'error')
           }
         }
 

@@ -1,5 +1,5 @@
 import CloseIcon from '@assets/icons/close.svg'
-import Collapse from '@assets/icons/collapse.svg'
+import CollapseIcon from '@assets/icons/collapse.svg'
 import BigLoader from '@assets/lottie/wizard-main-loader.json'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import Lottie from 'lottie-react'
@@ -34,7 +34,7 @@ export const TxReviewModal = () => {
 
   const renderCloseButton = () => {
     if (isTransactionCanBeCollapsed) {
-      return <Collapse className="size-6" onClick={handleClose} />
+      return <CollapseIcon className="size-6" onClick={handleClose} />
     }
     return <CloseIcon className="size-6" onClick={handleClose} />
   }

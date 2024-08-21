@@ -2,13 +2,15 @@ import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
-import { CHAIN_IDS_BY_NAME } from '@constants/chains'
-import { ARB_GATEWAY } from '@constants/contract-address'
+import type { ChainType } from '@constants/chains'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
+import { useEffect } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
@@ -26,6 +28,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     vault,
     currentStep,
     setCurrentStep,
+    setCurrentModal,
   } = useTxStore()
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
@@ -37,10 +40,13 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     },
   })
 
+  const vaultAddress = vault === 'USDC' ? USDC_VAULT_ADDRESS : USDT_VAULT_ADDRESS
+
   const { approve, status: approveStatus } = useApproveERC20({
     approveValue: parseUnits(amount, 6).toString(),
     tokenAddress: asset?.contract_address as Address,
-    transactionRequestTarget: ARB_GATEWAY,
+    transactionRequestTarget: vaultAddress,
+    chainId: asset?.chain_id,
     onSuccessHandler: () => {
       if (currentStep === 2) {
         setCurrentStep(3)
@@ -59,6 +65,12 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
 
   const depositStatus = useTransactionStatus(_depositStatus)
 
+  useEffect(() => {
+    if (depositStatus === 'success') {
+      setCurrentModal('done')
+    }
+  }, [setCurrentModal, depositStatus])
+
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
@@ -70,7 +82,10 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             type="button"
             onClick={switchChain}
           >
-            {getButtonContent(switchStatus, 'Switch to Arbitrum')}
+            {getButtonContent(
+              switchStatus,
+              `Switch to ${CHAIN_NAMES_BY_ID[asset?.chain_id as ChainType]}`,
+            )}
           </Button>
         )
       }
@@ -112,9 +127,9 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     <div className="flex flex-col items-stretch gap-10">
       <div className="flex flex-col gap-2">
         <WizardStep
-          icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
+          icon={<TokenIconComponent width="2rem" symbol={asset?.chain_id} />}
           activeStep={currentStep === 1}
-          title="Switch to Arbitrum"
+          title={`Switch to ${CHAIN_NAMES_BY_ID[asset?.chain_id as ChainType]}`}
           status={allStepsCompleted ? 'success' : switchStatus}
         />
         <WizardStep
