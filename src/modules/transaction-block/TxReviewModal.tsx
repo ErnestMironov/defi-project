@@ -26,7 +26,9 @@ export const TxReviewModal = () => {
   }
 
   const handleClose = () => {
-    resetStore()
+    if (isTransactionFromStore) {
+      resetStore()
+    }
     setCurrentModal(null)
   }
 
