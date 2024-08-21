@@ -4,7 +4,9 @@ import type {
   IDepositWizardHook,
   STEP_STATUS,
 } from '@modules/transaction-block/deposit/interfaces'
+import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
+import { convertBigIntToString } from '@utils/formatValue'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
 import type { Address } from 'viem'
@@ -179,7 +181,8 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
   const [error, setError] = useState('')
   const [depositHash, setDepositHash] = useState<string | null>(null)
 
-  const { setCurrentModal } = useTxStore()
+  const { setCurrentModal, getFullState } = useTxStore()
+  const { addTransaction } = useTransactionStore()
 
   const { sendTransaction } = useSendTransaction({
     mutation: {
@@ -190,6 +193,16 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
       onSuccess(data) {
         setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful
+
+        const txState = getFullState()
+        const preparedTxState = convertBigIntToString(txState)
+        addTransaction({
+          id: data,
+          status: 'pending',
+          timestamp: Date.now(),
+          ...preparedTxState,
+        })
+
         waitForSuccessStatus(
           data,
           route?.params?.fromChain!,

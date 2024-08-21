@@ -5,6 +5,7 @@ import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
@@ -27,17 +28,17 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     setCurrentStep,
   } = useTxStore()
 
-  function incrementStep() {
-    setCurrentStep(currentStep + 1)
-  }
-
   const {
     status: switchStatus,
     switchChain,
     error: switchError,
   } = useSwitchToTokenChain({
     chainId: 42_161, // Arb chain ID
-    onSuccessHandler: incrementStep,
+    onSuccessHandler: () => {
+      if (currentStep === 1) {
+        setCurrentStep(2)
+      }
+    },
   })
 
   const { squid } = useSquidSDK()
@@ -60,7 +61,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
 
   const {
     swapTokens: swapAndDeposit,
-    status: swapAndDepositStatus,
+    status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
   } = useSwap({
@@ -103,6 +104,8 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
       }
     }
   }
+
+  const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
   return (
     <div className="flex flex-col items-stretch gap-10">

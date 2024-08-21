@@ -130,6 +130,7 @@ export const PendingTransactions: React.FC = () => {
   }
 
   const handleTransactionClick = (transaction: IPendingTransactionData) => {
+    console.log('🚀 ~ handleTransactionClick ~ transaction:', transaction)
     setTransactionData(transaction)
 
     switch (transaction.status) {

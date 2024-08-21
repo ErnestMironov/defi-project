@@ -120,7 +120,6 @@ export function useGetSquidSwapRoute(parameters_: {
   useEffect(() => {
     if (data?.data?.route?.estimate?.toAmountMin) {
       const depositAmount = data?.data?.route?.estimate?.toAmountMin
-      console.log('🚀 ~ useEffect ~ depositAmount:', depositAmount)
       setDepositAmount(formatUnits(depositAmount, 6).toString())
     }
   }, [data, setDepositAmount])

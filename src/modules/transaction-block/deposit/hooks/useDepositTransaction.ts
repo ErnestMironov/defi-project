@@ -1,14 +1,12 @@
 // eslint-disable-next-line import/extensions
 import { GATEWAY_ABI } from '@abi/gateway'
-import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { ARB_EID, ARB_GATEWAY } from '@constants/contract-address'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
-import { waitForTransactionReceipt } from '@wagmi/core'
 import { useCallback, useState } from 'react'
 import { type Address, formatUnits } from 'viem'
-import { useAccount, useConfig, useWriteContract } from 'wagmi'
+import { useAccount, useWriteContract } from 'wagmi'
 
 import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
 
@@ -17,25 +15,21 @@ interface IProperties extends IDepositWizardHook {
   amount: bigint
 }
 
-export const useDepositTransaction = ({
-  address,
-  amount,
-  onSuccessHandler,
-}: IProperties) => {
+export const useDepositTransaction = ({ address, amount }: IProperties) => {
   const { writeContract, ...rest } = useWriteContract()
   const {
     setCurrentModal,
-    setDepositAmount,
     getFullState,
     setTransactionCanBeCollapsed,
+    setDepositAmount,
   } = useTxStore()
   const { address: userAddress } = useAccount()
   const [status, setStatus] = useState<STEP_STATUS>('idle')
-  const config = useConfig()
   const { addTransaction } = useTransactionStore()
 
   const deposit = useCallback(() => {
     if (!address || !userAddress) return
+    setDepositAmount(amount ? formatUnits(amount, 6) : '0')
     setStatus('confirm_in_wallet')
 
     return writeContract(
@@ -60,20 +54,6 @@ export const useDepositTransaction = ({
           })
 
           setTransactionCanBeCollapsed(true)
-
-          // @ts-ignore
-          await waitForTransactionReceipt(config, {
-            hash: data,
-            chainId: CHAIN_IDS_BY_NAME.Arbitrum,
-            confirmations: CONFIRMATIONS_NUMBER[CHAIN_IDS_BY_NAME.Arbitrum],
-            timeout: 60_000,
-          })
-
-          setStatus('success')
-
-          onSuccessHandler?.()
-          setCurrentModal('done')
-          setDepositAmount(formatUnits(amount, 6))
         },
         onError: (err) => {
           console.error('Error depositing', err)
@@ -83,16 +63,14 @@ export const useDepositTransaction = ({
     )
   }, [
     address,
-    amount,
     userAddress,
     writeContract,
-    addTransaction,
-    config,
-    onSuccessHandler,
-    setCurrentModal,
-    setDepositAmount,
-    setTransactionCanBeCollapsed,
+    amount,
     getFullState,
+    setDepositAmount,
+    addTransaction,
+    setTransactionCanBeCollapsed,
+    setCurrentModal,
   ])
 
   return { deposit, ...rest, status }

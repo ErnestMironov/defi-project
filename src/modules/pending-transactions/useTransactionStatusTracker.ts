@@ -10,12 +10,12 @@ export const useTransactionStatusChecker = () => {
 
   useEffect(() => {
     transactions.forEach((tx) => {
-      console.log('🚀 ~ transactions.forEach ~ tx:', tx)
       if (tx.status === 'pending') {
         const checkTransactionStatus = async () => {
           try {
             const network =
               tx.txType === 'deposit' ? tx.depositAsset?.chain_id : tx.withdrawNetwork
+
             await waitForTransactionReceipt(config, {
               hash: tx.id as `0x${string}`,
               chainId: network as number,

@@ -4,7 +4,7 @@ import { useChainId, useSwitchChain } from 'wagmi'
 import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
 
 interface IProperties extends IDepositWizardHook {
-  chainId: string | number
+  chainId?: string | number
 }
 
 export function useSwitchToTokenChain({ chainId, onSuccessHandler }: IProperties) {

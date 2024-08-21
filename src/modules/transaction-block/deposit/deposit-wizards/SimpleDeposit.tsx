@@ -5,6 +5,7 @@ import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { ARB_GATEWAY } from '@constants/contract-address'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
@@ -27,30 +28,36 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     setCurrentStep,
   } = useTxStore()
 
-  function incrementStep() {
-    setCurrentStep(currentStep + 1)
-  }
-
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
-    chainId: 42_161, // Arb chain ID
-    onSuccessHandler: incrementStep,
+    chainId: asset?.chain_id,
+    onSuccessHandler: () => {
+      if (currentStep === 1) {
+        setCurrentStep(2)
+      }
+    },
   })
 
   const { approve, status: approveStatus } = useApproveERC20({
     approveValue: parseUnits(amount, 6).toString(),
     tokenAddress: asset?.contract_address as Address,
     transactionRequestTarget: ARB_GATEWAY,
-    onSuccessHandler: incrementStep,
+    onSuccessHandler: () => {
+      if (currentStep === 2) {
+        setCurrentStep(3)
+      }
+    },
   })
 
   const {
     deposit,
-    status: depositStatus,
+    status: _depositStatus,
     data: depositHash,
   } = useDepositTransaction({
     address: asset?.contract_address as Address,
     amount: BigInt(parseUnits(amount, 6)),
   })
+
+  const depositStatus = useTransactionStatus(_depositStatus)
 
   const ActionButton = () => {
     switch (currentStep) {
