@@ -57,7 +57,7 @@ export const Tokens = (props: TokensProperties) => {
             symbol === 'USDC' ? 'rotate-[3.207deg]' : 'rotate-[-5.207deg] right-[-8.1rem]'
           }
         />
-        <div className="text-text-100 flex flex-col justify-between rounded-[1.75rem] bg-cards p-10 text-[1.25rem]/[1.5rem] normal-case [box-shadow:0px_3px_1px_0px_rgba(56,_118,_203,_0.20)]">
+        <div className="text-text flex flex-col justify-between rounded-[1.75rem] bg-cards p-10 text-[1.25rem]/[1.5rem] normal-case [box-shadow:0px_3px_1px_0px_rgba(56,_118,_203,_0.20)]">
           <p>
             USDC is a fully collateralized US dollar stablecoin. USDC is the bridge
             between dollars and trading on cryptocurrency exchanges.

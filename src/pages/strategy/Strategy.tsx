@@ -30,6 +30,7 @@ export const Strategy = (props: StrategyProperties) => {
         <StrategyTvlChart />
       </div>
       <TransactionHistory
+        className="mt-[6.25rem]"
         maatFilters={{
           search: { value: '', placeholder: 'Tx Hash' },
           action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
@@ -44,7 +45,6 @@ export const Strategy = (props: StrategyProperties) => {
           from: { items: SELECT_INCENTIVES_FROM, value: SELECT_INCENTIVES_FROM[0] },
           chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
         }}
-        className="mt-[6.25rem]"
       />
       <Footer className="mt-[7.5rem]" />
     </div>

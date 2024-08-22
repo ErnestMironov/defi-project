@@ -124,3 +124,25 @@ export const SELECT_INCENTIVES_FROM: OptionType[] = [
   { label: 'Vault', value: 'Vault' },
   { label: 'Compounder', value: 'Compounder' },
 ]
+
+export const SELECT_ADMIN_FUNCTIONS: OptionType[] = [
+  { label: 'All Functions', value: 'All Functions' },
+  { label: 'setPeer', value: 'setPeer' },
+  { label: 'setWatcher', value: 'setWatcher' },
+  { label: 'setCommander', value: 'setCommander' },
+  { label: 'setStargateAdapter', value: 'setStargateAdapter' },
+  { label: 'setIncentivesController', value: 'setIncentivesController' },
+]
+
+export const SELECT_ADMIN_FROM: OptionType[] = [
+  { label: 'From', value: 'From' },
+  { label: 'MAAT Admin', value: 'MAAT Admin' },
+  { label: 'Yield Searcher', value: 'Yield Searcher' },
+]
+
+export const SELECT_PPS: OptionType[] = [
+  { label: 'All PPS', value: 'All PPS' },
+  { label: '1.0001', value: '1.0001' },
+  { label: '1.13', value: '1.13' },
+  { label: '1.23', value: '1.23' },
+]

@@ -84,6 +84,24 @@ export const routes = createRoutesFromElements(
           }
         }}
       />
+      <Route
+        path={ROUTES.TRANSACTIONS}
+        lazy={async () => {
+          const { Transactions } = await import('@pages/transactions/Transactions')
+          return {
+            Component: Transactions,
+          }
+        }}
+      />
+      <Route
+        path={ROUTES.TRANSACTION}
+        lazy={async () => {
+          const { Transaction } = await import('@pages/transaction/Transaction')
+          return {
+            Component: Transaction,
+          }
+        }}
+      />
     </Route>
 
     <Route

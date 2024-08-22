@@ -10,15 +10,19 @@ export type SelectOption = {
 }
 export type SearchOption = { value: string; placeholder?: string }
 
+type SelectFilters =
+  | 'action'
+  | 'token'
+  | 'status'
+  | 'chain'
+  | 'protocol'
+  | 'from'
+  | 'functions'
+  | 'pps'
+
 export type TableFiltersType = {
-  search?: SearchOption
-  action?: SelectOption
-  token?: SelectOption
-  status?: SelectOption
-  chain?: SelectOption
-  protocol?: SelectOption
-  from?: SelectOption
-}
+  [key in SelectFilters]?: SelectOption
+} & { search?: SearchOption }
 
 interface TableFiltersProperties extends ComponentProps<'div'> {
   filters: TableFiltersType
