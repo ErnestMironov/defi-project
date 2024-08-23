@@ -1,5 +1,4 @@
 import type { ComponentProps } from 'react'
-import { useParams } from 'react-router-dom'
 
 import { Bridge } from './transaction-type/Bridge'
 import { Deposit } from './transaction-type/Deposit'
@@ -26,7 +25,6 @@ interface TransactionInfoProperties extends ComponentProps<'div'> {
 
 export const TransactionInfo = (props: TransactionInfoProperties) => {
   const { className, type, ...rest } = props
-  const { txHash } = useParams()
   if (type === 'Deposit') {
     return <Deposit className={className} {...rest} />
   }
