@@ -1,7 +1,7 @@
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { cn } from '@utils/cn'
-import type { ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 
 import { TokenStatsContainer } from './TokenStatsContainer'
 

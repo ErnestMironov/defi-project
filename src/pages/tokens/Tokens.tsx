@@ -57,7 +57,7 @@ export const Tokens = (props: TokensProperties) => {
             symbol === 'USDC' ? 'rotate-[3.207deg]' : 'rotate-[-5.207deg] right-[-8.1rem]'
           }
         />
-        <div className="text-text flex flex-col justify-between rounded-[1.75rem] bg-cards p-10 text-[1.25rem]/[1.5rem] normal-case [box-shadow:0px_3px_1px_0px_rgba(56,_118,_203,_0.20)]">
+        <div className="flex flex-col justify-between rounded-[1.75rem] bg-cards p-10 text-[1.25rem]/[1.5rem] normal-case text-text [box-shadow:0px_3px_1px_0px_rgba(56,_118,_203,_0.20)]">
           <p>
             USDC is a fully collateralized US dollar stablecoin. USDC is the bridge
             between dollars and trading on cryptocurrency exchanges.
@@ -83,7 +83,7 @@ export const Tokens = (props: TokensProperties) => {
       <Events
         className="mt-[6.25rem] max-lg:mt-14"
         filters={{
-          search: { value: '', placeholder: 'tx hash  / Address' },
+          search: { value: '', placeholder: 'Tx hash  / Address' },
           action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
           status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
           chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },

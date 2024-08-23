@@ -17,7 +17,7 @@ import { StrategyRow } from './StrategiesDesktopRow'
 interface StrategiesDesktopProperties extends StrategiesProperties {}
 
 export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) => {
-  const { filters: initialFilters, className, withLink = false, rowType = 'link' } = props
+  const { filters: initialFilters, className, withLink = false } = props
   const [filters, setFilters] = useState(initialFilters)
   const navigate = useNavigate()
   const { data, loading, error } = useStrategies()
@@ -54,7 +54,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
             </Table.Head>
             <Table.Body>
               {(data?.strategyStats as StrategyStats[])?.map((strategy, index) => {
-                return <StrategyRow key={index} strategy={strategy} rowType={rowType} />
+                return <StrategyRow key={index} strategy={strategy} />
               })}
             </Table.Body>
           </Table>

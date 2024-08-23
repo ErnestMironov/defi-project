@@ -6,6 +6,7 @@ import { ActionChip } from '@components/transaction-type-badge'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
 import type { ComponentProps } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { ITransaction } from 'src/lib/types/transaction'
 
 interface MaatTransactionHistoryRowProperties extends ComponentProps<'div'> {
@@ -14,9 +15,12 @@ interface MaatTransactionHistoryRowProperties extends ComponentProps<'div'> {
 
 export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProperties) => {
   const { transaction } = props
-
+  const navigate = useNavigate()
   return (
-    <Table.Row>
+    <Table.Row
+      className="cursor-pointer"
+      onClick={() => navigate(`/transactions/${transaction.txHash}`)}
+    >
       <Table.Cell>
         <ActionChip type={transaction.action} styled={false} />
       </Table.Cell>

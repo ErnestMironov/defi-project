@@ -33,7 +33,7 @@ export const Analytics = () => {
       <Events
         className="mt-28 max-lg:mt-14"
         filters={{
-          search: { value: '', placeholder: 'tx hash  / Address' },
+          search: { value: '', placeholder: 'Tx hash  / Address' },
           action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
           status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
           chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
