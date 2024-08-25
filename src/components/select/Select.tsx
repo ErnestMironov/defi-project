@@ -6,8 +6,15 @@ import {
 } from '@components/ui/select'
 import { type SelectProps, SelectValue } from '@radix-ui/react-select'
 import { cn } from '@utils/cn'
+import type { FC, SVGProps } from 'react'
 
-export type OptionType = { value: string; label: React.ReactNode | string }
+export type OptionType = {
+  value: string
+  label: React.ReactNode | string
+  Icon?: FC<SVGProps<SVGElement>>
+  onSelect?: () => void
+  callback?: () => void
+}
 
 interface SelectProperties extends Omit<React.FC<SelectProps>, 'value'> {
   className?: string
@@ -15,10 +22,15 @@ interface SelectProperties extends Omit<React.FC<SelectProps>, 'value'> {
   value: OptionType
   onChange: (value: OptionType) => void
   placeholder?: string
+  disabled?: boolean
+  classNames?: {
+    content?: string
+    trigger?: string
+  }
 }
 
 export const Select = (props: SelectProperties) => {
-  const { className, options, value, onChange, placeholder, ...rest } = props
+  const { className, options, value, onChange, placeholder, classNames, ...rest } = props
   return (
     <SelectPrimitive
       {...rest}
@@ -27,13 +39,13 @@ export const Select = (props: SelectProperties) => {
         onChange(options.find((option) => option.value === _value) as OptionType)
       }}
     >
-      <SelectTrigger className={cn('size-full', className)}>
+      <SelectTrigger className={cn('size-full', className, classNames?.trigger)}>
         <SelectValue placeholder={placeholder}>{value.label}</SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className={cn('w-full', classNames?.content)}>
         {options.map((option) => {
           return (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem key={option.value} value={option.value} Icon={option?.Icon}>
               {typeof option === 'string' ? option : option.label}
             </SelectItem>
           )

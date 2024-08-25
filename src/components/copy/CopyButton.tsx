@@ -18,9 +18,9 @@ export const CopyButton = (props: CopyButtonProperties) => {
         e.stopPropagation()
         copyWithToast(text)
       }}
-      className={cn('flex size-6 cursor-pointer justify-start transition', className)}
-      whileHover={{ scale: '1.05' }}
-      whileTap={{ scale: '0.95' }}
+      className={cn('flex size-6 cursor-pointer justify-start', className)}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.9 }}
     >
       <Copy type="button" className="size-full overflow-visible" />
     </motion.div>

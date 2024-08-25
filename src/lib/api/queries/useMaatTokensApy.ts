@@ -47,7 +47,6 @@ export const maatTokensApy = gql(`
 
 export const useMaatTokensApy = ({ from }: { from: number }) => {
   const { data, ...rest } = useQuery(maatTokensApy, { variables: { from } })
-
   // ! TODO: remove "* 5" when we have real data
   const chartData = useMemo(() => {
     const apyData = data?.apies.map((apy) => ({
@@ -118,6 +117,5 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
     }
     return apyDataArrayWithBothLines
   }, [data, from])
-
   return { data: chartData, ...rest }
 }

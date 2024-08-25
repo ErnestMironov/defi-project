@@ -13,7 +13,7 @@ export const Footer = (props: MobileFooterProperties) => {
   const { className } = props
   if (isBelowDesktop) {
     return (
-      <div
+      <footer
         className={cn('flex justify-center flex-col gap-[3rem] items-center', className)}
       >
         <Link to="/">
@@ -21,11 +21,11 @@ export const Footer = (props: MobileFooterProperties) => {
         </Link>
         <HeaderMenu className="gap-6 justify-self-center" />
         <Socials />
-      </div>
+      </footer>
     )
   }
   return (
-    <div
+    <footer
       className={cn('flex justify-center flex-col gap-[4.06rem] items-center', className)}
     >
       <div className="grid w-full grid-cols-[1fr_2fr_1fr] items-start">
@@ -39,6 +39,6 @@ export const Footer = (props: MobileFooterProperties) => {
           icon: 'size-[3.5rem] [&_path]:fill-[#323949]',
         }}
       />
-    </div>
+    </footer>
   )
 }

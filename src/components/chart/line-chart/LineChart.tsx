@@ -1,4 +1,4 @@
-import type { FrameType } from '@modules/charts/ApyChartModule'
+import type { FrameType } from '@components/frames-select/useFrameSelect'
 import { formatAmountValue } from '@utils/formatValue'
 import dayjs from 'dayjs'
 import {

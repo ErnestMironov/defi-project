@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 
-const USDC_TOKENS_RAW = [
+export const USDC_TOKENS_RAW = [
   {
     addr: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e',
     chainId: 43_114,
