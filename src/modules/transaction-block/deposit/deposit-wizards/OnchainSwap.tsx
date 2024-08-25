@@ -6,6 +6,7 @@ import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
@@ -25,13 +26,13 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
 
   const { depositAsset, vault, inputValue: amount, setCurrentModal } = useTxStore()
 
-  function incrementStep() {
-    setCurrentStep((previousStep) => previousStep + 1)
-  }
-
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
-    chainId: 42_161, // Arb chain ID
-    onSuccessHandler: incrementStep,
+    chainId: depositAsset?.chain_id,
+    onSuccessHandler: () => {
+      if (currentStep === 1) {
+        setCurrentStep(2)
+      }
+    },
   })
 
   const { squid } = useSquidSDK()
@@ -53,8 +54,24 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   })
 
   const {
+    approve: approveBeforeSwap,
+    status: approveStatusBeforeSwap,
+    error: approveErrorBeforeSwap,
+  } = useApproveERC20({
+    approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
+    tokenAddress: depositAsset?.contract_address as Address,
+    transactionRequestTarget: route?.transactionRequest?.target,
+    chainId: depositAsset?.chain_id,
+    onSuccessHandler: () => {
+      if (currentStep === 2) {
+        setCurrentStep(3)
+      }
+    },
+  })
+
+  const {
     swapTokens: swapAndDeposit,
-    status: swapAndDepositStatus,
+    status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
   } = useSwap({
@@ -65,16 +82,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     },
   })
 
-  const {
-    approve: approveBeforeSwap,
-    status: approveStatusBeforeSwap,
-    error: approveErrorBeforeSwap,
-  } = useApproveERC20({
-    approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
-    tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: route?.transactionRequest?.target,
-    onSuccessHandler: incrementStep,
-  })
+  const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
   const ActionButton = () => {
     switch (currentStep) {

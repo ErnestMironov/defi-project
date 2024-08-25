@@ -1,6 +1,5 @@
-import { GATEWAY_ABI } from '@abi/gateway'
+import { tokenVaultAbi } from '@constants/abi/token-vault'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
-import { ARB_GATEWAY } from '@constants/contract-address'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
@@ -22,6 +21,7 @@ export const useWithdrawTransaction = () => {
     setTransactionCanBeCollapsed,
     getFullState,
     setTransactionHash,
+    setTxDifficulty,
   } = useTxStore()
 
   const { addTransaction } = useTransactionStore()
@@ -44,13 +44,14 @@ export const useWithdrawTransaction = () => {
 
     return writeContract(
       {
-        address: ARB_GATEWAY,
-        abi: GATEWAY_ABI,
+        address: mtToken?.mtAddress as Address,
+        abi: tokenVaultAbi,
         functionName: 'requestWithdraw',
+        chainId: mtToken.chainData?.chainId,
         args: [
-          mtToken?.asset as Address,
           amount as bigint,
-          EIDS_BY_CHAIN_ID[mtToken?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum],
+          EIDS_BY_CHAIN_ID[mtToken.chainData?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum],
+          mtToken?.mtAddress as Address,
           address,
         ],
       },
@@ -59,6 +60,7 @@ export const useWithdrawTransaction = () => {
         onSuccess: (data) => {
           setStatus('pending')
           setTransactionHash(data)
+          setTxDifficulty('simple')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore

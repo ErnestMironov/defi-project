@@ -5,6 +5,7 @@ import { Button } from '@components/ui/button'
 import { ARB_USDC, ARB_USDT } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
@@ -33,7 +34,11 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
   const { status: switchToAssetChainStatus, switchChain: switchToAssetChain } =
     useSwitchToTokenChain({
       chainId: depositAssetChain?.chainId ?? 1,
-      onSuccessHandler: () => setCurrentStep(currentStep + 1),
+      onSuccessHandler: () => {
+        if (currentStep === 1) {
+          setCurrentStep(currentStep + 1)
+        }
+      },
     })
 
   const tokenAddrForVault = useMemo(() => {
@@ -42,16 +47,16 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
 
   const { route, requestId } = useGetSquidSwapRoute({
     fromAmount: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
-    fromChain: depositAssetChain?.chainId?.toString() ?? '1',
+    fromChain: depositAssetChain?.chainId?.toString(),
     fromToken: depositAsset?.contract_address as Address,
-    toChain: '42161',
+    toChain: depositAssetChain?.chainId?.toString(),
     toToken: tokenAddrForVault,
     enableBoost: true,
   })
 
   const {
     swapTokens: swapAndDeposit,
-    status: swapAndDepositStatus,
+    status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
   } = useSwap({
@@ -61,6 +66,8 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
       setCurrentModal('done')
     },
   })
+
+  const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
   const ActionButton = () => {
     switch (currentStep) {

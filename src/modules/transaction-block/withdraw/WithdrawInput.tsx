@@ -63,16 +63,19 @@ export const WithdrawInput = () => {
 
   const [validationError, setValidationError] = useState('')
 
-  const maxBalance = mtToken?.lpBalance ? formatUnits(BigInt(mtToken?.lpBalance), 6) : 0
+  const maxBalance = mtToken?.value ? formatUnits(BigInt(mtToken?.value), 6) : '0'
 
-  const inputValueBN = useMemo(() => new BigNumber(inputValue || '0'), [inputValue])
+  const inputValueBN = useMemo(
+    () => new BigNumber(inputValue || '0').times(1e6),
+    [inputValue],
+  )
   const lpBalanceBN = useMemo(
-    () => new BigNumber(mtToken?.lpBalance || '0'),
-    [mtToken?.lpBalance],
+    () => new BigNumber(mtToken?.value || '0'),
+    [mtToken?.value],
   )
   const balanceBN = useMemo(
-    () => new BigNumber(mtToken?.balance || '0'),
-    [mtToken?.balance],
+    () => new BigNumber(mtToken?.mtToken || '0'),
+    [mtToken?.mtToken],
   )
 
   useEffect(() => {
@@ -84,6 +87,8 @@ export const WithdrawInput = () => {
   }, [inputValueInUSD, setWithdrawAmount])
 
   useEffect(() => {
+    console.log('🚀 ~ useEffect ~ lpBalanceBN:', lpBalanceBN.toString())
+    console.log('🚀 ~ useEffect ~ inputValueBN:', inputValueBN.toString())
     if (inputValueBN.isGreaterThan(lpBalanceBN)) {
       setValidationError('Exceeds balance')
     } else if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
@@ -98,7 +103,9 @@ export const WithdrawInput = () => {
   }
 
   const handleAction = (type: InputType, value: string) => {
+    console.log('🚀 ~ handleAction ~ value:', value)
     const numericValue = BigNumber(value)
+    console.log('🚀 ~ handleAction ~ numericValue:', numericValue.toString())
 
     if (type === 'usd') {
       const tokenValue = calculateTokenValue(numericValue, lpBalanceBN, balanceBN)

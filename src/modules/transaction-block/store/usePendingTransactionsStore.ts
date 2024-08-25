@@ -7,7 +7,8 @@ import { devtools, persist } from 'zustand/middleware'
 
 import type { STEP_STATUS } from '../deposit/interfaces'
 import type { Vault } from '../deposit/SelectVault'
-import type { UserMTokenInfo } from '../interface'
+import type { UseGetMTokenInfoReturn } from '../withdraw/hooks/useGetMTokenInfo'
+import type { TxDifficulty } from './useTxStore'
 
 export interface IPendingTransactionData {
   transactionHash: string
@@ -19,7 +20,7 @@ export interface IPendingTransactionData {
   depositAsset: ITokenData
   depositNetwork: ChainType | null
   withdrawNetwork: ChainType | null
-  mtToken: UserMTokenInfo | null
+  mtToken: UseGetMTokenInfoReturn | null
   txType: TxType
   depositAmount: string
   withdrawAmount: string
@@ -28,6 +29,7 @@ export interface IPendingTransactionData {
   arrivalGas: string
   currentStep: number
   isTransactionFromStore: boolean
+  txDifficulty: TxDifficulty
 }
 
 interface TransactionState {

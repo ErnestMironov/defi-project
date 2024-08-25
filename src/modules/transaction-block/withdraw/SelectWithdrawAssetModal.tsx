@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import { useMaatUserTokens } from '@api/queries/useMaatUserTokens'
+import type { ParsedSharesBalanceResponse } from '@api/maat-finance/types'
+import { useGetSharesBalance } from '@api/maat-finance/useGetSharesBalance'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import {
@@ -12,12 +13,11 @@ import {
 import { Skeleton } from '@components/ui/skeleton'
 import { formatAmountValue } from '@utils/formatValue'
 import { type ComponentProps, useState } from 'react'
-import type { Address } from 'viem'
 import { formatUnits } from 'viem'
-import { useSwitchChain } from 'wagmi'
+import { useAccount, useSwitchChain } from 'wagmi'
 
-import type { UserMTokenInfo } from '../interface'
 import { useTxStore } from '../store/useTxStore'
+import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
 
 interface SelectWithdrawAssetModalProperties extends ComponentProps<'div'> {}
@@ -26,10 +26,10 @@ const WithdrawAssetItem = ({
   token,
   onChange,
 }: {
-  token: any
-  onChange: (token: any) => void
+  token: ParsedSharesBalanceResponse['balances'][number]
+  onChange: (token: UseGetMTokenInfoReturn) => void
 }) => {
-  const tokenData = useGetMTokenInfo(token?.asset)
+  const tokenData = useGetMTokenInfo(token)
 
   return (
     <button
@@ -55,10 +55,10 @@ const WithdrawAssetItem = ({
       </div>
       <div className="ml-auto flex flex-col items-end gap-1">
         <p className="text-base text-text">
-          {formatAmountValue(formatUnits(token.lpBalance, 6))} {tokenData?.symbol}
+          {formatAmountValue(formatUnits(BigInt(token.value), 6))} {tokenData?.symbol}
         </p>
         <p className="text-semi-base font-bold text-gray-80">
-          ${formatAmountValue(formatUnits(token.balance, 6), 2)}{' '}
+          ${formatAmountValue(formatUnits(BigInt(token.value), 6), 2)}{' '}
         </p>
       </div>
     </button>
@@ -69,26 +69,20 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
   const { mtToken, setMToken } = useTxStore()
   const [opened, setOpened] = useState(false)
   const { switchChain: _switchChain } = useSwitchChain()
+  const { address } = useAccount()
 
-  const { data, loading: isLoading } = useMaatUserTokens()
-  // const tokenBalanceUsdcUsd = formatAmountValue(
-  //   BigNumber((tokenBalanceUsdc as any) || 0)
-  //     .div(10 ** 6)
-  //     .toString(),
-  // )
-  // const tokenBalanceUsdtUsd = formatAmountValue(
-  //   BigNumber((tokenBalanceUsdt as any) || 0)
-  //     .div(10 ** 6)
-  //     .toString(),
-  // )
+  const { data, isLoading, error } = useGetSharesBalance(address)
 
-  const mtTokenData = useGetMTokenInfo(mtToken?.asset as Address)
+  const balances = data?.data?.balances.filter((token) => token.value > 0)
+  console.log('🚀 ~ SelectWithdrawAssetModal ~ balances:', balances)
 
-  const onChange = (_asset: UserMTokenInfo) => {
+  const onChange = (_asset: UseGetMTokenInfoReturn) => {
     setMToken(_asset)
-    _switchChain({
-      chainId: _asset?.chainId,
-    })
+    if (_asset?.chainData?.chainId) {
+      _switchChain({
+        chainId: _asset?.chainData?.chainId,
+      })
+    }
     setOpened(false)
   }
 
@@ -101,8 +95,8 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
           icon={
             <TokenWithNetwork
               className="size-[2.14288rem] max-lg:size-[1.125rem]"
-              symbol={mtTokenData?.stable}
-              network={mtTokenData?.chainData?.chainId}
+              symbol={mtToken?.stable}
+              network={mtToken?.chainData?.chainId}
             />
           }
         />
@@ -119,8 +113,8 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
                 className="flex h-[4.5rem] w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
               />
             ))}
-          {data.map((token) => (
-            <WithdrawAssetItem key={token?.asset} token={token} onChange={onChange} />
+          {balances?.map((token) => (
+            <WithdrawAssetItem key={token?.chain} token={token} onChange={onChange} />
           ))}
         </div>
       </DialogContent>

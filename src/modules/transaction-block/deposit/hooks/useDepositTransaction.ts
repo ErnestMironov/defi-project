@@ -24,6 +24,7 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
     setTransactionCanBeCollapsed,
     setDepositAmount,
     setTransactionHash,
+    setTxDifficulty,
     vault,
   } = useTxStore()
   const { address: userAddress } = useAccount()
@@ -49,12 +50,13 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
         onSuccess: async (data) => {
           setStatus('pending')
           setTransactionHash(data)
+          setTxDifficulty('withSwap')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore
           addTransaction({
             ...txStateWithStringBigInt,
-            id: data,
+            transactionHash: data,
             status: 'pending',
             timestamp: Date.now(),
           })
@@ -75,6 +77,8 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
     vault,
     writeContract,
     asset?.chain_id,
+    setTransactionHash,
+    setTxDifficulty,
     getFullState,
     addTransaction,
     setTransactionCanBeCollapsed,

@@ -37,6 +37,7 @@ export const useApproveERC20 = ({
         address: tokenAddress,
         abi: erc20Abi,
         functionName: 'approve',
+        chainId,
         args: [transactionRequestTarget as `0x${string}`, BigInt(approveValue)],
       },
       {

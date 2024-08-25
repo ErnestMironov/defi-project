@@ -7,10 +7,12 @@ import { convertBigIntToString } from '@utils/formatValue'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-import type { UserMTokenInfo } from '../interface'
+import type { UseGetMTokenInfoReturn } from '../withdraw/hooks/useGetMTokenInfo'
 import type { IPendingTransactionData } from './usePendingTransactionsStore'
 
 export type Vault = 'USDT' | 'USDC'
+
+export type TxDifficulty = 'simple' | 'withSwap'
 
 export type ModalState = 'review' | 'deposit' | 'withdraw' | 'done' | 'error'
 interface SelectedAssetState {
@@ -26,8 +28,8 @@ interface SelectedAssetState {
   vault?: Vault
   setVault: (by: Vault) => void
 
-  mtToken: UserMTokenInfo | null
-  setMToken: (by: UserMTokenInfo) => void
+  mtToken: UseGetMTokenInfoReturn | null
+  setMToken: (by: UseGetMTokenInfoReturn) => void
 
   txType: TxType
   setTxType: (by: TxType) => void
@@ -72,8 +74,8 @@ interface SelectedAssetState {
   transactionHash: string | null
   setTransactionHash: (hash: string | null) => void
 
-  txDifficulty: 'simple' | 'withSwap'
-  setTxDifficulty: (value: 'simple' | 'withSwap') => void
+  txDifficulty: TxDifficulty
+  setTxDifficulty: (value: TxDifficulty) => void
 
   resetStore: () => void
 }

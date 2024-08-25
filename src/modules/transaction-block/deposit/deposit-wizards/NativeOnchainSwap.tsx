@@ -26,6 +26,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     setCurrentModal,
     currentStep,
     setCurrentStep,
+    depositAsset,
   } = useTxStore()
 
   const {
@@ -33,7 +34,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     switchChain,
     error: switchError,
   } = useSwitchToTokenChain({
-    chainId: 42_161, // Arb chain ID
+    chainId: depositAsset?.chain_id,
     onSuccessHandler: () => {
       if (currentStep === 1) {
         setCurrentStep(2)
@@ -52,9 +53,9 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
 
   const { route, requestId } = useGetSquidSwapRoute({
     fromAmount: parseEther(amount).toString(),
-    fromChain: '42161',
+    fromChain: depositAsset?.chain_id?.toString(),
     fromToken: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    toChain: '42161',
+    toChain: depositAsset?.chain_id.toString(),
     toToken: tokenAddrForVault,
     enableBoost: true,
   })

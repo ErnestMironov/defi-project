@@ -52,10 +52,10 @@ const getRoute = async (_parameters: any, provider: any) => {
 }
 
 export function useGetSquidSwapRoute(parameters_: {
-  fromChain: string
+  fromChain?: string
   fromToken: string
   fromAmount: string
-  toChain: string
+  toChain?: string
   toToken: string
   enableBoost?: boolean
 }) {
@@ -90,6 +90,8 @@ export function useGetSquidSwapRoute(parameters_: {
     if (!fromAmount || !fromToken || !toToken) return
     if (fromToken.toLowerCase() === toToken.toLowerCase()) return
     if (!address) return
+    if (!fromChain) return
+    if (!toChain) return
 
     return {
       fromAddress: address,

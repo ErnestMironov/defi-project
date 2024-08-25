@@ -111,7 +111,7 @@ const handleError = async (
 // ------------ Status checker ------------
 // ---------------------------------------
 
-const waitForSuccessStatus = async (
+export const waitForSuccessStatus = async (
   txHash: string,
   fromChainId: string,
   toChainId: string,
@@ -181,8 +181,12 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
   const [error, setError] = useState('')
   const [depositHash, setDepositHash] = useState<string | null>(null)
 
-  const { setCurrentModal, getFullState } = useTxStore()
+  const { setCurrentModal, getFullState, setTransactionHash, setTxDifficulty } =
+    useTxStore()
   const { addTransaction } = useTransactionStore()
+
+  console.log('🚀 ~ onSuccess ~ route?.params?.fromChain:', route?.params?.fromChain)
+  console.log('🚀 ~ onSuccess ~ route?.params?.toChain:', route?.params?.toChain)
 
   const { sendTransaction } = useSendTransaction({
     mutation: {
@@ -191,16 +195,29 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
         setStatus('error')
       },
       onSuccess(data) {
+        setTransactionHash(data)
         setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful
+
+        const txDifficulty =
+          route?.params?.fromChain === route?.params?.toChain ? 'simple' : 'withSwap'
+
+        if (route?.params?.fromChain === route?.params?.toChain) {
+          console.log('🚀 ~ onSuccess', 'setTxDifficulty', 'simple')
+          setTxDifficulty('simple')
+        } else {
+          console.log('🚀 ~ onSuccess', 'setTxDifficulty', 'withSwap')
+          setTxDifficulty('withSwap')
+        }
 
         const txState = getFullState()
         const preparedTxState = convertBigIntToString(txState)
         addTransaction({
-          id: data,
+          ...preparedTxState,
+          transactionHash: data,
           status: 'pending',
           timestamp: Date.now(),
-          ...preparedTxState,
+          txDifficulty,
         })
 
         waitForSuccessStatus(

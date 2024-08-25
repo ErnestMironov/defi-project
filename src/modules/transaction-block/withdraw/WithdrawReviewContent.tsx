@@ -31,7 +31,7 @@ export const WithdrawReviewContent = ({
   } = useTxStore()
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
-    chainId: mtToken?.chainId ?? 1,
+    chainId: mtToken?.chainData?.chainId ?? 1,
     onSuccessHandler: () => {
       if (currentStep <= 1) {
         setCurrentStep(2)
@@ -47,6 +47,7 @@ export const WithdrawReviewContent = ({
     approveValue: parseUnits(amount, 6).toString(),
     tokenAddress: mtToken?.mtAddress,
     transactionRequestTarget: ARB_GATEWAY,
+    chainId: mtToken?.chainData?.chainId,
     onSuccessHandler: () => {
       if (currentStep === 2) {
         setCurrentStep(3)
@@ -81,7 +82,9 @@ export const WithdrawReviewContent = ({
             {getButtonContent(
               switchStatus,
               `Switch to ${
-                CHAIN_NAMES_BY_ID[mtToken?.chainId as keyof typeof CHAIN_NAMES_BY_ID]
+                CHAIN_NAMES_BY_ID[
+                  mtToken?.chainData?.chainId as keyof typeof CHAIN_NAMES_BY_ID
+                ]
               }`,
             )}
           </Button>
@@ -136,7 +139,7 @@ export const WithdrawReviewContent = ({
           <div className="flex items-center gap-2">
             <TokenWithNetwork
               symbol={mtToken?.symbol}
-              network={mtToken?.chainId}
+              network={mtToken?.chainData?.chainId}
               position="bottom-right"
               width="2.14288rem"
             />
@@ -151,10 +154,12 @@ export const WithdrawReviewContent = ({
       </div>
       <div className="flex flex-col gap-2">
         <WizardStep
-          icon={<TokenIconComponent width="2rem" symbol={mtToken?.chainId} />}
+          icon={<TokenIconComponent width="2rem" symbol={mtToken?.chainData?.chainId} />}
           activeStep={currentStep === 1}
           title={`Switch network to ${
-            CHAIN_NAMES_BY_ID[mtToken?.chainId as keyof typeof CHAIN_NAMES_BY_ID]
+            CHAIN_NAMES_BY_ID[
+              mtToken?.chainData?.chainId as keyof typeof CHAIN_NAMES_BY_ID
+            ]
           }`}
           status={allStepsCompleted ? 'success' : switchStatus}
         />
@@ -162,7 +167,7 @@ export const WithdrawReviewContent = ({
           icon={
             <TokenWithNetwork
               symbol={mtToken?.symbol}
-              network={mtToken?.chainId}
+              network={mtToken?.chainData?.chainId}
               width="2rem"
             />
           }
