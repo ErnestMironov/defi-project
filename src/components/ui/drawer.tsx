@@ -32,32 +32,38 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     withDraggable?: boolean
+    position?: 'right' | 'bottom'
   }
->(({ className, children, withDraggable = true, ...props }, reference) => (
-  <DrawerPortal>
-    <DrawerOverlay className="bg-transparent" />
-    <DrawerPrimitive.Content
-      ref={reference}
-      className={cn(
-        'fixed inset-y-0 right-0 z-50 flex h-full w-1/2 flex-col rounded-l-3xl bg-cards focus:outline-none',
-        className,
-      )}
-      {...props}
-    >
-      {withDraggable && (
-        <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-gray-50" />
-      )}
-      {children}
-    </DrawerPrimitive.Content>
-  </DrawerPortal>
-))
+>(
+  (
+    { className, children, withDraggable = true, position = 'bottom', ...props },
+    reference,
+  ) => (
+    <DrawerPortal>
+      <DrawerOverlay />
+      <DrawerPrimitive.Content
+        ref={reference}
+        className={cn(
+          'fixed focus:outline-none z-50',
+          position === 'right' &&
+            'inset-y-0 right-0  flex h-full w-1/2 flex-col rounded-l-3xl bg-cards',
+          position === 'bottom' && 'flex-col rounded-t-3xl bg-cards inset-x-0 bottom-0',
+          className,
+        )}
+        {...props}
+      >
+        {withDraggable && (
+          <div className="mx-auto mt-0 h-2 w-[100px] rounded-full bg-gray-50" />
+        )}
+        {children}
+      </DrawerPrimitive.Content>
+    </DrawerPortal>
+  ),
+)
 DrawerContent.displayName = 'DrawerContent'
 
 const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('grid gap-1.5 p-4 text-center sm:text-left', className)}
-    {...props}
-  />
+  <div className={cn('grid gap-1.5 text-center sm:text-left', className)} {...props} />
 )
 DrawerHeader.displayName = 'DrawerHeader'
 

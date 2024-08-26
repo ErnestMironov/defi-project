@@ -25,7 +25,9 @@ export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties
       </div>
       <div className="flex flex-col gap-[0.38rem]">
         {data.map((item, i) => {
-          if (!item.value || String(item.value) !== '0') return null
+          console.log('item', item)
+
+          if (!item.value) return null
           return (
             <div key={i} className="flex items-center gap-3">
               <Dot

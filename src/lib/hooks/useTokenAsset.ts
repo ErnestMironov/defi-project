@@ -200,7 +200,9 @@ export const useTokenAsset = (query?: string | number | null) => {
     }
     if (typeof query === 'string') {
       return TOKENS.find(
-        (token) => query.toLowerCase()?.includes(token.symbol?.toLowerCase()),
+        (token) =>
+          query.toLowerCase()?.includes(token.symbol?.toLowerCase() || '') ||
+          query.toLowerCase()?.includes(token.name?.toLowerCase() || ''),
       )
     }
   }, [query])

@@ -45,7 +45,11 @@ export const Select = (props: SelectProperties) => {
       <SelectContent className={cn('w-full', classNames?.content)}>
         {options.map((option) => {
           return (
-            <SelectItem key={option.value} value={option.value} Icon={option?.Icon}>
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              Icon={option?.Icon as FC<SVGProps<SVGElement>>}
+            >
               {typeof option === 'string' ? option : option.label}
             </SelectItem>
           )

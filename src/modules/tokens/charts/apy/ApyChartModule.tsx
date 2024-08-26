@@ -1,0 +1,74 @@
+/* eslint-disable sonarjs/no-identical-functions */
+import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
+import Dot from '@assets/icons/dot.svg'
+import { LineChartComponent } from '@components/chart/line-chart/LineChart'
+import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
+import { FramesSelect } from '@components/frames-select/FramesSelect'
+import { useFrameSelect } from '@components/frames-select/useFrameSelect'
+import { Skeleton } from '@components/ui/skeleton'
+import useDeviceWidth from '@hooks/useDeviceWidth'
+import { cn } from '@utils/cn'
+import { type ComponentProps } from 'react'
+
+import { ApyChartModuleMobile } from './mobile/ApyChartModuleMobile'
+
+interface LineChartModuleProperties extends ComponentProps<'div'> {}
+
+const chartData: { title: string; color: '#6160FF' | '#A6C1FF' }[] = [
+  { title: 'USDC', color: '#6160FF' },
+  { title: 'USDT', color: '#A6C1FF' },
+]
+
+export const ApyChartModule = (_props: LineChartModuleProperties) => {
+  const { isBelowDesktop } = useDeviceWidth()
+
+  if (isBelowDesktop) {
+    return <ApyChartModuleMobile />
+  }
+  return <ApyChartModuleDesktop />
+}
+
+const ApyChartModuleDesktop = () => {
+  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect()
+  const { data, loading, error } = useMaatTokensApy({ from: currentTimestamp })
+
+  const renderBody = () => {
+    switch (true) {
+      case loading:
+      case !!error: {
+        return <Skeleton className="size-full rounded-3xl" />
+      }
+      default: {
+        return <LineChartComponent data={data} yPostfix="%" frame={currentFrame} />
+      }
+    }
+  }
+  return (
+    <div>
+      <div className="flex items-center justify-between px-4">
+        <h2 className="flex-1 text-[2rem]/[2.4rem] uppercase">APY</h2>
+        <FramesSelect
+          frame={currentFrame}
+          frames={frames}
+          onFrameChange={onFrameChange}
+        />
+      </div>
+      <div className="mt-4 flex items-center gap-4 px-4">
+        {chartData.map((item) => {
+          return (
+            <div key={item.title} className="flex items-center gap-[0.56rem]">
+              <Dot
+                className={cn(
+                  getDotStyles(item.color),
+                  'w-2.5 h-[0.625rem] overflow-visible',
+                )}
+              />
+              <span className="text-[0.875rem]/[1.05rem]">{item.title}</span>
+            </div>
+          )
+        })}
+      </div>
+      <div className="mt-4 h-72">{renderBody()}</div>
+    </div>
+  )
+}
