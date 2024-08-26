@@ -1,8 +1,8 @@
 import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { waitForTransactionReceipt } from '@wagmi/core'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { type Address, erc20Abi } from 'viem'
-import { useConfig, useWriteContract } from 'wagmi'
+import { useAccount, useConfig, useReadContract, useWriteContract } from 'wagmi'
 
 import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
 
@@ -23,11 +23,35 @@ export const useApproveERC20 = ({
   const { writeContract, ...rest } = useWriteContract()
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<STEP_STATUS>('idle')
+  const { address } = useAccount()
 
   const config = useConfig()
 
+  const { data: allowance } = useReadContract({
+    address: tokenAddress,
+    abi: erc20Abi,
+    functionName: 'allowance',
+    args: [address, transactionRequestTarget],
+  })
+  console.log('🚀 ~ account:', address)
+  console.log('🚀 ~ transactionRequestTarget:', transactionRequestTarget)
+
+  console.log('🚀 ~ allowance:', allowance)
+  useEffect(() => {
+    if (allowance && approveValue && BigInt(allowance) >= BigInt(approveValue)) {
+      setStatus('success')
+      onSuccessHandler?.()
+    }
+  }, [allowance, approveValue, onSuccessHandler])
+
   const approve = useCallback(() => {
     if (!approveValue || !tokenAddress || !transactionRequestTarget) return
+
+    if (allowance && BigInt(allowance) >= BigInt(approveValue)) {
+      setStatus('success')
+      onSuccessHandler?.()
+      return
+    }
 
     setLoading(true)
     setStatus('confirm_in_wallet')
@@ -83,6 +107,7 @@ export const useApproveERC20 = ({
     tokenAddress,
     transactionRequestTarget,
     writeContract,
+    allowance,
   ])
 
   return { ...rest, approve, loading, status }

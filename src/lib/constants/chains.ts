@@ -8,7 +8,6 @@ export const CHAIN_NAMES_BY_ID = {
   5000: 'Mantle',
   56: 'BNB',
   1088: 'Metis',
-  43_114: 'Avalanche',
 } as const
 
 export const CHAIN_IDS_BY_NAME = {
@@ -21,7 +20,6 @@ export const CHAIN_IDS_BY_NAME = {
   Mantle: 5000,
   BNB: 56,
   Metis: 1088,
-  Avalanche: 43_114,
 } as const
 
 export const CHAINS = [

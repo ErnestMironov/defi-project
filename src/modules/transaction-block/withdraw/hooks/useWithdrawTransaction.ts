@@ -51,8 +51,8 @@ export const useWithdrawTransaction = () => {
         args: [
           amount as bigint,
           EIDS_BY_CHAIN_ID[mtToken.chainData?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum],
-          mtToken?.mtAddress as Address,
           address,
+          mtToken?.mtAddress as Address,
         ],
       },
 

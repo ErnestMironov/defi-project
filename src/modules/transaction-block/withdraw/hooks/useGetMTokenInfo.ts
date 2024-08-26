@@ -2,6 +2,7 @@ import type { ParsedSharesBalanceResponse } from '@api/maat-finance/types'
 import Usdc from '@assets/icons/tokens/usdc.svg'
 import Usdt from '@assets/icons/tokens/usdt.svg'
 import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
+import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { useMemo } from 'react'
 import type { Address } from 'viem'
@@ -18,13 +19,13 @@ const TOKENS: Record<'USDT' | 'USDC', IMToken> = {
     TokenIcon: Usdt,
     symbol: 'mtUSDT',
     stable: 'usdt',
-    mtAddress: '0xD4cdd1BAe5c358D1e1bB74597CDCDd168bd22545',
+    mtAddress: USDT_VAULT_ADDRESS,
   },
   USDC: {
     TokenIcon: Usdc,
     symbol: 'mtUSDC',
     stable: 'usdc',
-    mtAddress: '0x588f3B1ce9aF2F924f7f89577225c2cb5a5Ec578',
+    mtAddress: USDC_VAULT_ADDRESS,
   },
 }
 

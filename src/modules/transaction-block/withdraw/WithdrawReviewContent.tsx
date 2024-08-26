@@ -3,7 +3,6 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import { ARB_GATEWAY } from '@constants/contract-address'
 import { parseFloatLocale } from '@utils/formatValue'
 import { useEffect, useMemo } from 'react'
 import { parseUnits } from 'viem'
@@ -46,7 +45,7 @@ export const WithdrawReviewContent = ({
   } = useApproveERC20({
     approveValue: parseUnits(amount, 6).toString(),
     tokenAddress: mtToken?.mtAddress,
-    transactionRequestTarget: ARB_GATEWAY,
+    transactionRequestTarget: mtToken?.mtAddress,
     chainId: mtToken?.chainData?.chainId,
     onSuccessHandler: () => {
       if (currentStep === 2) {

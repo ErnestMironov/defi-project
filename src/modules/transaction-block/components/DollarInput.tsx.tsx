@@ -18,9 +18,19 @@ const DollarInput: React.FC<DollarInputProperties> = ({
   const valueSpanReference = React.useRef<HTMLSpanElement>(null)
   const [valueWidth, setValueWidth] = React.useState(0)
 
-  React.useEffect(() => {
+  const updateWidth = React.useCallback(() => {
     setValueWidth(valueSpanReference.current?.offsetWidth || 0)
-  }, [value])
+  }, [])
+
+  React.useEffect(() => {
+    updateWidth()
+    window.addEventListener('resize', updateWidth)
+    return () => window.removeEventListener('resize', updateWidth)
+  }, [updateWidth])
+
+  React.useEffect(() => {
+    updateWidth()
+  }, [value, updateWidth])
 
   return (
     <div

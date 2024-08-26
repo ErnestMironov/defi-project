@@ -17,7 +17,10 @@ export const useTransactionStatusChecker = () => {
     async (tx: IPendingTransactionData) => {
       try {
         const network =
-          tx.txType === 'deposit' ? tx.depositAsset?.chain_id : tx.withdrawNetwork
+          tx.txType === 'deposit'
+            ? tx.depositAsset?.chain_id
+            : tx.mtToken?.chainData?.chainId
+        console.log('🚀 ~ network:', network)
 
         if (!network) throw new Error('Invalid network')
 
