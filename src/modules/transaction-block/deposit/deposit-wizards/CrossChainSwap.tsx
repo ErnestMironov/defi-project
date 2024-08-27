@@ -30,6 +30,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     setCurrentModal,
     currentStep,
     setCurrentStep,
+    transactionHash,
+    txDifficulty,
   } = useTxStore()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
@@ -84,7 +86,6 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     swapTokens: swapAndDeposit,
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
-    depositHash,
   } = useSwap({
     route,
     requestId,
@@ -178,8 +179,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           status={swapAndDepositStatus}
           showArrow
         />
-        {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="crossChain" />
+        {transactionHash && (
+          <InfoBlock txHash={transactionHash} className="mt-4" type={txDifficulty} />
         )}
       </div>
       {ActionButton()}

@@ -192,7 +192,7 @@ export const DepositInput = () => {
         )}
       </div>
 
-      <ZapFee className="mt-4" />
+      {asset && <ZapFee className="mt-4" />}
 
       {isConnected && (
         <Button

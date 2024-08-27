@@ -50,7 +50,7 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
         onSuccess: async (data) => {
           setStatus('pending')
           setTransactionHash(data)
-          setTxDifficulty('withSwap')
+          setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore

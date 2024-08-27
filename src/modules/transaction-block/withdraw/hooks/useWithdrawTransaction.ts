@@ -52,7 +52,7 @@ export const useWithdrawTransaction = () => {
           amount as bigint,
           EIDS_BY_CHAIN_ID[mtToken.chainData?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum],
           address,
-          mtToken?.mtAddress as Address,
+          address,
         ],
       },
 
@@ -60,7 +60,7 @@ export const useWithdrawTransaction = () => {
         onSuccess: (data) => {
           setStatus('pending')
           setTransactionHash(data)
-          setTxDifficulty('simple')
+          setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore

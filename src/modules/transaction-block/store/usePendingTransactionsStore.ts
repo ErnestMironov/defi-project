@@ -18,13 +18,13 @@ export interface IPendingTransactionData {
   timestamp: number
   vault: Vault
   depositAsset: ITokenData
-  depositNetwork: ChainType | null
+  depositFromNetwork: ChainType | null
   withdrawNetwork: ChainType | null
   mtToken: UseGetMTokenInfoReturn | null
   txType: TxType
   depositAmount: string
   withdrawAmount: string
-  representationTokensChain: ChainType | null
+  depositToNetwork: ChainType | null
   boostMode: boolean
   arrivalGas: string
   currentStep: number

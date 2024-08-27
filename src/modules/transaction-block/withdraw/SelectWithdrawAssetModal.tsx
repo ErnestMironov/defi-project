@@ -48,14 +48,15 @@ const WithdrawAssetItem = ({
         network={tokenData?.chainData?.chainId}
       />
       <div className="ml-3 flex flex-col items-start text-[1.25rem]/[1.75rem]">
-        {tokenData?.symbol}
+        {tokenData?.stable.toUpperCase()}
         <span className="font-[Arial] text-[0.9375rem] font-normal not-italic leading-none text-gray-80">
           {tokenData?.chainData?.name}
         </span>
       </div>
       <div className="ml-auto flex flex-col items-end gap-1">
         <p className="text-base text-text">
-          {formatAmountValue(formatUnits(BigInt(token.value), 6))} {tokenData?.symbol}
+          {formatAmountValue(formatUnits(BigInt(token.value), 6))}{' '}
+          {tokenData?.stable.toUpperCase()}
         </p>
         <p className="text-semi-base font-bold text-gray-80">
           ${formatAmountValue(formatUnits(BigInt(token.value), 6), 2)}{' '}

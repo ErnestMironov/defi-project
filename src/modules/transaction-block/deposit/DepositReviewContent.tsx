@@ -22,7 +22,14 @@ export const DepositReviewContent = ({
 }: {
   allStepsCompleted?: boolean
 }) => {
-  const { depositAsset: asset, vault, inputValue: amount, inputValueInUSD } = useTxStore()
+  const {
+    depositAsset: asset,
+    vault,
+    inputValue: amount,
+    inputValueInUSD,
+    depositFromNetwork,
+    depositToNetwork,
+  } = useTxStore()
 
   const chainData = useTokenAsset(asset?.chain_id)
   const inputValue = parseFloatLocale(amount, 8) as string
@@ -37,36 +44,35 @@ export const DepositReviewContent = ({
     const isSupportedChain = SupportedChainsByVault[
       Tokens[vault as keyof typeof Tokens] as keyof typeof SupportedChainsByVault
     ]?.includes(asset.chain_id)
+    const isCrossChain = depositFromNetwork !== depositToNetwork
 
     try {
-      if (isSupportedChain) {
-        const tokenList = vault === 'USDC' ? USDC_TOKENS : USDT_TOKENS
-        const isMatchingToken =
-          assetContractAddress ===
-          tokenList
-            .find((token) => token.chainId === asset.chain_id)
-            ?.address.toLowerCase()
-
-        if (isMatchingToken) {
-          return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
-        }
-
-        if (isNativeToken) {
-          return <NativeOnchainSwap allStepsCompleted={allStepsCompleted} />
-        }
-
-        return <OnchainSwap allStepsCompleted={allStepsCompleted} />
+      if (isCrossChain || !isSupportedChain) {
+        return isNativeToken ? (
+          <NativeCrossChainSwap allStepsCompleted={allStepsCompleted} />
+        ) : (
+          <CrossChainSwap allStepsCompleted={allStepsCompleted} />
+        )
       }
 
-      return isNativeToken ? (
-        <NativeCrossChainSwap allStepsCompleted={allStepsCompleted} />
-      ) : (
-        <CrossChainSwap allStepsCompleted={allStepsCompleted} />
-      )
+      const tokenList = vault === 'USDC' ? USDC_TOKENS : USDT_TOKENS
+      const isMatchingToken =
+        assetContractAddress ===
+        tokenList.find((token) => token.chainId === asset.chain_id)?.address.toLowerCase()
+
+      if (isMatchingToken) {
+        return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
+      }
+
+      if (isNativeToken) {
+        return <NativeOnchainSwap allStepsCompleted={allStepsCompleted} />
+      }
+
+      return <OnchainSwap allStepsCompleted={allStepsCompleted} />
     } catch {
       return null
     }
-  }, [asset, chainData, vault, allStepsCompleted])
+  }, [asset, chainData, vault, allStepsCompleted, depositFromNetwork, depositToNetwork])
 
   return (
     <>
@@ -76,7 +82,7 @@ export const DepositReviewContent = ({
           amount={replaceCommasWithDots(trimTrailingZeros(inputValue))}
           tokenInfo={{
             symbol: asset?.contract_ticker_symbol,
-            chain_id: asset?.chain_id,
+            chain_id: depositFromNetwork!,
           }}
           usdAmount={inputValueInUSD}
         />
@@ -86,7 +92,7 @@ export const DepositReviewContent = ({
           amount={inputValueInUSD}
           tokenInfo={{
             symbol: vault,
-            chain_id: asset?.chain_id,
+            chain_id: depositToNetwork!,
           }}
           usdAmount={inputValueInUSD}
         />

@@ -200,14 +200,12 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
         setDepositHash(data) // Set the deposit hash when the transaction is successful
 
         const txDifficulty =
-          route?.params?.fromChain === route?.params?.toChain ? 'simple' : 'withSwap'
+          route?.params?.fromChain === route?.params?.toChain ? 'on_chain' : 'cross_chain'
 
         if (route?.params?.fromChain === route?.params?.toChain) {
-          console.log('🚀 ~ onSuccess', 'setTxDifficulty', 'simple')
-          setTxDifficulty('simple')
+          setTxDifficulty('on_chain')
         } else {
-          console.log('🚀 ~ onSuccess', 'setTxDifficulty', 'withSwap')
-          setTxDifficulty('withSwap')
+          setTxDifficulty('cross_chain')
         }
 
         const txState = getFullState()

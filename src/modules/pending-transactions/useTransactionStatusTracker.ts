@@ -63,9 +63,9 @@ export const useTransactionStatusChecker = () => {
     transactions.forEach((tx) => {
       if (tx.status !== 'pending') return
 
-      if (tx.txDifficulty === 'simple') {
+      if (tx.txDifficulty === 'on_chain') {
         checkTransactionStatus(tx)
-      } else if (tx.txDifficulty === 'withSwap') {
+      } else if (tx.txDifficulty === 'cross_chain') {
         checkSwapStatus(tx)
       }
     })

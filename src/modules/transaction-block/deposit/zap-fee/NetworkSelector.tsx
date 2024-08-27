@@ -2,7 +2,7 @@ import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
-import { CHAIN_IDS_BY_NAME, CHAINS } from '@constants/chains'
+import { CHAINS } from '@constants/chains'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import Grey3DBox from '@modules/transaction-block/components/Grey3DBox'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -15,7 +15,7 @@ const NetworkItem: React.FC<{ chain: any; onClick: () => void }> = ({
   onClick,
 }) => {
   const networkData = useTokenAsset(chain)
-  const { vault, representationTokensChain } = useTxStore()
+  const { vault, depositToNetwork } = useTxStore()
 
   return (
     <div
@@ -29,7 +29,7 @@ const NetworkItem: React.FC<{ chain: any; onClick: () => void }> = ({
         <TokenWithNetwork className="size-8" symbol={vault} network={chain} />
         {networkData?.name}
       </div>
-      {representationTokensChain === chain && <Check className="size-6" />}
+      {depositToNetwork === chain && <Check className="size-6" />}
     </div>
   )
 }
@@ -38,9 +38,8 @@ interface NetworkPopoverProperties extends PopoverPrimitive.PopoverProps {}
 
 export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
   const [isOpened, setIsOpened] = useState(false)
-  const NetworkData = useTokenAsset(CHAIN_IDS_BY_NAME.Optimism)
-
-  const { vault, representationTokensChain, setRepresentationTokensChain } = useTxStore()
+  const { vault, depositToNetwork, setDepositToNetwork } = useTxStore()
+  const NetworkData = useTokenAsset(depositToNetwork)
 
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
@@ -50,7 +49,7 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
             <TokenWithNetwork
               className="size-8"
               symbol={vault}
-              network={representationTokensChain}
+              network={depositToNetwork}
             />
             {NetworkData?.name}
           </div>
@@ -72,7 +71,7 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
             key={chain}
             chain={chain}
             onClick={() => {
-              setRepresentationTokensChain(chain)
+              setDepositToNetwork(chain)
               setIsOpened(false)
             }}
           />

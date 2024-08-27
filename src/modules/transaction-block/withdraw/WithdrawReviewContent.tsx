@@ -161,7 +161,7 @@ export const WithdrawReviewContent = ({
             ]
           }`}
           status={allStepsCompleted ? 'success' : switchStatus}
-        />
+        />                                                                
         <WizardStep
           icon={
             <TokenWithNetwork

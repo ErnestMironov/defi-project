@@ -12,15 +12,15 @@ import type { IPendingTransactionData } from './usePendingTransactionsStore'
 
 export type Vault = 'USDT' | 'USDC'
 
-export type TxDifficulty = 'simple' | 'withSwap'
+export type TxDifficulty = 'on_chain' | 'cross_chain'
 
 export type ModalState = 'review' | 'deposit' | 'withdraw' | 'done' | 'error'
 interface SelectedAssetState {
   depositAsset: ITokenData | null
   setDepositAsset: (by: ITokenData | null) => void
 
-  depositNetwork: ChainType | null
-  setDepositNetwork: (by: ChainType | null) => void
+  depositFromNetwork: ChainType | null
+  setDepositFromNetwork: (by: ChainType | null) => void
 
   withdrawNetwork: ChainType | null
   setWithdrawNetwork: (by: ChainType | null) => void
@@ -49,8 +49,8 @@ interface SelectedAssetState {
   withdrawAmount: string
   setWithdrawAmount: (value: string) => void
 
-  representationTokensChain: ChainType | null
-  setRepresentationTokensChain: (by: ChainType | null) => void
+  depositToNetwork: ChainType | null
+  setDepositToNetwork: (by: ChainType | null) => void
 
   boostMode: boolean
   setBoostMode: (by: boolean) => void
@@ -91,8 +91,12 @@ export const useTxStore = create<SelectedAssetState>()(
       depositAsset: null,
       setDepositAsset: (by) => set({ depositAsset: convertBigIntToString(by) }),
       // network
-      depositNetwork: null,
-      setDepositNetwork: (by) => set({ depositNetwork: by }),
+      depositFromNetwork: null,
+      setDepositFromNetwork: (by) => set({ depositFromNetwork: by }),
+      // representation tokens chain
+      depositToNetwork: null,
+      setDepositToNetwork: (by) => set({ depositToNetwork: by }),
+
       withdrawNetwork: CHAINS[0],
       setWithdrawNetwork: (by) => set({ withdrawNetwork: by }),
       // vault
@@ -116,10 +120,6 @@ export const useTxStore = create<SelectedAssetState>()(
       // withdraw amount
       withdrawAmount: '',
       setWithdrawAmount: (by) => set({ withdrawAmount: by }),
-
-      // representation tokens chain
-      representationTokensChain: null,
-      setRepresentationTokensChain: (by) => set({ representationTokensChain: by }),
 
       // boost mode
       boostMode: false,
@@ -155,7 +155,7 @@ export const useTxStore = create<SelectedAssetState>()(
       transactionHash: null,
       setTransactionHash: (hash) => set({ transactionHash: hash }),
 
-      txDifficulty: 'simple',
+      txDifficulty: 'on_chain',
       setTxDifficulty: (value) => set({ txDifficulty: value }),
 
       resetStore: () =>
@@ -163,21 +163,21 @@ export const useTxStore = create<SelectedAssetState>()(
           inputValue: '',
           inputValueInUSD: '',
           depositAsset: null,
-          depositNetwork: null,
+          depositFromNetwork: null,
           withdrawNetwork: CHAINS[0],
           mtToken: null,
           txType: TX_TYPE.DEPOSIT,
           currentModal: null,
           depositAmount: '',
           withdrawAmount: '',
-          representationTokensChain: null,
+          depositToNetwork: null,
           boostMode: false,
           arrivalGas: '',
           currentStep: 1,
           isTransactionCanBeCollapsed: false,
           isTransactionFromStore: false,
           transactionHash: null,
-          txDifficulty: 'simple',
+          txDifficulty: 'on_chain',
         }),
     }),
     {
