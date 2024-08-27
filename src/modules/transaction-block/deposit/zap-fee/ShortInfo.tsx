@@ -1,4 +1,4 @@
-import type { Route } from '@0xsquid/squid-types'
+import type { RouteResponse } from '@0xsquid/squid-types'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Lightning from '@assets/icons/blue-lightning.svg'
 import type { HTMLAttributes } from 'react'
@@ -6,7 +6,7 @@ import React from 'react'
 
 type ShortInfoProperties = HTMLAttributes<HTMLDivElement> & {
   openHandler?: () => void
-  route: Route
+  route?: RouteResponse['route']
 }
 
 const ShortInfo: React.FC<ShortInfoProperties> = ({ openHandler, route, ...props }) => {

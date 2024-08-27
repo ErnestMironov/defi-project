@@ -1,4 +1,4 @@
-import type { Route } from '@0xsquid/squid-types'
+import type { RouteResponse } from '@0xsquid/squid-types'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Gas from '@assets/icons/gas-station.svg'
 import Lightning from '@assets/icons/lightning.svg'
@@ -47,7 +47,7 @@ const Line: React.FC<
 
 interface DetailsProperties {
   open: boolean
-  route: Route
+  route?: RouteResponse['route']
   closeHandler: () => void
 }
 

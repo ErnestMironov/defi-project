@@ -1,3 +1,4 @@
+import type { RouteResponse } from '@0xsquid/squid-types'
 import { getEthersProvider } from '@hooks/web3/useEthersProvider'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { useQuery } from '@tanstack/react-query'
@@ -12,7 +13,10 @@ import { getDepositPostHook } from './postHook/postHook'
 const integratorId = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
 
 // Function to get the optimal route for the swap using Squid API
-const getRoute = async (_parameters: any, provider: any) => {
+const getRoute = async (
+  _parameters: any,
+  provider: any,
+): Promise<{ data: RouteResponse }> => {
   console.log('🚀 ~ getRoute ~ provider:', provider)
   console.log('🚀 ~ getRoute ~ _parameters:', _parameters)
 
