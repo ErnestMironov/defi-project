@@ -1,3 +1,4 @@
+import type { Route } from '@0xsquid/squid-types'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Gas from '@assets/icons/gas-station.svg'
 import Lightning from '@assets/icons/lightning.svg'
@@ -46,10 +47,11 @@ const Line: React.FC<
 
 interface DetailsProperties {
   open: boolean
+  route: Route
   closeHandler: () => void
 }
 
-const Details: React.FC<DetailsProperties> = ({ open, closeHandler }) => {
+const Details: React.FC<DetailsProperties> = ({ open, route, closeHandler }) => {
   return (
     <Dialog open={open} onOpenChange={() => closeHandler()}>
       <DialogContent
