@@ -64,7 +64,7 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]"
+        className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] dark:bg-cards"
       >
         {CHAINS.map((chain) => (
           <NetworkItem
