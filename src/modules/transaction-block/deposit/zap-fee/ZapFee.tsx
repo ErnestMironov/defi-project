@@ -9,6 +9,7 @@ import { parseUnits } from 'viem'
 
 import Details from './Details'
 import ShortInfo from './ShortInfo'
+import { getSummaryAndFees } from './summaryAndFees'
 
 interface ZapFeeProperties extends HTMLAttributes<HTMLDivElement> {}
 
@@ -40,10 +41,16 @@ const ZapFee: React.FC<ZapFeeProperties> = ({ className }) => {
   })
   console.log('🚀 ~ route:', route)
 
+  const summaryAndFees = getSummaryAndFees(route)
+
   return (
     <div className={className}>
-      <ShortInfo openHandler={() => setOpen(true)} route={route} />
-      <Details open={open} closeHandler={() => setOpen(false)} route={route} />
+      <ShortInfo openHandler={() => setOpen(true)} summaryAndFees={summaryAndFees} />
+      <Details
+        open={open}
+        closeHandler={() => setOpen(false)}
+        summaryAndFees={summaryAndFees}
+      />
     </div>
   )
 }
