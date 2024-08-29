@@ -16,6 +16,26 @@ export const SELECT_TOKENS: OptionType[] = [
     value: 'usdt',
   },
 ]
+export const MOBILE_SELECT_TOKENS: OptionType[] = [
+  {
+    label: SelectItemWithIcon({ symbol: 'USDC' }),
+    value: 'usdc',
+  },
+  {
+    label: SelectItemWithIcon({ symbol: 'USDT' }),
+    value: 'usdt',
+  },
+]
+
+export const SORT_BY_APY: OptionType[] = [
+  { label: 'Highest APY', value: 'Highest APY' },
+  { label: 'Lowest APY', value: 'Lowest APY' },
+]
+
+export const SORT_BY_TVL: OptionType[] = [
+  { label: 'Highest TVL', value: 'Highest TVL' },
+  { label: 'Lowest TVL', value: 'Lowest TVL' },
+]
 
 export const SELECT_CHAINS: OptionType[] = [
   { label: 'All Chains', value: 'All Chains' },
@@ -67,8 +87,34 @@ export const SELECT_ACTIONS: OptionType[] = [
   },
 ]
 
+export const MOBILE_SELECT_ACTIONS: OptionType[] = [
+  {
+    label: 'Deposit',
+    value: 'Deposit',
+  },
+  {
+    label: 'Withdraw Request',
+    value: 'Withdraw Request',
+  },
+]
+
 export const SELECT_STATUSES: OptionType[] = [
   { label: 'All Statuses', value: 'All Statuses' },
+  {
+    label: 'In Progress',
+    value: 'In Progress',
+  },
+  {
+    label: 'Success',
+    value: 'Success',
+  },
+  {
+    label: 'Failed',
+    value: 'Failed',
+  },
+]
+
+export const MOBILE_SELECT_STATUSES: OptionType[] = [
   {
     label: 'In Progress',
     value: 'In Progress',

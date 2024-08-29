@@ -1,5 +1,5 @@
 import { TokenIconComponent } from '@components/token-icon'
-import { useTokenAsset } from '@hooks/useTokenAsset'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 import { useTxStore } from '../store/useTxStore'

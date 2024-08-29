@@ -1,14 +1,14 @@
 import CurveArrow from '@assets/icons/curve-arrow-down.svg'
 import { cn } from '@utils/cn'
-import type { ComponentProps } from 'react'
+import type { LinkProps } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-interface ArrowButtonProperties extends ComponentProps<'button'> {}
+interface ArrowLinkProperties extends LinkProps {}
 
-export const ArrowButton = (props: ArrowButtonProperties) => {
+export const ArrowLink = (props: ArrowLinkProperties) => {
   const { className, ...rest } = props
   return (
-    <button
-      type="button"
+    <Link
       className={cn(
         'size-[2.625rem] rounded-[0.5rem] bg-main-15 flex items-center justify-center',
         className,
@@ -16,6 +16,6 @@ export const ArrowButton = (props: ArrowButtonProperties) => {
       {...rest}
     >
       <CurveArrow className="size-8 -rotate-90 [&_path]:stroke-main-100" />
-    </button>
+    </Link>
   )
 }

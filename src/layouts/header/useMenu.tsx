@@ -1,10 +1,12 @@
+import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
 import { ROUTES } from '@routes/routes'
+import { cn } from '@utils/cn'
 import { useMemo } from 'react'
 
 export interface IMenuItem {
   href: string
   label: string
-  src?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element
+  src?: React.FC<React.SVGProps<SVGSVGElement>>
   callback?: () => void
 }
 
@@ -40,31 +42,11 @@ export const useMenu = (): IMenu => {
       docs: {
         href: 'https://docs.maat.finance/',
         label: 'Docs',
-        src: (props: React.SVGProps<SVGSVGElement>) => (
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            {...props}
-          >
-            <path
-              d="M9.66406 9.63916L19.8708 9.63916L19.8708 20.0349"
-              stroke="#323949"
-              strokeWidth="1.5"
-              strokeMiterlimit="10"
-              strokeLinecap="square"
-            />
-            <path
-              d="M9.69141 20.0068L19.2255 10.2962"
-              stroke="#323949"
-              strokeWidth="1.5"
-              strokeMiterlimit="10"
-              strokeLinecap="square"
-              strokeLinejoin="round"
-            />
-          </svg>
+        src: ({ className, ...rest }) => (
+          <ArrowTopRight
+            {...rest}
+            className={cn(className, 'size-[1em] relative bottom-[0.06rem]')}
+          />
         ),
       },
     }

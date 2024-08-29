@@ -1,5 +1,6 @@
 import { useTxHistoryDesktop } from '@api/queries/useTxHistoryDesktop'
 import Sort from '@assets/icons/sort.svg'
+import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { SectionTitle } from '@components/section/SectionTitle'
@@ -12,7 +13,13 @@ import { useEffect, useState } from 'react'
 import type { EventsProperties } from './Events'
 import { TransactionHistoryRow } from './TransactionHistoryRow'
 
-export const TransactionsHistoryDesktop = (props: EventsProperties) => {
+interface TransactionsHistoryDesktopProperties extends EventsProperties {
+  filters: TableFiltersType
+}
+
+export const TransactionsHistoryDesktop = (
+  props: TransactionsHistoryDesktopProperties,
+) => {
   const { filters: initialFilters, className } = props
   const [filters, setFilters] = useState(initialFilters)
 

@@ -3,7 +3,7 @@ import Usdc from '@assets/icons/tokens/usdc.svg'
 import Usdt from '@assets/icons/tokens/usdt.svg'
 import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
-import { useTokenAsset } from '@hooks/useTokenAsset'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { useMemo } from 'react'
 import type { Address } from 'viem'
 

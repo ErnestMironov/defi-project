@@ -7,7 +7,7 @@ import { Select } from '@components/select/Select'
 import {
   SELECT_CHAINS,
   SELECT_PROTOCOLS,
-} from '@pages/analytics/constants/select-constant'
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 

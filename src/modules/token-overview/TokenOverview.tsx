@@ -10,7 +10,13 @@ interface TokenOverviewProperties extends ComponentProps<'div'> {}
 export const TokenOverview = (props: TokenOverviewProperties) => {
   const { className, ...rest } = props
   return (
-    <section className={cn(className, 'flex gap-8 *:w-1/2')} {...rest}>
+    <section
+      className={cn(
+        className,
+        'flex gap-8 max-lg:gap-2 max-lg:flex-col w-full max-lg:-mx-4',
+      )}
+      {...rest}
+    >
       <TokenStatsContainer
         color="#3883EB"
         apy="3.34"

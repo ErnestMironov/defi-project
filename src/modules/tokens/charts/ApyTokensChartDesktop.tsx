@@ -5,33 +5,21 @@ import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
+import { MultiSelect } from '@components/select/MultiSelect'
+import { type OptionType } from '@components/select/Select'
 import { Skeleton } from '@components/ui/skeleton'
-import useDeviceWidth from '@hooks/useDeviceWidth'
+import { CHART_TOKENS } from '@constants/chart-tokens'
+import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
 import { cn } from '@utils/cn'
-import { type ComponentProps } from 'react'
+import { type ComponentProps, useState } from 'react'
 
-import { ApyChartModuleMobile } from './mobile/ApyChartModuleMobile'
+interface ApyTokensChartDesktopProperties extends ComponentProps<'div'> {}
 
-interface LineChartModuleProperties extends ComponentProps<'div'> {}
-
-const chartData: { title: string; color: '#6160FF' | '#A6C1FF' }[] = [
-  { title: 'USDC', color: '#6160FF' },
-  { title: 'USDT', color: '#A6C1FF' },
-]
-
-export const ApyChartModule = (_props: LineChartModuleProperties) => {
-  const { isBelowDesktop } = useDeviceWidth()
-
-  if (isBelowDesktop) {
-    return <ApyChartModuleMobile />
-  }
-  return <ApyChartModuleDesktop />
-}
-
-const ApyChartModuleDesktop = () => {
-  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect()
+export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) => {
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
   const { data, loading, error } = useMaatTokensApy({ from: currentTimestamp })
-
+  const [selectedChain, setSelectedChain] = useState<OptionType[]>([])
+  const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
   const renderBody = () => {
     switch (true) {
       case loading:
@@ -43,18 +31,35 @@ const ApyChartModuleDesktop = () => {
       }
     }
   }
+
   return (
     <div>
       <div className="flex items-center justify-between px-4">
         <h2 className="flex-1 text-[2rem]/[2.4rem] uppercase">APY</h2>
-        <FramesSelect
-          frame={currentFrame}
-          frames={frames}
-          onFrameChange={onFrameChange}
-        />
+        <div className="flex h-[2.6875rem] items-center gap-3">
+          <MultiSelect
+            options={SELECT_CHAINS}
+            value={selectedChain}
+            onChange={setSelectedChain}
+            placeholder="All Chains"
+            className="w-40"
+          />
+          <MultiSelect
+            options={SELECT_PROTOCOLS}
+            value={selectedProtocol}
+            onChange={setSelectedProtocol}
+            placeholder="All Protocols"
+            className="w-40"
+          />
+          <FramesSelect
+            frame={currentFrame}
+            frames={frames}
+            onFrameChange={onFrameChange}
+          />
+        </div>
       </div>
       <div className="mt-4 flex items-center gap-4 px-4">
-        {chartData.map((item) => {
+        {CHART_TOKENS.map((item) => {
           return (
             <div key={item.title} className="flex items-center gap-[0.56rem]">
               <Dot

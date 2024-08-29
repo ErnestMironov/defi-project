@@ -10,7 +10,7 @@ import {
   SELECT_PROTOCOLS,
   SELECT_STATUSES,
   SELECT_TOKENS,
-} from '@pages/analytics/constants/select-constant'
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
 

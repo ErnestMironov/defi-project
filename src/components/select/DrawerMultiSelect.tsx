@@ -1,72 +1,87 @@
+/* eslint-disable react/no-unused-prop-types */
 import ChevronDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenIconComponent } from '@components/token-icon'
-import { Drawer, DrawerContent, DrawerTrigger } from '@components/ui/drawer'
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/ui/drawer'
 import { cn } from '@utils/cn'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 
 import type { OptionType } from './Select'
 
-interface DrawerMultiSelectProperties
+export interface DrawerMultiSelectProperties
   extends Omit<ComponentProps<'div'>, 'onChange' | 'value'> {
   options: OptionType[]
-  value: OptionType[]
-  onChange: (value: OptionType[]) => void
-  emptyLabel: string
+  onChange: (options: OptionType[]) => void
   label: string
+  value: OptionType[]
+  placeholder: string
 }
 
 interface DrawerMultiSelectTriggerProperties
   extends Omit<ComponentProps<'button'>, 'value'> {
   label?: string
   value: OptionType[]
-  emptyLabel: string
+  placeholder: string
 }
 
-export const DrawerMultiSelectTrigger = ({
-  label,
-  value,
-  className,
-  emptyLabel,
-  ...props
-}: DrawerMultiSelectTriggerProperties) => {
-  return (
-    <button
-      type="button"
-      className={cn('flex w-full flex-col items-start justify-between', className)}
-      {...props}
-    >
-      {label && <div className="text-gray-100">{label}</div>}
-      <div className="mt-4 flex w-full items-center justify-between rounded-lg border border-stroke-100 px-4 py-3">
-        {value.length > 1 ? (
-          <div className="flex items-center -space-x-2">
-            {value.map((option) => (
-              <TokenIconComponent className="size-6" symbol={option.value} />
-            ))}
-          </div>
-        ) : value.length === 1 ? (
-          value[0].label
-        ) : (
-          emptyLabel
-        )}
-        <ChevronDown className="size-4" />
-      </div>
-    </button>
-  )
-}
+export const DrawerMultiSelectTrigger = forwardRef<
+  HTMLButtonElement,
+  DrawerMultiSelectTriggerProperties
+>(
+  (
+    {
+      label,
+      value,
+      className,
+      placeholder,
+      ...props
+    }: DrawerMultiSelectTriggerProperties,
+    reference: React.Ref<HTMLButtonElement>,
+  ) => {
+    return (
+      <button
+        type="button"
+        className={cn('flex w-full flex-col items-start justify-between', className)}
+        ref={reference}
+        {...props}
+      >
+        {label && <div className="text-gray-100">{label}</div>}
+        <div className="mt-4 flex w-full items-center justify-between rounded-lg border border-stroke-100 px-4 py-3">
+          {value.length > 1 ? (
+            <div className="flex items-center -space-x-2">
+              {value.map((option) => (
+                <TokenIconComponent
+                  key={option.value}
+                  className="size-6"
+                  symbol={option.value}
+                />
+              ))}
+            </div>
+          ) : value.length === 1 ? (
+            value[0].label
+          ) : (
+            placeholder
+          )}
+          <ChevronDown className="size-4" />
+        </div>
+      </button>
+    )
+  },
+)
 
 export const DrawerMultiSelect = (props: DrawerMultiSelectProperties) => {
-  const { options, value, onChange, emptyLabel, label } = props
+  const { options, value, onChange, placeholder, label } = props
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <DrawerMultiSelectTrigger value={value} emptyLabel={emptyLabel} label={label} />
+        <DrawerMultiSelectTrigger value={value} placeholder={placeholder} label={label} />
       </DrawerTrigger>
       <DrawerContent
         aria-describedby={undefined}
         position="bottom"
         className="inset-x-0 w-full items-center justify-center space-y-5 px-4 py-6"
       >
+        <DrawerTitle className="sr-only">{label}</DrawerTitle>
         {options.map((option) => {
           return (
             <div

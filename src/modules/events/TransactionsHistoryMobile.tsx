@@ -1,27 +1,49 @@
 import { useTxHistory } from '@api/queries/useTxHistory'
-import { DotLoader } from '@components/loader/DotLoader'
-import type { StableType } from '@components/stable-switcher/StableSwitcher'
-import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
+import Filter from '@assets/icons/filter.svg'
+import Sort from '@assets/icons/mobile-sort.svg'
+import { ArrowLink } from '@components/link/ArrowLink'
+import { SectionTitle } from '@components/section/SectionTitle'
+import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
+import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
+import {
+  DrawerIconTrigger,
+  MobileFiltersDrawer,
+} from '@components/select/MobileFiltersDrawer'
+import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
+import type { OptionType } from '@components/select/Select'
+import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
-import { Logo } from '@components/ui/logo'
-import { Accordion } from '@radix-ui/react-accordion'
+import {
+  MOBILE_SELECT_ACTIONS,
+  MOBILE_SELECT_STATUSES,
+  SELECT_CHAINS,
+  SORT_BY_APY,
+  SORT_BY_TVL,
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import type { EventsProperties } from './Events'
-import {
-  SkeletonTransactionMobileItem,
-  TransactionMobileItem,
-} from './TransactionMobileItem'
+import { TransactionsMobileList } from './TransactionsMobileList'
 
 export const TransactionsHistoryMobile = (props: EventsProperties) => {
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const { withLink, className } = props
+  const navigate = useNavigate()
+
+  const [search, setSearch] = useState('')
+  const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
+  const [selectedStatuses, setSelectedStatuses] = useState<OptionType[]>([])
+  const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
+  const [selectedSortByAmount, setSelectedSortByAmount] = useState<
+    OptionType | undefined
+  >()
+  const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
   const [currentPage, setCurrentPage] = useState(1)
   const { data, loading, error, pageInfo, fetchMore, totalCount } = useTxHistory({
     perPage: 10,
     page: currentPage,
-    symbol: activeStableType,
   })
   const [isLoadingMore, setIsLoadingMore] = useState(false)
 
@@ -35,67 +57,98 @@ export const TransactionsHistoryMobile = (props: EventsProperties) => {
     setIsLoadingMore(false)
   }
 
-  const onStableChange = (value: string) => {
-    setCurrentPage(1)
-    setStableType(value as StableType)
-  }
-
-  const renderBody = () => {
-    switch (true) {
-      case loading:
-      case !!error: {
-        return (
-          <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <SkeletonTransactionMobileItem key={i} isLast={i === 9} />
-            ))}
-          </Accordion>
-        )
-      }
-      default: {
-        return (
-          <>
-            <Accordion type="multiple" className="rounded-3xl bg-cards px-5 py-6">
-              {totalCount &&
-                data?.map((tx, index, array) => (
-                  <TransactionMobileItem
-                    key={index}
-                    tx={tx}
-                    txIndex={totalCount - index}
-                    isLast={index === array.length - 1}
-                  />
-                ))}
-            </Accordion>
-            {isLoadingMore && (
-              <div className="my-4 flex items-center justify-center">
-                <DotLoader className="text-xl" />
-              </div>
-            )}
-            {pageInfo?.hasNextPage && (
-              <Button size="lg" className="mt-8" onClick={onViewMoreClick}>
-                View more
-              </Button>
-            )}
-          </>
-        )
-      }
-    }
-  }
-
   return (
-    <div {...props} className={cn('flex flex-col px-4', props.className)}>
-      <div className="flex items-start gap-4">
-        <Logo className="h-[1.625rem] w-[2.0625rem] overflow-visible" />
-        <h2 className="text-2xl uppercase">
-          Transactions <br /> History
-        </h2>
+    <div {...props} className={cn('flex flex-col', className)}>
+      <div className="flex items-center justify-between">
+        <SectionTitle>Events</SectionTitle>
+        {withLink && <ArrowLink to="/transactions" />}
       </div>
-      <StableSwitcher
-        activeTab={activeStableType}
-        onTabChange={onStableChange}
-        className="mb-6 mt-8"
+      <div className="mt-4 flex items-center gap-2">
+        <SearchInput
+          className="flex-1"
+          placeholder="Tx Hash"
+          classNames={{
+            container: 'bg-cards border-none rounded-[0.5rem] py-[0.81rem] px-3',
+            input: 'mx-2',
+          }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        {/* Filters */}
+        <MobileFiltersDrawer
+          title="Filters"
+          resetFilters={() => {
+            setSelectedActions([])
+            setSelectedStatuses([])
+            setSelectedChains([])
+          }}
+          trigger={
+            <DrawerIconTrigger
+              Icon={Filter}
+              active={
+                selectedActions.concat(selectedStatuses).concat(selectedChains).length > 0
+              }
+            />
+          }
+        >
+          <MobileCheckboxSelect
+            label="Actions"
+            value={selectedActions}
+            options={MOBILE_SELECT_ACTIONS}
+            onChange={setSelectedActions}
+          />
+          <MobileCheckboxSelect
+            label="Statuses"
+            value={selectedStatuses}
+            options={MOBILE_SELECT_STATUSES}
+            onChange={setSelectedStatuses}
+          />
+          <DrawerMultiSelect
+            label="Chains"
+            value={selectedChains}
+            options={SELECT_CHAINS}
+            onChange={setSelectedChains}
+            placeholder="All Chains"
+          />
+        </MobileFiltersDrawer>
+        {/* Sort */}
+        <MobileFiltersDrawer
+          title="Sorting"
+          closeOnReset
+          resetFilters={() => {
+            setSelectedSortByAmount(undefined)
+            setSelectedSortByDate(undefined)
+          }}
+          trigger={
+            <DrawerIconTrigger
+              Icon={Sort}
+              active={!!selectedSortByAmount || !!selectedSortByDate}
+            />
+          }
+        >
+          <MobileRadioSelect
+            label="Amount"
+            options={SORT_BY_APY}
+            value={selectedSortByAmount}
+            onChange={setSelectedSortByAmount}
+          />
+          <MobileRadioSelect
+            label="Created"
+            options={SORT_BY_TVL}
+            value={selectedSortByDate}
+            onChange={setSelectedSortByDate}
+          />
+        </MobileFiltersDrawer>
+      </div>
+      <TransactionsMobileList
+        className="mt-3"
+        transactions={data}
+        loading={loading}
+        error={error}
       />
-      {renderBody()}
+      <Button className="mt-6 h-[3.185rem]" size="lg">
+        View more
+      </Button>
     </div>
   )
 }

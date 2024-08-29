@@ -6,7 +6,7 @@ import {
   SELECT_INCENTIVES_ACTIONS,
   SELECT_INCENTIVES_FROM,
   SELECT_STATUSES,
-} from '@pages/analytics/constants/select-constant'
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 

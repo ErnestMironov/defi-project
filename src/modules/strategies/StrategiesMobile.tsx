@@ -1,49 +1,51 @@
 import { useStrategies } from '@api/queries/useStrategies'
+import Filter from '@assets/icons/filter.svg'
 import type { StrategyStats } from '@codegen/graphql'
-import { Logo } from '@components/ui/logo'
+import { ArrowLink } from '@components/link/ArrowLink'
+import { SectionTitle } from '@components/section/SectionTitle'
+import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
+import {
+  DrawerIconTrigger,
+  MobileFiltersDrawer,
+} from '@components/select/MobileFiltersDrawer'
+import { SELECT_PROTOCOLS } from '@constants/select-constant'
 import { cn } from '@utils/cn'
+import { useState } from 'react'
 
 import type { StrategiesProperties } from './Strategies'
-import { SkeletonStrategyMobileCard, StrategyMobileCard } from './StrategyMobileCard'
+import { StrategyMobileList } from './StrategyMobileList'
 
 export const StrategiesMobile: React.FC<StrategiesProperties> = (props) => {
+  const [isOpenFilters, setIsOpenFilters] = useState(false)
+  const { mobileFilters: initialFilters, className } = props
+  const [filters, setFilters] = useState(initialFilters.filters)
   const { data, loading, error } = useStrategies()
-  const renderBody = () => {
-    switch (true) {
-      case loading:
-      case !!error: {
-        return (
-          <>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <SkeletonStrategyMobileCard key={i} isLast={i === 9} />
-            ))}
-          </>
-        )
-      }
-      default: {
-        return (
-          <>
-            {(data?.strategyStats as StrategyStats[]).map((strategy, index, array) => (
-              <StrategyMobileCard
-                key={index}
-                strategy={strategy}
-                isLast={index === array.length - 1}
-              />
-            ))}
-          </>
-        )
-      }
-    }
-  }
+
   return (
-    <div {...props} className={cn('flex flex-col gap-6', props.className)}>
+    <div {...props} className={cn('flex flex-col gap-6', className)}>
       <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-4 text-2xl uppercase">
-          <Logo className="h-[1.625rem] w-[2.0625rem] overflow-visible" />
-          Strategies
-        </h2>
+        <SectionTitle>Strategies</SectionTitle>
+        <ArrowLink to="/strategies" />
       </div>
-      <div className="rounded-3xl bg-cards px-5 py-6">{renderBody()}</div>
+      {/* TODO: Add reset filters */}
+      <MobileFiltersDrawer
+        resetFilters={() => {}}
+        title="Filters"
+        trigger={<DrawerIconTrigger Icon={Filter} active={isOpenFilters} />}
+      >
+        <DrawerMultiSelect
+          options={SELECT_PROTOCOLS}
+          onChange={() => {}}
+          value={[]}
+          label="Protocol"
+          placeholder="All Protocols"
+        />
+      </MobileFiltersDrawer>
+      <StrategyMobileList
+        strategies={data?.strategyStats as StrategyStats[]}
+        loading={loading}
+        error={error}
+      />
     </div>
   )
 }

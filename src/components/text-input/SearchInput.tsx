@@ -21,13 +21,13 @@ export const SearchInput = forwardRef(
         )}
         {...rest}
       >
-        <Search className="size-4" />
+        <Search className="size-4 max-lg:size-3" />
 
         <input
           ref={reference}
           type="text"
           className={cn(
-            'h-full bg-transparent align-middle text-lg placeholder:text-gray-100 focus:outline-none mx-3 grow',
+            'h-full bg-transparent align-middle text-lg max-lg:text-[0.75rem]/[0.9rem] placeholder:text-gray-100 focus:outline-none mx-3 grow',
             classNames?.input,
           )}
           {...rest}

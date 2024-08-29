@@ -1,6 +1,6 @@
 import { Socials } from '@components/socials/Socials'
 import { Logo } from '@components/ui/logo'
-import useDeviceWidth from '@hooks/useDeviceWidth'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { HeaderMenu } from '@layouts/header/HeaderMenu'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -14,13 +14,18 @@ export const Footer = (props: MobileFooterProperties) => {
   if (isBelowDesktop) {
     return (
       <footer
-        className={cn('flex justify-center flex-col gap-[3rem] items-center', className)}
+        className={cn('flex justify-center flex-col gap-8 items-center', className)}
       >
         <Link to="/">
-          <Logo className="size-[2.20419rem] overflow-visible" />
+          <Logo className="size-9 overflow-visible" />
         </Link>
-        <HeaderMenu className="gap-6 justify-self-center" />
-        <Socials />
+        <HeaderMenu className="flex-wrap justify-center gap-x-3 gap-y-5 [&_*]:text-base [&_*]:tracking-[0.01rem]" />
+        <Socials
+          classNames={{
+            icon: '[&_path]:fill-text-80 opacity-100',
+            container: 'gap-8',
+          }}
+        />
       </footer>
     )
   }

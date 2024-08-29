@@ -7,7 +7,7 @@ import {
   SELECT_CHAINS,
   SELECT_PPS,
   SELECT_TOKENS,
-} from '@pages/analytics/constants/select-constant'
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 

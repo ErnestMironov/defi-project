@@ -1,4 +1,5 @@
 import Arrow from '@assets/icons/curve-arrow-down.svg'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
@@ -29,6 +30,62 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
     withLink = true,
     ...rest
   } = props
+  const { isBelowDesktop } = useDeviceWidth()
+  if (isBelowDesktop) {
+    return (
+      <div className={cn('hide-scrollbar overflow-scroll w-screen px-4 pb-1', className)}>
+        <BaseContainer
+          className={cn('flex flex-col gap-[0.62rem] w-fit rounded-[1rem] px-5 py-4')}
+        >
+          <div className="flex items-center space-x-6 *:flex *:flex-col *:justify-center *:space-y-1 [&>*]:h-14 [&_h6]:whitespace-nowrap [&_h6]:text-[0.75rem]/[0.9rem] [&_h6]:text-gray-100 [&_p]:text-[1.5rem]/[1.8rem] [&_p]:text-text">
+            <div>
+              <h6>{tokenName} Apy</h6>
+              <p>
+                {formatPercentValue(apy, {
+                  maximumFractionDigits: 2,
+                })}
+              </p>
+            </div>
+            <div className="h-full w-px bg-stroke-100" />
+            <div>
+              <h6>{tokenName} tvl</h6>
+              <p>
+                {formatUsdValue(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
+                <span
+                  className="ml-1 align-top text-[0.75rem]/[0.9rem]"
+                  style={{ color }}
+                >
+                  {formatPercentValue('27', {
+                    maximumFractionDigits: 0,
+                    signDisplay: 'exceptZero',
+                  })}
+                </span>
+              </p>
+            </div>
+            <div className="h-full w-px bg-stroke-100" />
+            <div>
+              <h6>Rebalancing volume</h6>
+              <p>
+                {formatUsdValue(rebalancingVolume, {
+                  notation: 'compact',
+                  minimumFractionDigits: 2,
+                })}
+              </p>
+            </div>
+          </div>
+          {withLink && (
+            <Link
+              to="#"
+              className="group flex items-center gap-0.5 text-[0.75rem]/[0.9rem] font-bold uppercase text-main-100"
+            >
+              <span>Go to {tokenName}</span>
+              <Arrow className="h-[1em] w-fit -rotate-90 transition group-hover:translate-x-1 [&_*]:stroke-main-100" />
+            </Link>
+          )}
+        </BaseContainer>
+      </div>
+    )
+  }
   return (
     <div
       className={cn(

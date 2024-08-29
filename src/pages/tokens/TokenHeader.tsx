@@ -1,7 +1,7 @@
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
-import { useDisclosure } from '@hooks/useDisclosure'
+import { useDisclosure } from '@hooks/common/useDisclosure'
 import { VAULTS } from '@modules/transaction-block/deposit/SelectVault'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'

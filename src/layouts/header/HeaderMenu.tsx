@@ -32,7 +32,7 @@ export const HeaderMenu = ({ className, callback, ...rest }: HeaderMenuPropertie
             >
               {menuItem.label}
               {menuItem.src && (
-                <menuItem.src className="relative bottom-0.5 size-7 [&_path]:stroke-text" />
+                <menuItem.src className="size-4.5 ml-0.5 [&_path]:stroke-text" />
               )}
               {menuItem.href === location.pathname && (
                 <div className="absolute bottom-0 h-0.5 w-full bg-violet-100" />

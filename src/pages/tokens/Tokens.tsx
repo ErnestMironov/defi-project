@@ -11,7 +11,8 @@ import {
   SELECT_CHAINS,
   SELECT_PROTOCOLS,
   SELECT_STATUSES,
-} from '@pages/analytics/constants/select-constant'
+  SELECT_TOKENS,
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -78,6 +79,28 @@ export const Tokens = (props: TokensProperties) => {
           search: { value: '', placeholder: 'Name / Address / ID ' },
           chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
           protocol: { items: SELECT_PROTOCOLS, value: SELECT_PROTOCOLS[0] },
+        }}
+        // TODO: add mobile filters
+        mobileFilters={{
+          search: { value: '', placeholder: 'Name / Address / ID ' },
+          filters: [
+            {
+              items: SELECT_TOKENS.slice(1),
+              value: [],
+              label: 'Tokens',
+              placeholder: 'All Tokens',
+              type: 'checkbox',
+            },
+          ],
+          sort: [
+            {
+              items: SELECT_CHAINS,
+              value: undefined,
+              label: 'Sort by',
+              placeholder: 'Sort by',
+              type: 'radio',
+            },
+          ],
         }}
       />
       <Events

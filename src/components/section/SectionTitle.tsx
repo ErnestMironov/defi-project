@@ -1,5 +1,5 @@
 import { Logo } from '@components/ui/logo'
-import useDeviceWidth from '@hooks/useDeviceWidth'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 

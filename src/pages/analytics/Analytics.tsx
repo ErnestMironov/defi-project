@@ -1,32 +1,20 @@
-import { TokenCharts } from '../../modules/tokens/Tokens'
+import { SankeyDiagramBasicDemo } from '@components/chart/sankey/SankeyD3'
+import { Footer } from '@layouts/footer/Footer'
+import { Events } from '@modules/events/Events'
+import { TokenOverview } from '@modules/token-overview/TokenOverview'
+import { TokenCharts } from '@modules/tokens/Tokens'
+
+import { Strategies } from './Strategies'
 
 export const Analytics = () => {
   return (
-    <div className="">
+    <>
       <TokenCharts className="mt-[5.31rem] max-lg:mt-6" />
-      {/* <TokenOverview className="mt-12 max-lg:px-4" />
-      <Strategies
-        className="mt-[6.25rem]"
-        rowType="modal"
-        withLink
-        filters={{
-          search: { value: '', placeholder: 'Name / Address / ID' },
-          token: { items: SELECT_TOKENS, value: SELECT_TOKENS[0] },
-          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
-          protocol: { items: SELECT_PROTOCOLS, value: SELECT_PROTOCOLS[0] },
-        }}
-      />
+      <TokenOverview className="mt-12 max-lg:mt-8" />
+      <Strategies className="mt-[6.25rem]" />
       <SankeyDiagramBasicDemo className="mt-[6.25rem]" />
-      <Events
-        className="mt-28 max-lg:mt-14"
-        filters={{
-          search: { value: '', placeholder: 'Tx hash  / Address' },
-          action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
-          status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
-          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
-        }}
-      />
-      <Footer className="mt-[7.5rem] max-lg:mb-[4.55rem] max-lg:mt-[4.5rem]" /> */}
-    </div>
+      <Events className="mt-28 max-lg:mt-14" />
+      <Footer className="mt-[7.5rem] max-lg:mb-[4.62rem] max-lg:mt-[5.25rem]" />
+    </>
   )
 }

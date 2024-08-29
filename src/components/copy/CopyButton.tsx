@@ -1,5 +1,5 @@
 import Copy from '@assets/icons/copy.svg'
-import { useClipboard } from '@hooks/useClipboard'
+import { useClipboard } from '@hooks/common/useClipboard'
 import { cn } from '@utils/cn'
 import { motion } from 'framer-motion'
 import type { ComponentProps } from 'react'

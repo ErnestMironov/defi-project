@@ -1,5 +1,5 @@
 import { Logo } from '@components/ui/logo'
-import useDeviceWidth from '@hooks/useDeviceWidth'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
 import { ThemeToggle } from '@modules/theme/ThemeToggler'
 import clsx from 'clsx'

@@ -1,7 +1,7 @@
 import { SupportedChainsByVault, Tokens } from '@api/squid-router/postHook/constants'
 import { USDC_TOKENS } from '@api/squid-router/postHook/data/USDC'
 import { USDT_TOKENS } from '@api/squid-router/postHook/data/USDT'
-import { useTokenAsset } from '@hooks/useTokenAsset'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import {
   parseFloatLocale,
   replaceCommasWithDots,

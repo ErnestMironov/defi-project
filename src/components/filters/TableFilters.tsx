@@ -1,5 +1,5 @@
-import { SearchInput } from '@components/input/SearchInput'
 import { type OptionType, Select } from '@components/select/Select'
+import { SearchInput } from '@components/text-input/SearchInput'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
@@ -44,7 +44,7 @@ export const TableFilters = (props: TableFiltersProperties) => {
         <SearchInput
           className="grow"
           value={searchFilter.value}
-          onChange={(e) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFilters({
               ...filters,
               search: { ...searchFilter, value: e.target.value },

@@ -7,7 +7,7 @@ import {
   SELECT_ADMIN_FROM,
   SELECT_ADMIN_FUNCTIONS,
   SELECT_CHAINS,
-} from '@pages/analytics/constants/select-constant'
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
