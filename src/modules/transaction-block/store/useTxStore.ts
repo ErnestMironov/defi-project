@@ -1,9 +1,10 @@
+import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import type { ITokenData } from '@api/tokens-balance/api'
 import type { ChainType } from '@constants/chains'
-import { CHAINS } from '@constants/chains'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
 import { convertBigIntToString } from '@utils/formatValue'
+import type { Address } from 'viem'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -15,18 +16,24 @@ export type Vault = 'USDT' | 'USDC'
 export type TxDifficulty = 'on_chain' | 'cross_chain'
 
 export type ModalState = 'review' | 'deposit' | 'withdraw' | 'done' | 'error'
-interface SelectedAssetState {
+export interface SelectedAssetState {
   depositAsset: ITokenData | null
   setDepositAsset: (by: ITokenData | null) => void
 
   depositFromNetwork: ChainType | null
   setDepositFromNetwork: (by: ChainType | null) => void
 
-  withdrawNetwork: ChainType | null
-  setWithdrawNetwork: (by: ChainType | null) => void
+  withdrawFromNetwork: ChainType | null
+  setWithdrawFromNetwork: (by: ChainType | null) => void
+
+  withdrawToNetwork: ChainType | null
+  setWithdrawToNetwork: (by: ChainType | null) => void
 
   vault?: Vault
   setVault: (by: Vault) => void
+
+  vaultAddress: Address | undefined
+  setVaultAddress: (by: Address | undefined) => void
 
   mtToken: UseGetMTokenInfoReturn | null
   setMToken: (by: UseGetMTokenInfoReturn) => void
@@ -39,6 +46,9 @@ interface SelectedAssetState {
 
   inputValueInUSD: string
   setInputValueInUSD: (value: string) => void
+
+  depositTotalInUSD: string
+  setDepositTotalInUSD: (value: string) => void
 
   currentModal: ModalState | null
   setCurrentModal: (by: ModalState | null) => void
@@ -74,8 +84,14 @@ interface SelectedAssetState {
   transactionHash: string | null
   setTransactionHash: (hash: string | null) => void
 
+  squidRoute: RouteResponse['route'] | undefined
+  setSquidRoute: (route: RouteResponse['route']) => void
+
   txDifficulty: TxDifficulty
   setTxDifficulty: (value: TxDifficulty) => void
+
+  isTxZAP: boolean
+  setIsTxZAP: (value: boolean) => void
 
   resetStore: () => void
 }
@@ -87,6 +103,10 @@ export const useTxStore = create<SelectedAssetState>()(
       setInputValue: (by) => set({ inputValue: by }),
       inputValueInUSD: '',
       setInputValueInUSD: (by) => set({ inputValueInUSD: by }),
+
+      depositTotalInUSD: '',
+      setDepositTotalInUSD: (by) => set({ depositTotalInUSD: by }),
+
       // asset
       depositAsset: null,
       setDepositAsset: (by) => set({ depositAsset: convertBigIntToString(by) }),
@@ -97,11 +117,18 @@ export const useTxStore = create<SelectedAssetState>()(
       depositToNetwork: null,
       setDepositToNetwork: (by) => set({ depositToNetwork: by }),
 
-      withdrawNetwork: CHAINS[0],
-      setWithdrawNetwork: (by) => set({ withdrawNetwork: by }),
-      // vault
+      withdrawFromNetwork: null,
+      setWithdrawFromNetwork: (by) => set({ withdrawFromNetwork: by }),
+
+      withdrawToNetwork: null,
+      setWithdrawToNetwork: (by) => set({ withdrawToNetwork: by }),
+
       vault: undefined,
       setVault: (by) => set({ vault: by }),
+
+      vaultAddress: undefined,
+      setVaultAddress: (by) => set({ vaultAddress: by }),
+
       // mtToken
       mtToken: null,
       setMToken: (by) => set({ mtToken: convertBigIntToString(by) }),
@@ -155,16 +182,24 @@ export const useTxStore = create<SelectedAssetState>()(
       transactionHash: null,
       setTransactionHash: (hash) => set({ transactionHash: hash }),
 
+      squidRoute: undefined,
+      setSquidRoute: (route) => set({ squidRoute: route }),
+
       txDifficulty: 'on_chain',
       setTxDifficulty: (value) => set({ txDifficulty: value }),
+
+      isTxZAP: false,
+      setIsTxZAP: (value) => set({ isTxZAP: value }),
 
       resetStore: () =>
         set({
           inputValue: '',
           inputValueInUSD: '',
+          depositTotalInUSD: '',
           depositAsset: null,
           depositFromNetwork: null,
-          withdrawNetwork: CHAINS[0],
+          withdrawFromNetwork: null,
+          withdrawToNetwork: null,
           mtToken: null,
           txType: TX_TYPE.DEPOSIT,
           currentModal: null,
@@ -178,6 +213,8 @@ export const useTxStore = create<SelectedAssetState>()(
           isTransactionFromStore: false,
           transactionHash: null,
           txDifficulty: 'on_chain',
+          squidRoute: undefined,
+          isTxZAP: false,
         }),
     }),
     {

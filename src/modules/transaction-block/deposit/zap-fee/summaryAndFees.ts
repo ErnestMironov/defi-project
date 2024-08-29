@@ -20,17 +20,17 @@ export interface SummaryAndFees {
 }
 
 export function getSummaryAndFees(route: RouteResponse['route'] | undefined) {
-  const summaryAndFees: SummaryAndFees = createDefaultSummaryAndFees(route)
+  const summaryAndFees: SummaryAndFees = createDefaultSummaryAndFees()
 
   if (!route) return summaryAndFees
 
   configureSummary(route, summaryAndFees)
   configureFeeBreakdown(route, summaryAndFees)
-
+  configureEstimatedTime(route, summaryAndFees)
   return summaryAndFees
 }
 
-function createDefaultSummaryAndFees(route: RouteResponse['route'] | undefined) {
+function createDefaultSummaryAndFees() {
   const defaultValue = {
     value: '0',
     usd: '0',
@@ -43,7 +43,7 @@ function createDefaultSummaryAndFees(route: RouteResponse['route'] | undefined) 
   const minReceive = { ...defaultValue }
   const exchangeRate = ''
 
-  const estimatedTime = getEstimatedTime(route?.estimate.estimatedRouteDuration)
+  const estimatedTime = '0 sec'
 
   return {
     crossChainFee,
@@ -58,13 +58,22 @@ function createDefaultSummaryAndFees(route: RouteResponse['route'] | undefined) 
 }
 
 function getEstimatedTime(estimatedTimeSeconds: number | undefined) {
-  if (!estimatedTimeSeconds) return '0sec'
+  if (!estimatedTimeSeconds) return '0 sec'
 
   if (estimatedTimeSeconds < 60) {
-    return `${estimatedTimeSeconds}sec`
+    return `${estimatedTimeSeconds} sec`
   }
 
-  return `${Math.floor(estimatedTimeSeconds / 60)}min`
+  return `${Math.floor(estimatedTimeSeconds / 60)} min`
+}
+
+function configureEstimatedTime(
+  route: RouteResponse['route'],
+  summaryAndFees: SummaryAndFees,
+) {
+  const estimatedTime = getEstimatedTime(route?.estimate.estimatedRouteDuration)
+
+  summaryAndFees.estimatedTime = estimatedTime
 }
 
 function configureSummary(route: RouteResponse['route'], summaryAndFees: SummaryAndFees) {

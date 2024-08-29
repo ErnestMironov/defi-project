@@ -1,4 +1,3 @@
-import { type RouteResponse } from '@0xsquid/sdk/dist/types'
 import { AXELAR_SCAN_URL } from '@constants/index'
 import type {
   IDepositWizardHook,
@@ -172,21 +171,27 @@ export const waitForSuccessStatus = async (
 // ---------------------------------------
 
 interface IProperties extends IDepositWizardHook {
-  route?: RouteResponse['route']
   requestId?: string
 }
 
-export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => {
+export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const [error, setError] = useState('')
   const [depositHash, setDepositHash] = useState<string | null>(null)
 
-  const { setCurrentModal, getFullState, setTransactionHash, setTxDifficulty } =
-    useTxStore()
+  const {
+    setCurrentModal,
+    getFullState,
+    setTransactionHash,
+    squidRoute: route,
+  } = useTxStore()
   const { addTransaction } = useTransactionStore()
+
+  console.log('🚀 ~ useSwap ~ depositFromNetwork:', route)
 
   console.log('🚀 ~ onSuccess ~ route?.params?.fromChain:', route?.params?.fromChain)
   console.log('🚀 ~ onSuccess ~ route?.params?.toChain:', route?.params?.toChain)
+  console.log('🚀 ~ onSuccess ~ route? time', new Date().toISOString())
 
   const { sendTransaction } = useSendTransaction({
     mutation: {
@@ -199,15 +204,6 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
         setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful
 
-        const txDifficulty =
-          route?.params?.fromChain === route?.params?.toChain ? 'on_chain' : 'cross_chain'
-
-        if (route?.params?.fromChain === route?.params?.toChain) {
-          setTxDifficulty('on_chain')
-        } else {
-          setTxDifficulty('cross_chain')
-        }
-
         const txState = getFullState()
         const preparedTxState = convertBigIntToString(txState)
         addTransaction({
@@ -215,7 +211,6 @@ export const useSwap = ({ route, requestId, onSuccessHandler }: IProperties) => 
           transactionHash: data,
           status: 'pending',
           timestamp: Date.now(),
-          txDifficulty,
         })
 
         waitForSuccessStatus(

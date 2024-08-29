@@ -49,7 +49,7 @@ export const useTransactionStatusChecker = () => {
     (tx: IPendingTransactionData) => {
       waitForSuccessStatus(
         tx.transactionHash,
-        tx.depositAsset?.chain_id.toString(),
+        tx.depositFromNetwork?.toString()!,
         CHAIN_IDS_BY_NAME.Arbitrum.toString(),
         (status) => updateTransaction(tx.transactionHash, status),
         () => updateTransaction(tx.transactionHash, 'success'),

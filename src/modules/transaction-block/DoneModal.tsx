@@ -20,7 +20,7 @@ export const DoneModal = () => {
     vault,
     setCurrentModal,
     currentModal,
-    depositAmount,
+    depositTotalInUSD,
     withdrawAmount,
     mtToken,
     resetStore,
@@ -52,7 +52,7 @@ export const DoneModal = () => {
   const amount = useMemo(() => {
     switch (txType) {
       case 'deposit': {
-        return formatAmountValue(depositAmount)
+        return formatAmountValue(depositTotalInUSD)
       }
       case 'withdraw': {
         return formatAmountValue(withdrawAmount)
@@ -61,7 +61,7 @@ export const DoneModal = () => {
         return ''
       }
     }
-  }, [depositAmount, txType, withdrawAmount])
+  }, [depositTotalInUSD, txType, withdrawAmount])
 
   return (
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>

@@ -1,11 +1,10 @@
 import type { RouteResponse } from '@0xsquid/squid-types'
-import { getEthersProvider } from '@hooks/web3/useEthersProvider'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { useQuery } from '@tanstack/react-query'
 import { Token } from '@uniswap/sdk-core'
 import axios from 'axios'
-import { formatUnits } from 'ethers'
 import { useEffect, useMemo } from 'react'
+import { parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { getDepositPostHook } from './postHook/postHook'
@@ -13,13 +12,7 @@ import { getDepositPostHook } from './postHook/postHook'
 const integratorId = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
 
 // Function to get the optimal route for the swap using Squid API
-const getRoute = async (
-  _parameters: any,
-  provider: any,
-): Promise<{ data: RouteResponse }> => {
-  console.log('🚀 ~ getRoute ~ provider:', provider)
-  console.log('🚀 ~ getRoute ~ _parameters:', _parameters)
-
+const getRoute = async (_parameters: any): Promise<{ data: RouteResponse }> => {
   try {
     const postHook = await getDepositPostHook(
       new Token(Number(_parameters.toChain), _parameters.toToken, 6),
@@ -55,68 +48,71 @@ const getRoute = async (
   }
 }
 
-export function useGetSquidSwapRoute(parameters_: {
-  fromChain?: string
-  fromToken: string
-  fromAmount: string
-  toChain?: string
-  toToken: string
-  enableBoost?: boolean
-}) {
+export function useGetSquidSwapRoute() {
   const {
-    fromToken,
-    toToken,
-    fromAmount,
-    fromChain,
-    toChain,
-    enableBoost = true,
-  } = parameters_
+    inputValue,
+    depositAsset,
+    depositToNetwork,
+    depositFromNetwork,
+    vaultAddress,
+    setSquidRoute,
+  } = useTxStore()
 
-  const { setDepositAmount } = useTxStore()
+  const { boostMode } = useTxStore()
 
   const { address } = useAccount()
-  const provider = getEthersProvider({
-    chainId: Number(toChain),
-  })
 
   const parameters = useMemo(() => {
-    console.log('��� ~ getRouteParameters', provider, fromAmount, fromToken, toToken)
-    console.log(
-      '🚀 ~ parameters ~ !fromAmount || !fromToken || !toToken:',
-      !fromAmount || !fromToken || !toToken,
-    )
-    console.log('🚀 ~ parameters ~ toToken:', toToken)
-    console.log('🚀 ~ parameters ~ fromToken:', fromToken)
-    console.log('🚀 ~ parameters ~ fromAmount:', fromAmount)
-    console.log('🚀 ~ parameters ~ address:', address)
+    console.log('Проверка inputValue:', !inputValue)
+    console.log('Проверка depositAsset:', !depositAsset)
+    console.log('Проверка vaultAddress:', !vaultAddress)
+    if (!inputValue || !depositAsset || !vaultAddress) return
 
-    if (!provider) return
-    if (!fromAmount || !fromToken || !toToken) return
-    if (fromToken.toLowerCase() === toToken.toLowerCase()) return
+    console.log(
+      'Проверка равенства символов:',
+      depositAsset?.contract_ticker_symbol.toLowerCase() === vaultAddress?.toLowerCase(),
+    )
+    if (
+      depositAsset?.contract_ticker_symbol.toLowerCase() === vaultAddress?.toLowerCase()
+    )
+      return
+
+    console.log('Проверка address:', !address)
     if (!address) return
-    if (!fromChain) return
-    if (!toChain) return
+
+    console.log('Проверка depositFromNetwork:', !depositFromNetwork)
+    if (!depositFromNetwork) return
+
+    console.log('Проверка depositToNetwork:', !depositToNetwork)
+    if (!depositToNetwork) return
 
     return {
       fromAddress: address,
-      fromChain,
-      fromToken,
-      fromAmount,
-      toChain,
-      toToken,
+      fromChain: depositFromNetwork.toString(),
+      fromToken: depositAsset?.contract_address,
+      fromAmount: parseUnits(inputValue, depositAsset?.contract_decimals ?? 6).toString(),
+      toChain: depositToNetwork.toString(),
+      toToken: vaultAddress,
       toAddress: address,
-      enableBoost,
+      enableBoost: boostMode,
       enableExpress: true,
     }
-  }, [provider, fromAmount, fromToken, toToken, address, fromChain, toChain, enableBoost])
-
-  console.log('🚀 ~ parameters:', parameters)
+  }, [
+    inputValue,
+    depositAsset,
+    vaultAddress,
+    address,
+    depositFromNetwork,
+    depositToNetwork,
+    boostMode,
+  ])
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['squidSwapRoute', parameters],
-    queryFn: async () => getRoute(parameters, provider),
+    queryFn: async () => getRoute(parameters),
     enabled:
-      !!parameters && !!provider && fromToken.toLowerCase() !== toToken.toLowerCase(),
+      !!parameters &&
+      depositAsset?.contract_ticker_symbol.toLowerCase() !== vaultAddress?.toLowerCase(),
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchInterval: 1000 * 60 * 5, // 5 minutes
     refetchIntervalInBackground: true,
@@ -124,11 +120,10 @@ export function useGetSquidSwapRoute(parameters_: {
   })
 
   useEffect(() => {
-    if (data?.data?.route?.estimate?.toAmountMin) {
-      const depositAmount = data?.data?.route?.estimate?.toAmountMin
-      setDepositAmount(formatUnits(depositAmount, 6).toString())
+    if (data) {
+      setSquidRoute(data.data.route)
     }
-  }, [data, setDepositAmount])
+  }, [data, setSquidRoute])
 
   return {
     route: data?.data?.route,

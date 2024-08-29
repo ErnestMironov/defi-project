@@ -1,3 +1,4 @@
+import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { Button } from '@components/ui/button'
 import { TX_TYPE } from '@constants/txTypes'
@@ -7,6 +8,7 @@ import { type ComponentProps } from 'react'
 import { useAccount } from 'wagmi'
 
 import { DepositInput } from './deposit/DepositInput'
+import { useSetDepositDetails } from './deposit/hooks/useSetDepositDetails'
 import { DoneModal } from './DoneModal'
 import { FailModal } from './FailModal'
 import { useTxStore } from './store/useTxStore'
@@ -18,6 +20,9 @@ interface DepositBlockProperties extends ComponentProps<'div'> {}
 export const TransactionBlock = (props: DepositBlockProperties) => {
   const { className, ...rest } = props
   const { txType } = useTxStore()
+
+  useGetSquidSwapRoute()
+  useSetDepositDetails()
 
   const { open: openConnectModal } = useWeb3Modal()
 

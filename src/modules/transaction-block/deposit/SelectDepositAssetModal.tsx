@@ -38,17 +38,14 @@ const SelectChainTrigger = () => {
   const chainData = useTokenAsset(depositFromNetwork)
 
   return (
-    <button
-      type="button"
-      className="flex items-center gap-[0.38rem] text-lg/[0] font-bold"
-    >
+    <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
       {depositFromNetwork && (
         <div className="overflow-hidden rounded-full">
           <TokenIconComponent symbol={depositFromNetwork} className="size-4" />
         </div>
       )}
       <span>{chainData?.name || 'All networks'}</span>
-    </button>
+    </div>
   )
 }
 
@@ -220,6 +217,10 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     searchValue,
   ])
 
+  console.log(
+    '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
+    filteredByChainTokens,
+  )
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>

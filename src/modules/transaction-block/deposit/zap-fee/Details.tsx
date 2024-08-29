@@ -3,6 +3,7 @@ import Lightning from '@assets/icons/lightning.svg'
 import { Dialog, DialogContent, DialogTitle } from '@components/ui/dialog'
 import { Switch } from '@components/ui/switch'
 import Grey3DBox from '@modules/transaction-block/components/Grey3DBox'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'
 import type { HTMLAttributes } from 'react'
 import React from 'react'
@@ -51,6 +52,8 @@ interface DetailsProperties {
 }
 
 const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandler }) => {
+  const { boostMode, setBoostMode } = useTxStore()
+
   return (
     <Dialog open={open} onOpenChange={() => closeHandler()}>
       <DialogContent
@@ -74,7 +77,7 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandl
               <Lightning className="size-6" />
               Boost
             </div>
-            <Switch />
+            <Switch checked={boostMode} onCheckedChange={setBoostMode} />
           </Grey3DBox>
           <Text className="mt-3">
             Boost is a special feature of Axelar and Squid that reduces transaction time

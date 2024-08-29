@@ -1,27 +1,58 @@
-import { TokenIconComponent } from '@components/token-icon'
-import { useTokenAsset } from '@hooks/useTokenAsset'
+import { ChoiceBox } from '@components/box/ChoiceBox'
+import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
+import type { ChainType } from '@constants/chains'
+import { CHAIN_NAMES_BY_ID, CHAINS } from '@constants/chains'
 
-import { SelectNetworkPopover } from '../SelectNetworkPopover'
 import { useTxStore } from '../store/useTxStore'
+import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
+import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
+import { UniversalSelectModal } from './UniversalSelectModal'
 
-export const SelectWithdrawNetwork = () => {
-  const { withdrawNetwork, setWithdrawNetwork } = useTxStore()
-  const token = useTokenAsset(withdrawNetwork)
+const RenderNetworkItem = (
+  chain: ChainType,
+  onChange: (chain: ChainType) => void,
+  token: UseGetMTokenInfoReturn | null,
+) => {
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(chain)}
+      className="flex w-full cursor-pointer items-center gap-4 rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+    >
+      <TokenWithNetwork symbol={token?.stable} network={chain} className="size-8" />
+      <div className="flex flex-col items-start text-[1.25rem]/[1.75rem]">
+        {token?.stable?.toUpperCase()}
+        <span className="text-gray-80">{CHAIN_NAMES_BY_ID[chain]}</span>
+      </div>
+    </button>
+  )
+}
+
+export const SelectWithdrawNetworkModal = () => {
+  const { withdrawToNetwork, setWithdrawToNetwork, mtToken } = useTxStore()
+  const token = useGetMTokenInfo(mtToken)
 
   return (
-    <SelectNetworkPopover
-      chain={withdrawNetwork}
-      onChange={(network) => setWithdrawNetwork(network)}
-      trigger={
-        <div className="flex items-center">
-          <span className="mr-4 text-text-80">To</span>
-          <TokenIconComponent
-            symbol={withdrawNetwork}
-            className="size-7 max-lg:size-[1.125rem]"
-          />
-          <span className="ml-[0.38rem]">{token?.name}</span>
-        </div>
-      }
+    <UniversalSelectModal
+      title="Select network"
+      selectedItem={withdrawToNetwork}
+      items={[...CHAINS]}
+      isLoading={false}
+      renderTrigger={() => (
+        <ChoiceBox
+          value={token?.stable?.toUpperCase() || 'Select network'}
+          className="min-w-[10.5rem]"
+          icon={
+            <TokenWithNetwork
+              symbol={token?.symbol}
+              network={withdrawToNetwork}
+              className="size-[2.14288rem] max-lg:size-[1.125rem]"
+            />
+          }
+        />
+      )}
+      renderItem={(chain, onItemChange) => RenderNetworkItem(chain, onItemChange, token)}
+      onChange={setWithdrawToNetwork}
     />
   )
 }

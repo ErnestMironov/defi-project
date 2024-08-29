@@ -1,5 +1,3 @@
-import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
-import useSquidSDK from '@api/squid-router/useSquidSdk'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
@@ -9,8 +7,6 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useMemo } from 'react'
-import { parseEther } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
 import { useSwap } from '../hooks/useSwap'
@@ -20,14 +16,8 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const {
-    vault,
-    inputValue: amount,
-    setCurrentModal,
-    currentStep,
-    setCurrentStep,
-    depositAsset,
-  } = useTxStore()
+  const { vault, setCurrentModal, currentStep, setCurrentStep, depositAsset } =
+    useTxStore()
 
   const {
     status: switchStatus,
@@ -42,32 +32,12 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     },
   })
 
-  const { squid } = useSquidSDK()
-
-  const tokenAddrForVault = useMemo(() => {
-    const depositTokenAsset = squid?.tokens.find(
-      (token) => token.symbol?.toLowerCase() === vault?.toLowerCase(),
-    )
-    return depositTokenAsset?.address!
-  }, [squid?.tokens, vault])
-
-  const { route, requestId } = useGetSquidSwapRoute({
-    fromAmount: parseEther(amount).toString(),
-    fromChain: depositAsset?.chain_id?.toString(),
-    fromToken: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    toChain: depositAsset?.chain_id.toString(),
-    toToken: tokenAddrForVault,
-    enableBoost: true,
-  })
-
   const {
     swapTokens: swapAndDeposit,
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
   } = useSwap({
-    route,
-    requestId,
     onSuccessHandler: () => {
       setCurrentModal('done')
     },
@@ -127,7 +97,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
           showArrow
         />
         {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="onChain" />
+          <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />
         )}
       </div>
       {ActionButton()}
