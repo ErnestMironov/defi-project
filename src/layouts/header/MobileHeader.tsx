@@ -10,7 +10,7 @@ import clsx from 'clsx'
 import { type ComponentProps, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { HeaderMenu } from './HeaderMenu'
+import { MobileSidebarMenu } from './HeaderMenu'
 
 interface MobileHeaderProperties extends ComponentProps<'div'> {}
 
@@ -42,10 +42,7 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
           opened && 'translate-x-0',
         )}
       >
-        <HeaderMenu
-          className="align-end flex-1 flex-col items-center justify-center last:[&>a]:ml-2.5"
-          callback={close}
-        />
+        <MobileSidebarMenu className="" callback={close} />
         <ThemeToggle />
       </div>
     </header>

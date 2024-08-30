@@ -1,9 +1,9 @@
+import Check from '@assets/icons/check.svg'
 import { Dialog, DialogContent, type DialogProps } from '@radix-ui/react-dialog'
 import { cn } from '@utils/cn'
 import { Command as CommandPrimitive } from 'cmdk'
 import { Search } from 'lucide-react'
 import * as React from 'react'
-import Check from '@assets/icons/check.svg'
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -11,10 +11,7 @@ const Command = React.forwardRef<
 >(({ className, ...props }, reference) => (
   <CommandPrimitive
     ref={reference}
-    className={cn(
-      'flex size-full flex-col rounded-md text-text',
-      className,
-    )}
+    className={cn('flex size-full flex-col rounded-md text-text', className)}
     {...props}
   />
 ))
@@ -38,7 +35,7 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, reference) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+  <div className="flex items-center border-b px-3">
     <Search className="mr-2 size-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       ref={reference}
@@ -57,11 +54,7 @@ const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
 >(({ className, ...props }, reference) => (
-  <CommandPrimitive.List
-    ref={reference}
-    className={cn('', className)}
-    {...props}
-  />
+  <CommandPrimitive.List ref={reference} className={cn('', className)} {...props} />
 ))
 
 CommandList.displayName = CommandPrimitive.List.displayName
@@ -85,10 +78,7 @@ const CommandGroup = React.forwardRef<
 >(({ className, ...props }, reference) => (
   <CommandPrimitive.Group
     ref={reference}
-    className={cn(
-      '*:flex *:flex-col *:gap-5',
-      className,
-    )}
+    className={cn('*:flex *:flex-col *:gap-5', className)}
     {...props}
   />
 ))
@@ -101,7 +91,7 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, reference) => (
   <CommandPrimitive.Separator
     ref={reference}
-    className={cn('-mx-1 h-px bg-stroke-100', className)}
+    className={cn('-mx-1 h-px bg-gray-50', className)}
     {...props}
   />
 ))
@@ -121,9 +111,7 @@ const CommandItem = React.forwardRef<
   >
     {props.children}
     <Check
-      className={cn(
-        'size-[1.125rem] opacity-0 group-data-[select=true]:opacity-100',
-      )}
+      className={cn('size-[1.125rem] opacity-0 group-data-[select=true]:opacity-100')}
     />
   </CommandPrimitive.Item>
 ))

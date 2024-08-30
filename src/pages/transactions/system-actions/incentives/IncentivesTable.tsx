@@ -19,9 +19,9 @@ export const IncentivesTable = (props: IncentivesTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Tx Hash' },
-    functions: { items: SELECT_ADMIN_FUNCTIONS, value: SELECT_ADMIN_FUNCTIONS[0] },
-    from: { items: SELECT_ADMIN_FROM, value: SELECT_ADMIN_FROM[0] },
-    chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+    functions: { items: SELECT_ADMIN_FUNCTIONS, value: [], placeholder: 'All Functions' },
+    from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
+    chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const renderBody = () => {
     return (

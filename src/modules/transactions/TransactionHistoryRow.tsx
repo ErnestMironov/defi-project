@@ -3,6 +3,7 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { ActionChip } from '@components/transaction-type-badge'
+import { ROUTES } from '@routes/routes'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
 import type { ComponentProps } from 'react'
@@ -19,7 +20,7 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
   return (
     <Table.Row
       className="cursor-pointer"
-      onClick={() => navigate(`/transactions/${transaction.txHash}`)}
+      onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${transaction.txHash}`)}
     >
       <Table.Cell>
         <ActionChip type={transaction.action} styled={false} />

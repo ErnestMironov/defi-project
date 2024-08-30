@@ -43,6 +43,7 @@ export const TvlTokensChartDesktop = (_props: TvlTokensChartDesktopProperties) =
             onChange={setSelectedChain}
             placeholder="All Chains"
             className="w-40"
+            classNames={{ content: 'w-full' }}
           />
           <MultiSelect
             options={SELECT_PROTOCOLS}
@@ -50,6 +51,7 @@ export const TvlTokensChartDesktop = (_props: TvlTokensChartDesktopProperties) =
             onChange={setSelectedProtocol}
             placeholder="All Protocols"
             className="w-40"
+            classNames={{ content: 'w-full' }}
           />
           <FramesSelect
             frame={currentFrame}

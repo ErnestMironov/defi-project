@@ -16,7 +16,7 @@ import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import {
-  MOBILE_SELECT_TOKENS,
+  SELECT_TOKENS,
   SELECT_CHAINS,
   SELECT_PROTOCOLS,
   SORT_BY_APY,
@@ -54,7 +54,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
             input: 'mx-2',
           }}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onValueChange={setSearch}
         />
         {/* Filters */}
         <MobileFiltersDrawer
@@ -76,7 +76,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
           <MobileCheckboxSelect
             label="Tokens"
             value={selectedTokens}
-            options={MOBILE_SELECT_TOKENS}
+            options={SELECT_TOKENS}
             onChange={setSelectedTokens}
           />
           <DrawerMultiSelect

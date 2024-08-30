@@ -1,8 +1,6 @@
 import { useTxHistory } from '@api/queries/useTxHistory'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
-import { ArrowLink } from '@components/link/ArrowLink'
-import { SectionTitle } from '@components/section/SectionTitle'
 import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
@@ -14,30 +12,34 @@ import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import {
-  MOBILE_SELECT_ACTIONS,
-  MOBILE_SELECT_STATUSES,
+  SELECT_ADMIN_FROM,
+  SELECT_ADMIN_FUNCTIONS,
   SELECT_CHAINS,
-  SORT_BY_APY,
-  SORT_BY_TVL,
+  SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
+import type { ComponentProps } from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import type { EventsProperties } from './Events'
-import { TransactionsMobileList } from './TransactionsMobileList'
+import { AdminActionMobileList } from './AdminActionMobileList'
 
-export const TransactionsHistoryMobile = (props: EventsProperties) => {
-  const { withLink, className } = props
+type FilterType = 'functions' | 'chains' | 'admin-action-from'
+
+interface AdminActionMobileWithFiltersProperties extends ComponentProps<'div'> {
+  filters?: FilterType[]
+}
+
+export const AdminActionMobileWithFilters = (
+  props: AdminActionMobileWithFiltersProperties,
+) => {
+  const { className, filters = ['functions', 'chains', 'admin-action-from'] } = props
   const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
-  const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
-  const [selectedStatuses, setSelectedStatuses] = useState<OptionType[]>([])
+  const [selectedFunctions, setSelectedFunctions] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
-  const [selectedSortByAmount, setSelectedSortByAmount] = useState<
-    OptionType | undefined
-  >()
+  const [selectedAdminFrom, setSelectedAdminFrom] = useState<OptionType[]>([])
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -57,13 +59,48 @@ export const TransactionsHistoryMobile = (props: EventsProperties) => {
     setIsLoadingMore(false)
   }
 
+  const renderFilters = (filter: FilterType) => {
+    switch (filter) {
+      case 'functions': {
+        return (
+          <MobileCheckboxSelect
+            label="Functions"
+            value={selectedFunctions}
+            options={SELECT_ADMIN_FUNCTIONS}
+            onChange={setSelectedFunctions}
+          />
+        )
+      }
+      case 'chains': {
+        return (
+          <DrawerMultiSelect
+            label="Chains"
+            value={selectedChains}
+            options={SELECT_CHAINS}
+            onChange={setSelectedChains}
+            placeholder="All Chains"
+          />
+        )
+      }
+      case 'admin-action-from': {
+        return (
+          <MobileCheckboxSelect
+            label="From"
+            value={selectedAdminFrom}
+            options={SELECT_ADMIN_FROM}
+            onChange={setSelectedAdminFrom}
+          />
+        )
+      }
+      default: {
+        return null
+      }
+    }
+  }
+
   return (
     <div {...props} className={cn('flex flex-col', className)}>
-      <div className="flex items-center justify-between">
-        <SectionTitle>Events</SectionTitle>
-        {withLink && <ArrowLink to="/transactions" />}
-      </div>
-      <div className="mt-4 flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <SearchInput
           className="flex-1"
           placeholder="Tx Hash"
@@ -72,77 +109,48 @@ export const TransactionsHistoryMobile = (props: EventsProperties) => {
             input: 'mx-2',
           }}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onValueChange={setSearch}
         />
         {/* Filters */}
         <MobileFiltersDrawer
           title="Filters"
           resetFilters={() => {
-            setSelectedActions([])
-            setSelectedStatuses([])
+            setSelectedFunctions([])
+            setSelectedAdminFrom([])
             setSelectedChains([])
           }}
           trigger={
             <DrawerIconTrigger
               Icon={Filter}
               active={
-                selectedActions.concat(selectedStatuses).concat(selectedChains).length > 0
+                selectedFunctions.concat(selectedAdminFrom).concat(selectedChains)
+                  .length > 0
               }
             />
           }
         >
-          <MobileCheckboxSelect
-            label="Actions"
-            value={selectedActions}
-            options={MOBILE_SELECT_ACTIONS}
-            onChange={setSelectedActions}
-          />
-          <MobileCheckboxSelect
-            label="Statuses"
-            value={selectedStatuses}
-            options={MOBILE_SELECT_STATUSES}
-            onChange={setSelectedStatuses}
-          />
-          <DrawerMultiSelect
-            label="Chains"
-            value={selectedChains}
-            options={SELECT_CHAINS}
-            onChange={setSelectedChains}
-            placeholder="All Chains"
-          />
+          {filters.map((filter) => renderFilters(filter))}
         </MobileFiltersDrawer>
         {/* Sort */}
         <MobileFiltersDrawer
           title="Sorting"
           closeOnReset
           resetFilters={() => {
-            setSelectedSortByAmount(undefined)
             setSelectedSortByDate(undefined)
           }}
-          trigger={
-            <DrawerIconTrigger
-              Icon={Sort}
-              active={!!selectedSortByAmount || !!selectedSortByDate}
-            />
-          }
+          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSortByDate} />}
         >
           <MobileRadioSelect
-            label="Amount"
-            options={SORT_BY_APY}
-            value={selectedSortByAmount}
-            onChange={setSelectedSortByAmount}
-          />
-          <MobileRadioSelect
             label="Created"
-            options={SORT_BY_TVL}
+            options={SORT_BY_DATE}
             value={selectedSortByDate}
             onChange={setSelectedSortByDate}
           />
         </MobileFiltersDrawer>
       </div>
-      <TransactionsMobileList
+      <AdminActionMobileList
         className="mt-3"
-        transactions={data}
+        adminActions={data}
         loading={loading}
         error={error}
       />

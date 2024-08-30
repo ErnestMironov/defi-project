@@ -20,7 +20,7 @@ const tags = {
   },
 }
 
-type Tag = keyof typeof tags
+export type Tag = keyof typeof tags
 
 interface TransactionTagsProperties extends ComponentProps<'div'> {
   tags: Tag[]
@@ -35,7 +35,7 @@ export const TransactionTags = (props: TransactionTagsProperties) => {
           key={tag}
           style={{ color: tags[tag].color, backgroundColor: tags[tag].backgroundColor }}
           className={cn(
-            'rounded-[0.5rem] px-5 py-2 text-sm uppercase flex items-center justify-center h-[2.25rem]',
+            'rounded-[0.5rem] px-5 py-2 max-lg:px-4 text-sm max-lg:text-[0.75rem]/[0.9rem] uppercase flex items-center justify-center h-[2.25rem] max-lg:h-[1.875rem]',
           )}
         >
           <span>{tag}</span>

@@ -10,8 +10,8 @@ import { PER_PAGE_ARRAY } from '@constants/per-page-array'
 import { cn } from '@utils/cn'
 import { useEffect, useState } from 'react'
 
-import type { EventsProperties } from './Events'
 import { TransactionHistoryRow } from './TransactionHistoryRow'
+import type { EventsProperties } from './Transactions'
 
 interface TransactionsHistoryDesktopProperties extends EventsProperties {
   filters: TableFiltersType

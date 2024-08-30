@@ -1,6 +1,7 @@
 import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
+import type { ComponentProps } from 'react'
 import { useMemo } from 'react'
 
 export interface IMenuItem {
@@ -8,6 +9,7 @@ export interface IMenuItem {
   label: string
   src?: React.FC<React.SVGProps<SVGSVGElement>>
   callback?: () => void
+  dropdown?: IMenuItem[]
 }
 
 interface IMenu {
@@ -16,7 +18,53 @@ interface IMenu {
   docs: IMenuItem
 }
 
-export const useMenu = (): IMenu => {
+export const useShortMenuArray = () => {
+  const menu = useMemo(() => {
+    return {
+      deposit: {
+        href: ROUTES.DEPOSIT,
+        label: 'Deposit',
+      },
+      analytics: {
+        href: ROUTES.ANALYTICS,
+        label: 'Analytics',
+        dropdown: [
+          {
+            href: ROUTES.TOKENS,
+            label: 'Tokens',
+          },
+          {
+            href: ROUTES.STRATEGIES,
+            label: 'Strategies',
+          },
+          {
+            href: ROUTES.TRANSACTIONS,
+            label: 'Transactions',
+          },
+        ],
+      },
+      docs: {
+        href: 'https://docs.maat.finance/',
+        label: 'Docs',
+        src: ({ className, ...rest }: ComponentProps<'svg'>) => (
+          <ArrowTopRight
+            {...rest}
+            className={cn(className, 'size-[1em] relative bottom-[0.06rem]')}
+          />
+        ),
+      },
+    }
+  }, [])
+  return Object.values(menu) as IMenuItem[]
+}
+
+export const useMenuArray = () => {
+  const menu = useMenu()
+
+  return Object.values(menu) as IMenuItem[]
+}
+
+export const useMenu = () => {
   return useMemo(() => {
     return {
       deposit: {
@@ -42,7 +90,7 @@ export const useMenu = (): IMenu => {
       docs: {
         href: 'https://docs.maat.finance/',
         label: 'Docs',
-        src: ({ className, ...rest }) => (
+        src: ({ className, ...rest }: ComponentProps<'svg'>) => (
           <ArrowTopRight
             {...rest}
             className={cn(className, 'size-[1em] relative bottom-[0.06rem]')}
@@ -51,10 +99,4 @@ export const useMenu = (): IMenu => {
       },
     }
   }, [])
-}
-
-export const useMenuArray = () => {
-  const menu = useMenu()
-
-  return Object.values(menu) as IMenuItem[]
 }

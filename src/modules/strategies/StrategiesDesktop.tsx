@@ -4,6 +4,7 @@ import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { Button } from '@components/ui/button'
+import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
@@ -26,7 +27,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
       <div className="flex items-center justify-between">
         <SectionTitle>Strategies</SectionTitle>
         {withLink && (
-          <Button onClick={() => navigate('/strategies')}>Go to strategies</Button>
+          <Button onClick={() => navigate(ROUTES.STRATEGIES)}>Go to strategies</Button>
         )}
       </div>
       <TableFilters filters={filters} setFilters={setFilters} />

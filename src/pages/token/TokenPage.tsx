@@ -2,17 +2,12 @@ import { USDC_TOKENS_RAW } from '@api/squid-router/postHook/data/USDC'
 import { USDT_TOKENS_RAW } from '@api/squid-router/postHook/data/USDT'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
-import { Events } from '@modules/events/Events'
-import { Strategies } from '@modules/strategies/Strategies'
+import { StrategiesMobile } from '@modules/strategies/StrategiesMobile'
 import { TokenStatsContainer } from '@modules/token-overview/TokenStatsContainer'
-import {
-  SELECT_ACTIONS,
-  SELECT_CHAINS,
-  SELECT_PROTOCOLS,
-  SELECT_STATUSES,
-  SELECT_TOKENS,
-} from '@constants/select-constant'
+import { Transactions } from '@modules/transactions/Transactions'
+import { TransactionsHistoryMobile } from '@modules/transactions/TransactionsHistoryMobile'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -20,14 +15,18 @@ import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from './Breadcrumbs'
 import { TokenAddressByChainPopover } from './TokenAdressesByChainPopover'
 import { TokenApyChart } from './TokenApyChart'
+import { TokenChartMobile } from './TokenChartMobile'
 import { TokenHeader } from './TokenHeader'
+import { TokenInfoMobile } from './TokenInfoMobile'
+import { TokenStrategies } from './TokenStrategies'
 import { TokenTvlChart } from './TokenTvlChart'
 
 interface TokensProperties extends ComponentProps<'div'> {}
 
-export const Tokens = (props: TokensProperties) => {
+export const TokenPage = (props: TokensProperties) => {
   const { className, ...rest } = props
   const { symbol } = useParams()
+  const { isBelowDesktop } = useDeviceWidth()
 
   const tokenAddresses = useMemo(() => {
     return symbol === 'USDT' ? USDT_TOKENS_RAW : USDC_TOKENS_RAW
@@ -36,6 +35,10 @@ export const Tokens = (props: TokensProperties) => {
   useEffect(() => {
     setSelectedAddress(tokenAddresses[0])
   }, [tokenAddresses])
+
+  if (isBelowDesktop) {
+    return <TokensMobilePage />
+  }
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
@@ -73,46 +76,28 @@ export const Tokens = (props: TokensProperties) => {
           </p>
         </div>
       </div>
-      <Strategies
-        className="mt-[6.25rem]"
-        filters={{
-          search: { value: '', placeholder: 'Name / Address / ID ' },
-          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
-          protocol: { items: SELECT_PROTOCOLS, value: SELECT_PROTOCOLS[0] },
-        }}
-        // TODO: add mobile filters
-        mobileFilters={{
-          search: { value: '', placeholder: 'Name / Address / ID ' },
-          filters: [
-            {
-              items: SELECT_TOKENS.slice(1),
-              value: [],
-              label: 'Tokens',
-              placeholder: 'All Tokens',
-              type: 'checkbox',
-            },
-          ],
-          sort: [
-            {
-              items: SELECT_CHAINS,
-              value: undefined,
-              label: 'Sort by',
-              placeholder: 'Sort by',
-              type: 'radio',
-            },
-          ],
-        }}
-      />
-      <Events
-        className="mt-[6.25rem] max-lg:mt-14"
-        filters={{
-          search: { value: '', placeholder: 'Tx hash  / Address' },
-          action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
-          status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
-          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
-        }}
-      />
+      <TokenStrategies className="mt-[6.25rem]" />
+      <Transactions className="mt-[6.25rem] max-lg:mt-14" />
       <Footer className="mt-[7.5rem]" />
+    </div>
+  )
+}
+
+const TokensMobilePage = (props: ComponentProps<'div'>) => {
+  const { className, ...rest } = props
+
+  return (
+    <div className={cn('mt-8', className)} {...rest}>
+      <TokenHeader />
+      <TokenChartMobile className="mt-7" />
+      <TokenInfoMobile className="mt-10" />
+      <StrategiesMobile
+        withLink={false}
+        className="mt-10"
+        filters={['protocols', 'chains']}
+      />
+      <TransactionsHistoryMobile className="mt-16" />
+      <Footer className="mt-[5.5rem]" />
     </div>
   )
 }

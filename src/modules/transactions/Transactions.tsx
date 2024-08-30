@@ -13,7 +13,7 @@ export interface EventsProperties extends ComponentProps<'div'> {
   withLink?: boolean
 }
 
-export const Events = (props: EventsProperties) => {
+export const Transactions = (props: EventsProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {
     return <TransactionsHistoryMobile withLink {...props} />
@@ -22,9 +22,9 @@ export const Events = (props: EventsProperties) => {
     <TransactionsHistoryDesktop
       filters={{
         search: { value: '', placeholder: 'Tx hash  / Address' },
-        action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
-        status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
-        chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+        action: { items: SELECT_ACTIONS, value: [], placeholder: 'All Actions' },
+        status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
+        chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
       }}
       {...props}
     />

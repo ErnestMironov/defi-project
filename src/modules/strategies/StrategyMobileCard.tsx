@@ -3,6 +3,7 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import { ROUTES } from '@routes/routes'
 import { formatAmountValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
 import BigNumber from 'bignumber.js'
@@ -20,7 +21,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
     <div
       {...rest}
       onClick={() => {
-        navigate(`/strategies/${strategy.strategyId}`)
+        navigate(`${ROUTES.STRATEGIES}/${strategy.strategyId}`)
       }}
     >
       <div className="flex items-center gap-2">

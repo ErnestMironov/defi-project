@@ -5,8 +5,7 @@ import {
 } from '@constants/select-constant'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { StrategiesDesktop } from '@modules/strategies/StrategiesDesktop'
-
-import { StrategiesMobile } from './StrategiesMobile'
+import { StrategiesMobile } from '@modules/strategies/StrategiesMobile'
 
 export interface StrategiesProperties extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -23,17 +22,17 @@ export const Strategies: React.FC<StrategiesProperties> = (props) => {
         search: { value: '', placeholder: 'Name / Address / ID' },
         token: {
           items: SELECT_TOKENS,
-          value: SELECT_TOKENS[0],
+          value: [],
           placeholder: 'All Tokens',
         },
         chain: {
           items: SELECT_CHAINS,
-          value: SELECT_CHAINS[0],
+          value: [],
           placeholder: 'All Chains',
         },
         protocol: {
           items: SELECT_PROTOCOLS,
-          value: SELECT_PROTOCOLS[0],
+          value: [],
           placeholder: 'All Protocols',
         },
       }}

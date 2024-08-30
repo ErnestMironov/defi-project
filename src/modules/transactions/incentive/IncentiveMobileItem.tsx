@@ -10,18 +10,20 @@ import { shortenString } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import type { ITransaction } from 'src/lib/types/transaction'
 
-interface TransactionMobileItemProperties extends ComponentProps<'div'> {
-  tx: ITransaction
+export type Incentive = ITransaction
+interface IncentiveMobileItemProperties extends ComponentProps<'div'> {
+  incentive: Incentive
 }
 
-export const TransactionMobileItem = (props: TransactionMobileItemProperties) => {
-  const { tx } = props
+export const IncentiveMobileItem = (props: IncentiveMobileItemProperties) => {
+  const { incentive } = props
   return (
     <div>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">Withdraw Request</div>
-      <div className="mt-4 text-gray-50">
-        <span className="text-dark-blue-100">In Progress</span>
-        <span className="before:content-['_|_']">{getFromNow(tx.timestamp)}</span>
+      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">Harvest</div>
+      <div className="mt-4 flex items-center gap-3 text-gray-100">
+        <span>Vault</span>
+        <div className="h-[1.0625rem] w-px bg-gray-50" />
+        <span>{getFromNow(incentive.timestamp)}</span>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
         <h6>Amount</h6>
@@ -34,9 +36,9 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
         <IconWithLabelComponent symbol="base" className="size-6" />
         <h6>Tx Hash</h6>
         <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenString(tx.txHash)}</p>
+          <p>{shortenString(incentive.txHash)}</p>
           <Scan className="size-5 shrink-0" />
-          <CopyButton text={tx.txHash} className="size-6 shrink-0" />
+          <CopyButton text={incentive.txHash} className="size-6 shrink-0" />
         </div>
       </div>
     </div>
@@ -44,7 +46,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
 }
 
 export const SkeletonTransactionMobileItem = (
-  _props: Omit<TransactionMobileItemProperties, 'tx'>,
+  _props: Omit<IncentiveMobileItemProperties, 'incentive'>,
 ) => {
   return (
     <AccordionItem value="">

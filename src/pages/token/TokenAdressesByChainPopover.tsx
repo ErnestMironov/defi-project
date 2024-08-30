@@ -8,7 +8,7 @@ import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { useDisclosure } from '@hooks/common/useDisclosure'
 import { cn } from '@utils/cn'
 import { shortenString } from '@utils/transform'
-import type { ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 
 interface TokenAddressByChainPopoverProperties
   extends Omit<ComponentProps<'div'>, 'onChange'> {

@@ -3,11 +3,7 @@ import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
-import {
-  SELECT_CHAINS,
-  SELECT_PPS,
-  SELECT_TOKENS,
-} from '@constants/select-constant'
+import { SELECT_CHAINS, SELECT_PPS, SELECT_TOKENS } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
@@ -19,9 +15,9 @@ export const ReportsTable = (props: ReportsTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Nonce / Tx Hash' },
-    token: { items: SELECT_TOKENS, value: SELECT_TOKENS[0] },
-    pps: { items: SELECT_PPS, value: SELECT_PPS[0] },
-    chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+    token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
+    pps: { items: SELECT_PPS, value: [], placeholder: 'All PPS' },
+    chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const renderBody = () => {
     return (

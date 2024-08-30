@@ -6,8 +6,8 @@ import clsx from 'clsx'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 
-import { HeaderMenu } from './header/HeaderMenu'
-import { MobileHeader } from './header/MobileHeader'
+import { HeaderMenu } from './HeaderMenu'
+import { MobileHeader } from './MobileHeader'
 
 interface HeaderProperties extends ComponentProps<'div'> {}
 

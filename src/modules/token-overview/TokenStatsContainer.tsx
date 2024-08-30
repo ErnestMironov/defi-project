@@ -1,6 +1,7 @@
 import Arrow from '@assets/icons/curve-arrow-down.svg'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
+import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { type ComponentProps } from 'react'
@@ -75,7 +76,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
           </div>
           {withLink && (
             <Link
-              to="#"
+              to={`/tokens/${tokenName}`}
               className="group flex items-center gap-0.5 text-[0.75rem]/[0.9rem] font-bold uppercase text-main-100"
             >
               <span>Go to {tokenName}</span>
@@ -131,7 +132,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
         </p>
         {withLink && (
           <Link
-            to="#"
+            to={`${ROUTES.TOKENS}/${tokenName}`}
             className="group absolute bottom-[1.34rem] flex items-center gap-0.5 text-semi-base font-bold uppercase text-main-100"
           >
             <span>Go to {tokenName}</span>
