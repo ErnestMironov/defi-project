@@ -153,7 +153,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           showArrow
         />
         {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="onChain" />
+          <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />
         )}
       </div>
       {ActionButton()}

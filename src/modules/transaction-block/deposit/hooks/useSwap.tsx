@@ -183,6 +183,7 @@ export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
     setCurrentModal,
     getFullState,
     setTransactionHash,
+    setTimerDuration,
     squidRoute: route,
   } = useTxStore()
   const { addTransaction } = useTransactionStore()
@@ -201,6 +202,7 @@ export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
       },
       onSuccess(data) {
         setTransactionHash(data)
+        setTimerDuration(route?.estimate?.estimatedRouteDuration ?? 12)
         setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful
 

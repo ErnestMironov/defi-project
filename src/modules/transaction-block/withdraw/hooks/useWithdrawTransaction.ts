@@ -18,10 +18,12 @@ export const useWithdrawTransaction = () => {
     inputValue,
     mtToken,
     withdrawToNetwork,
+    withdrawFromNetwork,
     setTransactionCanBeCollapsed,
     getFullState,
     setTransactionHash,
     setTxDifficulty,
+    setTimerDuration,
   } = useTxStore()
 
   const { addTransaction } = useTransactionStore()
@@ -42,7 +44,8 @@ export const useWithdrawTransaction = () => {
       !amount ||
       !isEnoughSharesToWithdraw ||
       !mtToken ||
-      !withdrawToNetwork
+      !withdrawToNetwork ||
+      !withdrawFromNetwork
     )
       return
     setStatus('confirm_in_wallet')
@@ -52,7 +55,7 @@ export const useWithdrawTransaction = () => {
         address: mtToken?.mtAddress as Address,
         abi: tokenVaultAbi,
         functionName: 'requestWithdraw',
-        chainId: mtToken.chainData?.chainId,
+        chainId: withdrawFromNetwork,
         args: [amount as bigint, EIDS_BY_CHAIN_ID[withdrawToNetwork], address, address],
       },
 
@@ -60,6 +63,7 @@ export const useWithdrawTransaction = () => {
         onSuccess: (data) => {
           setStatus('pending')
           setTransactionHash(data)
+          setTimerDuration(12)
           setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)

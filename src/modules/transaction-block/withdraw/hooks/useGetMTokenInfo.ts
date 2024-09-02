@@ -35,7 +35,7 @@ export type UseGetMTokenInfoReturn = IMToken &
   }
 
 export const useGetMTokenInfo = (
-  mToken: ParsedSharesBalanceResponse['balances'][number],
+  mToken: ParsedSharesBalanceResponse['balances'][number] | null,
 ): UseGetMTokenInfoReturn | null => {
   const tokenData = useMemo(() => {
     if (!mToken) return null

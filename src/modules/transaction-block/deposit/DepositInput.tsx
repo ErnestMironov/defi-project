@@ -58,7 +58,6 @@ export const DepositInput = () => {
     inputValue,
     inputValueInUSD,
     depositTotalInUSD,
-    isTxZAP,
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,

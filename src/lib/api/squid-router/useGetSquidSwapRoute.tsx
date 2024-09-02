@@ -11,8 +11,13 @@ import { getDepositPostHook } from './postHook/postHook'
 
 const integratorId = 'baat-c34ed33a-e43d-4903-8898-a62fcc1113c5'
 
+interface IResponse {
+  data: RouteResponse
+  requestId: string
+}
+
 // Function to get the optimal route for the swap using Squid API
-const getRoute = async (_parameters: any): Promise<{ data: RouteResponse }> => {
+const getRoute = async (_parameters: any): Promise<IResponse> => {
   try {
     const postHook = await getDepositPostHook(
       new Token(Number(_parameters.toChain), _parameters.toToken, 6),

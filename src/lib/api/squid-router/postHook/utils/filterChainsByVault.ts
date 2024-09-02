@@ -1,0 +1,14 @@
+import { SupportedChainsByVault, Tokens } from '@api/squid-router/postHook/constants'
+import type { Vault } from '@modules/transaction-block/store/useTxStore'
+
+export const filterChainsByVault = <T extends number | string>(
+  chains: T[],
+  vault?: Vault,
+): T[] => {
+  if (!vault) return chains
+  const tokenEnum = Tokens[vault]
+  if (tokenEnum === undefined) return chains
+  return chains.filter(
+    (chain) => SupportedChainsByVault[tokenEnum]?.includes(chain as any),
+  )
+}

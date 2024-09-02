@@ -94,6 +94,9 @@ export interface SelectedAssetState {
   setIsTxZAP: (value: boolean) => void
 
   resetStore: () => void
+
+  timerDuration: number
+  setTimerDuration: (duration: number) => void
 }
 
 export const useTxStore = create<SelectedAssetState>()(
@@ -190,6 +193,9 @@ export const useTxStore = create<SelectedAssetState>()(
 
       isTxZAP: false,
       setIsTxZAP: (value) => set({ isTxZAP: value }),
+
+      timerDuration: 120, // По умолчанию 2 минуты
+      setTimerDuration: (duration) => set({ timerDuration: duration }),
 
       resetStore: () =>
         set({

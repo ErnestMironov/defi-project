@@ -31,7 +31,7 @@ export const useApproveERC20 = ({
     address: tokenAddress,
     abi: erc20Abi,
     functionName: 'allowance',
-    args: [address, transactionRequestTarget],
+    args: [address!, transactionRequestTarget as Address],
   })
   console.log('🚀 ~ account:', address)
   console.log('🚀 ~ transactionRequestTarget:', transactionRequestTarget)

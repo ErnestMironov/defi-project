@@ -60,9 +60,9 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
   const { switchChain: _switchChain } = useSwitchChain()
   const { address } = useAccount()
 
-  const { data, isLoading, error } = useGetSharesBalance(address)
+  const { data, isLoading } = useGetSharesBalance(address)
 
-  const balances = data?.data?.balances.filter((token) => token.value > 0) || []
+  const balances = data?.data?.balances.filter((token) => token.value > 9999) || []
 
   const onChange = (_asset: UseGetMTokenInfoReturn) => {
     setMToken(_asset)

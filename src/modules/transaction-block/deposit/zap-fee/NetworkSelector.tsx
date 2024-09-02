@@ -1,3 +1,4 @@
+import { filterChainsByVault } from '@api/squid-router/postHook/utils/filterChainsByVault'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
@@ -8,7 +9,7 @@ import Grey3DBox from '@modules/transaction-block/components/Grey3DBox'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import type * as PopoverPrimitive from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 const NetworkItem: React.FC<{ chain: any; onClick: () => void }> = ({
   chain,
@@ -41,6 +42,8 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
   const { vault, depositToNetwork, setDepositToNetwork } = useTxStore()
   const NetworkData = useTokenAsset(depositToNetwork)
 
+  const filteredChains = useMemo(() => filterChainsByVault([...CHAINS], vault), [vault])
+
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
       <PopoverTrigger className="w-full">
@@ -66,7 +69,7 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
         sideOffset={8}
         className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] dark:bg-cards"
       >
-        {CHAINS.map((chain) => (
+        {filteredChains.map((chain) => (
           <NetworkItem
             key={chain}
             chain={chain}

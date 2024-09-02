@@ -25,6 +25,8 @@ export const WithdrawReviewContent = ({
     withdrawAmount: withdrawAmountInUSD,
     mtToken,
     currentStep,
+    withdrawFromNetwork,
+    withdrawToNetwork,
     setCurrentStep,
     setCurrentModal,
   } = useTxStore()
@@ -44,8 +46,8 @@ export const WithdrawReviewContent = ({
     error: approveError,
   } = useApproveERC20({
     approveValue: parseUnits(amount, 6).toString(),
-    tokenAddress: mtToken?.mtAddress,
-    transactionRequestTarget: mtToken?.mtAddress,
+    tokenAddress: '0x6bcCf39Ddc5f71B559B5fada94330eEc6945EE2b',
+    transactionRequestTarget: '0x6bcCf39Ddc5f71B559B5fada94330eEc6945EE2b',
     chainId: mtToken?.chainData?.chainId,
     onSuccessHandler: () => {
       if (currentStep === 2) {
@@ -130,26 +132,54 @@ export const WithdrawReviewContent = ({
     withdraw,
   ])
 
+  const isCrossChain = withdrawFromNetwork !== withdrawToNetwork
+
   return (
     <div className="flex flex-col items-stretch gap-10">
-      <div className="flex w-full flex-col items-start gap-2 self-stretch rounded-2xl border border-stroke-100 p-6 text-[1.125rem]">
-        <div className="flex w-full items-center justify-between">
-          <span className="text-text-80">You withdraw</span>
-          <div className="flex items-center gap-2">
-            <TokenWithNetwork
-              symbol={mtToken?.symbol}
-              network={mtToken?.chainData?.chainId}
-              position="bottom-right"
-              width="2.14288rem"
-            />
-            <span>
-              {amount} {mtToken?.symbol}
-            </span>
+      <div className="flex w-full flex-col items-start gap-4 self-stretch rounded-2xl border border-stroke-100 p-6 text-[1.125rem]">
+        <div className="flex w-full flex-col items-start gap-2 self-stretch">
+          <div className="flex w-full items-center justify-between">
+            <span className="text-text-80">You withdraw</span>
+            <div className="flex items-center gap-2">
+              <TokenWithNetwork
+                symbol={mtToken?.stable}
+                network={withdrawFromNetwork}
+                position="bottom-right"
+                width="2.14288rem"
+              />
+              <span>
+                {amount} {mtToken?.stable.toUpperCase()}
+              </span>
+            </div>
           </div>
+          <p className="self-end text-base text-gray-100">
+            $ {parseFloatLocale(withdrawAmountInUSD)}
+          </p>
         </div>
-        <p className="self-end text-base text-gray-100">
-          $ {parseFloatLocale(withdrawAmountInUSD)}
-        </p>
+        {isCrossChain && (
+          <>
+            <div className="h-px w-full bg-stroke-100" />
+            <div className="flex w-full flex-col items-start gap-2 self-stretch">
+              <div className="flex w-full items-center justify-between">
+                <span className="text-text-80">You will receive </span>
+                <div className="flex items-center gap-2">
+                  <TokenWithNetwork
+                    symbol={mtToken?.stable}
+                    network={withdrawToNetwork}
+                    position="bottom-right"
+                    width="2.14288rem"
+                  />
+                  <span>
+                    {amount} {mtToken?.stable.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+              <p className="self-end text-base text-gray-100">
+                $ {parseFloatLocale(withdrawAmountInUSD)}
+              </p>
+            </div>
+          </>
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <WizardStep
@@ -161,17 +191,17 @@ export const WithdrawReviewContent = ({
             ]
           }`}
           status={allStepsCompleted ? 'success' : switchStatus}
-        />                                                                
+        />
         <WizardStep
           icon={
             <TokenWithNetwork
-              symbol={mtToken?.symbol}
+              symbol={mtToken?.stable}
               network={mtToken?.chainData?.chainId}
               width="2rem"
             />
           }
           activeStep={currentStep === 2}
-          title={`Approve ${mtToken?.symbol} spending`}
+          title={`Approve ${mtToken?.stable.toUpperCase()} spending`}
           status={allStepsCompleted ? 'success' : approveStatus}
           error={approveError?.message}
           showArrow
@@ -179,7 +209,7 @@ export const WithdrawReviewContent = ({
         <WizardStep
           icon={<ReceiveSquare className="size-8" />}
           activeStep={currentStep === 3}
-          title={`Withdraw ${mtToken?.symbol}`}
+          title={`Withdraw ${mtToken?.stable.toUpperCase()}`}
           status={withdrawStatus}
           error={withdrawError?.message}
           showArrow

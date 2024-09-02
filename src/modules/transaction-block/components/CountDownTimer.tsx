@@ -1,36 +1,37 @@
 import { useEffect, useState } from 'react'
 
 interface CountdownTimerProperties {
-  initialCountdown: number
+  timestamp: number
   onComplete: () => void
 }
 
 export const CountdownTimer: React.FC<CountdownTimerProperties> = ({
-  initialCountdown,
+  timestamp,
   onComplete,
 }) => {
-  const [countdown, setCountdown] = useState(initialCountdown)
+  const [remainingTime, setRemainingTime] = useState(0)
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((previous) => {
-        if (previous <= 1) {
-          clearInterval(timer)
-          onComplete()
-          return 0
-        }
-        return previous - 1
-      })
+    const interval = setInterval(() => {
+      const now = Date.now()
+      const elapsed = now - timestamp
+      const remaining = Math.max(120 - Math.floor(elapsed / 1000), 0) // 120 секунд (2 минуты)
+
+      setRemainingTime(remaining)
+
+      if (remaining === 0) {
+        clearInterval(interval)
+        onComplete()
+      }
     }, 1000)
-    return () => clearInterval(timer)
-  }, [onComplete])
+
+    return () => clearInterval(interval)
+  }, [timestamp, onComplete])
 
   return (
-    <p
-      className="mt-5 text-center text-[1.125rem] uppercase leading-[120%] 
-    text-gray-100"
-    >
-      Estimated time 0:{countdown < 10 ? `0${countdown}` : countdown}
+    <p className="mt-5 text-center text-[1.125rem] uppercase leading-[120%] text-gray-100">
+      Estimated time {Math.floor(remainingTime / 60)}:{remainingTime % 60 < 10 ? '0' : ''}
+      {remainingTime % 60}
     </p>
   )
 }

@@ -157,7 +157,10 @@ export const WithdrawInput = () => {
 
   return (
     <div>
-      <InputWrapper title={mtToken && 'You withdraw'} validationError={validationError}>
+      <InputWrapper
+        title={mtToken ? 'You withdraw' : undefined}
+        validationError={validationError}
+      >
         <div className="flex w-full items-center justify-between ">
           {mtToken ? (
             <AmountInput
