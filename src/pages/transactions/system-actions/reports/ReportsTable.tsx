@@ -51,8 +51,8 @@ export const ReportsTable = (props: ReportsTableProperties) => {
         totalCount={100}
         currentPage={1}
         onPageChange={() => {}}
-        onPerPageChange={() => {}}
-        perPage={10}
+        onPageSizeChange={() => {}}
+        size={10}
       />
     </div>
   )

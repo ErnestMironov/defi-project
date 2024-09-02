@@ -1,13 +1,16 @@
 import { apiClient } from '@api/maat-finance/api-client'
 import type {
+  ActionType,
+  Event,
   PaginationResponse,
   SortDirection,
   Status,
-  Strategy,
 } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
-type StrategiesParameters = {
+type EventsParameters = {
+  limit?: number
+  action_type?: ActionType | null
   page?: number
   size?: number
   sort?: SortDirection
@@ -16,29 +19,29 @@ type StrategiesParameters = {
   end?: string
 }
 
-const getStrategies = (parameters: StrategiesParameters) => {
-  return apiClient.get<PaginationResponse<Strategy>>('/getStrategies', {
+const getEvents = (parameters: EventsParameters) => {
+  return apiClient.get<PaginationResponse<Event>>('/getLastEvents', {
     params: parameters,
   })
 }
 
-export const useStrategies = (parameters: StrategiesParameters) => {
+export const useEvents = (parameters: EventsParameters) => {
   return useQuery({
-    queryKey: ['strategies', parameters],
+    queryKey: ['events', parameters],
     queryFn: async () => {
-      const { data } = await getStrategies(parameters)
+      const { data } = await getEvents(parameters)
       return data
     },
   })
 }
 
-export const useInfiniteStrategies = (parameters: StrategiesParameters) => {
+export const useInfiniteEvents = (parameters: EventsParameters) => {
   const { size, ...rest } = parameters
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
-      queryKey: ['strategies', rest],
+      queryKey: ['events', rest],
       queryFn: async ({ pageParam }) => {
-        const response = await getStrategies({ size, page: pageParam, ...rest })
+        const response = await getEvents({ size, page: pageParam, ...rest })
         return response.data
       },
       getNextPageParam: (lastPage) => {

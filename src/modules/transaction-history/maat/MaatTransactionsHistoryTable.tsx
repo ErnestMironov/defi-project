@@ -10,13 +10,15 @@ import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 
-import { IncentiveRow } from './IncentiveRow'
+import { MaatTransactionHistoryRow } from './MaatTransactionHistoryRow'
 
-interface IncentivesHistoryProperties extends ComponentProps<'div'> {
+interface TransactionsHistoryProperties extends ComponentProps<'div'> {
   filters: TableFiltersType
 }
 
-export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) => {
+export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryProperties> = (
+  props,
+) => {
   const { filters: initialFilters, className } = props
   const [filters, setFilters] = useState(initialFilters)
 
@@ -24,7 +26,7 @@ export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) 
   const { data, isLoading, error, isPlaceholderData } = useEvents({
     size,
     page,
-    action_type: 'incentives',
+    action_type: null,
     limit: 100,
   })
 
@@ -35,16 +37,21 @@ export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) 
       case !!error: {
         return <TransactionsHistoryDesktopSkeleton count={size} {...props} />
       }
-
       default: {
         return (
           <Table>
             <Table.Head>
               <Table.Row>
                 <Table.HeadCell>Action</Table.HeadCell>
-                <Table.HeadCell>From</Table.HeadCell>
-                <Table.HeadCell>Tx Hash</Table.HeadCell>
+                <Table.HeadCell>Status</Table.HeadCell>
+                <Table.HeadCell>
+                  <div className="flex items-center gap-[0.79rem]">
+                    <span>Amount</span>
+                    <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+                  </div>
+                </Table.HeadCell>
                 <Table.HeadCell>Chain</Table.HeadCell>
+                <Table.HeadCell>Tx Hash</Table.HeadCell>
                 <Table.HeadCell>
                   <div className="flex items-center gap-[0.79rem]">
                     <span>Created</span>
@@ -55,7 +62,7 @@ export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) 
             </Table.Head>
             <Table.Body>
               {data?.items?.map((event, index) => (
-                <IncentiveRow key={index} event={event as any} />
+                <MaatTransactionHistoryRow key={index} event={event} />
               ))}
             </Table.Body>
           </Table>
@@ -89,10 +96,21 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
       <Table.Head>
         <Table.Row>
           <Table.HeadCell>Action</Table.HeadCell>
-          <Table.HeadCell>From</Table.HeadCell>
-          <Table.HeadCell>Tx Hash</Table.HeadCell>
+          <Table.HeadCell>Status</Table.HeadCell>
+          <Table.HeadCell>
+            <div className="flex items-center gap-[0.79rem]">
+              <span>Amount</span>
+              <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+            </div>
+          </Table.HeadCell>
           <Table.HeadCell>Chain</Table.HeadCell>
-          <Table.HeadCell>Created</Table.HeadCell>
+          <Table.HeadCell>Tx Hash</Table.HeadCell>
+          <Table.HeadCell>
+            <div className="flex items-center gap-[0.79rem]">
+              <span>Created</span>
+              <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+            </div>
+          </Table.HeadCell>
         </Table.Row>
       </Table.Head>
       <Table.Body>
@@ -111,7 +129,10 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
               <Skeleton className="w-30 h-10 rounded-xl" />
             </Table.Cell>
             <Table.Cell>
-              <Skeleton className="w-30 h-10 rounded-xl" />
+              <Skeleton className="h-10 w-24 rounded-xl" />
+            </Table.Cell>
+            <Table.Cell>
+              <Skeleton className="h-10 w-20 rounded-xl" />
             </Table.Cell>
           </Table.Row>
         ))}

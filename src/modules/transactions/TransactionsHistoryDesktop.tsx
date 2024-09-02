@@ -1,4 +1,4 @@
-import { useTxHistoryDesktop } from '@api/queries/useTxHistoryDesktop'
+import { useEvents } from '@api/queries/useEvents'
 import Sort from '@assets/icons/sort.svg'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
@@ -6,9 +6,9 @@ import { Pagination } from '@components/pagination/Pagination'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
-import { PER_PAGE_ARRAY } from '@constants/per-page-array'
+import { usePages } from '@hooks/common/usePages'
 import { cn } from '@utils/cn'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { TransactionHistoryRow } from './TransactionHistoryRow'
 import type { EventsProperties } from './Transactions'
@@ -23,36 +23,19 @@ export const TransactionsHistoryDesktop = (
   const { filters: initialFilters, className } = props
   const [filters, setFilters] = useState(initialFilters)
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [perPage, setPerPage] = useState<(typeof PER_PAGE_ARRAY)[number]>(
-    PER_PAGE_ARRAY[0],
-  )
-
-  const { data, loading, error, totalCount } = useTxHistoryDesktop({
-    perPage,
-    page: currentPage,
+  const { onPageChange, page, size, onPageSizeChange } = usePages()
+  const { data, isLoading, error, isPlaceholderData } = useEvents({
+    size,
+    page,
+    limit: 100,
   })
-  const [totalCountMemo, setTotalCountMemo] = useState<number | undefined>()
-  useEffect(() => {
-    if (totalCount === undefined) {
-      return
-    }
-    setTotalCountMemo(totalCount)
-  }, [totalCount])
-
-  const onPageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-  const onPerPageChange = (_perPage: (typeof PER_PAGE_ARRAY)[number]) => {
-    setCurrentPage(1)
-    setPerPage(_perPage)
-  }
 
   const renderBody = () => {
     switch (true) {
-      case loading:
+      case isLoading:
+      case isPlaceholderData:
       case !!error: {
-        return <TransactionsHistoryDesktopSkeleton count={perPage} {...props} />
+        return <TransactionsHistoryDesktopSkeleton count={size} {...props} />
       }
       default: {
         return (
@@ -79,8 +62,8 @@ export const TransactionsHistoryDesktop = (
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {data?.map((tx, index) => (
-                <TransactionHistoryRow key={index} transaction={tx} />
+              {data?.items?.map((event, index) => (
+                <TransactionHistoryRow key={index} event={event} />
               ))}
             </Table.Body>
           </Table>
@@ -93,14 +76,14 @@ export const TransactionsHistoryDesktop = (
       <SectionTitle>Events</SectionTitle>
       <TableFilters filters={filters} setFilters={setFilters} />
       {renderBody()}
-      {totalCountMemo && (
+      {data && (
         <Pagination
           className="mt-6"
-          currentPage={currentPage}
-          totalCount={totalCountMemo}
+          currentPage={page}
+          totalCount={data.total_items}
           onPageChange={onPageChange}
-          perPage={perPage}
-          onPerPageChange={onPerPageChange}
+          size={size}
+          onPageSizeChange={onPageSizeChange}
         />
       )}
     </div>

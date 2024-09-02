@@ -1,19 +1,19 @@
 /* eslint-disable react/jsx-no-useless-fragment */
+import type { Event } from '@api/maat-finance/types'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import type { ITransaction } from 'src/lib/types/transaction'
 
 import { TransactionMobileItem } from './TransactionMobileItem'
 
 interface TransactionsMobileListProperties extends ComponentProps<'div'> {
-  transactions?: ITransaction[]
+  events?: Event[]
   loading?: boolean
   error?: any
 }
 
 export const TransactionsMobileList = (props: TransactionsMobileListProperties) => {
-  const { className, transactions, loading, error, ...rest } = props
+  const { className, events, loading, error, ...rest } = props
 
   const renderBody = () => {
     switch (true) {
@@ -28,13 +28,13 @@ export const TransactionsMobileList = (props: TransactionsMobileListProperties) 
         )
       }
       default: {
-        if (!transactions || !transactions?.length) {
+        if (!events || !events?.length) {
           return <div className="text-center text-gray-500">No transactions found</div>
         }
         return (
           <>
-            {transactions?.map((transaction, index) => (
-              <TransactionMobileItem key={index} tx={transaction} />
+            {events?.map((event, index) => (
+              <TransactionMobileItem key={index} event={event} />
             ))}
           </>
         )

@@ -64,8 +64,8 @@ export const IncentivesTable = (props: IncentivesTableProperties) => {
         totalCount={100}
         currentPage={1}
         onPageChange={() => {}}
-        onPerPageChange={() => {}}
-        perPage={10}
+        onPageSizeChange={() => {}}
+        size={10}
       />
     </div>
   )
