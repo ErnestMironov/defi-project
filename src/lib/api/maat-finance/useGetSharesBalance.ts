@@ -15,7 +15,6 @@ export const useGetSharesBalance = (address?: Address) => {
       const response = await apiClient.get<SharesBalanceResponse>('/getSharesBalance', {
         params: { address },
       })
-      // Преобразуем SharesBalanceResponse в ParsedSharesBalanceResponse
       const parsedData: ParsedSharesBalanceResponse = {
         balances: response.data.balances.flatMap(({ chain, balances }) =>
           balances.map((balance) => ({ chain, ...balance })),

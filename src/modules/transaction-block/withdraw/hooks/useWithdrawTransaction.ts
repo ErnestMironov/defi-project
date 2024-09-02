@@ -1,5 +1,4 @@
 import { tokenVaultAbi } from '@constants/abi/token-vault'
-import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
@@ -18,10 +17,13 @@ export const useWithdrawTransaction = () => {
     setCurrentModal,
     inputValue,
     mtToken,
+    withdrawToNetwork,
+    withdrawFromNetwork,
     setTransactionCanBeCollapsed,
     getFullState,
     setTransactionHash,
     setTxDifficulty,
+    setTimerDuration,
   } = useTxStore()
 
   const { addTransaction } = useTransactionStore()
@@ -31,15 +33,21 @@ export const useWithdrawTransaction = () => {
 
   const { sharesBalance } = useVaultBalance(mtToken?.mtAddress || '0x')
 
-  const isEnoughSharesToWithdraw = (() => {
-    if (!sharesBalance || !amount) return
-    return (sharesBalance as bigint) >= amount
-  })()
+  const isEnoughSharesToWithdraw =
+    sharesBalance && amount ? sharesBalance >= amount : undefined
 
   const { writeContract, ...rest } = useWriteContract({})
 
   const withdraw = async () => {
-    if (!address || !amount || !isEnoughSharesToWithdraw || !mtToken) return
+    if (
+      !address ||
+      !amount ||
+      !isEnoughSharesToWithdraw ||
+      !mtToken ||
+      !withdrawToNetwork ||
+      !withdrawFromNetwork
+    )
+      return
     setStatus('confirm_in_wallet')
 
     return writeContract(
@@ -47,23 +55,18 @@ export const useWithdrawTransaction = () => {
         address: mtToken?.mtAddress as Address,
         abi: tokenVaultAbi,
         functionName: 'requestWithdraw',
-        chainId: mtToken.chainData?.chainId,
-        args: [
-          amount as bigint,
-          EIDS_BY_CHAIN_ID[mtToken.chainData?.chainId ?? CHAIN_IDS_BY_NAME.Arbitrum],
-          address,
-          mtToken?.mtAddress as Address,
-        ],
+        chainId: withdrawFromNetwork,
+        args: [amount as bigint, EIDS_BY_CHAIN_ID[withdrawToNetwork], address, address],
       },
 
       {
         onSuccess: (data) => {
           setStatus('pending')
           setTransactionHash(data)
-          setTxDifficulty('simple')
+          setTimerDuration(12)
+          setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
-          // @ts-ignore
           addTransaction({
             ...txStateWithStringBigInt,
             status: 'pending',

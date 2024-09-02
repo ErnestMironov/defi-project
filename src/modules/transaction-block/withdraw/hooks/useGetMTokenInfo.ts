@@ -35,16 +35,22 @@ export type UseGetMTokenInfoReturn = IMToken &
   }
 
 export const useGetMTokenInfo = (
-  mToken: ParsedSharesBalanceResponse['balances'][number],
-): UseGetMTokenInfoReturn => {
-  const tokenData = useMemo(() => TOKENS[mToken?.token], [mToken?.token])
+  mToken: ParsedSharesBalanceResponse['balances'][number] | null,
+): UseGetMTokenInfoReturn | null => {
+  const tokenData = useMemo(() => {
+    if (!mToken) return null
+
+    return TOKENS[mToken.token]
+  }, [mToken])
   const chainData = useTokenAsset(
     CHAIN_IDS_BY_BACKEND_NAMES[mToken?.chain as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES],
   )
+
+  if (!tokenData || !mToken) return null
 
   return {
     ...tokenData,
     ...mToken,
     chainData,
-  }
+  } as UseGetMTokenInfoReturn
 }

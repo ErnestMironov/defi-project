@@ -61,7 +61,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
         <TokenWithNetwork
           className="size-[1.14219rem]"
           symbol={transaction.mtToken?.symbol}
-          network={transaction.mtToken?.chainId}
+          network={transaction.mtToken?.chainData?.chainId}
         />
         <div className="bg-red-15 flex items-center gap-1 rounded-[12.5rem] px-2 py-1 leading-[120%]">
           {formatAmountValue(transaction.inputValue, 2)} {transaction.vault}
@@ -73,7 +73,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
       transition={{ duration: 0.3 }}
@@ -153,13 +153,17 @@ export const PendingTransactions: React.FC = () => {
     }
   }
 
+  if (transactions.length === 0) {
+    return null
+  }
+
   return (
     <motion.div
       className="fixed bottom-0 right-0 z-[1000] h-full overflow-y-auto overflow-x-hidden px-10 backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{
         opacity: isHovered ? 1 : 0.7,
-        x: isHovered ? 0 : 'calc(100% - 6.5rem)',
+        x: isHovered ? 0 : 'calc(100% - 5.5rem)',
       }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}

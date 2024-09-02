@@ -34,21 +34,18 @@ import { useTxStore } from '../store/useTxStore'
 interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
 const SelectChainTrigger = () => {
-  const { depositNetwork } = useTxStore()
-  const chainData = useTokenAsset(depositNetwork)
+  const { depositFromNetwork } = useTxStore()
+  const chainData = useTokenAsset(depositFromNetwork)
 
   return (
-    <button
-      type="button"
-      className="flex items-center gap-[0.38rem] text-lg/[0] font-bold"
-    >
-      {depositNetwork && (
+    <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
+      {depositFromNetwork && (
         <div className="overflow-hidden rounded-full">
-          <TokenIconComponent symbol={depositNetwork} className="size-4" />
+          <TokenIconComponent symbol={depositFromNetwork} className="size-4" />
         </div>
       )}
       <span>{chainData?.name || 'All networks'}</span>
-    </button>
+    </div>
   )
 }
 
@@ -77,7 +74,7 @@ function TokensListItem({
 
       <div className="ml-3 flex flex-col items-start max-lg:items-start max-lg:text-left">
         <p className="text-[1.25rem]/[1.75rem] text-text max-lg:max-w-[8.5rem] ">
-          {token.contract_name}
+          {token.contract_ticker_symbol}
         </p>
         <p className="text-[0.9375rem]/[1.125rem] text-gray-80">{chainData?.name}</p>
       </div>
@@ -160,14 +157,18 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
-    depositNetwork: chain,
-    setDepositNetwork: setNetwork,
-    setRepresentationTokensChain,
+    depositFromNetwork: chain,
+    setDepositFromNetwork: setNetwork,
+    setDepositToNetwork,
+    setDepositFromNetwork,
+    resetStore,
   } = useTxStore()
   const [opened, setOpened] = useState(false)
   const onChange = (_asset: ITokenData) => {
+    resetStore()
     setAsset(_asset)
-    setRepresentationTokensChain(_asset.chain_id as ChainType)
+    setDepositToNetwork(_asset.chain_id as ChainType)
+    setDepositFromNetwork(_asset.chain_id as ChainType)
     setOpened(false)
   }
 
@@ -216,6 +217,10 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     searchValue,
   ])
 
+  console.log(
+    '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
+    filteredByChainTokens,
+  )
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>

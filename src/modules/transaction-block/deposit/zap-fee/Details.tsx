@@ -1,14 +1,15 @@
 import ArrowDown from '@assets/icons/arrow-down.svg'
-import Gas from '@assets/icons/gas-station.svg'
 import Lightning from '@assets/icons/lightning.svg'
 import { Dialog, DialogContent, DialogTitle } from '@components/ui/dialog'
 import { Switch } from '@components/ui/switch'
 import Grey3DBox from '@modules/transaction-block/components/Grey3DBox'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'
 import type { HTMLAttributes } from 'react'
 import React from 'react'
 
 import { NetworkSelector } from './NetworkSelector'
+import type { SummaryAndFees } from './summaryAndFees'
 
 const Text: React.FC<HTMLAttributes<HTMLParagraphElement>> = ({ children, ...props }) => {
   return (
@@ -46,10 +47,13 @@ const Line: React.FC<
 
 interface DetailsProperties {
   open: boolean
+  summaryAndFees: SummaryAndFees
   closeHandler: () => void
 }
 
-const Details: React.FC<DetailsProperties> = ({ open, closeHandler }) => {
+const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandler }) => {
+  const { boostMode, setBoostMode } = useTxStore()
+
   return (
     <Dialog open={open} onOpenChange={() => closeHandler()}>
       <DialogContent
@@ -73,24 +77,12 @@ const Details: React.FC<DetailsProperties> = ({ open, closeHandler }) => {
               <Lightning className="size-6" />
               Boost
             </div>
-            <Switch />
+            <Switch checked={boostMode} onCheckedChange={setBoostMode} />
           </Grey3DBox>
           <Text className="mt-3">
             Boost is a special feature of Axelar and Squid that reduces transaction time
             across chains to 5-30 seconds. It is currently available for swaps below a
             value of $20,000 USD.
-          </Text>
-        </div>
-        <div>
-          <Grey3DBox>
-            <div className="flex items-center gap-2 text-[1.1875rem] font-bold leading-[120%] text-text-80">
-              <Gas className="size-6" />
-              Arrival gas
-            </div>
-            <Switch />
-          </Grey3DBox>
-          <Text className="mt-3">
-            Swap some of your tokens for gas on the destination chain.
           </Text>
         </div>
         <div>
@@ -103,20 +95,43 @@ const Details: React.FC<DetailsProperties> = ({ open, closeHandler }) => {
         <div className="flex flex-col gap-4">
           <h3 className="text-[1.125rem] font-bold">Summary</h3>
           <div className="flex flex-col gap-3">
-            <Line title="Convert from" value="0.0 USDC" usd="0.00" />
-            <Line title="Min receive" value="0.0 USDC" usd="0.00" />
-            <Line title="Exchange rate" value="0.00 USDC = 0.00 USDT" />
-            <Line title="Gas to receive" value="0.00425 OP" usd="1.84" />
+            <Line
+              title="Convert from"
+              value={summaryAndFees.convertFrom.value}
+              usd={summaryAndFees.convertFrom.usd}
+            />
+            <Line
+              title="Min receive"
+              value={summaryAndFees.minReceive.value}
+              usd={summaryAndFees.minReceive.usd}
+            />
+            <Line title="Exchange rate" value={summaryAndFees.exchangeRate} />
           </div>
         </div>
         <div className="block h-px w-full bg-stroke-100" />
         <div className="flex flex-col gap-4">
           <h3 className="text-[1.125rem] font-bold">Fee breakdown</h3>
           <div className="flex flex-col gap-3">
-            <Line title="Cross-chain gas fees" value="0.0 USDC" usd="0.00" />
-            <Line title="Expected gas refund" value="- 0.00 OP" usd="0.00" />
-            <Line title="Boost fee" value="+ 0.00 OP" usd="0.00" />
-            <Line title="Total" value="0.00 OP" usd="0.00" />
+            <Line
+              title="Cross-chain gas fees"
+              value={summaryAndFees.crossChainFee.value}
+              usd={summaryAndFees.crossChainFee.usd}
+            />
+            <Line
+              title="Expected gas refund"
+              value={`- ${summaryAndFees.expectedGasRefund.value}`}
+              usd={summaryAndFees.expectedGasRefund.usd}
+            />
+            <Line
+              title="Boost fee"
+              value={`+ ${summaryAndFees.boostFee.value}`}
+              usd={summaryAndFees.boostFee.usd}
+            />
+            <Line
+              title="Total"
+              value={summaryAndFees.total.value}
+              usd={summaryAndFees.total.usd}
+            />
           </div>
         </div>
       </DialogContent>

@@ -35,6 +35,6 @@ export const useVaultBalance = (token: Address) => {
 
   return {
     tokenBalance: tokenBalance as bigint | undefined,
-    sharesBalance,
+    sharesBalance: sharesBalance as bigint | undefined,
   }
 }

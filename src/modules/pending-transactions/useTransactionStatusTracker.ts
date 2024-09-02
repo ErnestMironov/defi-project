@@ -49,7 +49,7 @@ export const useTransactionStatusChecker = () => {
     (tx: IPendingTransactionData) => {
       waitForSuccessStatus(
         tx.transactionHash,
-        tx.depositAsset?.chain_id.toString(),
+        tx.depositFromNetwork?.toString()!,
         CHAIN_IDS_BY_NAME.Arbitrum.toString(),
         (status) => updateTransaction(tx.transactionHash, status),
         () => updateTransaction(tx.transactionHash, 'success'),
@@ -63,9 +63,9 @@ export const useTransactionStatusChecker = () => {
     transactions.forEach((tx) => {
       if (tx.status !== 'pending') return
 
-      if (tx.txDifficulty === 'simple') {
+      if (tx.txDifficulty === 'on_chain') {
         checkTransactionStatus(tx)
-      } else if (tx.txDifficulty === 'withSwap') {
+      } else if (tx.txDifficulty === 'cross_chain') {
         checkSwapStatus(tx)
       }
     })

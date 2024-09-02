@@ -117,5 +117,6 @@ export const useMaatTokensApy = ({ from }: { from: number }) => {
     }
     return apyDataArrayWithBothLines
   }, [data, from])
+
   return { data: chartData, ...rest }
 }

@@ -1,35 +1,19 @@
 // src/modules/transaction-block/store/usePendingTransactionsStore.ts
-import type { ITokenData } from '@api/tokens-balance/api'
-import { type ChainType } from '@constants/chains'
-import type { TxType } from '@constants/txTypes'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
 import type { STEP_STATUS } from '../deposit/interfaces'
-import type { Vault } from '../deposit/SelectVault'
-import type { UseGetMTokenInfoReturn } from '../withdraw/hooks/useGetMTokenInfo'
-import type { TxDifficulty } from './useTxStore'
+import type { SelectedAssetState } from './useTxStore'
 
-export interface IPendingTransactionData {
+type OmitSetters<T> = {
+  [K in keyof T as K extends `set${string}` ? never : K]: T[K]
+}
+
+export interface IPendingTransactionData extends OmitSetters<SelectedAssetState> {
   transactionHash: string
-  inputValue: string
-  inputValueInUsd: string
   status: STEP_STATUS
   timestamp: number
-  vault: Vault
-  depositAsset: ITokenData
-  depositNetwork: ChainType | null
-  withdrawNetwork: ChainType | null
-  mtToken: UseGetMTokenInfoReturn | null
-  txType: TxType
-  depositAmount: string
-  withdrawAmount: string
-  representationTokensChain: ChainType | null
-  boostMode: boolean
-  arrivalGas: string
-  currentStep: number
   isTransactionFromStore: boolean
-  txDifficulty: TxDifficulty
 }
 
 interface TransactionState {
