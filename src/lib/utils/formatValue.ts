@@ -59,7 +59,7 @@ export const formatTokenBalance = (
   balance: string | bigint | null,
   decimals: number,
 ): string => {
-  if (balance === null) {
+  if (balance == null) {
     return '0'
   }
 
@@ -102,4 +102,54 @@ export function replaceCommasWithDots(value: string): string {
   if (!value) return value
 
   return value.replaceAll(',', '.')
+}
+
+export const formatUsdValue = (
+  value: string | number,
+  options?: Intl.NumberFormatOptions,
+) => {
+  const parsedValue = Number.parseFloat(value.toString())
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    ...options,
+  }).format(parsedValue)
+}
+
+export const formatAmount = (
+  value: string | number,
+  options?: Intl.NumberFormatOptions,
+) => {
+  const parsedValue = Number.parseFloat(value.toString())
+  return new Intl.NumberFormat('en-US', {
+    ...options,
+  }).format(parsedValue)
+}
+
+export const formatPercentValue = (
+  value?: string | number,
+  options?: Intl.NumberFormatOptions,
+) => {
+  if (!value) return 'N/A'
+  const parsedValue = Number.parseFloat(value.toString())
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    maximumFractionDigits: 2,
+    ...options,
+  }).format(parsedValue / 100)
+}
+
+export function convertBigIntToString(object: any): any {
+  if (typeof object === 'bigint') {
+    return object.toString()
+  }
+  if (Array.isArray(object)) {
+    return object.map(convertBigIntToString)
+  }
+  if (typeof object === 'object' && object !== null) {
+    return Object.fromEntries(
+      Object.entries(object).map(([key, value]) => [key, convertBigIntToString(value)]),
+    )
+  }
+  return object
 }

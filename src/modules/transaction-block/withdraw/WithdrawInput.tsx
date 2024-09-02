@@ -1,50 +1,113 @@
 import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
+import { Switch } from '@components/ui/switch.tsx'
 import { cn } from '@utils/cn'
 import BigNumber from 'bignumber.js'
-import { useEffect, useState } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
+import DollarInput from '../components/DollarInput.tsx'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
-import { useTxStore } from '../store/useDepositStore'
-import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
+import { useTxStore } from '../store/useTxStore'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
+import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork.tsx'
+
+type InputType = 'usd' | 'token'
+
+function isValidInput(
+  value: BigNumber,
+  lpBalance: BigNumber,
+  balance: BigNumber,
+): boolean {
+  return (
+    !value.isZero() &&
+    !lpBalance.isZero() &&
+    !balance.isZero() &&
+    !value.isNaN() &&
+    !lpBalance.isNaN() &&
+    !balance.isNaN()
+  )
+}
+
+function calculateTokenValue(
+  numericValue: BigNumber,
+  lpBalanceBN: BigNumber,
+  balanceBN: BigNumber,
+): string {
+  return isValidInput(numericValue, lpBalanceBN, balanceBN)
+    ? numericValue.multipliedBy(lpBalanceBN).div(balanceBN).toString()
+    : '0'
+}
+
+function calculateUSDValue(
+  numericValue: BigNumber,
+  lpBalanceBN: BigNumber,
+  balanceBN: BigNumber,
+): string {
+  return isValidInput(numericValue, lpBalanceBN, balanceBN)
+    ? numericValue.multipliedBy(balanceBN).div(lpBalanceBN).toFixed(2)
+    : '0'
+}
+
+interface InputWrapperProperties extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode
+  validationError: string
+  title?: string
+}
+
+export const InputWrapper = ({
+  children,
+  validationError,
+  title,
+  className,
+}: InputWrapperProperties) => {
+  return (
+    <div
+      className={cn(
+        'rounded-2xl bg-input-default p-6 max-lg:px-3 flex flex-col gap-3',
+        validationError && 'bg-input-error',
+        className,
+      )}
+    >
+      {title && <h3 className="text-[1.125rem] leading-[120%] text-gray-100">{title}</h3>}
+      {children}
+    </div>
+  )
+}
 
 export const WithdrawInput = () => {
   const { isConnected } = useAccount()
-  const { inputValue, setInputValue, mtToken, setWithdrawAmount } = useTxStore()
   const {
-    approve,
-    isAllowed,
-    isEnoughSharesToWithdraw,
-    withdraw,
-    loading: isPending,
-  } = useWithdrawTransaction()
+    inputValue,
+    setInputValue,
+    mtToken,
+    setWithdrawAmount,
+    setCurrentModal,
+    inputValueInUSD,
+    setInputValueInUSD,
+  } = useTxStore()
+
+  const [withdrawToAnotherChain, setWithdrawToAnotherChain] = useState(false)
 
   const [validationError, setValidationError] = useState('')
-  useEffect(() => {
-    if (isEnoughSharesToWithdraw === false) {
-      setValidationError('Exceeds balance')
-      return
-    }
-    setValidationError('')
-  }, [inputValue, isEnoughSharesToWithdraw])
 
-  const maxBalance = mtToken?.lpBalance ? formatUnits(BigInt(mtToken?.lpBalance), 6) : 0
+  const maxBalance = mtToken?.value ? formatUnits(BigInt(mtToken?.value), 6) : '0'
 
-  // Calculate the input value in USD
-  const inputValueBN = new BigNumber(inputValue || '0')
-  const lpBalanceBN = new BigNumber(mtToken?.lpBalance || '0')
-  const balanceBN = new BigNumber(mtToken?.balance || '0')
-
-  let inputValueInUSD = '0.00'
-  if (lpBalanceBN.isZero()) {
-    console.warn('lpBalanceBN or balanceBN is zero, cannot calculate inputValueInUSD')
-  } else {
-    inputValueInUSD = inputValueBN.div(lpBalanceBN).multipliedBy(balanceBN).toFixed(2)
-  }
+  const inputValueBN = useMemo(
+    () => new BigNumber(inputValue || '0').times(1e6),
+    [inputValue],
+  )
+  const lpBalanceBN = useMemo(
+    () => new BigNumber(mtToken?.value || '0'),
+    [mtToken?.value],
+  )
+  const balanceBN = useMemo(
+    () => new BigNumber(mtToken?.mtToken || '0'),
+    [mtToken?.mtToken],
+  )
 
   useEffect(() => {
     if (!inputValueInUSD || Number.isNaN(Number(inputValueInUSD))) {
@@ -55,27 +118,63 @@ export const WithdrawInput = () => {
   }, [inputValueInUSD, setWithdrawAmount])
 
   useEffect(() => {
-    if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
-      setValidationError('Withdraw amount cannot be less than 1$')
+    if (inputValueBN.isGreaterThan(lpBalanceBN)) {
+      return setValidationError('Exceeds balance')
     }
-  }, [inputValueInUSD])
+
+    if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
+      return setValidationError('Withdraw amount cannot be less than 1$')
+    }
+
+    setValidationError('')
+  }, [inputValueBN, lpBalanceBN, inputValueInUSD])
+
+  const handleReview = () => {
+    setCurrentModal('review')
+  }
+
+  const handleAction = (type: InputType, value: string) => {
+    const numericValue = BigNumber(value)
+
+    switch (type) {
+      case 'usd': {
+        const tokenValue = calculateTokenValue(numericValue, lpBalanceBN, balanceBN)
+        setInputValueInUSD(value)
+        setInputValue(tokenValue)
+        break
+      }
+      case 'token': {
+        const usdValue = calculateUSDValue(numericValue, lpBalanceBN, balanceBN)
+        setInputValue(value)
+        setInputValueInUSD(usdValue.toString())
+        break
+      }
+      default: {
+        console.error('Invalid input type')
+      }
+    }
+  }
 
   return (
     <div>
-      <div
-        className={cn(
-          'rounded-2xl bg-input-default p-6 max-lg:px-3',
-          validationError && 'bg-input-error',
-        )}
+      <InputWrapper
+        title={mtToken ? 'You withdraw' : undefined}
+        validationError={validationError}
       >
-        <div className="flex w-full items-center justify-between">
-          <AmountInput
-            value={inputValue}
-            error={validationError}
-            decimals={6}
-            onChange={(value) => setInputValue(value)}
-            disabled={!isConnected}
-          />
+        <div className="flex w-full items-center justify-between ">
+          {mtToken ? (
+            <AmountInput
+              value={inputValue}
+              error={validationError}
+              decimals={6}
+              onChange={(value) => handleAction('token', value)}
+              disabled={!isConnected || !mtToken}
+            />
+          ) : (
+            <p className="text-md text-gray-100 max-lg:text-sm">
+              Select the desired asset...
+            </p>
+          )}
 
           {isConnected ? (
             <SelectWithdrawAssetModal />
@@ -83,57 +182,86 @@ export const WithdrawInput = () => {
             <SelectWithoutWalletPlaceholder />
           )}
         </div>
-        <div className="mt-3 flex w-full items-center justify-between">
-          {validationError ? (
-            <p className="text-lg text-red-100 max-lg:text-xs">{validationError}</p>
-          ) : (
-            <p className="text-lg text-gray-100 max-lg:text-xs">
-              $ {inputValueInUSD || 0}
-            </p>
-          )}
-          <div className="flex items-center">
-            <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
-            {isConnected ? (
-              <>
-                <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                  {maxBalance}
-                </p>
-                <button
-                  type="button"
-                  className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                  onClick={() => maxBalance && setInputValue(maxBalance)}
-                >
-                  Max
-                </button>
-              </>
-            ) : (
-              <span className="text-gray-100">--</span>
-            )}
+        {mtToken ? (
+          <div className="flex w-full items-center justify-between">
+            <DollarInput
+              disabled={!mtToken || !isConnected}
+              value={inputValueInUSD}
+              onValueChange={(value) => handleAction('usd', value)}
+              error={!!validationError}
+            />
+
+            <div className="flex items-center">
+              <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
+              <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
+                {maxBalance}
+              </p>
+              <button
+                type="button"
+                className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
+                onClick={() => maxBalance && handleAction('token', maxBalance)}
+              >
+                Max
+              </button>
+            </div>
           </div>
+        ) : null}
+      </InputWrapper>
+
+      {mtToken && withdrawToAnotherChain && (
+        <InputWrapper
+          title="You will receive "
+          className="mt-3"
+          validationError={validationError}
+        >
+          <div className="flex w-full items-center justify-between">
+            <AmountInput
+              value={inputValue}
+              error={validationError}
+              decimals={6}
+              onChange={(value) => handleAction('token', value)}
+              disabled
+            />
+
+            <SelectWithdrawNetworkModal />
+          </div>
+          <div className="mt-3 flex w-full items-center justify-between">
+            <DollarInput
+              disabled
+              value={inputValueInUSD}
+              onValueChange={(value) => handleAction('usd', value)}
+              error={!!validationError}
+            />
+          </div>
+        </InputWrapper>
+      )}
+
+      {validationError && (
+        <p className="mt-3 text-lg text-red-100 max-lg:text-xs">{validationError}</p>
+      )}
+
+      {mtToken && (
+        <div className="mt-3 flex items-start justify-between self-stretch rounded-2xl border border-stroke-100 p-6">
+          <span className="text-[1.1875rem] leading-[120%] text-text-80">
+            Withdraw to another chain
+          </span>
+          <Switch
+            checked={withdrawToAnotherChain}
+            onCheckedChange={setWithdrawToAnotherChain}
+          />
         </div>
-      </div>
-      {isConnected &&
-        (isAllowed ? (
-          <Button
-            loading={isPending}
-            size="lg"
-            disabled={!inputValue || !!validationError}
-            className="mt-10 w-full max-lg:mt-6"
-            onClick={withdraw}
-          >
-            Withdraw
-          </Button>
-        ) : (
-          <Button
-            loading={isPending}
-            size="lg"
-            disabled={!inputValue || !!validationError}
-            className="mt-10 w-full max-lg:mt-6"
-            onClick={approve}
-          >
-            Approve
-          </Button>
-        ))}
+      )}
+
+      {isConnected && (
+        <Button
+          size="lg"
+          disabled={!inputValue || !!validationError}
+          className="mt-10 w-full max-lg:mt-6"
+          onClick={handleReview}
+        >
+          Withdraw
+        </Button>
+      )}
     </div>
   )
 }

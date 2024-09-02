@@ -1,65 +1,41 @@
-import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
-import useSquidSDK from '@api/squid-router/useSquidSdk'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
-import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
+export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const { depositAsset, vault, inputValue: amount, setCurrentModal } = useTxStore()
-
-  function incrementStep() {
-    setCurrentStep((previousStep) => previousStep + 1)
-  }
+  const {
+    depositAsset,
+    vault,
+    inputValue: amount,
+    setCurrentModal,
+    squidRoute,
+  } = useTxStore()
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
-    chainId: 42_161, // Arb chain ID
-    onSuccessHandler: incrementStep,
-  })
-
-  const { squid } = useSquidSDK()
-
-  const tokenAddrForVault = useMemo(() => {
-    const depositTokenAsset = squid?.tokens.find(
-      (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
-    )
-    return depositTokenAsset?.address!
-  }, [squid?.tokens, vault])
-
-  const { route, requestId } = useGetSquidSwapRoute({
-    fromAmount: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
-    fromChain: '42161',
-    fromToken: depositAsset?.contract_address as Address,
-    toChain: '42161',
-    toToken: tokenAddrForVault,
-    enableBoost: true,
-  })
-
-  const {
-    swapTokens: swapAndDeposit,
-    status: swapAndDepositStatus,
-    error: swapAndDepositError,
-    depositHash,
-  } = useSwap({
-    route,
-    requestId,
+    chainId: depositAsset?.chain_id,
     onSuccessHandler: () => {
-      setCurrentModal('done')
+      if (currentStep === 1) {
+        setCurrentStep(2)
+      }
     },
   })
 
@@ -70,9 +46,27 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: route?.transactionRequest?.target,
-    onSuccessHandler: incrementStep,
+    transactionRequestTarget: squidRoute?.transactionRequest?.target,
+    chainId: depositAsset?.chain_id,
+    onSuccessHandler: () => {
+      if (currentStep === 2) {
+        setCurrentStep(3)
+      }
+    },
   })
+
+  const {
+    swapTokens: swapAndDeposit,
+    status: _swapAndDepositStatus,
+    error: swapAndDepositError,
+    depositHash,
+  } = useSwap({
+    onSuccessHandler: () => {
+      setCurrentModal('done')
+    },
+  })
+
+  const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
   const ActionButton = () => {
     switch (currentStep) {
@@ -131,7 +125,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
           icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           activeStep={currentStep === 1}
           title="Switch to Arbitrum"
-          status={switchStatus}
+          status={allStepsCompleted ? 'success' : switchStatus}
         />
         <WizardStep
           icon={
@@ -143,20 +137,20 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
           }
           activeStep={currentStep === 2}
           title="Approve"
-          status={approveStatusBeforeSwap}
+          status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
           showArrow
           error={approveErrorBeforeSwap?.message}
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
-          activeStep={currentStep === 2}
+          activeStep={currentStep === 3}
           title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
           error={swapAndDepositError}
           showArrow
         />
         {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="onChain" />
+          <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />
         )}
       </div>
       {ActionButton()}

@@ -28,6 +28,9 @@ export const GET_TX_HISTORY = gql(`
         timestamp
         id
         data
+        token {
+          symbol
+        }
         chain {
           name
           id
@@ -105,10 +108,11 @@ export const useTxHistory = ({
         from: sourceChain,
         to: destinationChain,
         timestamp: edge.node.timestamp,
+        symbol: edge.node.token.symbol,
         nonce: edge.node.id,
         txHash: edge.node.txhash,
         strategy: edge.node.data.strategyId,
-        // ! remove "* 5" when we have real data
+        // ! TODO: remove "* 5" when we have real data
         apy: BigNumber(strategyApy).multipliedBy(5).toString(),
         tvl,
         protocol: strategy?.protocol,

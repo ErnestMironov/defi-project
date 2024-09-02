@@ -1,29 +1,45 @@
 import { SankeyDiagramBasicDemo } from '@components/chart/sankey/SankeyD3'
-import useDeviceWidth from '@hooks/useDeviceWidth'
-import { MobileFooter } from '@layouts/footer/MobileFooter'
-import { ApyChartModule } from '@modules/charts/ApyChartModule'
-import { TvlChartModule } from '@modules/charts/TvlChartModule'
+import { Footer } from '@layouts/footer/Footer'
+import { Strategies } from '@modules/strategies/Strategies'
+import { TokenOverview } from '@modules/token-overview/TokenOverview'
 
-import { DocumentationLinks } from './modules/DocsLinks'
-import { Overviews } from './modules/Overviews'
-import { Strategies } from './modules/strategies/Strategies'
-import { TransactionsHistory } from './modules/transaction-history/TransactionsHistory'
+import { Events } from '../../modules/events/Events'
+import { TokenCharts } from '../../modules/tokens/Tokens'
+import {
+  SELECT_ACTIONS,
+  SELECT_CHAINS,
+  SELECT_PROTOCOLS,
+  SELECT_STATUSES,
+  SELECT_TOKENS,
+} from './constants/select-constant'
 
 export const Analytics = () => {
-  const { isBelowDesktop } = useDeviceWidth()
-
   return (
     <div className="max-lg:-mx-4">
-      <Overviews className="mb-8 mt-[1.87rem] max-lg:px-4 lg:my-20" />
-      <div className="mx-4 grid gap-4 max-lg:gap-8 lg:grid-cols-2">
-        <ApyChartModule />
-        <TvlChartModule />
-      </div>
-      <DocumentationLinks className="mt-32 max-lg:mt-12" />
-      <SankeyDiagramBasicDemo />
-      <Strategies className="mt-[8.75rem] max-lg:mt-14 max-lg:px-4" />
-      <TransactionsHistory className="mt-28 max-lg:mt-14" />
-      {isBelowDesktop && <MobileFooter className="mb-[4.55rem] mt-[4.5rem]" />}
+      <TokenCharts className="mt-[5.31rem]" />
+      <TokenOverview className="mt-12 max-lg:px-4" />
+      <Strategies
+        className="mt-[6.25rem]"
+        rowType="modal"
+        withLink
+        filters={{
+          search: { value: '', placeholder: 'Name / Address / ID' },
+          token: { items: SELECT_TOKENS, value: SELECT_TOKENS[0] },
+          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+          protocol: { items: SELECT_PROTOCOLS, value: SELECT_PROTOCOLS[0] },
+        }}
+      />
+      <SankeyDiagramBasicDemo className="mt-[6.25rem]" />
+      <Events
+        className="mt-28 max-lg:mt-14"
+        filters={{
+          search: { value: '', placeholder: 'Tx hash  / Address' },
+          action: { items: SELECT_ACTIONS, value: SELECT_ACTIONS[0] },
+          status: { items: SELECT_STATUSES, value: SELECT_STATUSES[0] },
+          chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+        }}
+      />
+      <Footer className="mt-[7.5rem] max-lg:mb-[4.55rem] max-lg:mt-[4.5rem]" />
     </div>
   )
 }

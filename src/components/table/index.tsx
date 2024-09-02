@@ -13,7 +13,7 @@ const TableHead = forwardRef<
   HTMLAttributes<HTMLTableSectionElement>
 >(({ children, ...rest }, reference) => {
   return (
-    <thead className="-translate-y-2 text-gray-700" {...rest} ref={reference}>
+    <thead className="text-gray-700" {...rest} ref={reference}>
       {children}
     </thead>
   )
@@ -53,7 +53,7 @@ const TableCell = forwardRef<HTMLTableCellElement, HTMLAttributes<HTMLTableCellE
       <td
         {...rest}
         className={cn(
-          'bg-transparent px-10 py-6 text-left text-[1.25rem] leading-[140%] first:rounded-l-[2rem] last:rounded-r-[2rem] transition-all',
+          'bg-transparent px-9 py-8 text-left text-lg leading-[140%] first:rounded-l-[1.5rem] last:rounded-r-[1.5rem] transition-all',
           rest.className,
         )}
         ref={reference}
@@ -72,7 +72,7 @@ const TableHeadCell = forwardRef<
     <th
       {...rest}
       className={cn(
-        'px-10 py-6 text-left text-[1.25rem] font-normal leading-[140%] first:rounded-l-3xl last:rounded-r-3xl',
+        'px-9 py-8 text-left text-lg font-normal leading-[140%] first:rounded-l-3xl last:rounded-r-3xl',
         rest.className,
       )}
       ref={reference}
@@ -102,7 +102,7 @@ export const Table = forwardRef<
 >((props, reference) => (
   <table
     ref={reference}
-    className="w-full border-separate border-spacing-y-2 pt-2 text-xl font-normal leading-6"
+    className="w-full border-separate border-spacing-y-2 text-xl font-normal leading-6"
     {...props}
   >
     {props.children}

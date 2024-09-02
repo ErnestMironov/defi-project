@@ -71,9 +71,17 @@ function useBadgeData(action: ActionType) {
   return BadgeData
 }
 
-export const ActionChip = ({ type }: { type: ActionType }) => {
+export const ActionChip = ({
+  type,
+  styled = true,
+}: {
+  type: ActionType
+  styled?: boolean
+}) => {
   const data = useBadgeData(type)
-
+  if (!styled) {
+    return <p>{data?.text}</p>
+  }
   return (
     <div
       className={cn(

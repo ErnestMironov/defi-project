@@ -7,7 +7,7 @@ import BigCloseBtn from '@assets/icons/big-close-btn.svg'
 import BigCloseBtnDark from '@assets/icons/big-close-btn_dark.svg'
 import Search from '@assets/icons/search.svg'
 import WarnIcon from '@assets/icons/warn.svg'
-import { Select } from '@components/select/Select'
+import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import {
@@ -19,6 +19,7 @@ import {
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
+import type { ChainType } from '@constants/chains'
 import useDeviceWidth from '@hooks/useDeviceWidth'
 import { useTokenAsset } from '@hooks/useTokenAsset'
 import { cn } from '@utils/cn'
@@ -28,26 +29,23 @@ import { type ComponentProps, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
-import { useTxStore } from '../store/useDepositStore'
+import { useTxStore } from '../store/useTxStore'
 
 interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
 const SelectChainTrigger = () => {
-  const { depositNetwork } = useTxStore()
-  const chainData = useTokenAsset(depositNetwork)
+  const { depositFromNetwork } = useTxStore()
+  const chainData = useTokenAsset(depositFromNetwork)
 
   return (
-    <button
-      type="button"
-      className="flex items-center gap-[0.38rem] text-lg/[0] font-bold"
-    >
-      {depositNetwork && (
+    <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
+      {depositFromNetwork && (
         <div className="overflow-hidden rounded-full">
-          <TokenIconComponent symbol={depositNetwork} className="size-4" />
+          <TokenIconComponent symbol={depositFromNetwork} className="size-4" />
         </div>
       )}
       <span>{chainData?.name || 'All networks'}</span>
-    </button>
+    </div>
   )
 }
 
@@ -76,7 +74,7 @@ function TokensListItem({
 
       <div className="ml-3 flex flex-col items-start max-lg:items-start max-lg:text-left">
         <p className="text-[1.25rem]/[1.75rem] text-text max-lg:max-w-[8.5rem] ">
-          {token.contract_name}
+          {token.contract_ticker_symbol}
         </p>
         <p className="text-[0.9375rem]/[1.125rem] text-gray-80">{chainData?.name}</p>
       </div>
@@ -159,12 +157,18 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
-    depositNetwork: chain,
-    setDepositNetwork: setNetwork,
+    depositFromNetwork: chain,
+    setDepositFromNetwork: setNetwork,
+    setDepositToNetwork,
+    setDepositFromNetwork,
+    resetStore,
   } = useTxStore()
   const [opened, setOpened] = useState(false)
   const onChange = (_asset: ITokenData) => {
+    resetStore()
     setAsset(_asset)
+    setDepositToNetwork(_asset.chain_id as ChainType)
+    setDepositFromNetwork(_asset.chain_id as ChainType)
     setOpened(false)
   }
 
@@ -213,10 +217,14 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     searchValue,
   ])
 
+  console.log(
+    '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
+    filteredByChainTokens,
+  )
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
-        <Select
+        <ChoiceBox
           className="min-w-[10.5rem]"
           value={asset?.contract_ticker_symbol || 'Any token'}
           icon={

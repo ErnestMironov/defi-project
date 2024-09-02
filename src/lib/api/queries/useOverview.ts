@@ -54,7 +54,7 @@ export const useOverview = () => {
   const deposited = data?.maatUserStats.balances
     .reduce((accumulator, item) => accumulator.plus(item.balance), BigNumber(0))
     .div(10 ** 6)
-  // ! remove "* 5" when we have real data
+  // ! TODO: remove "* 5" when we have real data
   const lastApy = BigNumber(data?.apies[0].apy || '0')
     .multipliedBy(5)
     .toString()

@@ -1,36 +1,56 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
-import { ShadowBox } from '@components/box/ShadowBox'
-import { TokenIconComponent } from '@components/token-icon'
+import {
+  Select as SelectPrimitive,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from '@components/ui/select'
+import { type SelectProps, SelectValue } from '@radix-ui/react-select'
 import { cn } from '@utils/cn'
-import type { ComponentProps, ReactNode } from 'react'
+import type { FC, SVGProps } from 'react'
 
-interface SelectProperties extends ComponentProps<'div'> {
-  symbol?: string
+export type OptionType = {
   value: string
-  opened?: boolean
-  icon?: ReactNode
-  className?: string
+  label: React.ReactNode | string
+  Icon?: FC<SVGProps<SVGElement>>
+  onSelect?: () => void
+  callback?: () => void
 }
 
-export const Select = ({ symbol, value, opened, icon, className }: SelectProperties) => {
+interface SelectProperties extends Omit<React.FC<SelectProps>, 'value'> {
+  className?: string
+  options: OptionType[]
+  value: OptionType
+  onChange: (value: OptionType) => void
+  placeholder?: string
+  disabled?: boolean
+  classNames?: {
+    content?: string
+    trigger?: string
+  }
+}
+
+export const Select = (props: SelectProperties) => {
+  const { className, options, value, onChange, placeholder, classNames, ...rest } = props
   return (
-    <ShadowBox
-      className={cn(
-        'flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14',
-        className,
-      )}
+    <SelectPrimitive
+      {...rest}
+      value={value.value}
+      onValueChange={(_value) => {
+        onChange(options.find((option) => option.value === _value) as OptionType)
+      }}
     >
-      {icon ||
-        (symbol && (
-          <TokenIconComponent symbol={symbol} className="size-8 max-lg:size-5" />
-        ))}
-      <div>{value}</div>
-      <ArrowDown
-        className={cn(
-          'size-4 max-lg:size-3 transition group-data-[state="open"]:rotate-180',
-          opened && 'rotate-180',
-        )}
-      />
-    </ShadowBox>
+      <SelectTrigger className={cn('size-full', className, classNames?.trigger)}>
+        <SelectValue placeholder={placeholder}>{value.label}</SelectValue>
+      </SelectTrigger>
+      <SelectContent className={cn('w-full', classNames?.content)}>
+        {options.map((option) => {
+          return (
+            <SelectItem key={option.value} value={option.value} Icon={option?.Icon}>
+              {typeof option === 'string' ? option : option.label}
+            </SelectItem>
+          )
+        })}
+      </SelectContent>
+    </SelectPrimitive>
   )
 }

@@ -5,9 +5,10 @@ import type { StrategyStats } from '@codegen/graphql'
 import { ActionType } from '@codegen/graphql'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import { formatAmountValue } from '@utils/formatValue'
+import { formatAmount, formatAmountValue } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import type { ITransaction } from 'src/lib/types/transaction'
+import { formatUnits } from 'viem'
 
 export const GET_TX_HISTORY_DESKTOP = gql(`
   query TxHistoryDesktop($type_in: [ActionType!], $symbol: String, $limit: Int, $offset: Int) {
@@ -22,6 +23,9 @@ export const GET_TX_HISTORY_DESKTOP = gql(`
           name
           id
         }
+        token {
+          symbol
+    }
   }
   maatActionsConnection(orderBy: timestamp_DESC, where: {type_in: $type_in, token: {symbol_eq: $symbol}}) {
     totalCount
@@ -71,7 +75,7 @@ export const useTxHistoryDesktop = ({
       (_strategy: StrategyStats) => _strategy.strategyId === node.data.strategyId,
     )
 
-    // ! remove "* 5" when we have real data
+    // ! TODO: remove "* 5" when we have real data
     const strategyApy =
       formatAmountValue(
         BigNumber(strategy?.apy || '0')
@@ -88,13 +92,10 @@ export const useTxHistoryDesktop = ({
         )
       : '0'
 
-    const amount =
-      formatAmountValue(
-        BigNumber(node.data.amount)
-          .div(10 ** 6)
-          ?.toString(),
-        2,
-      ) || '0'
+    const amount = formatAmount(formatUnits(node.data.amount, 6), {
+      maximumFractionDigits: 2,
+      notation: 'compact',
+    })
 
     return {
       action: node.type,
@@ -109,6 +110,7 @@ export const useTxHistoryDesktop = ({
       tvl,
       protocol: strategy?.protocol,
       cursor: node.cursor,
+      symbol: node.token?.symbol,
     }
   })
 

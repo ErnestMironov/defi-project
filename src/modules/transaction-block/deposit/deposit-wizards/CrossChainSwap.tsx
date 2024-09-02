@@ -1,94 +1,88 @@
-import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
-import useSquidSDK from '@api/squid-router/useSquidSdk'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { useTokenAsset } from '@hooks/useTokenAsset'
-import { useTxStore } from '@modules/transaction-block/store/useDepositStore'
+import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useMemo, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
-import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({}) => {
-  const [currentStep, setCurrentStep] = useState(1)
-
-  const { depositAsset, vault, inputValue: amount, setCurrentModal } = useTxStore()
-
-  function incrementStep() {
-    setCurrentStep((previousStep) => previousStep + 1)
-  }
+export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
+  allStepsCompleted,
+}) => {
+  const {
+    depositAsset,
+    vault,
+    inputValue: amount,
+    setCurrentModal,
+    currentStep,
+    setCurrentStep,
+    transactionHash,
+    txDifficulty,
+    squidRoute,
+  } = useTxStore()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
   const { status: switchToAssetChainStatus, switchChain: switchToAssetChain } =
     useSwitchToTokenChain({
-      chainId: depositAssetChain?.chainId ?? 1, // Arb chain ID
-      onSuccessHandler: incrementStep,
+      chainId: depositAssetChain?.chainId ?? 1,
+      onSuccessHandler: () => {
+        if (currentStep === 1) {
+          setCurrentStep(2)
+        }
+      },
     })
 
-  const { squid } = useSquidSDK()
-
-  const tokenAddrForVault = useMemo(() => {
-    const depositTokenAsset = squid?.tokens.find(
-      (token) => token.symbol?.toLowerCase() === vault.toLowerCase(),
-    )
-    return depositTokenAsset?.address!
-  }, [squid?.tokens, vault])
-
-  const { route, requestId } = useGetSquidSwapRoute({
-    fromAmount: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
-    fromChain: depositAssetChain?.chainId?.toString() ?? '1',
-    fromToken: depositAsset?.contract_address as Address,
-    toChain: '42161',
-    toToken: tokenAddrForVault,
-    enableBoost: true,
-  })
-  console.log('🚀 ~ route:', route)
   const {
-    approve: approveBeforeSwap,
-    status: approveStatusBeforeSwap,
-    error: approveErrorBeforeSwap,
+    approve,
+    status: approveStatus,
+    error: approveError,
   } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: route?.transactionRequest?.target,
-    onSuccessHandler: incrementStep,
+    transactionRequestTarget: squidRoute?.transactionRequest?.target,
+    chainId: depositAssetChain?.chainId,
+    onSuccessHandler: () => {
+      if (currentStep === 2) {
+        setCurrentStep(3)
+      }
+    },
   })
+
+  console.log('approve status', approveStatus)
 
   const {
     swapTokens: swapAndDeposit,
-    status: swapAndDepositStatus,
+    status: _swapAndDepositStatus,
     error: swapAndDepositError,
-    depositHash,
   } = useSwap({
-    route,
-    requestId,
     onSuccessHandler: () => {
       setCurrentModal('done')
     },
   })
 
+  const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
+
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
-        console.info(
-          '��� ~ CrossChainSwap ~ currentStep:',
-          `Switch to ${depositAssetChain?.name}`,
-        )
         return (
           <Button
             size="lg"
             type="button"
-            onClick={switchToAssetChain}
+            onClick={() => {
+              switchToAssetChain()
+            }}
             disabled={switchToAssetChainStatus === 'pending'}
           >
             {getButtonContent(
@@ -99,23 +93,21 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
         )
       }
       case 2: {
-        console.info('��� ~ CrossChainSwap ~ currentStep:', 'approve')
         return (
           <Button
             size="lg"
             type="button"
-            onClick={approveBeforeSwap}
-            disabled={approveStatusBeforeSwap === 'pending'}
+            onClick={approve}
+            disabled={approveStatus === 'pending'}
           >
             {getButtonContent(
-              approveStatusBeforeSwap,
+              approveStatus,
               `Approve ${depositAsset?.contract_ticker_symbol}`,
             )}
           </Button>
         )
       }
       case 3: {
-        console.info('��� ~ CrossChainSwap ~ currentStep:', 'deposit')
         return (
           <Button
             size="lg"
@@ -140,7 +132,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
           activeStep={currentStep === 1}
           title={`Switch to ${depositAssetChain?.name}`}
-          status={switchToAssetChainStatus}
+          status={allStepsCompleted ? 'success' : switchToAssetChainStatus}
         />
         <WizardStep
           icon={
@@ -152,8 +144,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           }
           activeStep={currentStep === 2}
           title="Approve"
-          status={approveStatusBeforeSwap}
-          error={approveErrorBeforeSwap?.message}
+          status={allStepsCompleted ? 'success' : approveStatus}
+          error={approveError?.message}
           showArrow
         />
         <WizardStep
@@ -164,8 +156,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           status={swapAndDepositStatus}
           showArrow
         />
-        {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="crossChain" />
+        {transactionHash && (
+          <InfoBlock txHash={transactionHash} className="mt-4" type={txDifficulty} />
         )}
       </div>
       {ActionButton()}

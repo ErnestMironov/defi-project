@@ -1,39 +1,36 @@
-import { AnimatedTabs } from '@components/tab/AnimatedTabs'
+import { BaseTabs } from '@components/tab/BaseTabs'
 import type { ComponentProps } from 'react'
 
 export const STABLE_TYPE = {
   USDT: 'USDT',
   USDC: 'USDC',
 } as const
+const TABS = [STABLE_TYPE.USDT, STABLE_TYPE.USDC]
 export type StableType = (typeof STABLE_TYPE)[keyof typeof STABLE_TYPE]
 
 interface TxTypeSwitcherProperties extends ComponentProps<'div'> {
-  activeTab: StableType
-  onTabChange: (tab: StableType) => void
-  layoutId: string
+  activeTab: string
+  onTabChange: (tab: string) => void
+  classNames?: {
+    tab?: string
+    activeTab?: string
+    container?: string
+  }
 }
-
-const TABS = [
-  { id: STABLE_TYPE.USDT, label: 'USDT' },
-  { id: STABLE_TYPE.USDC, label: 'USDC' },
-]
 
 export const StableSwitcher = ({
   activeTab,
   onTabChange,
-  ...props
+  classNames,
+  className,
 }: TxTypeSwitcherProperties) => {
   return (
-    <AnimatedTabs
-      {...props}
+    <BaseTabs
+      classNames={classNames}
+      className={className}
       tabs={TABS}
       activeTab={activeTab}
-      onTabChange={(value) => onTabChange(value as StableType)}
-      classNames={{
-        activeTab: 'bg-gray-100',
-        tab: 'w-[9.21rem] max-lg:text-base max-lg:py-[0.62rem] max-lg:w-[6.375rem]',
-        container: 'max-lg:p-[0.25rem]',
-      }}
+      onTabChange={(tab) => onTabChange(tab as StableType)}
     />
   )
 }

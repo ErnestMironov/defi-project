@@ -7,32 +7,33 @@ import { formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useTxStore } from './store/useDepositStore'
+import { useTransactionStore } from './store/usePendingTransactionsStore'
+import { useTxStore } from './store/useTxStore'
 
 export const DoneModal = () => {
   const navigate = useNavigate()
+
+  const { removeTransaction } = useTransactionStore()
 
   const {
     txType,
     vault,
     setCurrentModal,
     currentModal,
-    depositAmount,
+    depositTotalInUSD,
     withdrawAmount,
     mtToken,
-    setDepositAsset,
-    setDepositAmount,
-    setInputValue,
+    resetStore,
+    transactionHash,
   } = useTxStore()
 
-  const reset = () => {
-    setDepositAsset(null)
-    setDepositAmount('')
-    setInputValue('')
+  const onClose = () => {
+    if (transactionHash) {
+      removeTransaction(transactionHash)
+    }
+    resetStore()
     setCurrentModal(null)
   }
-
-  const onClose = () => reset()
 
   const title = useMemo(() => {
     switch (txType) {
@@ -51,7 +52,7 @@ export const DoneModal = () => {
   const amount = useMemo(() => {
     switch (txType) {
       case 'deposit': {
-        return formatAmountValue(depositAmount)
+        return formatAmountValue(depositTotalInUSD)
       }
       case 'withdraw': {
         return formatAmountValue(withdrawAmount)
@@ -60,7 +61,7 @@ export const DoneModal = () => {
         return ''
       }
     }
-  }, [depositAmount, txType, withdrawAmount])
+  }, [depositTotalInUSD, txType, withdrawAmount])
 
   return (
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
@@ -82,7 +83,7 @@ export const DoneModal = () => {
                 width="1.75rem"
                 position="bottom-right"
                 symbol={mtToken?.stable}
-                network={mtToken?.chainId}
+                network={mtToken?.chainData?.chainId}
               />
             ) : (
               <TokenIconComponent symbol={vault} className="size-7" />
