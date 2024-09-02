@@ -1,14 +1,19 @@
-import { ARBITRUM_SCAN_URL, AXELAR_SCAN_URL } from '@constants/index'
+import { AXELAR_SCAN_URL } from '@constants/index'
 import { cn } from '@utils/cn'
+import { useClient } from 'wagmi'
 
 interface IProperties {
   txHash?: string | null
   className?: string
-  type?: 'crossChain' | 'onChain'
+  type?: 'on_chain' | 'cross_chain'
 }
 
-export const InfoBlock = ({ txHash, className, type = 'crossChain' }: IProperties) => {
-  const scanner = type === 'crossChain' ? AXELAR_SCAN_URL : ARBITRUM_SCAN_URL
+export const InfoBlock = ({ txHash, className, type = 'cross_chain' }: IProperties) => {
+  const client = useClient()
+  const scanner =
+    type === 'cross_chain'
+      ? AXELAR_SCAN_URL
+      : `${client?.chain?.blockExplorers?.default?.url}/tx/`
 
   return (
     <div

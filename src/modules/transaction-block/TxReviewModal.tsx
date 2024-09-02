@@ -7,6 +7,7 @@ import { cloneElement } from 'react'
 
 import { CountdownTimer } from './components/CountDownTimer'
 import { DepositReviewContent } from './deposit/DepositReviewContent'
+import { useTransactionStore } from './store/usePendingTransactionsStore'
 import { useTxStore } from './store/useTxStore'
 import { WithdrawReviewContent } from './withdraw/WithdrawReviewContent'
 
@@ -18,7 +19,12 @@ export const TxReviewModal = () => {
     txType,
     resetStore,
     isTransactionFromStore,
+    transactionHash,
   } = useTxStore()
+
+  const { transactions } = useTransactionStore()
+
+  const transaction = transactions.find((tx) => tx.transactionHash === transactionHash)
 
   const handleCountdownComplete = () => {
     console.log('Countdown complete')
@@ -66,7 +72,12 @@ export const TxReviewModal = () => {
         </DialogHeader>
         <div>
           <Lottie animationData={BigLoader} loop className="-scale-100 opacity-80" />
-          <CountdownTimer initialCountdown={12} onComplete={handleCountdownComplete} />
+          {transaction && (
+            <CountdownTimer
+              timestamp={transaction.timestamp}
+              onComplete={handleCountdownComplete}
+            />
+          )}
           <p className="mt-4 text-center font-[Arial] text-[1.125rem] leading-[120%] text-gray-100">
             Sit back and relax, the transaction will take some time. <br /> This window
             will be available till Tx completed.{' '}

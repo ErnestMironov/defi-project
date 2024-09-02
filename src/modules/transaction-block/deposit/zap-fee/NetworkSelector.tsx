@@ -1,21 +1,24 @@
+import { filterChainsByVault } from '@api/squid-router/postHook/utils/filterChainsByVault'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
-import { CHAIN_IDS_BY_NAME, CHAINS } from '@constants/chains'
+
+import { CHAINS } from '@constants/chains'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
+
 import Grey3DBox from '@modules/transaction-block/components/Grey3DBox'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import type * as PopoverPrimitive from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 const NetworkItem: React.FC<{ chain: any; onClick: () => void }> = ({
   chain,
   onClick,
 }) => {
   const networkData = useTokenAsset(chain)
-  const { vault, representationTokensChain } = useTxStore()
+  const { vault, depositToNetwork } = useTxStore()
 
   return (
     <div
@@ -29,7 +32,7 @@ const NetworkItem: React.FC<{ chain: any; onClick: () => void }> = ({
         <TokenWithNetwork className="size-8" symbol={vault} network={chain} />
         {networkData?.name}
       </div>
-      {representationTokensChain === chain && <Check className="size-6" />}
+      {depositToNetwork === chain && <Check className="size-6" />}
     </div>
   )
 }
@@ -38,9 +41,10 @@ interface NetworkPopoverProperties extends PopoverPrimitive.PopoverProps {}
 
 export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
   const [isOpened, setIsOpened] = useState(false)
-  const NetworkData = useTokenAsset(CHAIN_IDS_BY_NAME.Optimism)
+  const { vault, depositToNetwork, setDepositToNetwork } = useTxStore()
+  const NetworkData = useTokenAsset(depositToNetwork)
 
-  const { vault, representationTokensChain, setRepresentationTokensChain } = useTxStore()
+  const filteredChains = useMemo(() => filterChainsByVault([...CHAINS], vault), [vault])
 
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
@@ -50,7 +54,7 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
             <TokenWithNetwork
               className="size-8"
               symbol={vault}
-              network={representationTokensChain}
+              network={depositToNetwork}
             />
             {NetworkData?.name}
           </div>
@@ -65,14 +69,14 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
       <PopoverContent
         align="end"
         sideOffset={8}
-        className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]"
+        className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] dark:bg-cards"
       >
-        {CHAINS.map((chain) => (
+        {filteredChains.map((chain) => (
           <NetworkItem
             key={chain}
             chain={chain}
             onClick={() => {
-              setRepresentationTokensChain(chain)
+              setDepositToNetwork(chain)
               setIsOpened(false)
             }}
           />

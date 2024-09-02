@@ -10,8 +10,8 @@ export enum Tokens {
 }
 
 export const TOKEN_VAULT_ADDRESSES = {
-  [Tokens.USDC]: '0x9C0F7b07baa9e5C0C156452301C3c3dB37b486Fe',
-  [Tokens.USDT]: '0x965ff3F7c2989fC23e933631582269A78924137e',
+  [Tokens.USDC]: '0x1f1EeFc9eaa0d3989AbB8F384fDfFA843240eD1e',
+  [Tokens.USDT]: '0x6bcCf39Ddc5f71B559B5fada94330eEc6945EE2b',
 }
 
 type ChainsByVault = {

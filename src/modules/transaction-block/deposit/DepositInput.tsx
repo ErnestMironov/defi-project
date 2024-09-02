@@ -55,10 +55,11 @@ export const DepositInput = () => {
 
   const {
     depositAsset: asset,
-    setCurrentModal,
     inputValue,
-    setInputValue,
     inputValueInUSD,
+    depositTotalInUSD,
+    setInputValue,
+    setCurrentModal,
     setInputValueInUSD,
   } = useTxStore()
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
@@ -167,11 +168,7 @@ export const DepositInput = () => {
       >
         <div className="flex w-full items-center justify-between">
           {isConnected && asset ? (
-            <AmountInput
-              value={inputValueInUSD}
-              decimals={18}
-              onChange={(value) => handleAction('usd', value)}
-            />
+            <AmountInput value={depositTotalInUSD} decimals={18} disabled />
           ) : (
             <p className="text-md text-gray-100 max-lg:text-sm">
               Select the desired vault...
@@ -181,10 +178,7 @@ export const DepositInput = () => {
         </div>
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
-            <DollarInput
-              value={inputValueInUSD}
-              onValueChange={(value) => handleAction('usd', value)}
-            />
+            <DollarInput value={depositTotalInUSD} disabled />
             <p className="text-[1.125rem] leading-[120%] text-gray-100">
               + $0.0 over 1 year
             </p>
@@ -192,7 +186,7 @@ export const DepositInput = () => {
         )}
       </div>
 
-      <ZapFee className="mt-4" />
+      {inputValue && <ZapFee className="mt-4" />}
 
       {isConnected && (
         <Button

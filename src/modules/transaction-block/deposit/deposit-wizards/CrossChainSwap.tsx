@@ -1,5 +1,3 @@
-import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
-import useSquidSDK from '@api/squid-router/useSquidSdk'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
@@ -11,7 +9,6 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useMemo } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
@@ -30,6 +27,9 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     setCurrentModal,
     currentStep,
     setCurrentStep,
+    transactionHash,
+    txDifficulty,
+    squidRoute,
   } = useTxStore()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
@@ -44,24 +44,6 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
       },
     })
 
-  const { squid } = useSquidSDK()
-
-  const tokenAddrForVault = useMemo(() => {
-    const depositTokenAsset = squid?.tokens.find(
-      (token) => token.symbol?.toLowerCase() === vault?.toLowerCase(),
-    )
-    return depositTokenAsset?.address!
-  }, [squid?.tokens, vault])
-
-  const { route, requestId } = useGetSquidSwapRoute({
-    fromAmount: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
-    fromChain: depositAssetChain?.chainId?.toString() ?? '1',
-    fromToken: depositAsset?.contract_address as Address,
-    toChain: CHAIN_IDS_BY_NAME.Arbitrum.toString(),
-    toToken: tokenAddrForVault,
-    enableBoost: true,
-  })
-
   const {
     approve,
     status: approveStatus,
@@ -69,7 +51,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
   } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: route?.transactionRequest?.target,
+    transactionRequestTarget: squidRoute?.transactionRequest?.target,
     chainId: depositAssetChain?.chainId,
     onSuccessHandler: () => {
       if (currentStep === 2) {
@@ -84,10 +66,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     swapTokens: swapAndDeposit,
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
-    depositHash,
   } = useSwap({
-    route,
-    requestId,
     onSuccessHandler: () => {
       setCurrentModal('done')
     },
@@ -178,8 +157,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           status={swapAndDepositStatus}
           showArrow
         />
-        {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="crossChain" />
+        {transactionHash && (
+          <InfoBlock txHash={transactionHash} className="mt-4" type={txDifficulty} />
         )}
       </div>
       {ActionButton()}

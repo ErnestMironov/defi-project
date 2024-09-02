@@ -1,4 +1,3 @@
-import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
@@ -9,8 +8,6 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useMemo } from 'react'
-import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
 import { useSwap } from '../hooks/useSwap'
@@ -20,14 +17,8 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const {
-    depositAsset,
-    vault,
-    inputValue: amount,
-    setCurrentModal,
-    currentStep,
-    setCurrentStep,
-  } = useTxStore()
+  const { depositAsset, vault, setCurrentModal, currentStep, setCurrentStep } =
+    useTxStore()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
@@ -41,27 +32,12 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
       },
     })
 
-  const tokenAddrForVault = useMemo(() => {
-    return vault?.toLowerCase() === 'usdc' ? ARB_USDC : ARB_USDT
-  }, [vault])
-
-  const { route, requestId } = useGetSquidSwapRoute({
-    fromAmount: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
-    fromChain: depositAssetChain?.chainId?.toString(),
-    fromToken: depositAsset?.contract_address as Address,
-    toChain: depositAssetChain?.chainId?.toString(),
-    toToken: tokenAddrForVault,
-    enableBoost: true,
-  })
-
   const {
     swapTokens: swapAndDeposit,
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
   } = useSwap({
-    route,
-    requestId,
     onSuccessHandler: () => {
       setCurrentModal('done')
     },
@@ -122,7 +98,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
           showArrow
         />
         {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="crossChain" />
+          <InfoBlock txHash={depositHash} className="mt-4" type="cross_chain" />
         )}
       </div>
       {ActionButton()}
