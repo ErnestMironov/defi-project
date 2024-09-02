@@ -68,7 +68,7 @@ export const routes = createRoutesFromElements(
             loader: ({ request }) => {
               const url = new URL(request.url)
               if (url.pathname === ROUTES.TOKENS) {
-                return redirect('/tokens/USDC')
+                return redirect(`${ROUTES.TOKENS}/USDC`)
               }
               return null
             },
@@ -78,27 +78,29 @@ export const routes = createRoutesFromElements(
       <Route
         path={ROUTES.TOKEN}
         lazy={async () => {
-          const { Tokens } = await import('@pages/tokens/Tokens')
+          const { TokenPage } = await import('@pages/token/TokenPage')
           return {
-            Component: Tokens,
+            Component: TokenPage,
           }
         }}
       />
       <Route
         path={ROUTES.TRANSACTIONS}
         lazy={async () => {
-          const { Transactions } = await import('@pages/transactions/Transactions')
+          const { TransactionsPage } = await import(
+            '@pages/transactions/TransactionsPage'
+          )
           return {
-            Component: Transactions,
+            Component: TransactionsPage,
           }
         }}
       />
       <Route
         path={ROUTES.TRANSACTION}
         lazy={async () => {
-          const { Transaction } = await import('@pages/transaction/Transaction')
+          const { TransactionPage } = await import('@pages/transaction/TransactionPage')
           return {
-            Component: Transaction,
+            Component: TransactionPage,
           }
         }}
       />

@@ -19,7 +19,7 @@ export const TransactionHistory = (props: TransactionHistoryProperties) => {
     <div {...rest} className={cn('', className)}>
       <SectionTitle>Transactions</SectionTitle>
       <Tabs className="mt-12" defaultValue="maat">
-        <TabsList>
+        <TabsList className="*:w-[12.5rem]">
           <TabsTrigger value="maat">MAAT</TabsTrigger>
           <TabsTrigger value="incentives">INCENTIVES</TabsTrigger>
         </TabsList>

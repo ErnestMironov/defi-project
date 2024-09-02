@@ -3,8 +3,10 @@ import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
+
 import { CHAINS } from '@constants/chains'
-import { useTokenAsset } from '@hooks/useTokenAsset'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
+
 import Grey3DBox from '@modules/transaction-block/components/Grey3DBox'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import type * as PopoverPrimitive from '@radix-ui/react-popover'
