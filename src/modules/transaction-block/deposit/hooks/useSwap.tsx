@@ -1,3 +1,4 @@
+import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
 import { AXELAR_SCAN_URL } from '@constants/index'
 import type {
   IDepositWizardHook,
@@ -188,12 +189,6 @@ export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
   } = useTxStore()
   const { addTransaction } = useTransactionStore()
 
-  console.log('🚀 ~ useSwap ~ depositFromNetwork:', route)
-
-  console.log('🚀 ~ onSuccess ~ route?.params?.fromChain:', route?.params?.fromChain)
-  console.log('🚀 ~ onSuccess ~ route?.params?.toChain:', route?.params?.toChain)
-  console.log('🚀 ~ onSuccess ~ route? time', new Date().toISOString())
-
   const { sendTransaction } = useSendTransaction({
     mutation: {
       onError(_error) {
@@ -202,7 +197,9 @@ export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
       },
       onSuccess(data) {
         setTransactionHash(data)
-        setTimerDuration(route?.estimate?.estimatedRouteDuration ?? 12)
+        setTimerDuration(
+          route?.estimate?.estimatedRouteDuration ?? ESTIMATED_TIME_OF_CONFIRMATION,
+        )
         setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful
 
@@ -229,8 +226,6 @@ export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
   })
 
   const swapTokens = useCallback(async () => {
-    console.log('🚀 ~ swapTokens ~ route?.transactionRequest:', route?.transactionRequest)
-
     if (!route?.transactionRequest) return
     try {
       setStatus('confirm_in_wallet')

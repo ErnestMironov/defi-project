@@ -1,4 +1,5 @@
 import { tokenVaultAbi } from '@constants/abi/token-vault'
+import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
@@ -63,7 +64,7 @@ export const useWithdrawTransaction = () => {
         onSuccess: (data) => {
           setStatus('pending')
           setTransactionHash(data)
-          setTimerDuration(12)
+          setTimerDuration(ESTIMATED_TIME_OF_CONFIRMATION)
           setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)

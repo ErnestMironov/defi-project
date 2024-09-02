@@ -35,11 +35,13 @@ export const CHAINS = [
 export type ChainType = (typeof CHAINS)[number]
 
 export const CONFIRMATIONS_NUMBER = {
-  [CHAIN_IDS_BY_NAME.Polygon]: 5,
-  [CHAIN_IDS_BY_NAME.Arbitrum]: 48,
-  [CHAIN_IDS_BY_NAME.Optimism]: 6,
-  [CHAIN_IDS_BY_NAME.Base]: 6,
+  [CHAIN_IDS_BY_NAME.Polygon]: 2,
+  [CHAIN_IDS_BY_NAME.Arbitrum]: 24,
+  [CHAIN_IDS_BY_NAME.Optimism]: 3,
+  [CHAIN_IDS_BY_NAME.Base]: 3,
 }
+
+export const ESTIMATED_TIME_OF_CONFIRMATION = 6
 
 export const CHAIN_IDS_BY_NAME_REVERSE = Object.fromEntries(
   Object.entries(CHAIN_IDS_BY_NAME).map(([key, value]) => [value, key]),
