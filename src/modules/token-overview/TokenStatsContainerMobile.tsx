@@ -57,7 +57,7 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
             <h6>Rebalancing volume</h6>
             <p>
               {rebalancingVolume &&
-                formatUsdValue(formatUnits(rebalancingVolume, 6), {
+                formatUsdValue(formatUnits(BigInt(rebalancingVolume), 6), {
                   notation: 'compact',
                   minimumFractionDigits: 2,
                 })}

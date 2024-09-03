@@ -4,7 +4,7 @@ import type {
   Event,
   PaginationResponse,
   SortDirection,
-  Status,
+  StatusType,
 } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
@@ -14,7 +14,7 @@ type EventsParameters = {
   page?: number
   size?: number
   sort?: SortDirection
-  status?: Status
+  status?: StatusType
   start?: string
   end?: string
 }
@@ -41,7 +41,8 @@ export const useInfiniteEvents = (parameters: EventsParameters) => {
     useInfiniteQuery({
       queryKey: ['events', rest],
       queryFn: async ({ pageParam }) => {
-        const response = await getEvents({ size, page: pageParam, ...rest })
+        //! TODO: remove limit
+        const response = await getEvents({ size, page: pageParam, limit: 100, ...rest })
         return response.data
       },
       getNextPageParam: (lastPage) => {

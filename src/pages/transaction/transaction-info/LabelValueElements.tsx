@@ -1,8 +1,8 @@
+import type { StatusType } from '@api/maat-finance/types'
 import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
-import type { StatusType } from '@components/status-label/StatusLabel'
-import { StatusLabel } from '@components/status-label/StatusLabel'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
+import { STATUS_COLOR } from '@constants/status-color'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
 import { formatAmount, formatUsdValue } from '@utils/formatValue'
@@ -41,7 +41,12 @@ export const Status = (props: InfoPairElementsProperties & { status: StatusType 
   return (
     <LabelValueContainer className={cn(className, 'max-lg:hidden')} {...rest}>
       <div>{label}</div>
-      <StatusLabel className="text-semi-base uppercase" status={status} />
+      <span
+        className="text-semi-base uppercase"
+        style={{ color: STATUS_COLOR[status as keyof typeof STATUS_COLOR] }}
+      >
+        {status}
+      </span>
     </LabelValueContainer>
   )
 }

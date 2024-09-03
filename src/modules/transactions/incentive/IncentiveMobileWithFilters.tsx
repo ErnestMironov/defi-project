@@ -1,4 +1,4 @@
-import { useTxHistory } from '@api/queries/useTxHistory'
+import { useInfiniteEvents } from '@api/queries/useEvents'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
@@ -13,15 +13,15 @@ import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import {
   SELECT_ACTIONS,
-  SELECT_INCENTIVES_FROM,
   SELECT_CHAINS,
+  SELECT_INCENTIVES_FROM,
   SORT_BY_AMOUNT,
   SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
+import { Loader } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { IncentiveMobileList } from './IncentiveMobileList'
 
@@ -35,7 +35,6 @@ export const IncentiveMobileWithFilters = (
   props: IncentiveMobileWithFiltersProperties,
 ) => {
   const { className, filters = ['actions', 'from', 'chains'] } = props
-  const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
   const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
@@ -46,22 +45,11 @@ export const IncentiveMobileWithFilters = (
   >()
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const { data, loading, error, pageInfo, fetchMore, totalCount } = useTxHistory({
-    perPage: 10,
-    page: currentPage,
-  })
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
-
-  const onViewMoreClick = async () => {
-    setIsLoadingMore(true)
-    await fetchMore({
-      variables: {
-        after: pageInfo?.endCursor,
-      },
+  const { data, isLoading, error, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useInfiniteEvents({
+      action_type: 'incentives',
+      limit: 100,
     })
-    setIsLoadingMore(false)
-  }
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -165,13 +153,25 @@ export const IncentiveMobileWithFilters = (
       </div>
       <IncentiveMobileList
         className="mt-3"
-        incentives={data}
-        loading={loading}
+        incentives={data as any}
+        loading={isLoading}
         error={error}
       />
-      <Button className="mt-6 h-[3.185rem]" size="lg">
-        View more
-      </Button>
+      {isFetchingNextPage && (
+        <div className="mt-3 flex h-8 w-full animate-spin items-center justify-center">
+          <Loader size="xs" />
+        </div>
+      )}
+      {hasNextPage && !isLoading && (
+        <Button
+          disabled={isFetchingNextPage}
+          onClick={() => fetchNextPage()}
+          className="mt-6 h-[3.185rem]"
+          size="lg"
+        >
+          View more
+        </Button>
+      )}
     </div>
   )
 }

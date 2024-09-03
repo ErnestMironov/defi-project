@@ -54,7 +54,7 @@ export const TokenPage = (props: TokensProperties) => {
           color="#3883EB"
           apy="3.34"
           tvl="567.83"
-          rebalancingVolume="4586.74"
+          rebalancingVolume={4586}
           tokenName={symbol ?? ''}
           img={symbol === 'USDC' ? usdc : usdt}
           imageClassName={

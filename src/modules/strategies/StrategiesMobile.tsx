@@ -165,7 +165,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
           <Loader size="xs" />
         </div>
       )}
-      {hasNextPage && (
+      {hasNextPage && !isLoading && (
         <Button
           disabled={isFetchingNextPage}
           onClick={() => fetchNextPage()}

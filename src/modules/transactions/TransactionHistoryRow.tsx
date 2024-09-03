@@ -40,9 +40,12 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
         <div className="flex items-center gap-3">
           {event.amount && (
             <span className="block min-w-12">
-              {formatAmount(formatUnits(event.amount, event.vault.token.decimals), {
-                notation: 'compact',
-              })}
+              {formatAmount(
+                formatUnits(BigInt(event.amount), event.vault.token.decimals),
+                {
+                  notation: 'compact',
+                },
+              )}
             </span>
           )}
           <IconWithLabelComponent symbol={event.vault.token.symbol} className="size-8" />

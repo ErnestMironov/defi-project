@@ -6,7 +6,7 @@ export interface ApiResponse<T> {
 }
 export type SortDirection = 'asc' | 'desc'
 
-export type Status = 'success' | 'in progress' | 'failed'
+export type StatusType = 'success' | 'in progress' | 'failed'
 
 export type PaginationResponse<T> = {
   items: T[]
@@ -97,8 +97,8 @@ export type IncentiveEvent = {
   status: string
   strategy: string | null
   to: string
-  token_in: string | null
-  token_out: string | null
+  token_in: Token | null
+  token_out: Token | null
   txFrom: string
 }
 

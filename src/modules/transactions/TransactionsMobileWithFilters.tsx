@@ -15,6 +15,7 @@ import {
   SELECT_ACTIONS,
   SELECT_CHAINS,
   SELECT_STATUSES,
+  SELECT_TOKENS,
   SORT_BY_AMOUNT,
   SORT_BY_DATE,
 } from '@constants/select-constant'
@@ -25,7 +26,13 @@ import { useState } from 'react'
 
 import { TransactionsMobileList } from './TransactionsMobileList'
 
-type FilterType = 'actions' | 'statuses' | 'chains' | 'sortByAmount' | 'sortByDate'
+type FilterType =
+  | 'actions'
+  | 'statuses'
+  | 'tokens'
+  | 'chains'
+  | 'sortByAmount'
+  | 'sortByDate'
 
 interface TransactionsMobileWithFiltersProperties extends ComponentProps<'div'> {
   filters?: FilterType[]
@@ -38,6 +45,7 @@ export const TransactionsMobileWithFilters = (
 
   const [search, setSearch] = useState('')
   const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
+  const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
   const [selectedStatuses, setSelectedStatuses] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
   const [selectedSortByAmount, setSelectedSortByAmount] = useState<
@@ -60,6 +68,17 @@ export const TransactionsMobileWithFilters = (
           />
         )
       }
+      case 'tokens': {
+        return (
+          <MobileCheckboxSelect
+            label="Tokens"
+            value={selectedTokens}
+            options={SELECT_TOKENS}
+            onChange={setSelectedTokens}
+          />
+        )
+      }
+
       case 'statuses': {
         return (
           <MobileCheckboxSelect
@@ -159,7 +178,7 @@ export const TransactionsMobileWithFilters = (
           <Loader size="xs" />
         </div>
       )}
-      {hasNextPage && (
+      {hasNextPage && !isLoading && (
         <Button
           disabled={isFetchingNextPage}
           onClick={() => fetchNextPage()}

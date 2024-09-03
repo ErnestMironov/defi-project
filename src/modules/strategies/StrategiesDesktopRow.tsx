@@ -44,7 +44,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
         {formatPercentValue(strategy.apy * 5)}
       </Table.Cell>
       <Table.Cell>
-        {formatUsdValue(formatUnits(strategy.tvl, strategy.token.decimals), {
+        {formatUsdValue(formatUnits(BigInt(strategy.tvl), strategy.token.decimals), {
           notation: 'compact',
           maximumFractionDigits: 2,
         })}

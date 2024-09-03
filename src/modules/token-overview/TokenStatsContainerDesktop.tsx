@@ -67,7 +67,7 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
         <h6>Rebalancing volume</h6>
         <p className="text-3xl">
           {rebalancingVolume &&
-            formatUsdValue(formatUnits(rebalancingVolume, 6), {
+            formatUsdValue(formatUnits(BigInt(rebalancingVolume), 6), {
               notation: 'compact',
               minimumFractionDigits: 2,
             })}

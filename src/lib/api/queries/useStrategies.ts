@@ -2,7 +2,7 @@ import { apiClient } from '@api/maat-finance/api-client'
 import type {
   PaginationResponse,
   SortDirection,
-  Status,
+  StatusType,
   Strategy,
 } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
@@ -11,7 +11,7 @@ type StrategiesParameters = {
   page?: number
   size?: number
   sort?: SortDirection
-  status?: Status
+  status?: StatusType
   start?: string
   end?: string
 }

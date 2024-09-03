@@ -23,13 +23,13 @@ export const Deposit = (props: DepositProperties) => {
       <TransactionInfoHeader
         title="Deposit"
         tags={['USER', 'TRIGGER']}
-        status="fail"
+        status="failed"
         date={new Date().toISOString()}
       />
       <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
         <TransactionHash value={txHash} className="col-span-2" />
         <Address value={txHash} className="col-span-2" />
-        <Status status="in-progress" className="col-span-2" />
+        <Status status="in progress" className="col-span-2" />
         <TokenAmount
           value="20000"
           symbol="USDC"

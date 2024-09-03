@@ -45,9 +45,12 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
             <h6>Amount</h6>
             <div className="flex items-center">
               <span>
-                {formatAmount(formatUnits(event.amount, event.vault.token.decimals), {
-                  notation: 'compact',
-                })}
+                {formatAmount(
+                  formatUnits(BigInt(event.amount), event.vault.token.decimals),
+                  {
+                    notation: 'compact',
+                  },
+                )}
               </span>
               <TokenIconComponent
                 symbol={event.vault.token.symbol}

@@ -5,6 +5,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@components/ui/breadcrumb'
+import { ROUTES } from '@routes/routes'
 import type { ComponentProps } from 'react'
 import { NavLink } from 'react-router-dom'
 
@@ -15,11 +16,11 @@ export const Breadcrumbs = (_props: BreadcrumbsProperties) => {
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <NavLink to="/analytics">Analytics</NavLink>
+          <NavLink to={ROUTES.ANALYTICS}>Analytics</NavLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <NavLink to="/transactions">Transactions</NavLink>
+          <NavLink to={ROUTES.TRANSACTIONS}>Transactions</NavLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
