@@ -74,17 +74,22 @@ export const TxReviewModal = () => {
           <Lottie animationData={BigLoader} loop className="-scale-100 opacity-80" />
           {transaction && (
             <CountdownTimer
+              duration={transaction.timerDuration}
               timestamp={transaction.timestamp}
               onComplete={handleCountdownComplete}
             />
           )}
-          <p className="mt-4 text-center font-[Arial] text-[1.125rem] leading-[120%] text-gray-100">
-            Sit back and relax, the transaction will take some time. <br /> This window
-            will be available till Tx completed.{' '}
-            <a href="" className="text-main-100">
-              View the transaction
-            </a>
-          </p>
+          {transaction &&
+            transaction.status === 'pending' &&
+            transaction.txDifficulty === 'cross_chain' && (
+              <p className="mt-4 text-center font-[Arial] text-[1.125rem] leading-[120%] text-gray-100">
+                Sit back and relax, the transaction will take some time. <br /> This
+                window will be available till Tx completed.{' '}
+                <a href="" className="text-main-100">
+                  View the transaction
+                </a>
+              </p>
+            )}
         </div>
 
         {renderContent()}

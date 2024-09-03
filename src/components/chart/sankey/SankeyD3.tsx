@@ -9,13 +9,12 @@ import Lendle from '@assets/icons/protocols/lendle.svg?url'
 import Mantle from '@assets/icons/protocols/mantle.svg?url'
 import Metis from '@assets/icons/protocols/metis.svg?url'
 import Yearn from '@assets/icons/protocols/yearn.svg?url'
+import { SectionTitle } from '@components/section/SectionTitle'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
-import { Button } from '@components/ui/button'
 import { Skeleton } from '@components/ui/skeleton'
-import useDeviceWidth from '@hooks/useDeviceWidth'
-import { useDimensions } from '@hooks/useDimensions'
-import { SectionTitle } from '@components/section/SectionTitle'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { useDimensions } from '@hooks/common/useDimensions'
 import { cn } from '@utils/cn'
 import type { SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
@@ -341,20 +340,17 @@ export const SankeyDiagramBasicDemo = (props: SankeyDiagramBasicDemoProperties) 
     }
   }
   return (
-    <section className={cn('max-lg:mt-8 max-lg:px-4', className)} {...rest}>
-      <SectionTitle>Check how we rebalance</SectionTitle>
+    <section className={cn('max-lg:mt-16', className)} {...rest}>
+      <SectionTitle className="whitespace-nowrap">Check how we rebalance</SectionTitle>
       <StableSwitcher
         activeTab={activeStableType}
         onTabChange={(value) => setStableType(value as StableType)}
-        className="mb-4 mt-[3.06rem] max-lg:mb-[1.47rem] max-lg:mt-8"
-        classNames={{ tab: 'w-[12.5rem]' }}
+        className="mb-4 mt-[3.06rem] max-lg:my-6"
+        classNames={{
+          tab: 'w-[12.5rem] max-lg:w-[7.75rem]',
+        }}
       />
       {renderBody()}
-      {isBelowDesktop && (
-        <Button className="mt-8 w-full" size="lg" onClick={() => navigate('/')}>
-          Deposit
-        </Button>
-      )}
     </section>
   )
 }

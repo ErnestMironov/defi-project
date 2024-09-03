@@ -1,7 +1,7 @@
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import { PER_PAGE_ARRAY } from '@constants/per-page-array'
-import { useDisclosure } from '@hooks/useDisclosure'
-import { usePagination } from '@hooks/usePagination'
+import { useDisclosure } from '@hooks/common/useDisclosure'
+import { usePagination } from '@hooks/common/usePagination'
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
 

@@ -5,7 +5,7 @@ import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import type { ChainType } from '@constants/chains'
 import { CHAINS } from '@constants/chains'
-import { useTokenAsset } from '@hooks/useTokenAsset'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 

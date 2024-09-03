@@ -2,15 +2,15 @@ import Burger from '@assets/icons/burger.svg'
 import EmptyWallet from '@assets/icons/empty-wallet.svg'
 import Close from '@assets/icons/menu-close.svg'
 import { Logo } from '@components/ui/logo'
-import { useDisclosure } from '@hooks/useDisclosure'
+import { useDisclosure } from '@hooks/common/useDisclosure'
 import { ThemeToggle } from '@modules/theme/ThemeToggler'
 import { cn } from '@utils/cn'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import clsx from 'clsx'
-import type { ComponentProps } from 'react'
+import { type ComponentProps, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { HeaderMenu } from './HeaderMenu'
+import { MobileSidebarMenu } from './HeaderMenu'
 
 interface MobileHeaderProperties extends ComponentProps<'div'> {}
 
@@ -18,6 +18,9 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
   const { className, ...rest } = props
   const [opened, { toggle, close }] = useDisclosure()
   const { open: openConnectModal } = useWeb3Modal()
+  useEffect(() => {
+    document.body.style.overflow = opened ? 'hidden' : 'auto'
+  }, [opened])
   return (
     <header {...rest} className={clsx('flex items-center', className)}>
       <Link onClick={close} to="/" className="flex items-center justify-center">
@@ -39,10 +42,7 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
           opened && 'translate-x-0',
         )}
       >
-        <HeaderMenu
-          className="align-end flex-1 flex-col items-center justify-center last:[&>a]:ml-2.5"
-          callback={close}
-        />
+        <MobileSidebarMenu className="" callback={close} />
         <ThemeToggle />
       </div>
     </header>

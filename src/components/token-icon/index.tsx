@@ -1,4 +1,4 @@
-import { useTokenAsset } from '@hooks/useTokenAsset'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import React from 'react'
 

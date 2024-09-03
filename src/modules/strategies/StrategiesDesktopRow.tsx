@@ -3,6 +3,7 @@ import type { StrategyStats } from '@codegen/graphql'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
+import { ROUTES } from '@routes/routes'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
 import { useNavigate } from 'react-router-dom'
@@ -17,7 +18,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
   return (
     <Table.Row
       className="cursor-pointer"
-      onClick={() => navigate(`/strategies/${strategy.strategyId}`)}
+      onClick={() => navigate(`${ROUTES.STRATEGIES}/${strategy.strategyId}`)}
     >
       <Table.Cell className="px-10 py-6">
         <div className="flex items-center">

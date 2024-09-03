@@ -37,3 +37,5 @@ export const useFrameSelect = () => {
   }
   return { currentTimestamp, currentFrame, onFrameChange, frames: FRAMES }
 }
+
+export type FrameSelect = ReturnType<typeof useFrameSelect>

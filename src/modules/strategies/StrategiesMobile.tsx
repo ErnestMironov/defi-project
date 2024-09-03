@@ -1,49 +1,167 @@
+/* eslint-disable unicorn/no-useless-undefined */
 import { useStrategies } from '@api/queries/useStrategies'
+import Filter from '@assets/icons/filter.svg'
+import Sort from '@assets/icons/mobile-sort.svg'
 import type { StrategyStats } from '@codegen/graphql'
-import { Logo } from '@components/ui/logo'
+import { ArrowLink } from '@components/link/ArrowLink'
+import { SectionTitle } from '@components/section/SectionTitle'
+import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
+import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
+import {
+  DrawerIconTrigger,
+  MobileFiltersDrawer,
+} from '@components/select/MobileFiltersDrawer'
+import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
+import type { OptionType } from '@components/select/Select'
+import { SearchInput } from '@components/text-input/SearchInput'
+import { Button } from '@components/ui/button'
+import {
+  SELECT_CHAINS,
+  SELECT_PROTOCOLS,
+  SELECT_TOKENS,
+  SORT_BY_APY,
+  SORT_BY_TVL,
+} from '@constants/select-constant'
+import { StrategyMobileList } from '@modules/strategies/StrategyMobileList'
 import { cn } from '@utils/cn'
+import { useState } from 'react'
 
-import type { StrategiesProperties } from './Strategies'
-import { SkeletonStrategyMobileCard, StrategyMobileCard } from './StrategyMobileCard'
+type StrategyFilters = 'tokens' | 'protocols' | 'chains'
 
-export const StrategiesMobile: React.FC<StrategiesProperties> = (props) => {
+interface StrategiesMobileProperties extends React.HTMLAttributes<HTMLDivElement> {
+  withLink?: boolean
+  filters?: StrategyFilters[]
+}
+
+export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) => {
+  const {
+    className,
+    withLink = true,
+    filters = ['tokens', 'protocols', 'chains'],
+  } = props
+  const [search, setSearch] = useState('')
+  const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
+  const [selectedProtocols, setSelectedProtocols] = useState<OptionType[]>([])
+  const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
+  const [selectedSortByApy, setSelectedSortByApy] = useState<OptionType | undefined>()
+  const [selectedSortByTvl, setSelectedSortByTvl] = useState<OptionType | undefined>()
+
   const { data, loading, error } = useStrategies()
-  const renderBody = () => {
-    switch (true) {
-      case loading:
-      case !!error: {
+
+  const renderFilters = (filter: StrategyFilters) => {
+    switch (filter) {
+      case 'tokens': {
         return (
-          <>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <SkeletonStrategyMobileCard key={i} isLast={i === 9} />
-            ))}
-          </>
+          <MobileCheckboxSelect
+            label="Tokens"
+            value={selectedTokens}
+            options={SELECT_TOKENS}
+            onChange={setSelectedTokens}
+          />
+        )
+      }
+      case 'protocols': {
+        return (
+          <DrawerMultiSelect
+            label="Protocols"
+            value={selectedProtocols}
+            options={SELECT_PROTOCOLS}
+            onChange={setSelectedProtocols}
+            placeholder="All Protocols"
+          />
+        )
+      }
+      case 'chains': {
+        return (
+          <DrawerMultiSelect
+            label="Chains"
+            value={selectedChains}
+            options={SELECT_CHAINS}
+            onChange={setSelectedChains}
+            placeholder="All Chains"
+          />
         )
       }
       default: {
-        return (
-          <>
-            {(data?.strategyStats as StrategyStats[]).map((strategy, index, array) => (
-              <StrategyMobileCard
-                key={index}
-                strategy={strategy}
-                isLast={index === array.length - 1}
-              />
-            ))}
-          </>
-        )
+        return null
       }
     }
   }
+
   return (
-    <div {...props} className={cn('flex flex-col gap-6', props.className)}>
+    <div {...props} className={cn('flex flex-col', className)}>
       <div className="flex items-center justify-between">
-        <h2 className="flex items-center gap-4 text-2xl uppercase">
-          <Logo className="h-[1.625rem] w-[2.0625rem] overflow-visible" />
-          Strategies
-        </h2>
+        <SectionTitle>Strategies</SectionTitle>
+        {withLink && <ArrowLink to="/strategies" />}
       </div>
-      <div className="rounded-3xl bg-cards px-5 py-6">{renderBody()}</div>
+      <div className="mt-4 flex items-center gap-2">
+        <SearchInput
+          className="flex-1"
+          placeholder="Name / Address / ID "
+          classNames={{
+            container: 'bg-cards border-none rounded-[0.5rem] py-[0.81rem] px-3',
+            input: 'mx-2',
+          }}
+          value={search}
+          onValueChange={setSearch}
+        />
+        {/* Filters */}
+        <MobileFiltersDrawer
+          title="Filters"
+          resetFilters={() => {
+            setSelectedTokens([])
+            setSelectedProtocols([])
+            setSelectedChains([])
+          }}
+          trigger={
+            <DrawerIconTrigger
+              Icon={Filter}
+              active={
+                selectedTokens.concat(selectedProtocols).concat(selectedChains).length > 0
+              }
+            />
+          }
+        >
+          {filters.map((filter) => renderFilters(filter))}
+        </MobileFiltersDrawer>
+        {/* Sort */}
+        <MobileFiltersDrawer
+          title="Sorting"
+          closeOnReset
+          resetFilters={() => {
+            setSelectedSortByApy(undefined)
+            setSelectedSortByTvl(undefined)
+          }}
+          trigger={
+            <DrawerIconTrigger
+              Icon={Sort}
+              active={!!selectedSortByApy || !!selectedSortByTvl}
+            />
+          }
+        >
+          <MobileRadioSelect
+            label="APY"
+            options={SORT_BY_APY}
+            value={selectedSortByApy}
+            onChange={setSelectedSortByApy}
+          />
+          <MobileRadioSelect
+            label="TVL"
+            options={SORT_BY_TVL}
+            value={selectedSortByTvl}
+            onChange={setSelectedSortByTvl}
+          />
+        </MobileFiltersDrawer>
+      </div>
+      <StrategyMobileList
+        className="mt-3"
+        strategies={data?.strategyStats as StrategyStats[]}
+        loading={loading}
+        error={error}
+      />
+      <Button className="mt-6 h-[3.185rem]" size="lg">
+        View more
+      </Button>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import type { BalanceItem, Chain } from '@covalenthq/client-sdk'
 import { CovalentClient } from '@covalenthq/client-sdk'
 
-const API_KEY = 'cqt_rQ7pKmqvWVKDTG9w4BG3YgHKG6y7'
+const API_KEY = 'cqt_rQG3MV6vxTJ6JGmrtBCJjYCJDJJm'
 
 const client = new CovalentClient(API_KEY)
 

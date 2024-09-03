@@ -6,7 +6,7 @@ import rainbow from '@assets/images/rainbow-circle.png'
 import loader from '@assets/lottie/wizard-main-loader.json'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
-import useDeviceWidth from '@hooks/useDeviceWidth'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import type { IPendingTransactionData } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -63,7 +63,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
           symbol={transaction.mtToken?.symbol}
           network={transaction.mtToken?.chainData?.chainId}
         />
-        <div className="bg-red-15 flex items-center gap-1 rounded-[12.5rem] px-2 py-1 leading-[120%]">
+        <div className="flex items-center gap-1 rounded-[12.5rem] bg-red-15 px-2 py-1 leading-[120%]">
           {formatAmountValue(transaction.inputValue, 2)} {transaction.vault}
         </div>
       </div>
@@ -78,9 +78,9 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
       exit={{ opacity: 0, y: 50 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        'relative flex w-[17.5rem] cursor-pointer flex-col items-start gap-4 overflow-hidden rounded-2xl bg-[#FFF] p-6 pt-4',
+        'relative flex w-[17.5rem] cursor-pointer flex-col items-start gap-4 overflow-hidden rounded-2xl bg-[#FFF] dark:bg-cards p-6 pt-4',
         {
-          'bg-[#F7EDF1]': transaction.status === 'error',
+          'bg-[#F7EDF1] dark:bg-red-15': transaction.status === 'error',
         },
       )}
       onClick={() => onClick(transaction)}
@@ -98,7 +98,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
           <span>{transaction.txType === 'deposit' ? 'Deposit' : 'Withdraw'} </span>
           <span>{statusText[transaction.status as keyof typeof statusText]}</span>
         </h3>
-        <Expand className="size-6" />
+        <Expand className="size-6 [&_path]:stroke-text-80" />
       </div>
       {renderTransactionInfo()}
       {transaction.status === 'pending' && (

@@ -7,7 +7,7 @@ import {
   SELECT_ADMIN_FROM,
   SELECT_ADMIN_FUNCTIONS,
   SELECT_CHAINS,
-} from '@pages/analytics/constants/select-constant'
+} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
@@ -19,9 +19,9 @@ export const AdminTable = (props: AdminTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Tx Hash / Arguments' },
-    functions: { items: SELECT_ADMIN_FUNCTIONS, value: SELECT_ADMIN_FUNCTIONS[0] },
-    from: { items: SELECT_ADMIN_FROM, value: SELECT_ADMIN_FROM[0] },
-    chain: { items: SELECT_CHAINS, value: SELECT_CHAINS[0] },
+    functions: { items: SELECT_ADMIN_FUNCTIONS, value: [], placeholder: 'All Functions' },
+    from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
+    chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const renderBody = () => {
     return (

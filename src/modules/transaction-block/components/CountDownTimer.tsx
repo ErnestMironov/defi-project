@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react'
 interface CountdownTimerProperties {
   timestamp: number
   onComplete: () => void
+  duration: number // добавляем параметр для продолжительности
 }
 
 export const CountdownTimer: React.FC<CountdownTimerProperties> = ({
   timestamp,
   onComplete,
+  duration,
 }) => {
   const [remainingTime, setRemainingTime] = useState(0)
 
@@ -15,7 +17,7 @@ export const CountdownTimer: React.FC<CountdownTimerProperties> = ({
     const interval = setInterval(() => {
       const now = Date.now()
       const elapsed = now - timestamp
-      const remaining = Math.max(120 - Math.floor(elapsed / 1000), 0) // 120 секунд (2 минуты)
+      const remaining = Math.max(duration - Math.floor(elapsed / 1000), 0) // используем параметр продолжительности
 
       setRemainingTime(remaining)
 
@@ -26,7 +28,9 @@ export const CountdownTimer: React.FC<CountdownTimerProperties> = ({
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [timestamp, onComplete])
+  }, [timestamp, onComplete, duration])
+
+  if (remainingTime === 0) return null
 
   return (
     <p className="mt-5 text-center text-[1.125rem] uppercase leading-[120%] text-gray-100">
