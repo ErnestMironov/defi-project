@@ -27,10 +27,20 @@ interface SelectProperties extends Omit<React.FC<SelectProps>, 'value'> {
     content?: string
     trigger?: string
   }
+  leftSection?: React.ReactNode
 }
 
 export const Select = (props: SelectProperties) => {
-  const { className, options, value, onChange, placeholder, classNames, ...rest } = props
+  const {
+    className,
+    options,
+    value,
+    onChange,
+    placeholder,
+    classNames,
+    leftSection,
+    ...rest
+  } = props
   return (
     <SelectPrimitive
       {...rest}
@@ -40,7 +50,10 @@ export const Select = (props: SelectProperties) => {
       }}
     >
       <SelectTrigger className={cn('size-full', className, classNames?.trigger)}>
-        <SelectValue placeholder={placeholder}>{value.label}</SelectValue>
+        <SelectValue placeholder={placeholder}>
+          {leftSection}
+          {value.label}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent className={cn('w-full', classNames?.content)}>
         {options.map((option) => {

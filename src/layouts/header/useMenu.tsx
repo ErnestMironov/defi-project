@@ -12,12 +12,6 @@ export interface IMenuItem {
   dropdown?: IMenuItem[]
 }
 
-interface IMenu {
-  analytics: IMenuItem
-  deposit: IMenuItem
-  docs: IMenuItem
-}
-
 export const useShortMenuArray = () => {
   const menu = useMemo(() => {
     return {

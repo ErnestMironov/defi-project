@@ -18,6 +18,7 @@ import Lendle from '@assets/icons/protocols/lendle.svg'
 import Mantle from '@assets/icons/protocols/mantle.svg'
 import Metis from '@assets/icons/protocols/metis.svg'
 import Sonne from '@assets/icons/protocols/sonne.svg'
+import Stargate from '@assets/icons/protocols/stargate.svg'
 import Yearn from '@assets/icons/protocols/yearn.svg'
 // token icons
 import Dai from '@assets/icons/tokens/dai.svg'
@@ -50,7 +51,7 @@ const TOKENS: ITokenAsset[] = [
   {
     TokenIcon: Usdt,
     symbol: 'USDT',
-    name: 'Tether USD',
+    name: 'USDT',
   },
   {
     TokenIcon: Dai,
@@ -193,6 +194,11 @@ const TOKENS: ITokenAsset[] = [
     TokenIcon: Yearn,
     symbol: 'Yearn',
     name: 'Yearn',
+  },
+  {
+    TokenIcon: Stargate,
+    symbol: 'Stargate',
+    name: 'Stargate',
   },
 ]
 

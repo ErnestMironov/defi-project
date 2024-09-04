@@ -1,5 +1,5 @@
-import type { StatusType } from '@components/status-label/StatusLabel'
-import { StatusLabel } from '@components/status-label/StatusLabel'
+import type { StatusType } from '@api/maat-finance/types'
+import { STATUS_COLOR } from '@constants/status-color'
 import { cn } from '@utils/cn'
 import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
@@ -24,7 +24,12 @@ export const TransactionInfoHeader = (props: TransactionInfoHeaderProperties) =>
         <TransactionTags tags={tags} />
       </div>
       <div className="mt-4 hidden items-center gap-3 text-base max-lg:flex">
-        <StatusLabel status={status} />
+        <span
+          className="text-semi-base uppercase"
+          style={{ color: STATUS_COLOR[status as keyof typeof STATUS_COLOR] }}
+        >
+          {status}
+        </span>
         <span className="text-gray-50">|</span>
         <span className="text-gray-100">{dayjs(date).format('DD.MM.YYYY HH:mm:ss')}</span>
       </div>

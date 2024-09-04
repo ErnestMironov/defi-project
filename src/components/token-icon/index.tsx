@@ -48,11 +48,11 @@ export const IconWithLabelComponent = ({
 }: TokenIconProperties & { label?: string }) => {
   const asset = useTokenAsset(symbol)
   if (!asset) return
-  const { TokenIcon, symbol: assetSymbol } = asset
+  const { TokenIcon, name } = asset
   return (
     <div className={cn('flex items-center gap-2 min-w-max', className)}>
       <TokenIcon {...rest} className={cn(className, 'overflow-visible')} />
-      <div className="leading-normal">{label || assetSymbol}</div>
+      <div className="leading-normal">{label || name}</div>
     </div>
   )
 }

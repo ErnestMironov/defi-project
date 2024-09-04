@@ -4,9 +4,9 @@ import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
 import {
-  SELECT_ADMIN_FROM,
-  SELECT_ADMIN_FUNCTIONS,
   SELECT_CHAINS,
+  SELECT_INCENTIVES_ACTIONS,
+  SELECT_INCENTIVES_FROM,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
@@ -19,8 +19,16 @@ export const IncentivesTable = (props: IncentivesTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Tx Hash' },
-    functions: { items: SELECT_ADMIN_FUNCTIONS, value: [], placeholder: 'All Functions' },
-    from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
+    'incentive-actions': {
+      items: SELECT_INCENTIVES_ACTIONS,
+      value: [],
+      placeholder: 'All Actions',
+    },
+    'incentive-from': {
+      items: SELECT_INCENTIVES_FROM,
+      value: [],
+      placeholder: 'From...',
+    },
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const renderBody = () => {
@@ -64,8 +72,8 @@ export const IncentivesTable = (props: IncentivesTableProperties) => {
         totalCount={100}
         currentPage={1}
         onPageChange={() => {}}
-        onPerPageChange={() => {}}
-        perPage={10}
+        onPageSizeChange={() => {}}
+        size={10}
       />
     </div>
   )

@@ -1,17 +1,17 @@
-import type { StrategyStats } from '@codegen/graphql'
+import type { Strategy } from '@api/maat-finance/types'
 import { CopyButton } from '@components/copy/CopyButton'
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { ROUTES } from '@routes/routes'
-import { formatAmountValue } from '@utils/formatValue'
+import { formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
 import BigNumber from 'bignumber.js'
 import { type ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 interface StrategyMobileCardProperties extends ComponentProps<'div'> {
-  strategy: StrategyStats
+  strategy: Strategy
 }
 
 export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
@@ -21,21 +21,21 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
     <div
       {...rest}
       onClick={() => {
-        navigate(`${ROUTES.STRATEGIES}/${strategy.strategyId}`)
+        navigate(`${ROUTES.STRATEGIES}/${strategy.id}`)
       }}
     >
       <div className="flex items-center gap-2">
         <div className="flex items-center space-x-[-0.44rem] *:size-6">
-          <TokenIconComponent symbol={strategy.tokenSymbol} />
-          <TokenIconComponent symbol={strategy.chainName} />
+          <TokenIconComponent symbol={strategy.token.symbol} />
+          <TokenIconComponent symbol={strategy.chain_id} />
           <TokenIconComponent symbol={strategy.protocol} />
         </div>
         <div className="text-lg [&>*:not(:last-child)]:after:content-['_/_']">
-          <span>{strategy.tokenSymbol}</span>
+          <span>{strategy.token.symbol}</span>
           <span>
             {
               CHAIN_NAMES_BY_ID[
-                Number(strategy.chainId) as keyof typeof CHAIN_NAMES_BY_ID
+                Number(strategy.chain_id) as keyof typeof CHAIN_NAMES_BY_ID
               ]
             }
           </span>
@@ -50,18 +50,15 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
         </div>
         <h6>TVL</h6>
         <div>
-          $
-          {formatAmountValue(
-            BigNumber(strategy.deposited)
-              .div(10 ** strategy.decimals)
-              ?.toString(),
-            2,
-          )}
+          {formatUsdValue(strategy.tvl, {
+            notation: 'compact',
+            maximumFractionDigits: 2,
+          })}
         </div>
         <h6>Strategy ID</h6>
         <div className="flex w-full items-center gap-2">
-          <p>{shortenString(strategy.strategyId)}</p>
-          <CopyButton text={strategy.strategyId} className="size-6 shrink-0" />
+          <p>{shortenString(strategy.id)}</p>
+          <CopyButton text={strategy.id} className="size-6 shrink-0" />
         </div>
       </div>
     </div>

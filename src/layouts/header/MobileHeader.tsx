@@ -38,12 +38,14 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
       </div>
       <div
         className={cn(
-          'flex fixed inset-0 h-screen flex-col items-center justify-between rounded-none bg-bg py-[5.81rem] focus:outline-none translate-x-[100vw] transition z-50 w-full',
+          'flex fixed inset-0 h-screen flex-col items-center justify-center rounded-none bg-bg py-[5.81rem] focus:outline-none translate-x-[100vw] transition z-50 w-full',
           opened && 'translate-x-0',
         )}
       >
-        <MobileSidebarMenu className="" callback={close} />
-        <ThemeToggle />
+        <div className="space-y-16">
+          <MobileSidebarMenu callback={close} />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   )

@@ -28,8 +28,8 @@ interface PaginationProperties extends React.HTMLAttributes<HTMLDivElement> {
   totalCount: number
   currentPage: number
   onPageChange: (page: number) => void
-  onPerPageChange: (page: (typeof PER_PAGE_ARRAY)[number]) => void
-  perPage: (typeof PER_PAGE_ARRAY)[number]
+  onPageSizeChange: (page: number) => void
+  size: number
 }
 
 export const Pagination = ({
@@ -37,14 +37,14 @@ export const Pagination = ({
   currentPage,
   totalCount,
   onPageChange,
-  perPage,
-  onPerPageChange,
+  size,
+  onPageSizeChange,
 }: PaginationProperties) => {
   const paginationRange = usePagination({
     currentPage,
     totalCount,
     siblingCount: 1,
-    pageSize: perPage,
+    pageSize: size,
   })
 
   const onNextPage = () => {
@@ -108,13 +108,13 @@ export const Pagination = ({
       </div>
       <Popover open={opened} onOpenChange={togglePerPage}>
         <PopoverTrigger className="group flex w-[8.75rem] items-center justify-center self-stretch rounded-[0.875rem] border border-solid border-gray-50 py-[1.12rem] text-[1.125rem]/[0]">
-          {perPage} / page
+          {size} / page
           <ArrowDown className="ml-2 size-4 overflow-visible transition group-data-[state='open']:rotate-180 [&_path]:stroke-text" />
         </PopoverTrigger>
         <PopoverContent
           align="center"
           sideOffset={8}
-          className="flex w-[8.75rem] flex-col rounded-[0.625rem] border border-stroke-100 bg-cards"
+          className="relative z-50 flex w-[8.75rem] flex-col rounded-[0.625rem] border border-stroke-100 bg-cards"
         >
           {PER_PAGE_ARRAY.map((_perPage, i, array) => {
             return (
@@ -122,12 +122,12 @@ export const Pagination = ({
                 key={_perPage}
                 type="button"
                 className={cn(
-                  perPage === _perPage && 'bg-input-active',
+                  size === _perPage && 'bg-input-active',
                   'hover:bg-input-active px-5 py-[1.31rem] text-lg relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-stroke-100',
                   i === array.length - 1 && 'after:bg-transparent',
                 )}
                 onClick={() => {
-                  onPerPageChange(_perPage)
+                  onPageSizeChange(_perPage)
                   togglePerPage()
                 }}
               >

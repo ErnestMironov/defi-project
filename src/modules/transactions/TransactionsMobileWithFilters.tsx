@@ -1,4 +1,4 @@
-import { useTxHistory } from '@api/queries/useTxHistory'
+import { useInfiniteEvents } from '@api/queries/useEvents'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
@@ -15,16 +15,24 @@ import {
   SELECT_ACTIONS,
   SELECT_CHAINS,
   SELECT_STATUSES,
+  SELECT_TOKENS,
   SORT_BY_AMOUNT,
   SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
+import { Loader } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 
 import { TransactionsMobileList } from './TransactionsMobileList'
 
-type FilterType = 'actions' | 'statuses' | 'chains' | 'sortByAmount' | 'sortByDate'
+type FilterType =
+  | 'actions'
+  | 'statuses'
+  | 'tokens'
+  | 'chains'
+  | 'sortByAmount'
+  | 'sortByDate'
 
 interface TransactionsMobileWithFiltersProperties extends ComponentProps<'div'> {
   filters?: FilterType[]
@@ -37,6 +45,7 @@ export const TransactionsMobileWithFilters = (
 
   const [search, setSearch] = useState('')
   const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
+  const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
   const [selectedStatuses, setSelectedStatuses] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
   const [selectedSortByAmount, setSelectedSortByAmount] = useState<
@@ -44,22 +53,8 @@ export const TransactionsMobileWithFilters = (
   >()
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const { data, loading, error, pageInfo, fetchMore, totalCount } = useTxHistory({
-    perPage: 10,
-    page: currentPage,
-  })
-  // const [isLoadingMore, setIsLoadingMore] = useState(false)
-
-  // const onViewMoreClick = async () => {
-  //   setIsLoadingMore(true)
-  //   await fetchMore({
-  //     variables: {
-  //       after: pageInfo?.endCursor,
-  //     },
-  //   })
-  //   setIsLoadingMore(false)
-  // }
+  const { data, isLoading, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useInfiniteEvents({ action_type: 'maat' })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -73,6 +68,17 @@ export const TransactionsMobileWithFilters = (
           />
         )
       }
+      case 'tokens': {
+        return (
+          <MobileCheckboxSelect
+            label="Tokens"
+            value={selectedTokens}
+            options={SELECT_TOKENS}
+            onChange={setSelectedTokens}
+          />
+        )
+      }
+
       case 'statuses': {
         return (
           <MobileCheckboxSelect
@@ -163,13 +169,25 @@ export const TransactionsMobileWithFilters = (
       </div>
       <TransactionsMobileList
         className="mt-3"
-        transactions={data}
-        loading={loading}
+        events={data}
+        loading={isLoading}
         error={error}
       />
-      <Button className="mt-6 h-[3.185rem]" size="lg">
-        View more
-      </Button>
+      {isFetchingNextPage && (
+        <div className="mt-3 flex h-8 w-full animate-spin items-center justify-center">
+          <Loader size="xs" />
+        </div>
+      )}
+      {hasNextPage && !isLoading && (
+        <Button
+          disabled={isFetchingNextPage}
+          onClick={() => fetchNextPage()}
+          className="mt-6 h-[3.185rem]"
+          size="lg"
+        >
+          View more
+        </Button>
+      )}
     </div>
   )
 }

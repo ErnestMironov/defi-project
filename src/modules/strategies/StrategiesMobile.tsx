@@ -1,8 +1,7 @@
 /* eslint-disable unicorn/no-useless-undefined */
-import { useStrategies } from '@api/queries/useStrategies'
+import { useInfiniteStrategies } from '@api/queries/useStrategies'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
-import type { StrategyStats } from '@codegen/graphql'
 import { ArrowLink } from '@components/link/ArrowLink'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
@@ -24,6 +23,7 @@ import {
 } from '@constants/select-constant'
 import { StrategyMobileList } from '@modules/strategies/StrategyMobileList'
 import { cn } from '@utils/cn'
+import { Loader } from 'lucide-react'
 import { useState } from 'react'
 
 type StrategyFilters = 'tokens' | 'protocols' | 'chains'
@@ -46,7 +46,8 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
   const [selectedSortByApy, setSelectedSortByApy] = useState<OptionType | undefined>()
   const [selectedSortByTvl, setSelectedSortByTvl] = useState<OptionType | undefined>()
 
-  const { data, loading, error } = useStrategies()
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteStrategies({})
 
   const renderFilters = (filter: StrategyFilters) => {
     switch (filter) {
@@ -155,13 +156,25 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
       </div>
       <StrategyMobileList
         className="mt-3"
-        strategies={data?.strategyStats as StrategyStats[]}
-        loading={loading}
+        strategies={data}
+        loading={isLoading}
         error={error}
       />
-      <Button className="mt-6 h-[3.185rem]" size="lg">
-        View more
-      </Button>
+      {isFetchingNextPage && (
+        <div className="mt-3 flex h-8 w-full animate-spin items-center justify-center">
+          <Loader size="xs" />
+        </div>
+      )}
+      {hasNextPage && !isLoading && (
+        <Button
+          disabled={isFetchingNextPage}
+          onClick={() => fetchNextPage()}
+          className="mt-6 h-[3.185rem]"
+          size="lg"
+        >
+          View more
+        </Button>
+      )}
     </div>
   )
 }

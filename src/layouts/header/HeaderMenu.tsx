@@ -131,7 +131,7 @@ export const SubNavLinkMenuItem = ({ href, label, callback }: IMenuItem) => {
       key={label}
       className={({ isActive }) =>
         clsx(
-          'relative flex cursor-pointer items-center gap-4 text-[1.125rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_path]:hover:stroke-main-100',
+          'relative flex cursor-pointer items-center gap-4 text-[1.125rem] font-normal uppercase leading-[120%] tracking-[0.0125rem]',
           {
             'text-main-100 [&_path]:fill-main-50': isActive,
           },
@@ -158,7 +158,7 @@ export const NavMobileLinkMenuItem = ({
       key={label}
       className={({ isActive }) =>
         clsx(
-          'relative flex cursor-pointer flex-col items-start text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_path]:hover:stroke-main-100',
+          'relative flex cursor-pointer flex-col items-start text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem]',
           {
             '[&>span]:text-main-100 [&>span]:underline decoration-[2px] underline-offset-4':
               isActive,

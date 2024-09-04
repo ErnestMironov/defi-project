@@ -17,6 +17,7 @@ import type { OptionType } from '@components/select/Select'
 import { AnimatedTabs } from '@components/tab/AnimatedTabs'
 import { Skeleton } from '@components/ui/skeleton'
 import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
+import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
@@ -76,7 +77,7 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
     <section className={cn(className, '')} {...rest}>
       <div className="flex items-center justify-between">
         <SectionTitle>Tokens</SectionTitle>
-        <ArrowLink to="/tokens" />
+        <ArrowLink to={ROUTES.TOKENS} />
       </div>
       <AnimatedTabs
         className="mt-4"

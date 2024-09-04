@@ -20,7 +20,6 @@ import type { SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
 import type { ComponentProps } from 'react'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { D3TooltipComponent } from './D3Tooltip'
 
@@ -318,8 +317,6 @@ export const SankeyDiagramBasicDemo = (props: SankeyDiagramBasicDemoProperties) 
   const { className, ...rest } = props
   const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDC)
   const { data, loading, error } = useRebalance({ symbol: activeStableType })
-  const navigate = useNavigate()
-  const { isBelowDesktop } = useDeviceWidth()
 
   const renderBody = () => {
     switch (true) {

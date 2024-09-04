@@ -20,6 +20,8 @@ type SelectFilters =
   | 'from'
   | 'functions'
   | 'pps'
+  | 'incentive-actions'
+  | 'incentive-from'
 
 export type TableFiltersType = {
   [key in SelectFilters]?: SelectOption
