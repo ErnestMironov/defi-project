@@ -1,4 +1,3 @@
-import { Balance } from '@codegen/graphql'
 import type { Address } from 'viem'
 
 export interface ApiResponse<T> {
@@ -18,6 +17,15 @@ export type PaginationResponse<T> = {
   total_pages: number
 }
 
+export interface Balance {
+  symbol: 'USDT' | 'USDC'
+  mtToken: number
+  value: number
+  address: Address
+  decimals: number
+  chain_id: number
+}
+
 export interface SharesBalanceResponse {
   address: Address
   balances: {
@@ -31,13 +39,10 @@ export interface SharesBalanceResponse {
 }
 
 export interface ParsedSharesBalanceResponse {
-  balances: {
-    chain: string
-    token: 'USDT' | 'USDC'
-    mtToken: number
-    value: number
-  }[]
+  balances: Balance[]
 }
+
+export type WithdrawStatusResponse = 'success' | 'failed' | 'pending'
 
 export type Token = {
   address: string
