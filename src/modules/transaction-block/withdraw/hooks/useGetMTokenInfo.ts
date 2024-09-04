@@ -1,7 +1,6 @@
 import type { ParsedSharesBalanceResponse } from '@api/maat-finance/types'
 import Usdc from '@assets/icons/tokens/usdc.svg'
 import Usdt from '@assets/icons/tokens/usdt.svg'
-import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { useMemo } from 'react'
@@ -40,11 +39,10 @@ export const useGetMTokenInfo = (
   const tokenData = useMemo(() => {
     if (!mToken) return null
 
-    return TOKENS[mToken.token]
+    return TOKENS[mToken.symbol]
   }, [mToken])
-  const chainData = useTokenAsset(
-    CHAIN_IDS_BY_BACKEND_NAMES[mToken?.chain as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES],
-  )
+  console.log('🚀 ~ tokenData ~ mToken:', mToken)
+  const chainData = useTokenAsset(mToken?.chain_id)
 
   if (!tokenData || !mToken) return null
 

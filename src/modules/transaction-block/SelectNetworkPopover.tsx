@@ -3,16 +3,15 @@ import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
-import type { ChainType } from '@constants/chains'
-import { CHAINS } from '@constants/chains'
+import { DEPOSIT_CHAIN_IDS, type DepositChainType } from '@constants/chains'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import { useState } from 'react'
 
 interface SelectNetworkPopoverProperties {
   trigger: React.ReactNode
-  onChange: (chain: ChainType | null) => void
-  chain?: ChainType | null
+  onChange: (chain: DepositChainType | null) => void
+  chain?: DepositChainType | null
   showAllNetworksOption?: boolean
 }
 
@@ -21,9 +20,9 @@ const ChainItem = ({
   chain,
   currentChain,
 }: {
-  onNetworkChange: (chain: ChainType | null) => void
-  chain: ChainType | null
-  currentChain: ChainType | null | undefined
+  onNetworkChange: (chain: DepositChainType | null) => void
+  chain: DepositChainType | null
+  currentChain: DepositChainType | null | undefined
 }) => {
   const data = useTokenAsset(chain)
 
@@ -70,7 +69,7 @@ export const SelectNetworkPopover = ({
   showAllNetworksOption = false,
 }: SelectNetworkPopoverProperties) => {
   const [isOpened, setIsOpened] = useState(false)
-  const onNetworkChange = (chain: ChainType | null) => {
+  const onNetworkChange = (chain: DepositChainType | null) => {
     onChange(chain)
     setIsOpened(false)
   }
@@ -99,7 +98,7 @@ export const SelectNetworkPopover = ({
               currentChain={currentChain}
             />
           )}
-          {CHAINS.map((chain) => (
+          {DEPOSIT_CHAIN_IDS.map((chain) => (
             <ChainItem
               key={chain}
               onNetworkChange={onNetworkChange}

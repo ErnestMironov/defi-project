@@ -52,7 +52,7 @@ const DollarInput: React.FC<DollarInputProperties> = ({
             'text-red-500': error,
           },
         )}
-        wrapperClassName="w-auto bg-transparent inline-flex p-0 min-h-0"
+        wrapperClassName="w-auto bg-transparent inline-flex p-0 min-h-0 transition-all duration-300"
         style={{ width: valueWidth }}
         value={value}
         decimals={2}

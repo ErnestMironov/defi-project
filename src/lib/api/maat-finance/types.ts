@@ -1,3 +1,4 @@
+import { Balance } from '@codegen/graphql'
 import type { Address } from 'viem'
 
 export interface ApiResponse<T> {
@@ -22,9 +23,9 @@ export interface SharesBalanceResponse {
   balances: {
     chain: string
     balances: {
-      token: 'USDT' | 'USDC'
       mtToken: number
       value: number
+      token: Omit<Balance, 'value' | 'mtToken'>
     }[]
   }[]
 }

@@ -37,6 +37,7 @@ const NetworkItem: React.FC<{ chain: any; onClick: () => void }> = ({
 
 interface NetworkPopoverProperties extends PopoverPrimitive.PopoverProps {}
 
+
 export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
   const [isOpened, setIsOpened] = useState(false)
   const { vault, depositToNetwork, setDepositToNetwork } = useTxStore()

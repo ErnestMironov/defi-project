@@ -1,6 +1,6 @@
 import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import type { ITokenData } from '@api/tokens-balance/api'
-import type { ChainType } from '@constants/chains'
+import type { ChainType, DepositChainType } from '@constants/chains'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
 import { convertBigIntToString } from '@utils/formatValue'
@@ -17,86 +17,80 @@ export type TxDifficulty = 'on_chain' | 'cross_chain'
 
 export type ModalState = 'review' | 'deposit' | 'withdraw' | 'done' | 'error'
 export interface SelectedAssetState {
-  depositAsset: ITokenData | null
-  setDepositAsset: (by: ITokenData | null) => void
-
-  depositFromNetwork: ChainType | null
-  setDepositFromNetwork: (by: ChainType | null) => void
-
-  withdrawFromNetwork: ChainType | null
-  setWithdrawFromNetwork: (by: ChainType | null) => void
-
-  withdrawToNetwork: ChainType | null
-  setWithdrawToNetwork: (by: ChainType | null) => void
-
-  vault?: Vault
-  setVault: (by: Vault) => void
-
-  vaultAddress: Address | undefined
-  setVaultAddress: (by: Address | undefined) => void
-
-  mtToken: UseGetMTokenInfoReturn | null
-  setMToken: (by: UseGetMTokenInfoReturn) => void
-
+  // Transaction type and difficulty
   txType: TxType
   setTxType: (by: TxType) => void
-
-  inputValue: string
-  setInputValue: (value: string) => void
-
-  inputValueInUSD: string
-  setInputValueInUSD: (value: string) => void
-
-  depositTotalInUSD: string
-  setDepositTotalInUSD: (value: string) => void
-
-  currentModal: ModalState | null
-  setCurrentModal: (by: ModalState | null) => void
-
-  depositAmount: string
-  setDepositAmount: (value: string) => void
-
-  withdrawAmount: string
-  setWithdrawAmount: (value: string) => void
-
-  depositToNetwork: ChainType | null
-  setDepositToNetwork: (by: ChainType | null) => void
-
-  boostMode: boolean
-  setBoostMode: (by: boolean) => void
-
-  arrivalGas: string
-  setArrivalGas: (value: string) => void
-
-  currentStep: number
-  setCurrentStep: (by: number) => void
-
-  isTransactionCanBeCollapsed: boolean
-  setTransactionCanBeCollapsed: (value: boolean) => void
-
-  isTransactionFromStore: boolean
-  setTransactionFromStore: (value: boolean) => void
-
-  setTransactionData: (transaction: IPendingTransactionData) => void
-
-  getFullState: () => Partial<SelectedAssetState>
-
-  transactionHash: string | null
-  setTransactionHash: (hash: string | null) => void
-
-  squidRoute: RouteResponse['route'] | undefined
-  setSquidRoute: (route: RouteResponse['route']) => void
-
   txDifficulty: TxDifficulty
   setTxDifficulty: (value: TxDifficulty) => void
-
   isTxZAP: boolean
   setIsTxZAP: (value: boolean) => void
 
-  resetStore: () => void
+  // Asset and network information
+  depositAsset: ITokenData | null
+  setDepositAsset: (by: ITokenData | null) => void
+  depositFromNetwork: DepositChainType | null
+  setDepositFromNetwork: (by: DepositChainType | null) => void
+  depositToNetwork: ChainType | null
+  setDepositToNetwork: (by: ChainType | null) => void
+  withdrawFromNetwork: ChainType | null
+  setWithdrawFromNetwork: (by: ChainType | null) => void
+  withdrawToNetwork: ChainType | null
+  setWithdrawToNetwork: (by: ChainType | null) => void
 
+  // Vault information
+  vault?: Vault
+  setVault: (by: Vault) => void
+  vaultAddress: Address | undefined
+  setVaultAddress: (by: Address | undefined) => void
+
+  // Withdraw Token information
+  mtToken: UseGetMTokenInfoReturn | null
+  setMToken: (by: UseGetMTokenInfoReturn) => void
+
+  // Input values and amounts
+  inputValue: string
+  setInputValue: (value: string) => void
+  inputValueInUSD: string
+  setInputValueInUSD: (value: string) => void
+  depositTotalInUSD: string
+  setDepositTotalInUSD: (value: string) => void
+  depositAmount: string
+  setDepositAmount: (value: string) => void
+  withdrawAmount: string
+  setWithdrawAmount: (value: string) => void
+
+  // Modal and UI state
+  currentModal: ModalState | null
+  setCurrentModal: (by: ModalState | null) => void
+  currentStep: number
+  setCurrentStep: (by: number) => void
+  isTransactionCanBeCollapsed: boolean
+  setTransactionCanBeCollapsed: (value: boolean) => void
+
+  // Transaction-related information
+  isTransactionFromStore: boolean
+  setTransactionFromStore: (value: boolean) => void
+  setTransactionData: (transaction: IPendingTransactionData) => void
+  transactionHash: string | null
+  setTransactionHash: (hash: string | null) => void
+
+  // Additional features
+  boostMode: boolean
+  setBoostMode: (by: boolean) => void
+  arrivalGas: string
+  setArrivalGas: (value: string) => void
+
+  // Squid route information
+  squidRoute: RouteResponse['route'] | undefined
+  setSquidRoute: (route: RouteResponse['route'] | undefined) => void
+
+  // Timer
   timerDuration: number
   setTimerDuration: (duration: number) => void
+
+  // Utility functions
+  getFullState: () => Partial<SelectedAssetState>
+  resetStore: () => void
 }
 
 export const useTxStore = create<SelectedAssetState>()(

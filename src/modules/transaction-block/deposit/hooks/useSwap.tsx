@@ -32,6 +32,11 @@ const completedStatuses = new Set([
 // ------------ Helper Functions ----------
 // ---------------------------------------
 
+/**
+ * Fetches the status of a transaction from the Squid API
+ * @param parameters - The parameters for the API request
+ * @returns The status data from the API
+ */
 const getStatus = async (parameters: any) => {
   try {
     const result = await axios.get(SQUID_API_URL, {
@@ -56,6 +61,15 @@ const getStatus = async (parameters: any) => {
   }
 }
 
+/**
+ * Handles the status of a transaction and updates accordingly
+ * @param status - The status object from the API
+ * @param txHash - The transaction hash
+ * @param changeStatusFunction - Function to update the status
+ * @param successHandler - Function to call on success
+ * @param failHandler - Function to call on failure
+ * @returns A boolean indicating if the status is final
+ */
 const handleStatus = (
   status: any,
   txHash: string,
@@ -87,6 +101,13 @@ const handleStatus = (
   return false
 }
 
+/**
+ * Handles errors during status checking
+ * @param error - The error object
+ * @param retryCount - The current retry count
+ * @param changeStatusFunction - Function to update the status
+ * @param checkStatus - Function to retry status check
+ */
 const handleError = async (
   error: unknown,
   retryCount: number,
@@ -111,6 +132,16 @@ const handleError = async (
 // ------------ Status checker ------------
 // ---------------------------------------
 
+/**
+ * Waits for a successful status of a transaction
+ * @param txHash - The transaction hash
+ * @param fromChainId - The source chain ID
+ * @param toChainId - The destination chain ID
+ * @param changeStatusFunction - Function to update the status
+ * @param successHandler - Function to call on success
+ * @param failHandler - Function to call on failure
+ * @param requestId - Optional request ID
+ */
 export const waitForSuccessStatus = async (
   txHash: string,
   fromChainId: string,
@@ -175,6 +206,12 @@ interface IProperties extends IDepositWizardHook {
   requestId?: string
 }
 
+/**
+ * Hook for handling token swaps
+ * @param requestId - Optional request ID
+ * @param onSuccessHandler - Function to call on successful swap
+ * @returns Object containing swap function, status, error, and deposit hash
+ */
 export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const [error, setError] = useState('')
@@ -198,7 +235,7 @@ export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
       onSuccess(data) {
         setTransactionHash(data)
         setTimerDuration(
-          route?.estimate?.estimatedRouteDuration ?? ESTIMATED_TIME_OF_CONFIRMATION,
+          (route?.estimate?.estimatedRouteDuration ?? 0) + ESTIMATED_TIME_OF_CONFIRMATION,
         )
         setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful

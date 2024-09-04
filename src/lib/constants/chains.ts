@@ -32,7 +32,25 @@ export const CHAINS = [
   // Chains.MANTLE_MAINNET,
 ] as const
 
+export const DEPOSIT_CHAIN_IDS = [
+  CHAIN_IDS_BY_NAME.Ethereum,
+  CHAIN_IDS_BY_NAME.Arbitrum,
+  CHAIN_IDS_BY_NAME.Optimism,
+  CHAIN_IDS_BY_NAME.Polygon,
+  CHAIN_IDS_BY_NAME.BNB,
+  CHAIN_IDS_BY_NAME.Base,
+  CHAIN_IDS_BY_NAME.Mantle,
+  CHAIN_IDS_BY_NAME.Metis,
+]
+
+export const CHAINS_WITH_VAULTS = [
+  CHAIN_IDS_BY_NAME.Arbitrum,
+  CHAIN_IDS_BY_NAME.Optimism,
+  CHAIN_IDS_BY_NAME.Polygon,
+  CHAIN_IDS_BY_NAME.Base,
+]
 export type ChainType = (typeof CHAINS)[number]
+export type DepositChainType = (typeof DEPOSIT_CHAIN_IDS)[number]
 
 export const CONFIRMATIONS_NUMBER = {
   [CHAIN_IDS_BY_NAME.Polygon]: 2,
