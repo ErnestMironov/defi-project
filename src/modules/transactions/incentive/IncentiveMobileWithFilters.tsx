@@ -12,8 +12,8 @@ import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import {
-  SELECT_ACTIONS,
   SELECT_CHAINS,
+  SELECT_INCENTIVES_ACTIONS,
   SELECT_INCENTIVES_FROM,
   SORT_BY_AMOUNT,
   SORT_BY_DATE,
@@ -58,7 +58,7 @@ export const IncentiveMobileWithFilters = (
           <MobileCheckboxSelect
             label="Actions"
             value={selectedActions}
-            options={SELECT_ACTIONS}
+            options={SELECT_INCENTIVES_ACTIONS}
             onChange={setSelectedActions}
           />
         )

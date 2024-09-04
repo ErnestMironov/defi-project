@@ -16,7 +16,7 @@ export const ReportsTable = (props: ReportsTableProperties) => {
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Nonce / Tx Hash' },
     token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
-    pps: { items: SELECT_PPS, value: [], placeholder: 'All PPS' },
+    pps: { items: SELECT_PPS, value: [], placeholder: 'PPS' },
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const renderBody = () => {

@@ -5,6 +5,8 @@ import {
 } from '@components/select/SelectItemWithIcon'
 import { CHAIN_NAMES_BY_ID, CHAINS } from '@constants/chains'
 
+import { ACTION_TYPE, INCENTIVE_ACTION_TYPE, STATUSES } from './action-type'
+
 export const SELECT_TOKENS: OptionType[] = [
   {
     label: SelectItemWithIcon({ symbol: 'USDC' }),
@@ -70,31 +72,17 @@ export const SELECT_PROTOCOLS: OptionType[] = [
   },
 ]
 
-export const SELECT_ACTIONS: OptionType[] = [
-  {
-    label: 'Deposit',
-    value: 'Deposit',
-  },
-  {
-    label: 'Withdraw Request',
-    value: 'Withdraw Request',
-  },
-]
+export const SELECT_ACTIONS: OptionType[] = Object.entries(ACTION_TYPE).map(
+  ([key, value]) => ({
+    label: value,
+    value: key,
+  }),
+)
 
-export const SELECT_STATUSES: OptionType[] = [
-  {
-    label: 'In Progress',
-    value: 'In Progress',
-  },
-  {
-    label: 'Success',
-    value: 'Success',
-  },
-  {
-    label: 'Failed',
-    value: 'Failed',
-  },
-]
+export const SELECT_STATUSES: OptionType[] = STATUSES.map((value) => ({
+  label: value.charAt(0).toUpperCase() + value.slice(1),
+  value,
+}))
 
 export const SELECT_MAAT_ACTIONS: OptionType[] = [
   {
@@ -115,20 +103,12 @@ export const SELECT_MAAT_ACTIONS: OptionType[] = [
   },
 ]
 
-export const SELECT_INCENTIVES_ACTIONS: OptionType[] = [
-  {
-    label: 'Harvest',
-    value: 'Harvest',
-  },
-  {
-    label: 'Swap',
-    value: 'Swap',
-  },
-  {
-    label: 'Compound',
-    value: 'Compound',
-  },
-]
+export const SELECT_INCENTIVES_ACTIONS: OptionType[] = Object.entries(
+  INCENTIVE_ACTION_TYPE,
+).map(([key, value]) => ({
+  label: value,
+  value: key,
+}))
 
 export const SELECT_INCENTIVES_FROM: OptionType[] = [
   { label: 'Vault', value: 'Vault' },

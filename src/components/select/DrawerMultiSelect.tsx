@@ -12,7 +12,7 @@ export interface DrawerMultiSelectProperties
   extends Omit<ComponentProps<'div'>, 'onChange' | 'value'> {
   options: OptionType[]
   onChange: (options: OptionType[]) => void
-  label: string
+  label?: string
   value: OptionType[]
   placeholder: string
 }
@@ -41,12 +41,17 @@ export const DrawerMultiSelectTrigger = forwardRef<
     return (
       <button
         type="button"
-        className={cn('flex w-full flex-col items-start justify-between', className)}
+        className={cn('flex w-full flex-col items-start justify-between')}
         ref={reference}
         {...props}
       >
-        {label && <div className="text-gray-100">{label}</div>}
-        <div className="mt-4 flex w-full items-center justify-between rounded-lg border border-stroke-100 px-4 py-3">
+        {label && <div className="mb-4 text-gray-100">{label}</div>}
+        <div
+          className={cn(
+            'flex w-full items-center justify-between rounded-lg border border-stroke-100 px-4 py-3',
+            className,
+          )}
+        >
           {value.length > 1 ? (
             <div className="flex items-center -space-x-2">
               {value.map((option) => (
@@ -70,11 +75,16 @@ export const DrawerMultiSelectTrigger = forwardRef<
 )
 
 export const DrawerMultiSelect = (props: DrawerMultiSelectProperties) => {
-  const { options, value, onChange, placeholder, label } = props
+  const { options, value, onChange, placeholder, label, className } = props
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <DrawerMultiSelectTrigger value={value} placeholder={placeholder} label={label} />
+        <DrawerMultiSelectTrigger
+          className={className}
+          value={value}
+          placeholder={placeholder}
+          label={label}
+        />
       </DrawerTrigger>
       <DrawerContent
         aria-describedby={undefined}

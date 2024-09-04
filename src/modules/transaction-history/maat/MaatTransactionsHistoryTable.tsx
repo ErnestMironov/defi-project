@@ -26,7 +26,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
   const { data, isLoading, error, isPlaceholderData } = useEvents({
     size,
     page,
-    action_type: null,
+    action_type: 'maat',
     limit: 100,
   })
 

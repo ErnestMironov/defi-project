@@ -58,7 +58,13 @@ export type Strategy = {
   tvl: number
 }
 
-export type ActionType = 'trigger' | 'handler' | 'incentives' | 'rebalance'
+export type ActionType =
+  | 'trigger'
+  | 'handler'
+  | 'incentives'
+  | 'rebalance'
+  | 'maat'
+  | 'oracle'
 
 export type Vault = {
   address: string

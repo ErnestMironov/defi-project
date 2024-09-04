@@ -9,6 +9,7 @@ export const ACTION_TYPE = {
   WITHDRAW: 'Withdraw',
   WITHDRAW_REQUEST: 'Withdraw request',
   WITHDRAW_FROM_STRATEGY: 'Withdraw from strategy',
+  WITHDRAW_FULFILLMENT: 'Withdraw fulfillment',
   WITHDRAW_REQUEST_FULFILLMENT: 'Withdraw request fulfillment',
 } as const
 
@@ -17,3 +18,5 @@ export const INCENTIVE_ACTION_TYPE = {
   INC_COMPOUND: 'Compound',
   INC_SWAP: 'Swap',
 } as const
+
+export const STATUSES = ['success', 'in progress', 'failed'] as const

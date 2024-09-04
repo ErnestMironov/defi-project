@@ -88,9 +88,9 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
             interval="preserveStartEnd"
           />
           <Tooltip
+            wrapperStyle={{ zIndex: 50 }}
             content={({ active, payload, coordinate }) => {
               if (active && payload && payload.length > 0 && coordinate) {
-                console.log('payload', payload)
                 return (
                   <StrategyTooltipComponent
                     timestamp={payload[0].payload.timestamp}

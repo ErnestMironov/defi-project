@@ -1,7 +1,9 @@
 import type { OptionType } from '@components/select/Select'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
 import { Strategies } from '@modules/strategies/Strategies'
-import { StrategiesChart } from '@modules/strategies/StrategiesChart'
+import { StrategiesChartMobile } from '@modules/strategies/strategies-chart/mobile/StrategiesChartMobile'
+import { StrategiesChart } from '@modules/strategies/strategies-chart/StrategiesChart'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
 
@@ -72,6 +74,11 @@ interface StrategiesProperties extends ComponentProps<'div'> {}
 
 export const StrategiesPage = (props: StrategiesProperties) => {
   const { className, ...rest } = props
+  const { isBelowDesktop } = useDeviceWidth()
+
+  if (isBelowDesktop) {
+    return <StrategiesMobilePage {...props} />
+  }
 
   return (
     <div className={cn(className, 'mt-[5.31rem]')} {...rest}>
@@ -94,6 +101,18 @@ export const StrategiesPage = (props: StrategiesProperties) => {
       <Strategies className="mt-[6.25rem]" />
       <Transactions className="mt-[6.25rem]" />
       <Footer className="mt-[7.5rem] max-lg:mb-[4.55rem] max-lg:mt-[4.5rem]" />
+    </div>
+  )
+}
+export const StrategiesMobilePage = (props: StrategiesProperties) => {
+  const { className, ...rest } = props
+
+  return (
+    <div className={cn(className, 'mt-6')} {...rest}>
+      <StrategiesChartMobile />
+      {/* <Strategies className="mt-14" /> */}
+      {/* <Transactions className="mt-16" /> */}
+      <Footer className="mb-[4.55rem] mt-[4.5rem]" />
     </div>
   )
 }

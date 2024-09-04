@@ -10,7 +10,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
 type EventsParameters = {
   limit?: number
-  action_type?: ActionType | null
+  action_type: ActionType
   page?: number
   size?: number
   sort?: SortDirection
@@ -20,7 +20,7 @@ type EventsParameters = {
 }
 
 const getEvents = (parameters: EventsParameters) => {
-  return apiClient.get<PaginationResponse<Event>>('/getLastEvents', {
+  return apiClient.get<PaginationResponse<Event>>('/actions/last', {
     params: parameters,
   })
 }

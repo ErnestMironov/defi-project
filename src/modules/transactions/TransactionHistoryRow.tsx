@@ -38,7 +38,7 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
       </Table.Cell>
       <Table.Cell>
         <div className="flex items-center gap-3">
-          {event.amount && (
+          {event.amount && event.vault && (
             <span className="block min-w-12">
               {formatAmount(
                 formatUnits(BigInt(event.amount), event.vault.token.decimals),
@@ -48,7 +48,12 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
               )}
             </span>
           )}
-          <IconWithLabelComponent symbol={event.vault.token.symbol} className="size-8" />
+          {event.vault && (
+            <IconWithLabelComponent
+              symbol={event.vault.token.symbol}
+              className="size-8"
+            />
+          )}
         </div>
       </Table.Cell>
       <Table.Cell>

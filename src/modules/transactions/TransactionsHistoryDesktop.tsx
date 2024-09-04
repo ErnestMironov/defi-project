@@ -28,6 +28,7 @@ export const TransactionsHistoryDesktop = (
     size,
     page,
     limit: 100,
+    action_type: 'maat',
   })
 
   const renderBody = () => {

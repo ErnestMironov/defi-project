@@ -1,23 +1,17 @@
 import { apiClient } from '@api/maat-finance/api-client'
-import type {
-  PaginationResponse,
-  SortDirection,
-  StatusType,
-  Strategy,
-} from '@api/maat-finance/types'
+import type { PaginationResponse, Strategy } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
 type StrategiesParameters = {
   page?: number
   size?: number
-  sort?: SortDirection
-  status?: StatusType
-  start?: string
-  end?: string
+  strategy_id?: string
+  start_timestamp?: string
+  end_timestamp?: string
 }
 
 const getStrategies = (parameters: StrategiesParameters) => {
-  return apiClient.get<PaginationResponse<Strategy>>('/getStrategies', {
+  return apiClient.get<PaginationResponse<Strategy>>('/overview/strategies', {
     params: parameters,
   })
 }

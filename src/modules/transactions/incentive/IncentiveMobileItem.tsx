@@ -18,9 +18,7 @@ interface IncentiveMobileItemProperties extends ComponentProps<'div'> {
 export const IncentiveMobileItem = (props: IncentiveMobileItemProperties) => {
   const { incentive } = props
 
-  const chainId = (() => {
-    return incentive.src_chain_id || incentive.dst_chain_id
-  })()
+  const chainId = incentive.src_chain_id || incentive.dst_chain_id
 
   const renderAmount = () => {
     const amount = incentive.amount_in || incentive.amount_out
