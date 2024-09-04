@@ -46,8 +46,8 @@ export const WithdrawReviewContent = ({
     error: approveError,
   } = useApproveERC20({
     approveValue: parseUnits(amount, 6).toString(),
-    tokenAddress: '0x6bcCf39Ddc5f71B559B5fada94330eEc6945EE2b',
-    transactionRequestTarget: '0x6bcCf39Ddc5f71B559B5fada94330eEc6945EE2b',
+    tokenAddress: mtToken?.mtAddress,
+    transactionRequestTarget: mtToken?.mtAddress,
     chainId: mtToken?.chainData?.chainId,
     onSuccessHandler: () => {
       if (currentStep === 2) {

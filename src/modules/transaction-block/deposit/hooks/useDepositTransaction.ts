@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/extensions
 import { tokenVaultAbi } from '@constants/abi/token-vault'
+import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -52,7 +53,7 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
           setStatus('pending')
           setTransactionHash(data)
           setTxDifficulty('on_chain')
-          setTimerDuration(12)
+          setTimerDuration(ESTIMATED_TIME_OF_CONFIRMATION)
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
           // @ts-ignore
