@@ -54,7 +54,7 @@ export const TransactionsMobileWithFilters = (
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
   const { data, isLoading, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteEvents({})
+    useInfiniteEvents({ action_type: 'maat' })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {

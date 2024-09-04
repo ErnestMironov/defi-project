@@ -12,7 +12,7 @@ interface DrawerMultiSelectTokensProperties extends ComponentProps<'div'> {
 }
 
 export const DrawerMultiSelectTokens = (props: DrawerMultiSelectTokensProperties) => {
-  const { className, selectedTokens, setSelectedTokens, tokens, ...rest } = props
+  const { selectedTokens, setSelectedTokens, tokens } = props
   return (
     <Drawer>
       <DrawerTrigger asChild className="h-11">

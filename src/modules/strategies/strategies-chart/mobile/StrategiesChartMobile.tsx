@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/no-small-switch */
 import type { Strategy } from '@api/maat-finance/types'
-import { useStrategies } from '@api/queries/useStrategies'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Close from '@assets/icons/close.svg'
 import Filter from '@assets/icons/filter.svg'
@@ -145,9 +144,9 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
   // ----------- strategies -----------
-  const { data } = useStrategies({
-    size: 5,
-  })
+  // const { data } = useStrategies({
+  //   size: 5,
+  // })
   const {
     topStrategiesWithColors,
     setTopStrategiesWithColors,
@@ -183,7 +182,7 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
   }
   // ---------------------------------
 
-  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange /* currentTimestamp */ } = useFrameSelect()
 
   const renderApyBody = () => {
     switch (true) {

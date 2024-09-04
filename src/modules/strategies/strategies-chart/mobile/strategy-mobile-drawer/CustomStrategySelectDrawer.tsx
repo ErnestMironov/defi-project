@@ -198,8 +198,7 @@ interface CustomStrategySelectDrawerProperties extends ComponentProps<'div'> {
 export const CustomStrategySelectDrawer = (
   props: CustomStrategySelectDrawerProperties,
 ) => {
-  const { className, children, index, color, onStrategySelect, strategiesWithColors } =
-    props
+  const { children, index, color, onStrategySelect, strategiesWithColors } = props
 
   const [isOpen, setIsOpen] = useState(false)
 
