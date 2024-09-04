@@ -61,6 +61,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
   const { address } = useAccount()
 
   const { data, isLoading } = useGetSharesBalance(address)
+  console.log('🚀 ~ SelectWithdrawAssetModal ~ data:', data)
 
   const balances =
     [...(data?.data?.balances || [])].filter((token) => token.value > 9999) || []
@@ -96,7 +97,7 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
         />
       )}
       renderItem={(token, onItemChange) => (
-        <WithdrawAssetItem key={token?.chain} token={token} onChange={onItemChange} />
+        <WithdrawAssetItem key={token?.chain_id} token={token} onChange={onItemChange} />
       )}
       onChange={onChange}
     />

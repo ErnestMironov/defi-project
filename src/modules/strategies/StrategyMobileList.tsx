@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import type { StrategyStats } from '@codegen/graphql'
+import type { Strategy } from '@api/maat-finance/types'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -7,7 +7,7 @@ import type { ComponentProps } from 'react'
 import { StrategyMobileCard } from './StrategyMobileCard'
 
 interface StrategyMobileListProperties extends ComponentProps<'div'> {
-  strategies?: StrategyStats[]
+  strategies?: Strategy[]
   loading?: boolean
   error?: any
 }

@@ -10,6 +10,7 @@ interface SelectProperties extends ComponentProps<'div'> {
   opened?: boolean
   icon?: ReactNode
   className?: string
+  disabled?: boolean
 }
 
 export const ChoiceBox = ({
@@ -18,12 +19,15 @@ export const ChoiceBox = ({
   opened,
   icon,
   className,
+  disabled,
 }: SelectProperties) => {
   return (
     <ShadowBox
       className={cn(
-        'flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14',
+        'flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14',
         className,
+        disabled && 'cursor-default',
+        !disabled && 'hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover',
       )}
     >
       {icon ||
@@ -31,12 +35,14 @@ export const ChoiceBox = ({
           <TokenIconComponent symbol={symbol} className="size-8 max-lg:size-5" />
         ))}
       <div>{value}</div>
-      <ArrowDown
-        className={cn(
-          'size-4 max-lg:size-3 transition group-data-[state="open"]:rotate-180',
-          opened && 'rotate-180',
-        )}
-      />
+      {!disabled && (
+        <ArrowDown
+          className={cn(
+            'size-4 max-lg:size-3 transition group-data-[state="open"]:rotate-180',
+            opened && 'rotate-180',
+          )}
+        />
+      )}
     </ShadowBox>
   )
 }

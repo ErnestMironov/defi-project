@@ -3,7 +3,6 @@ import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
 import { CHAIN_NAMES_BY_ID, CHAINS } from '@constants/chains'
 
-
 import { useTxStore } from '../store/useTxStore'
 import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'

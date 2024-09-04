@@ -1,19 +1,14 @@
 import type { OptionType } from '@components/select/Select'
-import {
-  SELECT_ACTIONS,
-  SELECT_CHAINS,
-  SELECT_MAAT_ACTIONS,
-  SELECT_STATUSES,
-  SELECT_TOKENS,
-} from '@constants/select-constant'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
 import { Strategies } from '@modules/strategies/Strategies'
-import { StrategiesChart } from '@modules/strategies/StrategiesChart'
-import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
+import { StrategiesChartMobile } from '@modules/strategies/strategies-chart/mobile/StrategiesChartMobile'
+import { StrategiesChart } from '@modules/strategies/strategies-chart/StrategiesChart'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
 
 import { Breadcrumbs } from './Breadcrumbs'
+import { Transactions } from './transactions/Transactions'
 
 const MOCK_APY_DATA = [
   {
@@ -79,6 +74,11 @@ interface StrategiesProperties extends ComponentProps<'div'> {}
 
 export const StrategiesPage = (props: StrategiesProperties) => {
   const { className, ...rest } = props
+  const { isBelowDesktop } = useDeviceWidth()
+
+  if (isBelowDesktop) {
+    return <StrategiesMobilePage {...props} />
+  }
 
   return (
     <div className={cn(className, 'mt-[5.31rem]')} {...rest}>
@@ -99,22 +99,20 @@ export const StrategiesPage = (props: StrategiesProperties) => {
         className="mt-[6.25rem]"
       />
       <Strategies className="mt-[6.25rem]" />
-      <TransactionHistory
-        className="mt-[6.25rem]"
-        maatFilters={{
-          search: { value: '', placeholder: 'Tx Hash' },
-          action: { items: SELECT_MAAT_ACTIONS, value: [], placeholder: 'All Actions' },
-          status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
-          token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
-          chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
-        }}
-        incentivesFilters={{
-          search: { value: '', placeholder: 'Tx Hash' },
-          action: { items: SELECT_ACTIONS, value: [], placeholder: 'All Actions' },
-          status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
-        }}
-      />
+      <Transactions className="mt-[6.25rem]" />
       <Footer className="mt-[7.5rem] max-lg:mb-[4.55rem] max-lg:mt-[4.5rem]" />
+    </div>
+  )
+}
+export const StrategiesMobilePage = (props: StrategiesProperties) => {
+  const { className, ...rest } = props
+
+  return (
+    <div className={cn(className, 'mt-6')} {...rest}>
+      <StrategiesChartMobile />
+      {/* <Strategies className="mt-14" /> */}
+      {/* <Transactions className="mt-16" /> */}
+      <Footer className="mb-[4.55rem] mt-[4.5rem]" />
     </div>
   )
 }

@@ -121,7 +121,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
 export const PendingTransactions: React.FC = () => {
   const { isBelowDesktop } = useDeviceWidth()
   const { transactions } = useTransactionStore()
-  const { setCurrentModal, setTransactionData } = useTxStore()
+  const { setCurrentModal, setTransactionData, currentModal } = useTxStore()
   useTransactionStatusChecker()
   const [isHovered, setIsHovered] = useState(false)
 
@@ -153,7 +153,7 @@ export const PendingTransactions: React.FC = () => {
     }
   }
 
-  if (transactions.length === 0) {
+  if (transactions.length === 0 || currentModal) {
     return null
   }
 

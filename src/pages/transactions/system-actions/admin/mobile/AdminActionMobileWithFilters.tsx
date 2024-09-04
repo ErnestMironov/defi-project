@@ -17,10 +17,10 @@ import {
   SELECT_CHAINS,
   SORT_BY_DATE,
 } from '@constants/select-constant'
+import { usePages } from '@hooks/common/usePages'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { AdminActionMobileList } from './AdminActionMobileList'
 
@@ -34,7 +34,6 @@ export const AdminActionMobileWithFilters = (
   props: AdminActionMobileWithFiltersProperties,
 ) => {
   const { className, filters = ['functions', 'chains', 'admin-action-from'] } = props
-  const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
   const [selectedFunctions, setSelectedFunctions] = useState<OptionType[]>([])
@@ -42,22 +41,12 @@ export const AdminActionMobileWithFilters = (
   const [selectedAdminFrom, setSelectedAdminFrom] = useState<OptionType[]>([])
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const { data, loading, error, pageInfo, fetchMore, totalCount } = useTxHistory({
-    perPage: 10,
-    page: currentPage,
+  const { page, size } = usePages()
+  // TODO: replace with useEvents
+  const { data, loading, error } = useTxHistory({
+    perPage: size,
+    page,
   })
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
-
-  const onViewMoreClick = async () => {
-    setIsLoadingMore(true)
-    await fetchMore({
-      variables: {
-        after: pageInfo?.endCursor,
-      },
-    })
-    setIsLoadingMore(false)
-  }
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {

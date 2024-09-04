@@ -1,12 +1,12 @@
+import type { Strategy } from '@api/maat-finance/types'
 import Sort from '@assets/icons/sort.svg'
-import type { StrategyStats } from '@codegen/graphql'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
 
 import { StrategyRow } from './StrategiesDesktopRow'
 
 export interface StrategyTableProperties extends React.HTMLAttributes<HTMLDivElement> {
-  strategies: StrategyStats[]
+  strategies?: Strategy[]
   loading?: boolean
   error?: any
 }

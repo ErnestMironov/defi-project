@@ -55,8 +55,40 @@ const multiSelectVariants = cva('', {
   },
 })
 
+const SELECT_ICONS_PLACEHOLDERS = new Set(['All Protocols', 'All Chains', 'All Tokens'])
+
 const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
   const { value, placeholder, className, variant } = props
+
+  const renderValue = () => {
+    switch (true) {
+      case value.length === 0: {
+        return placeholder
+      }
+      case value.length === 1: {
+        return value[0].label
+      }
+      case placeholder && !SELECT_ICONS_PLACEHOLDERS.has(placeholder): {
+        return `${value.length} Selected`
+      }
+      case value.length > 1: {
+        return (
+          <div className="flex items-center -space-x-2">
+            {value.map((option) => (
+              <TokenIconComponent
+                key={option.value}
+                className="size-5"
+                symbol={option.value}
+              />
+            ))}
+          </div>
+        )
+      }
+      default: {
+        return placeholder
+      }
+    }
+  }
   return (
     <button
       type="button"
@@ -71,21 +103,7 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
           multiSelectVariants({ variant }),
         )}
       >
-        {value.length > 1 ? (
-          <div className="flex items-center -space-x-2">
-            {value.map((option) => (
-              <TokenIconComponent
-                key={option.value}
-                className="size-5"
-                symbol={option.value}
-              />
-            ))}
-          </div>
-        ) : value.length === 1 ? (
-          value[0].label
-        ) : (
-          <div>{placeholder}</div>
-        )}
+        {renderValue()}
         <ArrowDown className="size-4 transition group-data-[state=open]:rotate-180" />
       </div>
     </button>
@@ -125,7 +143,7 @@ export const MultiSelect = ({
         sideOffset={10}
         align="start"
         className={cn(
-          'w-fit rounded-xl p-6',
+          'w-fit rounded-xl p-6 max-h-96 overflow-scroll',
           multiSelectVariants({ variant }),
           classNames?.content,
         )}

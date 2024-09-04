@@ -24,8 +24,6 @@ const getRoute = async (_parameters: any): Promise<IResponse> => {
       _parameters.toAddress,
     )
 
-    console.log('��� ~ postHook:', postHook)
-
     const parameters = {
       ..._parameters,
       postHook,
@@ -68,27 +66,15 @@ export function useGetSquidSwapRoute() {
   const { address } = useAccount()
 
   const parameters = useMemo(() => {
-    console.log('Проверка inputValue:', !inputValue)
-    console.log('Проверка depositAsset:', !depositAsset)
-    console.log('Проверка vaultAddress:', !vaultAddress)
-    if (!inputValue || !depositAsset || !vaultAddress) return
-
-    console.log(
-      'Проверка равенства символов:',
-      depositAsset?.contract_ticker_symbol.toLowerCase() === vaultAddress?.toLowerCase(),
-    )
     if (
       depositAsset?.contract_ticker_symbol.toLowerCase() === vaultAddress?.toLowerCase()
     )
       return
 
-    console.log('Проверка address:', !address)
     if (!address) return
 
-    console.log('Проверка depositFromNetwork:', !depositFromNetwork)
     if (!depositFromNetwork) return
 
-    console.log('Проверка depositToNetwork:', !depositToNetwork)
     if (!depositToNetwork) return
 
     return {
@@ -126,8 +112,9 @@ export function useGetSquidSwapRoute() {
 
   useEffect(() => {
     if (data) {
-      setSquidRoute(data.data.route)
+      return setSquidRoute(data.data.route)
     }
+    setSquidRoute(undefined)
   }, [data, setSquidRoute])
 
   return {

@@ -16,7 +16,6 @@ export const useSetDepositDetails = () => {
     inputValue,
     setVaultAddress,
     setDepositTotalInUSD,
-    setInputValueInUSD,
     setTxDifficulty,
     setIsTxZAP,
   } = useTxStore()
@@ -25,12 +24,10 @@ export const useSetDepositDetails = () => {
     if (!squidRoute) return
 
     setDepositTotalInUSD(squidRoute?.estimate?.toAmountMinUSD ?? '0')
-    setInputValueInUSD(squidRoute?.estimate?.fromAmountUSD ?? '0')
   }, [
     squidRoute?.estimate?.fromAmountUSD,
     squidRoute?.estimate?.toAmountMinUSD,
     setDepositTotalInUSD,
-    setInputValueInUSD,
     squidRoute,
     vault,
     depositToNetwork,
@@ -66,7 +63,6 @@ export const useSetDepositDetails = () => {
     ) {
       setIsTxZAP(false)
       setDepositTotalInUSD(formatAmountValue(inputValue ?? '0', 2) ?? '0')
-      setInputValueInUSD(formatAmountValue(inputValue ?? '0', 2) ?? '0')
       return
     }
 
@@ -77,7 +73,6 @@ export const useSetDepositDetails = () => {
     depositToNetwork,
     inputValue,
     setDepositTotalInUSD,
-    setInputValueInUSD,
     setIsTxZAP,
     vaultAddress,
   ])

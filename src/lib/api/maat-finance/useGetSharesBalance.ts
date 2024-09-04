@@ -12,12 +12,12 @@ export const useGetSharesBalance = (address?: Address) => {
   return useQuery<ApiResponse<ParsedSharesBalanceResponse>>({
     queryKey: ['sharesBalance', address],
     queryFn: async () => {
-      const response = await apiClient.get<SharesBalanceResponse>('/getSharesBalance', {
+      const response = await apiClient.get<SharesBalanceResponse>('/user/balances', {
         params: { address },
       })
       const parsedData: ParsedSharesBalanceResponse = {
-        balances: response.data.balances.flatMap(({ chain, balances }) =>
-          balances.map((balance) => ({ chain, ...balance })),
+        balances: response.data.balances.flatMap(({ balances }) =>
+          balances.map((balance) => ({ ...balance, ...balance.token })),
         ),
       }
       return { data: parsedData, status: response.status }

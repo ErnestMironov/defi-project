@@ -1,7 +1,6 @@
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
-import { ARB_USDC, ARB_USDT } from '@constants/contract-address'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'

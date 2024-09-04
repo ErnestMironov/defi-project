@@ -5,9 +5,9 @@ import { ScrollArea } from '@radix-ui/react-scroll-area'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
-import { COLORS, MultiColoredLineChart } from './components/MultiColoredLineChart'
-import { SelectPopover } from './components/SelectMenu'
-import { StrategyRow } from './components/StrategyRow'
+import { COLORS, MultiColoredLineChart } from '../components/MultiColoredLineChart'
+import { SelectPopover } from '../components/SelectMenu'
+import { StrategyRow } from '../components/StrategyRow'
 
 type ChartDataType = {
   name: string
