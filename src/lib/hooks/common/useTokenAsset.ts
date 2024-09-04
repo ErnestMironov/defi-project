@@ -82,6 +82,11 @@ const TOKENS: ITokenAsset[] = [
     symbol: 'MNT',
     name: 'Mantle',
   },
+  {
+    TokenIcon: Optimism,
+    symbol: 'OP',
+    name: 'Optimism',
+  },
   // network icons
   {
     TokenIcon: Ethereum,

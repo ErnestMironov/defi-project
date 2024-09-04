@@ -1,5 +1,6 @@
 import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import { FeeType } from '@0xsquid/sdk/dist/types'
+import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
 
 const overEstimateCoefficient = 1.3
 const valueCharNumber = 8
@@ -43,7 +44,7 @@ function createDefaultSummaryAndFees() {
   const minReceive = { ...defaultValue }
   const exchangeRate = ''
 
-  const estimatedTime = '0 sec'
+  const estimatedTime = `${ESTIMATED_TIME_OF_CONFIRMATION} sec`
 
   return {
     crossChainFee,
@@ -71,7 +72,9 @@ function configureEstimatedTime(
   route: RouteResponse['route'],
   summaryAndFees: SummaryAndFees,
 ) {
-  const estimatedTime = getEstimatedTime(route?.estimate.estimatedRouteDuration)
+  const estimatedTime = getEstimatedTime(
+    Number(route?.estimate.estimatedRouteDuration) + ESTIMATED_TIME_OF_CONFIRMATION,
+  )
 
   summaryAndFees.estimatedTime = estimatedTime
 }

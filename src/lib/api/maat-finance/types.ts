@@ -5,23 +5,29 @@ export interface ApiResponse<T> {
   status: number
 }
 
+export interface Balance {
+  symbol: 'USDT' | 'USDC'
+  mtToken: number
+  value: number
+  address: Address
+  decimals: number
+  chain_id: number
+}
+
 export interface SharesBalanceResponse {
   address: Address
   balances: {
     chain: string
     balances: {
-      token: 'USDT' | 'USDC'
       mtToken: number
       value: number
+      token: Omit<Balance, 'value' | 'mtToken'>
     }[]
   }[]
 }
 
 export interface ParsedSharesBalanceResponse {
-  balances: {
-    chain: string
-    token: 'USDT' | 'USDC'
-    mtToken: number
-    value: number
-  }[]
+  balances: Balance[]
 }
+
+export type WithdrawStatusResponse = 'success' | 'failed' | 'pending'

@@ -21,7 +21,6 @@ import {
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { TransactionsMobileList } from './TransactionsMobileList'
 
@@ -35,7 +34,6 @@ export const TransactionsMobileWithFilters = (
   props: TransactionsMobileWithFiltersProperties,
 ) => {
   const { className, filters = ['actions', 'statuses', 'chains'] } = props
-  const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
   const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
@@ -51,17 +49,17 @@ export const TransactionsMobileWithFilters = (
     perPage: 10,
     page: currentPage,
   })
-  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  // const [isLoadingMore, setIsLoadingMore] = useState(false)
 
-  const onViewMoreClick = async () => {
-    setIsLoadingMore(true)
-    await fetchMore({
-      variables: {
-        after: pageInfo?.endCursor,
-      },
-    })
-    setIsLoadingMore(false)
-  }
+  // const onViewMoreClick = async () => {
+  //   setIsLoadingMore(true)
+  //   await fetchMore({
+  //     variables: {
+  //       after: pageInfo?.endCursor,
+  //     },
+  //   })
+  //   setIsLoadingMore(false)
+  // }
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {

@@ -10,6 +10,10 @@ const DEFAULT_CHAINS = [
   Chains.OPTIMISM_MAINNET,
   Chains.MATIC_MAINNET,
   Chains.BASE_MAINNET,
+  Chains.ETH_MAINNET,
+  Chains.MANTLE_MAINNET,
+  Chains.BSC_MAINNET,
+  Chains.METIS_MAINNET,
 ]
 
 export const COVALENT_CHAINS_MAPPER = {
@@ -17,6 +21,10 @@ export const COVALENT_CHAINS_MAPPER = {
   [Chains.OPTIMISM_MAINNET]: CHAIN_IDS_BY_NAME.Optimism,
   [Chains.MATIC_MAINNET]: CHAIN_IDS_BY_NAME.Polygon,
   [Chains.BASE_MAINNET]: CHAIN_IDS_BY_NAME.Base,
+  [Chains.ETH_MAINNET]: CHAIN_IDS_BY_NAME.Ethereum,
+  [Chains.MANTLE_MAINNET]: CHAIN_IDS_BY_NAME.Mantle,
+  [Chains.BSC_MAINNET]: CHAIN_IDS_BY_NAME.BNB,
+  [Chains.METIS_MAINNET]: CHAIN_IDS_BY_NAME.Metis,
 } as const
 
 interface UsePortfolioProperties {

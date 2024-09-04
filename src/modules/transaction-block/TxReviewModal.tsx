@@ -40,9 +40,11 @@ export const TxReviewModal = () => {
 
   const renderCloseButton = () => {
     if (isTransactionCanBeCollapsed) {
-      return <CollapseIcon className="size-6" onClick={handleClose} />
+      return (
+        <CollapseIcon className="size-6 [&_path]:stroke-text-80" onClick={handleClose} />
+      )
     }
-    return <CloseIcon className="size-6" onClick={handleClose} />
+    return <CloseIcon className="size-6 [&_path]:fill-text-80" onClick={handleClose} />
   }
 
   const renderContent = () => {

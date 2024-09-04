@@ -1,26 +1,48 @@
+import { filterVaultsByChain } from '@api/squid-router/postHook/utils/filterChainsByVault'
 import Close from '@assets/icons/close.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
+import type { ChainType } from '@constants/chains'
+import { VAULTS } from '@constants/vaults'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import type { Vault } from '../store/useTxStore'
 import { useTxStore } from '../store/useTxStore'
 
 interface SelectAssetPopoverProperties {}
 
-export const VAULTS = ['USDT', 'USDC'] as const
-export type Vault = (typeof VAULTS)[number]
-
 export const SelectVault = (_props: SelectAssetPopoverProperties) => {
-  const { vault, setVault } = useTxStore()
+  const { vault, setVault, depositToNetwork } = useTxStore()
   const [isOpened, setIsOpened] = useState(false)
-  const onChange = (_vault: Vault) => {
-    setVault(_vault)
-    setIsOpened(false)
-  }
+
+  const onChange = useCallback(
+    (_vault: Vault) => {
+      setVault(_vault)
+      setIsOpened(false)
+    },
+    [setVault],
+  )
+
+  const filteredVaults = useMemo(
+    () => filterVaultsByChain(depositToNetwork as ChainType, [...VAULTS]),
+    [depositToNetwork],
+  )
+
+  useEffect(() => {
+    if (filteredVaults.length === 1) {
+      onChange(filteredVaults[0])
+    }
+  }, [filteredVaults, onChange])
+
+  const handleOpenChange = useCallback(() => {
+    if (depositToNetwork) {
+      setIsOpened(!isOpened)
+    }
+  }, [depositToNetwork, isOpened])
 
   if (!vault) {
     return (
@@ -35,9 +57,10 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
   }
 
   return (
-    <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
+    <Popover open={isOpened} onOpenChange={handleOpenChange}>
       <PopoverTrigger>
         <ChoiceBox
+          disabled={!depositToNetwork || filteredVaults.length <= 1}
           className="min-w-[10.5rem]"
           value={vault}
           symbol={vault}
@@ -52,7 +75,7 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
           </PopoverClose>
         </div>
         <div className="mt-6 space-y-2">
-          {VAULTS.map((_vault) => (
+          {filteredVaults.map((_vault) => (
             <button
               type="button"
               key={_vault}

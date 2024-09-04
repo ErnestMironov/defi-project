@@ -30,7 +30,7 @@ const calculateTokenValue = (
     return 0
   }
 
-  return usdValue.multipliedBy(_assetBalance.div(assetQuote)).toNumber()
+  return +usdValue.multipliedBy(_assetBalance.div(assetQuote)).toFixed(4)
 }
 
 const calculateUSDValue = (
@@ -78,7 +78,7 @@ export const DepositInput = () => {
       inputValueBN.isNaN() ||
       assetQuoteBN.isNaN()
     ) {
-      // setInputValueInUSD('0.00')
+      setInputValueInUSD('0.00')
       setError('Invalid input or balance')
       return
     }
@@ -97,6 +97,14 @@ export const DepositInput = () => {
   }, [asset, asset?.quote, assetBalance, inputValue, inputValueInUSD, setInputValueInUSD])
 
   const handleAction = (type: InputType, value: string) => {
+    console.log('handleAction', type, value)
+
+    if (!value) {
+      setInputValue('')
+      setInputValueInUSD('')
+      return
+    }
+
     const assetBalanceBN = BigNumber(assetBalance)
     const assetQuoteBN = BigNumber(asset?.quote ?? 1)
     const numericValue = BigNumber(value)

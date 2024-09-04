@@ -217,10 +217,6 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     searchValue,
   ])
 
-  console.log(
-    '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
-    filteredByChainTokens,
-  )
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
