@@ -52,7 +52,7 @@ export const DoneModal = () => {
   const amount = useMemo(() => {
     switch (txType) {
       case 'deposit': {
-        return formatAmountValue(depositTotalInUSD)
+        return depositTotalInUSD
       }
       case 'withdraw': {
         return formatAmountValue(withdrawAmount)

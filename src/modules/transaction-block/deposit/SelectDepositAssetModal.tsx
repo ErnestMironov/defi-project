@@ -19,7 +19,8 @@ import {
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
-import type { ChainType } from '@constants/chains'
+import { CHAIN_IDS_BY_NAME, type ChainType } from '@constants/chains'
+import { SUPPORTED_CHAINS_FOR_REP_TOKENS } from '@constants/eids'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
@@ -31,8 +32,21 @@ import { useAccount } from 'wagmi'
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 import { useTxStore } from '../store/useTxStore'
 
+// -------------------- Types --------------------
+
 interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
+interface ResponsiveDialogContentProperties
+  extends React.ComponentPropsWithoutRef<typeof DialogContent> {
+  opened: boolean
+  setOpened: (isOpen: boolean) => void
+}
+
+// -------------------- Components --------------------
+
+/**
+ * Renders the trigger for selecting a chain
+ */
 const SelectChainTrigger = () => {
   const { depositFromNetwork } = useTxStore()
   const chainData = useTokenAsset(depositFromNetwork)
@@ -49,6 +63,11 @@ const SelectChainTrigger = () => {
   )
 }
 
+/**
+ * Renders a single token item in the list
+ * @param onChange - Function to call when the token is selected
+ * @param token - Token data to display
+ */
 function TokensListItem({
   onChange,
   token,
@@ -89,12 +108,10 @@ function TokensListItem({
   )
 }
 
-interface ResponsiveDialogContentProperties
-  extends React.ComponentPropsWithoutRef<typeof DialogContent> {
-  opened: boolean
-  setOpened: (isOpen: boolean) => void
-}
-
+/**
+ * Renders a responsive dialog content
+ * @param props - Component properties
+ */
 const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
   className,
   children,
@@ -140,9 +157,16 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
   )
 }
 
+// -------------------- Main Component --------------------
+
+/**
+ * Renders the SelectDepositAsset component
+ * @param _props - Component properties
+ */
 export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
   const [searchValue, setSearchValue] = useState('')
+  const [opened, setOpened] = useState(false)
 
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
@@ -163,19 +187,42 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     setDepositFromNetwork,
     resetStore,
   } = useTxStore()
-  const [opened, setOpened] = useState(false)
+
+  // -------------------- Handlers --------------------
+
+  /**
+   * Handles the change of selected asset
+   * @param _asset - The selected asset
+   */
   const onChange = (_asset: ITokenData) => {
     resetStore()
     setAsset(_asset)
-    setDepositToNetwork(_asset.chain_id as ChainType)
     setDepositFromNetwork(_asset.chain_id as ChainType)
+
+    if (SUPPORTED_CHAINS_FOR_REP_TOKENS.includes(_asset.chain_id as ChainType)) {
+      setDepositToNetwork(_asset.chain_id as ChainType)
+    } else {
+      setDepositToNetwork(CHAIN_IDS_BY_NAME.Arbitrum)
+    }
+
     setOpened(false)
   }
 
+  // -------------------- Helper Functions --------------------
+
+  /**
+   * Sorts tokens by quote in descending order
+   * @param tokens - Array of tokens to sort
+   */
   const sortTokensByQuote = (tokens: ITokenData[]) => {
     return tokens.sort((a, b) => b.quote - a.quote)
   }
 
+  /**
+   * Filters tokens based on supported addresses and non-zero balance
+   * @param tokens - Array of tokens to filter
+   * @param supportedTokensAddr - Array of supported token addresses
+   */
   const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
     return tokens.filter(
       (token) =>
@@ -184,6 +231,11 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     )
   }
 
+  /**
+   * Searches tokens based on name or symbol
+   * @param tokens - Array of tokens to search
+   * @param searchValue - Search query
+   */
   const searchTokens = (tokens: ITokenData[], searchValue: string) => {
     return tokens.filter(
       (token) =>
@@ -191,6 +243,8 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
         token.contract_ticker_symbol?.toLowerCase().includes(searchValue.toLowerCase()),
     )
   }
+
+  // -------------------- Memoized Values --------------------
 
   const filteredByChainTokens = useMemo(() => {
     if (!userTokens || !supportedTokensAddr || supportedBySquidTokens?.length === 0)
@@ -216,6 +270,8 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     chain,
     searchValue,
   ])
+
+  // -------------------- Render --------------------
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>

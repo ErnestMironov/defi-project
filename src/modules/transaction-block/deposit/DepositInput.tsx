@@ -66,6 +66,8 @@ export const DepositInput = () => {
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
 
+  const prettyAssetBalance = Number(assetBalance).toFixed(4)
+
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -159,7 +161,7 @@ export const DepositInput = () => {
               <button
                 type="button"
                 className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                onClick={() => handleAction('token', assetBalance)}
+                onClick={() => handleAction('token', prettyAssetBalance)}
               >
                 Max
               </button>
