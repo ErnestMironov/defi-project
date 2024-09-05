@@ -39,10 +39,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       <Table.Cell>
         <IconWithLabelComponent symbol={strategy.protocol} className="size-9 gap-4" />
       </Table.Cell>
-      {/* // ! TODO: remove "* 5" when we have real data */}
-      <Table.Cell className="font-bold">
-        {formatPercentValue(strategy.apy * 5)}
-      </Table.Cell>
+      <Table.Cell className="font-bold">{formatPercentValue(strategy.apy)}</Table.Cell>
       <Table.Cell>
         {formatUsdValue(formatUnits(BigInt(strategy.tvl), strategy.token.decimals), {
           notation: 'compact',

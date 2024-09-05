@@ -44,10 +44,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
       </div>
       <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-2 text-base even:[&>*]:justify-self-end">
         <h6>Projected APY</h6>
-        {/* // ! TODO: remove "* 5" when we have real data */}
-        <div className="font-bold">
-          {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
-        </div>
+        <div className="font-bold">{BigNumber(strategy.apy).toFixed(2)}%</div>
         <h6>TVL</h6>
         <div>
           {formatUsdValue(strategy.tvl, {
