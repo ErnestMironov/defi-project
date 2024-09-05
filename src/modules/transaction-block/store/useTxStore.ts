@@ -54,6 +54,8 @@ export interface SelectedAssetState {
   setInputValueInUSD: (value: string) => void
   depositTotalInUSD: string
   setDepositTotalInUSD: (value: string) => void
+  depositTotalAmount: string
+  setDepositTotalAmount: (value: string) => void
   depositAmount: string
   setDepositAmount: (value: string) => void
   withdrawAmount: string
@@ -126,6 +128,9 @@ export const useTxStore = create<SelectedAssetState>()(
       vaultAddress: undefined,
       setVaultAddress: (by) => set({ vaultAddress: by }),
 
+      depositTotalAmount: '',
+      setDepositTotalAmount: (by) => set({ depositTotalAmount: by }),
+
       // mtToken
       mtToken: null,
       setMToken: (by) => set({ mtToken: convertBigIntToString(by) }),
@@ -196,6 +201,7 @@ export const useTxStore = create<SelectedAssetState>()(
           inputValue: '',
           inputValueInUSD: '',
           depositTotalInUSD: '',
+          depositTotalAmount: '',
           depositAsset: null,
           depositFromNetwork: null,
           withdrawFromNetwork: null,
