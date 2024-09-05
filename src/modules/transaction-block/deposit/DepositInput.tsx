@@ -2,7 +2,7 @@ import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
-import { formatTokenBalance } from '@utils/formatValue'
+import { formatTokenBalance, formatValueWithPrecision } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -58,6 +58,8 @@ export const DepositInput = () => {
     inputValue,
     inputValueInUSD,
     depositTotalInUSD,
+    depositTotalAmount,
+    isTxZAP,
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,
@@ -66,7 +68,7 @@ export const DepositInput = () => {
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
 
-  const prettyAssetBalance = Number(assetBalance).toFixed(4)
+  const prettyAssetBalance = formatValueWithPrecision(assetBalance, 8)
 
   const [error, setError] = useState('')
 
@@ -178,7 +180,7 @@ export const DepositInput = () => {
       >
         <div className="flex w-full items-center justify-between">
           {isConnected && asset ? (
-            <AmountInput value={depositTotalInUSD} decimals={18} disabled />
+            <AmountInput value={depositTotalAmount} decimals={18} disabled />
           ) : (
             <p className="text-md text-gray-100 max-lg:text-sm">
               Select the desired vault...
@@ -196,7 +198,7 @@ export const DepositInput = () => {
         )}
       </div>
 
-      {inputValue && <ZapFee className="mt-4" />}
+      {inputValue && isTxZAP ? <ZapFee className="mt-4" /> : null}
 
       {isConnected && (
         <Button
