@@ -14,6 +14,7 @@ const DEFAULT_CHAINS = [
   Chains.MANTLE_MAINNET,
   Chains.BSC_MAINNET,
   Chains.METIS_MAINNET,
+  Chains.AVALANCHE_MAINNET,
 ]
 
 export const COVALENT_CHAINS_MAPPER = {
@@ -25,6 +26,7 @@ export const COVALENT_CHAINS_MAPPER = {
   [Chains.MANTLE_MAINNET]: CHAIN_IDS_BY_NAME.Mantle,
   [Chains.BSC_MAINNET]: CHAIN_IDS_BY_NAME.BNB,
   [Chains.METIS_MAINNET]: CHAIN_IDS_BY_NAME.Metis,
+  [Chains.AVALANCHE_MAINNET]: CHAIN_IDS_BY_NAME.Avalanche,
 } as const
 
 interface UsePortfolioProperties {

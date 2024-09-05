@@ -87,6 +87,9 @@ function TokensListItem({
         symbol={token.contract_ticker_symbol}
         tokenLogoFallback={token.logo_url}
         network={token.chain_id}
+        classNames={{
+          token: 'rounded-full',
+        }}
         position="bottom-right"
         width="2.14288rem"
       />

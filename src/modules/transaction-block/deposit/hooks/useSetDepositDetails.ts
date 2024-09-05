@@ -1,9 +1,11 @@
 import { USDC_TOKENS } from '@api/squid-router/postHook/data/USDC'
 import { USDT_TOKENS } from '@api/squid-router/postHook/data/USDT'
-import type { ChainType } from '@constants/chains'
-import { SUPPORTED_CHAINS_FOR_REP_TOKENS } from '@constants/eids'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
-import { formatTokenBalance, formatValueWithPrecision } from '@utils/formatValue'
+import {
+  formatAmountValue,
+  formatTokenBalance,
+  formatValueWithPrecision,
+} from '@utils/formatValue'
 import { useEffect } from 'react'
 import { type Address } from 'viem'
 
@@ -14,6 +16,8 @@ export const useSetDepositDetails = () => {
     depositToNetwork,
     vault,
     inputValue,
+    depositAsset,
+    vaultAddress,
     setVaultAddress,
     setDepositTotalInUSD,
     setDepositTotalAmount,
@@ -64,13 +68,25 @@ export const useSetDepositDetails = () => {
   }, [depositFromNetwork, depositToNetwork, setTxDifficulty, setVaultAddress, vault])
 
   useEffect(() => {
-    if (SUPPORTED_CHAINS_FOR_REP_TOKENS.includes(depositFromNetwork as ChainType)) {
+    if (
+      depositFromNetwork === depositToNetwork &&
+      depositAsset?.contract_address.toLowerCase() === vaultAddress?.toLowerCase()
+    ) {
       setIsTxZAP(false)
+      setDepositTotalInUSD(formatAmountValue(inputValue ?? '0', 2) ?? '0')
       return
     }
 
     setIsTxZAP(true)
-  }, [depositFromNetwork, setIsTxZAP])
+  }, [
+    depositAsset?.contract_address,
+    depositFromNetwork,
+    depositToNetwork,
+    inputValue,
+    setDepositTotalInUSD,
+    setIsTxZAP,
+    vaultAddress,
+  ])
 
   useEffect(() => {
     if (depositFromNetwork === depositToNetwork) {

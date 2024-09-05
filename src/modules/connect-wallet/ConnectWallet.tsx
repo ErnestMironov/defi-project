@@ -1,6 +1,6 @@
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import type { ButtonProperties } from '@components/ui/button'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import clsx from 'clsx'
 import { useAccount } from 'wagmi'
@@ -26,7 +26,7 @@ export const ConnectWallet = ({ btnProps }: IConnectWalletProperties) => {
     >
       {address ? (
         <>
-          <span>{shortenString(address)}</span>{' '}
+          <span className="normal-case">{shortenAddress(address)}</span>{' '}
           <ArrowDown
             className={clsx(
               'size-4 transition-all duration-150 dark:[&_path]:stroke-white',
