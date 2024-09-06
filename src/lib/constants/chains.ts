@@ -20,7 +20,16 @@ export const CHAIN_IDS_BY_NAME = {
   Mantle: 5000,
   BNB: 56,
   Metis: 1088,
+  Sei: 1329,
 } as const
+
+export const SCAN_LINK_BY_CHAIN_ID = {
+  1: 'https://etherscan.io/',
+  10: 'https://optimistic.etherscan.io/',
+  1329: 'https://seitrace.com/',
+  43_114: 'https://snowtrace.io/',
+  56: 'https://bscscan.com/',
+}
 
 export const CHAINS = [
   // CHAIN_IDS_BY_NAME.Ethereum,

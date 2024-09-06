@@ -49,9 +49,14 @@ export const MobileFiltersDrawer = (props: MobileFiltersDrawerProperties) => {
     closeOnReset = false,
   } = props
   const [isOpen, setIsOpen] = useState(false)
+
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger asChild className={cn(className)}>
+      <DrawerTrigger
+        asChild
+        className={cn(className)}
+        onClick={(e) => e.stopPropagation()}
+      >
         {trigger}
       </DrawerTrigger>
       <DrawerContent
@@ -59,6 +64,10 @@ export const MobileFiltersDrawer = (props: MobileFiltersDrawerProperties) => {
         position="bottom"
         withDraggable={false}
         className="inset-x-0 w-full items-center justify-center space-y-5 px-4 py-6"
+        onInteractOutside={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
       >
         <DrawerHeader className="flex w-full items-center justify-between">
           <DrawerTitle className="text-lg font-bold text-text-90">{title}</DrawerTitle>

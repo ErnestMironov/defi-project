@@ -6,7 +6,7 @@ import { Link, NavLink } from 'react-router-dom'
 
 import { MenuItemDropdown } from './MenuItemDropdown'
 import type { IMenuItem } from './useMenu'
-import { useMenuArray, useShortMenuArray } from './useMenu'
+import { useShortMenuArray } from './useMenu'
 
 interface HeaderMenuProperties extends ComponentProps<'ul'> {
   callback?: () => void
@@ -27,17 +27,93 @@ export const HeaderMenu = ({ className, callback, ...rest }: HeaderMenuPropertie
   )
 }
 
-export const FooterMenu = ({ className, callback, ...rest }: HeaderMenuProperties) => {
-  const menu = useMenuArray()
-
+export const MobileFooterMenu = ({
+  className,
+  callback,
+  ...rest
+}: HeaderMenuProperties) => {
+  const menu = useShortMenuArray()
   return (
-    <ul className={cn('flex items-center gap-[3.69rem]', className)} {...rest}>
+    <ul
+      className={cn('flex flex-col items-center gap-6 [&_*]:text-base', className)}
+      {...rest}
+    >
       {menu.map((menuItem) => {
         if (menuItem.href.startsWith('http')) {
-          return <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
+          return (
+            <li>
+              <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
+            </li>
+          )
         }
-        return <NavLinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
+        return (
+          <li className="flex flex-col items-center">
+            <NavLinkMenuItem
+              key={menuItem.href}
+              {...{ ...menuItem, dropdown: undefined }}
+              callback={callback}
+            />
+            {menuItem.dropdown && (
+              <ul className="mt-6 flex flex-col items-start gap-3 [&_*]:text-sm">
+                {menuItem.dropdown?.map((item) => {
+                  return (
+                    <li key={item.href}>
+                      <SubNavLinkMenuItem
+                        {...item}
+                        callback={callback}
+                        className="gap-2"
+                      />
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </li>
+        )
       })}
+    </ul>
+  )
+}
+export const FooterMenu = ({ className, callback, ...rest }: HeaderMenuProperties) => {
+  const menu = useShortMenuArray()
+
+  return (
+    <ul
+      className={cn(
+        'grid grid-cols-[auto_1fr] w-fit gap-x-8 gap-y-8 [&_*]:text-2xl',
+        className,
+      )}
+      {...rest}
+    >
+      {menu.map((menuItem) => (
+        <>
+          <li className="">
+            {menuItem.href.startsWith('http') ? (
+              <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
+            ) : (
+              <NavLinkMenuItem
+                key={menuItem.href}
+                {...{ ...menuItem, dropdown: undefined }}
+                callback={callback}
+              />
+            )}
+          </li>
+          <li className="">
+            {menuItem.dropdown && (
+              <ul className="flex flex-col items-start gap-8 [&_*]:text-sm">
+                {menuItem.dropdown?.map((item) => (
+                  <SubNavLinkMenuItem
+                    key={item.href}
+                    {...item}
+                    callback={callback}
+                    className="gap-2 hover:text-main-100"
+                  />
+                ))}
+              </ul>
+            )}
+          </li>
+        </>
+      ))}
     </ul>
   )
 }
@@ -86,12 +162,12 @@ export const LinkMenuItem = ({ href, label, src: Source, callback }: IMenuItem) 
       target="_blank"
       key={label}
       className={clsx(
-        'relative flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_path]:hover:stroke-main-100',
+        'relative inline-flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_path]:hover:stroke-main-100',
       )}
     >
-      {label}
+      <span>{label}</span>
 
-      {Source && <Source className="size-4.5 ml-0.5 [&_path]:stroke-text" />}
+      {Source && <Source className="size-4 [&_path]:stroke-text" />}
     </Link>
   )
 }
@@ -123,18 +199,24 @@ export const NavLinkMenuItem = ({
     </NavLink>
   )
 }
-export const SubNavLinkMenuItem = ({ href, label, callback }: IMenuItem) => {
+export const SubNavLinkMenuItem = ({
+  href,
+  label,
+  callback,
+  className,
+}: IMenuItem & ComponentProps<'span'>) => {
   return (
     <NavLink
       onClick={callback}
       to={href}
       key={label}
       className={({ isActive }) =>
-        clsx(
+        cn(
           'relative flex cursor-pointer items-center gap-4 text-[1.125rem] font-normal uppercase leading-[120%] tracking-[0.0125rem]',
           {
             'text-main-100 [&_path]:fill-main-50': isActive,
           },
+          className,
         )
       }
     >

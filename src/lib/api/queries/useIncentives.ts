@@ -1,48 +1,44 @@
 import { apiClient } from '@api/maat-finance/api-client'
-import type {
-  ActionType,
-  Event,
-  PaginationResponse,
-  SortDirection,
-  StatusType,
-} from '@api/maat-finance/types'
+import type { IncentiveEvent, PaginationResponse } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
-export type EventsParameters = {
+export type IncentiveParameters = {
   limit?: number
-  action_type: ActionType
   page?: number
   size?: number
-  sort?: SortDirection
-  status?: StatusType
-  start?: string
-  end?: string
+  start_timestamp?: string
+  end_timestamp?: string
 }
 
-const getEvents = (parameters: EventsParameters) => {
-  return apiClient.get<PaginationResponse<Event>>('/actions/last', {
+const getIncentives = (parameters: IncentiveParameters) => {
+  return apiClient.get<PaginationResponse<IncentiveEvent>>('/actions/incentives', {
     params: parameters,
   })
 }
 
-export const useEvents = (parameters: EventsParameters) => {
+export const useIncentives = (parameters: IncentiveParameters) => {
   return useQuery({
-    queryKey: ['events', parameters],
+    queryKey: ['incentives', parameters],
     queryFn: async () => {
-      const { data } = await getEvents(parameters)
+      const { data } = await getIncentives(parameters)
       return data
     },
   })
 }
 
-export const useInfiniteEvents = (parameters: EventsParameters) => {
+export const useInfiniteIncentives = (parameters: IncentiveParameters) => {
   const { size, ...rest } = parameters
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
       queryKey: ['events', rest],
       queryFn: async ({ pageParam }) => {
         //! TODO: remove limit
-        const response = await getEvents({ size, page: pageParam, limit: 100, ...rest })
+        const response = await getIncentives({
+          size,
+          page: pageParam,
+          limit: 100,
+          ...rest,
+        })
         return response.data
       },
       getNextPageParam: (lastPage) => {

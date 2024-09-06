@@ -1,5 +1,5 @@
 import type { FrameType } from '@components/frames-select/useFrameSelect'
-import { formatAmountValue } from '@utils/formatValue'
+import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import dayjs from 'dayjs'
 import {
   Area,
@@ -22,15 +22,21 @@ export type RechartDataType = {
 
 interface AreaChartComponentProperties {
   data?: RechartDataType[]
-  yPrefix?: string
-  yPostfix?: string
   frame?: FrameType
+  yAxisType: 'percentage' | 'usd'
 }
 
 export const LineChartComponent = (props: AreaChartComponentProperties) => {
-  const { data, yPrefix = '', yPostfix = '', frame } = props
-  const tooltipFormatter = (value?: string) =>
-    `${yPrefix}${formatAmountValue(value, 2)}${yPostfix}`
+  const { data, yAxisType, frame } = props
+  const tooltipFormatter = (value?: string) => {
+    if (yAxisType === 'percentage') {
+      return formatPercentValue(value)
+    }
+    if (yAxisType === 'usd') {
+      return formatUsdValue(value)
+    }
+    return ''
+  }
 
   const filteredData = data?.reduce((accumulator, current, index) => {
     if (index === 0 || frame === '1D') {
@@ -81,7 +87,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
         margin={{
           top: 10,
           right: 10,
-          left: 0,
+          left: 10,
           bottom: 0,
         }}
       >
@@ -100,6 +106,8 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
         <YAxis
           axisLine={false}
           tickLine={false}
+          type="number"
+          domain={['dataMin', 'dataMax']}
           tickFormatter={(value) => (value === 0 ? '' : tooltipFormatter(value))}
           className="text-[0.8125rem] [&_text]:fill-gray-100"
           interval="preserveStartEnd"

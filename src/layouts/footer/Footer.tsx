@@ -1,7 +1,7 @@
 import { Socials } from '@components/socials/Socials'
 import { Logo } from '@components/ui/logo'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { FooterMenu } from '@layouts/header/HeaderMenu'
+import { HeaderMenu, MobileFooterMenu } from '@layouts/header/HeaderMenu'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
@@ -14,12 +14,12 @@ export const Footer = (props: MobileFooterProperties) => {
   if (isBelowDesktop) {
     return (
       <footer
-        className={cn('flex justify-center flex-col gap-8 items-center', className)}
+        className={cn('flex justify-center flex-col gap-12 items-center', className)}
       >
         <Link to="/">
           <Logo className="size-9 overflow-visible" />
         </Link>
-        <FooterMenu className="flex-wrap justify-center gap-x-3 gap-y-5 [&_*]:text-base [&_*]:tracking-[0.01rem]" />
+        <MobileFooterMenu />
         <Socials
           classNames={{
             icon: '[&_path]:fill-text-80 opacity-100',
@@ -31,13 +31,13 @@ export const Footer = (props: MobileFooterProperties) => {
   }
   return (
     <footer
-      className={cn('flex justify-center flex-col gap-[4.06rem] items-center', className)}
+      className={cn('flex justify-center flex-col gap-[7rem] items-center', className)}
     >
-      <div className="grid w-full grid-cols-[1fr_2fr_1fr] items-start">
+      <div className="grid w-full grid-cols-3 items-start">
         <Link to="/" className="flex-[0.5] justify-self-start">
           <Logo className="h-[1.5625rem] w-[4.1875rem]" />
         </Link>
-        <FooterMenu className="flex-[0.5] gap-[3.75rem] justify-self-center" />
+        <HeaderMenu className="place-self-center" />
       </div>
       <Socials
         classNames={{

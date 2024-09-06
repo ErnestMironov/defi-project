@@ -9,11 +9,13 @@ import Ethereum from '@assets/icons/networks/ethereum.svg'
 // import MantleNetowork from '@assets/icons/networks/mantle.svg'
 import Optimism from '@assets/icons/networks/optimism.svg'
 import Polygon from '@assets/icons/networks/polygon.svg'
+import Sei from '@assets/icons/networks/sei.svg'
 // protocol icons
 import Aave from '@assets/icons/protocols/aave.svg'
 import Beefy from '@assets/icons/protocols/beefy.svg'
 import Compound from '@assets/icons/protocols/compound.svg'
 import Gnosis from '@assets/icons/protocols/gnosis.svg'
+import Harvest from '@assets/icons/protocols/harvest.svg'
 import Lendle from '@assets/icons/protocols/lendle.svg'
 import Mantle from '@assets/icons/protocols/mantle.svg'
 import Metis from '@assets/icons/protocols/metis.svg'
@@ -96,6 +98,12 @@ const TOKENS: ITokenAsset[] = [
     name: 'Ethereum',
   },
   {
+    TokenIcon: Sei,
+    symbol: 'SEI',
+    chainId: 1329,
+    name: 'Sei',
+  },
+  {
     TokenIcon: Optimism,
     symbol: 'optimism-mainnet',
     chainId: 10,
@@ -154,6 +162,11 @@ const TOKENS: ITokenAsset[] = [
     TokenIcon: Aave,
     symbol: 'Aave',
     name: 'Aave',
+  },
+  {
+    TokenIcon: Harvest,
+    symbol: 'Harvest',
+    name: 'Harvest',
   },
   {
     TokenIcon: Lendle,

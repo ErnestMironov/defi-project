@@ -17,6 +17,7 @@ interface IncentiveRowProperties extends ComponentProps<'div'> {
 
 export const IncentiveRow = (props: IncentiveRowProperties) => {
   const { event } = props
+
   const renderAmount = () => {
     const amount = event.amount_in || event.amount_out
     const token = event.token_in || event.token_out

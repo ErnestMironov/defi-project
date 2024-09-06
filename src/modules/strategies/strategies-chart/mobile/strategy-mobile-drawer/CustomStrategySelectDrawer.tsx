@@ -1,10 +1,12 @@
 import type { Strategy } from '@api/maat-finance/types'
+import { useInfiniteStrategies } from '@api/queries/useStrategies'
 import Arrow from '@assets/icons/arrow-left.svg'
 import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import type { OptionType } from '@components/select/Select'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/ui/drawer'
+import { Loader } from '@components/ui/loader'
 import {
   SELECT_CHAINS,
   SELECT_PROTOCOLS,
@@ -15,179 +17,6 @@ import { type ComponentProps, useState } from 'react'
 
 import type { StrategyWithColor } from '../useMobileStrategiesChartStore'
 import { DrawerMultiSelectTokens } from './DrawerMultiSelectTokens'
-
-export const MOCK_STRATEGIES: Strategy[] = [
-  {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-    apy: 12.34,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-1',
-    info: null,
-    protocol: 'aave',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 1',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 1_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 23.45,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-2',
-    info: null,
-    protocol: 'stargate',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 2',
-      decimals: 18,
-      address: '0x1234567890abcdef1234567890abcdef12345678',
-    },
-    tvl: 2_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 34.56,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-3',
-    info: null,
-    protocol: 'yearn',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 3',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 3_000_000,
-  },
-  {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-    apy: 45.67,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-4',
-    info: null,
-    protocol: 'aave',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 4',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 4_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 56.78,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-5',
-    info: null,
-    protocol: 'stargate',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 5',
-      decimals: 18,
-      address: '0x1234567890abcdef1234567890abcdef12345678',
-    },
-    tvl: 5_000_000,
-  },
-  {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-    apy: 12.34,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-6',
-    info: null,
-    protocol: 'aave',
-    token: {
-      chain_id: 137,
-      symbol: 'usdc',
-      name: 'Token 1',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 1_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 23.45,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-7',
-    info: null,
-    protocol: 'stargate',
-    token: {
-      chain_id: 137,
-      symbol: 'usdc',
-      name: 'Token 2',
-      decimals: 18,
-      address: '0x1234567890abcdef1234567890abcdef12345678',
-    },
-    tvl: 2_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 34.56,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-8',
-    info: null,
-    protocol: 'yearn',
-    token: {
-      chain_id: 137,
-      symbol: 'usdc',
-      name: 'Token 3',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 3_000_000,
-  },
-  {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-    apy: 45.67,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-9',
-    info: null,
-    protocol: 'aave',
-    token: {
-      chain_id: 137,
-      symbol: 'usdc',
-      name: 'Token 4',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 4_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 56.78,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-10',
-    info: null,
-    protocol: 'stargate',
-    token: {
-      chain_id: 137,
-      symbol: 'usdc',
-      name: 'Token 5',
-      decimals: 18,
-      address: '0x1234567890abcdef1234567890abcdef12345678',
-    },
-    tvl: 5_000_000,
-  },
-]
 
 interface CustomStrategySelectDrawerProperties extends ComponentProps<'div'> {
   index: number
@@ -208,6 +37,11 @@ export const CustomStrategySelectDrawer = (
 
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null)
 
+  const { data, isLoading, error, totalCount, hasNextPage, isFetchingNextPage, ref } =
+    useInfiniteStrategies({
+      sort: 'apy',
+      orderBy: 'desc',
+    })
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger>{children}</DrawerTrigger>
@@ -246,8 +80,8 @@ export const CustomStrategySelectDrawer = (
             tokens={SELECT_TOKENS}
           />
         </div>
-        <div className="mt-3 min-h-28 space-y-2">
-          {MOCK_STRATEGIES.map((strategy) => (
+        <div className="mt-3 max-h-[22rem] min-h-28 space-y-2 overflow-auto">
+          {data?.map((strategy) => (
             <div
               onClick={() => setSelectedStrategy(strategy)}
               key={strategy.id}
@@ -273,7 +107,13 @@ export const CustomStrategySelectDrawer = (
               <p className="ml-auto text-semi-base font-bold">10.57%</p>
             </div>
           ))}
-          {MOCK_STRATEGIES.length === 0 && (
+          {hasNextPage && <div ref={ref} className="h-1 w-full" />}
+          {(isLoading || isFetchingNextPage) && (
+            <div ref={ref} className="flex h-8 w-full items-center justify-center">
+              <Loader />
+            </div>
+          )}
+          {totalCount === 0 && (
             <div className="flex h-28 items-center justify-center text-base text-text-50">
               <span>Strategies not found</span>
             </div>

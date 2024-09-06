@@ -4,9 +4,9 @@ import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { ROUTES } from '@routes/routes'
-import { formatUsdValue } from '@utils/formatValue'
+import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
-import BigNumber from 'bignumber.js'
+import { formatUnits } from 'ethers'
 import { type ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -44,13 +44,10 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
       </div>
       <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-2 text-base even:[&>*]:justify-self-end">
         <h6>Projected APY</h6>
-        {/* // ! TODO: remove "* 5" when we have real data */}
-        <div className="font-bold">
-          {BigNumber(strategy.apy).multipliedBy(5).toFixed(2)}%
-        </div>
+        <div className="font-bold">{formatPercentValue(strategy.apy)}</div>
         <h6>TVL</h6>
         <div>
-          {formatUsdValue(strategy.tvl, {
+          {formatUsdValue(formatUnits(BigInt(strategy.tvl), strategy.token.decimals), {
             notation: 'compact',
             maximumFractionDigits: 2,
           })}

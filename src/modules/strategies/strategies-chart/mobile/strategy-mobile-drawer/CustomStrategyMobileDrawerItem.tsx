@@ -8,7 +8,7 @@ import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/u
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { motion } from 'framer-motion'
-import { type ComponentProps } from 'react'
+import type { ComponentProps, PropsWithChildren } from 'react'
 
 import type { StrategyWithColor } from '../useMobileStrategiesChartStore'
 import { CustomStrategySelectDrawer } from './CustomStrategySelectDrawer'
@@ -84,7 +84,7 @@ export const CustomStrategyMobileDrawerItem = (
   )
 }
 
-const StrategiesDrawerNavigate = (props: CustomStrategyMobileDrawerItemProperties) => {
+const StrategiesDrawerNavigate = (props: PropsWithChildren & { strategy: Strategy }) => {
   const {
     children,
     strategy: {

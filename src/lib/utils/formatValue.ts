@@ -105,9 +105,10 @@ export function replaceCommasWithDots(value: string): string {
 }
 
 export const formatUsdValue = (
-  value: string | number,
+  value?: string | number,
   options?: Intl.NumberFormatOptions,
 ) => {
+  if (!value && value !== 0) return 'N/A'
   const parsedValue = Number.parseFloat(value.toString())
   return new Intl.NumberFormat('en-US', {
     style: 'currency',

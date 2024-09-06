@@ -39,10 +39,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       <Table.Cell>
         <IconWithLabelComponent symbol={strategy.protocol} className="size-9 gap-4" />
       </Table.Cell>
-      {/* // ! TODO: remove "* 5" when we have real data */}
-      <Table.Cell className="font-bold">
-        {formatPercentValue(strategy.apy * 5)}
-      </Table.Cell>
+      <Table.Cell className="font-bold">{formatPercentValue(strategy.apy)}</Table.Cell>
       <Table.Cell>
         {formatUsdValue(formatUnits(BigInt(strategy.tvl), strategy.token.decimals), {
           notation: 'compact',
@@ -51,8 +48,8 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       </Table.Cell>
       <Table.Cell className="max-w-[12.1rem]">
         <div className="flex w-full items-center">
-          <p className="w-[6.9rem]">{shortenString(strategy.id, 5)}</p>
-          <CopyButton text={strategy.id} className="ml-4 size-6 shrink-0" />
+          <p className="w-[6.9rem]">{shortenString(strategy.address, 5)}</p>
+          <CopyButton text={strategy.address} className="ml-4 size-6 shrink-0" />
           <Scan className="ml-3 size-5 shrink-0" />
         </div>
       </Table.Cell>

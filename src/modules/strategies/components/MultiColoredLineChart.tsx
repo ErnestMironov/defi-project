@@ -12,27 +12,26 @@ import {
   YAxis,
 } from 'recharts'
 
+import type { StrategiesMetricsChartData } from '../strategies-chart/desktop/StrategiesCharts'
 import { StrategyTooltipComponent } from './StrategyTooltipComponent'
 
 export const COLORS = ['#6160FF', '#FFD74B', '#6A97FF', '#FF4057', '#79DEC2']
 
-export type RechartDataType = {
-  name: string
-  timestamp: number
-  values: (number | null)[]
-}
-
 interface AreaChartComponentProperties {
-  data?: RechartDataType[]
+  data?: StrategiesMetricsChartData[]
   frame?: FrameType
   className?: string
   yAxisType?: 'percent' | 'usd'
+  dataKey?: 'apy' | 'tvl'
+  isFetching?: boolean
 }
 
 export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
-  const { data, frame, className, yAxisType = 'usd' } = props
+  const { data, frame, className, yAxisType = 'usd', dataKey = 'apy', isFetching } = props
   const tooltipFormatter = (value: string) =>
-    yAxisType === 'usd' ? formatUsdValue(value) : formatPercentValue(value)
+    yAxisType === 'usd'
+      ? formatUsdValue(value, { notation: 'compact' })
+      : formatPercentValue(value)
 
   const tickFormatter = (value: string) => {
     let format: string = 'MMM'
@@ -54,7 +53,7 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
   }
 
   return (
-    <div className={cn('size-full', className)}>
+    <div className={cn('size-full', isFetching && 'animate-pulse', className)}>
       <ResponsiveContainer
         width="100%"
         height="100%"
@@ -94,15 +93,19 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
                 return (
                   <StrategyTooltipComponent
                     timestamp={payload[0].payload.timestamp}
-                    data={payload.map((item) => ({
-                      symbol: 'USDT',
-                      chain: 'BASE',
-                      protocol: 'Beefy',
-                      color: item.color || '',
-                      value: formatPercentValue(
-                        item.value as string | number | undefined,
-                      ),
-                    }))}
+                    data={payload.map((item, i) => {
+                      console.log('item', item)
+
+                      return {
+                        symbol: item.payload.values[i]?.token,
+                        chain: item.payload.values[i]?.chain,
+                        protocol: item.payload.values[i]?.protocol,
+                        color: item.stroke || '',
+                        value: formatPercentValue(
+                          item.value as string | number | undefined,
+                        ),
+                      }
+                    })}
                   />
                 )
               }
@@ -115,7 +118,7 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
               key={color}
               type="monotone"
               connectNulls
-              dataKey={`values[${index}]`}
+              dataKey={`values[${index}].${dataKey}`}
               stroke={color}
               fill={`url(#color${index})`}
             />

@@ -1,3 +1,4 @@
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import { useRebalanceVolume } from '@api/queries/useRebalanceVolume'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
@@ -11,6 +12,16 @@ interface TokenOverviewProperties extends ComponentProps<'div'> {}
 export const TokenOverview = (props: TokenOverviewProperties) => {
   const { className, ...rest } = props
   const { data, isLoading, error } = useRebalanceVolume()
+  const {
+    data: protocolMetrics,
+    isLoading: isProtocolMetricsLoading,
+    error: protocolMetricsError,
+  } = useProtocolMetrics()
+
+  const usdcApy = protocolMetrics?.USDC?.apy
+  const usdcTvl = protocolMetrics?.USDC?.tvl
+  const usdtApy = protocolMetrics?.USDT?.apy
+  const usdtTvl = protocolMetrics?.USDT?.tvl
 
   return (
     <section
@@ -21,22 +32,22 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
       {...rest}
     >
       <TokenStatsContainer
-        loading={isLoading}
-        error={error}
+        loading={isLoading || isProtocolMetricsLoading}
+        error={error || protocolMetricsError}
         color="#3883EB"
-        apy="3.34"
-        tvl="567.83"
+        apy={usdcApy}
+        tvl={usdcTvl}
         rebalancingVolume={data?.USDC.volume}
         tokenName="USDC"
         img={usdc}
         imageClassName="rotate-[5.207deg]"
       />
       <TokenStatsContainer
-        loading={isLoading}
-        error={error}
+        loading={isLoading || isProtocolMetricsLoading}
+        error={error || protocolMetricsError}
         color="#4CD7B1"
-        apy="3.34"
-        tvl="567.83"
+        apy={usdtApy}
+        tvl={usdtTvl}
         rebalancingVolume={data?.USDT.volume}
         tokenName="USDT"
         img={usdt}
