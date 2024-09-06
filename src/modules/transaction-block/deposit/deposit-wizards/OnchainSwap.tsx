@@ -22,13 +22,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(1)
 
-  const {
-    depositAsset,
-    vault,
-    inputValue: amount,
-    setCurrentModal,
-    squidRoute,
-  } = useTxStore()
+  const { depositAsset, vault, inputValue: amount, squidRoute } = useTxStore()
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
     chainId: depositAsset?.chain_id,
@@ -60,11 +54,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
-  } = useSwap({
-    onSuccessHandler: () => {
-      setCurrentModal('done')
-    },
-  })
+  } = useSwap()
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 

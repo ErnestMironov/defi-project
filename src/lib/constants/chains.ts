@@ -84,7 +84,7 @@ export const CONFIRMATIONS_NUMBER = {
   [CHAIN_IDS_BY_NAME.Base]: 3,
 }
 
-export const ESTIMATED_TIME_OF_CONFIRMATION = 6
+export const ESTIMATED_TIME_OF_CONFIRMATION = 8
 
 export const CHAIN_IDS_BY_NAME_REVERSE = Object.fromEntries(
   Object.entries(CHAIN_IDS_BY_NAME).map(([key, value]) => [value, key]),

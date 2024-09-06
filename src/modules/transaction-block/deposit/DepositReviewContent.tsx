@@ -7,9 +7,10 @@ import {
   replaceCommasWithDots,
   trimTrailingZeros,
 } from '@utils/formatValue'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { TokenInfo } from '../components/TokenInfo'
+import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
 import { NativeCrossChainSwap } from './deposit-wizards/NativeCrossChainSwap'
@@ -29,6 +30,7 @@ export const DepositReviewContent = ({
     inputValueInUSD,
     depositFromNetwork,
     depositToNetwork,
+    setCurrentModal,
   } = useTxStore()
 
   const chainData = useTokenAsset(asset?.chain_id)
@@ -73,6 +75,18 @@ export const DepositReviewContent = ({
       return null
     }
   }, [asset, chainData, vault, allStepsCompleted, depositFromNetwork, depositToNetwork])
+
+  const depositStatus = useTransactionStatus('idle')
+
+  useEffect(() => {
+    if (depositStatus === 'success') {
+      setCurrentModal('done')
+    }
+
+    if (depositStatus === 'error') {
+      setCurrentModal('error')
+    }
+  }, [setCurrentModal, depositStatus])
 
   return (
     <>

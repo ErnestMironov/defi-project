@@ -10,7 +10,6 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useEffect } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
@@ -64,12 +63,6 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
   })
 
   const depositStatus = useTransactionStatus(_depositStatus)
-
-  useEffect(() => {
-    if (depositStatus === 'success') {
-      setCurrentModal('done')
-    }
-  }, [setCurrentModal, depositStatus])
 
   const ActionButton = () => {
     switch (currentStep) {

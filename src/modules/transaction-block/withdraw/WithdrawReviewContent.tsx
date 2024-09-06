@@ -3,7 +3,8 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import { parseFloatLocale } from '@utils/formatValue'
+import { formatAmount, parseFloatLocale } from '@utils/formatValue'
+import BigNumber from 'bignumber.js'
 import { useEffect, useMemo } from 'react'
 import { parseUnits } from 'viem'
 
@@ -31,6 +32,28 @@ export const WithdrawReviewContent = ({
     setCurrentModal,
   } = useTxStore()
 
+  const inputValueInMtToken = useMemo(() => {
+    const parsedAmount = parseUnits(amount, 6)
+
+    const inputValueBN = new BigNumber(parsedAmount.toString())
+    const lpBalanceBN = new BigNumber(mtToken?.mtToken ?? 0)
+    const balanceBN = new BigNumber(mtToken?.value ?? 0)
+
+    if (
+      inputValueBN.isZero() ||
+      lpBalanceBN.isZero() ||
+      balanceBN.isZero() ||
+      inputValueBN.isNaN() ||
+      lpBalanceBN.isNaN() ||
+      balanceBN.isNaN()
+    ) {
+      return '0'
+    }
+
+    return inputValueBN.multipliedBy(lpBalanceBN).div(balanceBN).toFixed(0)
+  }, [amount, mtToken?.mtToken, mtToken?.value])
+  console.log('🚀 ~ inputValueInMtToken ~ inputValueInMtToken:', inputValueInMtToken)
+
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
     chainId: mtToken?.chainData?.chainId ?? 1,
     onSuccessHandler: () => {
@@ -45,7 +68,7 @@ export const WithdrawReviewContent = ({
     status: approveStatus,
     error: approveError,
   } = useApproveERC20({
-    approveValue: parseUnits(amount, 6).toString(),
+    approveValue: inputValueInMtToken,
     tokenAddress: mtToken?.mtAddress,
     transactionRequestTarget: mtToken?.mtAddress,
     chainId: mtToken?.chainData?.chainId,
@@ -60,13 +83,19 @@ export const WithdrawReviewContent = ({
     withdraw,
     status: currentWithdrawStatus,
     error: withdrawError,
-  } = useWithdrawTransaction()
+  } = useWithdrawTransaction({
+    amount: inputValueInMtToken,
+  })
 
   const withdrawStatus = useTransactionStatus(currentWithdrawStatus)
 
   useEffect(() => {
     if (withdrawStatus === 'success') {
       setCurrentModal('done')
+    }
+
+    if (withdrawStatus === 'error') {
+      setCurrentModal('error')
     }
   }, [setCurrentModal, withdrawStatus])
 
@@ -148,7 +177,10 @@ export const WithdrawReviewContent = ({
                 width="2.14288rem"
               />
               <span>
-                {amount} {mtToken?.stable.toUpperCase()}
+                {formatAmount(amount, {
+                  minimumFractionDigits: 2,
+                })}{' '}
+                {mtToken?.stable.toUpperCase()}
               </span>
             </div>
           </div>

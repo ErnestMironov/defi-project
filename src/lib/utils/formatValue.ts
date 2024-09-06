@@ -120,6 +120,8 @@ export const formatAmount = (
   value: string | number,
   options?: Intl.NumberFormatOptions,
 ) => {
+  if (!value) return ''
+
   const parsedValue = Number.parseFloat(value.toString())
   return new Intl.NumberFormat('en-US', {
     ...options,

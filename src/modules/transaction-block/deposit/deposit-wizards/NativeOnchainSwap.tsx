@@ -16,8 +16,7 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const { vault, setCurrentModal, currentStep, setCurrentStep, depositAsset } =
-    useTxStore()
+  const { vault, currentStep, setCurrentStep, depositAsset } = useTxStore()
 
   const {
     status: switchStatus,
@@ -37,11 +36,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
-  } = useSwap({
-    onSuccessHandler: () => {
-      setCurrentModal('done')
-    },
-  })
+  } = useSwap()
 
   const ActionButton = () => {
     switch (currentStep) {

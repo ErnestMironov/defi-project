@@ -23,7 +23,6 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     depositAsset,
     vault,
     inputValue: amount,
-    setCurrentModal,
     currentStep,
     setCurrentStep,
     transactionHash,
@@ -59,17 +58,11 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     },
   })
 
-  console.log('approve status', approveStatus)
-
   const {
     swapTokens: swapAndDeposit,
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
-  } = useSwap({
-    onSuccessHandler: () => {
-      setCurrentModal('done')
-    },
-  })
+  } = useSwap()
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
