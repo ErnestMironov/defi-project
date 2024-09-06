@@ -9,6 +9,7 @@ import {
 } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
+import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput.tsx'
@@ -66,15 +67,13 @@ export const DepositInput = () => {
     depositTotalAmount,
     isTxZAP,
     vault,
+    squidRoute,
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,
   } = useTxStore()
 
   const { usdcApy, usdtApy, loading } = useTokenApy()
-  console.log('🚀 ~ DepositInput ~ usdtApy:', usdtApy)
-  console.log('🚀 ~ DepositInput ~ usdcApy:', usdcApy)
-  console.log('🚀 ~ yourYearlyEarnings ~ inputValue:', inputValue)
 
   const yourYearlyEarnings = useMemo(() => {
     if (!usdcApy || !usdtApy || loading || !depositTotalInUSD) return false
@@ -124,17 +123,45 @@ export const DepositInput = () => {
   }, [asset, asset?.quote, assetBalance, inputValue, inputValueInUSD, setInputValueInUSD])
 
   const handleAction = (type: InputType, value: string) => {
-    console.log('handleAction', type, value)
-
     if (!value) {
       setInputValue('')
       setInputValueInUSD('')
       return
     }
 
-    const assetBalanceBN = BigNumber(assetBalance)
-    const assetQuoteBN = BigNumber(asset?.quote ?? 1)
+    let assetBalanceBN = BigNumber(assetBalance)
+    let assetQuoteBN = BigNumber(asset?.quote ?? 1)
     const numericValue = BigNumber(value)
+
+    if (squidRoute) {
+      assetBalanceBN = BigNumber(
+        formatUnits(
+          squidRoute?.estimate?.fromAmount,
+          squidRoute.estimate.fromToken.decimals,
+        ),
+      )
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute.params.fromToken.decimals,:',
+        squidRoute.estimate.fromToken.decimals,
+      )
+
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
+        squidRoute?.estimate?.fromAmount,
+      )
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
+        formatUnits(
+          squidRoute?.estimate?.fromAmount,
+          squidRoute.estimate.fromToken.decimals,
+        ),
+      )
+      assetQuoteBN = BigNumber(squidRoute?.estimate?.fromAmountUSD)
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmountUSD:',
+        squidRoute?.estimate?.fromAmountUSD,
+      )
+    }
 
     if (type === 'usd') {
       setInputValueInUSD(value) // Set the input value for USD type
@@ -143,6 +170,7 @@ export const DepositInput = () => {
     } else if (type === 'token') {
       setInputValue(value) // Set the input value for token type
       const usdValue = calculateUSDValue(numericValue, assetQuoteBN, assetBalanceBN) // Calculate USD value based on the exchange rate
+      console.log('🚀 ~ handleAction ~ usdValue:', usdValue)
       setInputValueInUSD(usdValue.toString()) // Set the input value in USD
     }
   }
@@ -203,7 +231,11 @@ export const DepositInput = () => {
       >
         <div className="flex w-full items-center justify-between">
           {isConnected && asset ? (
-            <AmountInput value={depositTotalAmount} decimals={18} disabled />
+            <AmountInput
+              value={Number(depositTotalAmount).toFixed(2)}
+              decimals={18}
+              disabled
+            />
           ) : (
             <p className="text-md text-gray-100 max-lg:text-sm">
               Select the desired vault...
@@ -214,15 +246,16 @@ export const DepositInput = () => {
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
             <DollarInput value={depositTotalInUSD} disabled />
-            {yourYearlyEarnings && (
+            {yourYearlyEarnings ? (
               <p className="text-[0.8125rem] leading-[120%] text-gray-100 lg:text-[1.125rem]">
                 + $
                 {formatAmount(yourYearlyEarnings, {
                   minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
                 })}{' '}
                 over 1 year
               </p>
-            )}
+            ) : null}
           </div>
         )}
       </div>

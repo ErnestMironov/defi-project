@@ -41,7 +41,6 @@ export const useGetMTokenInfo = (
 
     return TOKENS[mToken.symbol]
   }, [mToken])
-  console.log('🚀 ~ tokenData ~ mToken:', mToken)
   const chainData = useTokenAsset(mToken?.chain_id)
 
   if (!tokenData || !mToken) return null

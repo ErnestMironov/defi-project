@@ -3741,7 +3741,7 @@
   resolved "https://registry.yarnpkg.com/@stablelib/wipe/-/wipe-1.0.1.tgz#d21401f1d59ade56a62e139462a97f104ed19a36"
   integrity sha512-WfqfX/eXGiAd3RJe4VU2snh/ZPwtSjLG4ynQ/vYzvghTh7dHFcI1wl+nrkWG6lGhukOxOsUHfv8dUXr58D0ayg==
 
-"@stablelib/x25519@1.0.3", "@stablelib/x25519@^1.0.3":
+"@stablelib/x25519@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@stablelib/x25519/-/x25519-1.0.3.tgz#13c8174f774ea9f3e5e42213cbf9fc68a3c7b7fd"
   integrity sha512-KnTbKmUhPhHavzobclVJQG5kuivH+qDLpe84iRqX3CLrKp881cF160JvXJ+hjn1aMyCwYOKeIZefIH/P5cJoRw==
@@ -4549,10 +4549,10 @@
     mipd "0.0.5"
     zustand "4.4.1"
 
-"@wagmi/core@^2.13.1":
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-2.13.1.tgz#d9cf910775eca0e1aeb6fe9ad787264ee32632f3"
-  integrity sha512-6ZdgI6dYfpa+IZPU0DZ3XQEQVzs003tKCERzSUNkxmt5cwSMg0XB1kvF5vU9MuPP96K6IcGkqSwAtgCmM5uy2w==
+"@wagmi/core@^2.13.4":
+  version "2.13.4"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-2.13.4.tgz#8d5da08e450171bfe34f72a079cfa2b81825410a"
+  integrity sha512-J6gfxHYr8SCc/BzEa712LnI+qLFs5K2nBLupwQqQl4WiAlCu8SdcpbZokqiwfCMYhIRMj0+YFEP9qe4ypcexmw==
   dependencies:
     eventemitter3 "5.0.1"
     mipd "0.0.7"
@@ -4581,6 +4581,28 @@
     lodash.isequal "4.5.0"
     uint8arrays "3.1.0"
 
+"@walletconnect/core@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/core/-/core-2.15.1.tgz#98536057874246988428d9aadf4b25b23c3fd57f"
+  integrity sha512-9MWVt33MFrLiAeK9nqY/B30/y0M4uiq8v9EXenIBQdlgkmXM++RTcOnn7u7EAbthGgzx3WLPRm4ViwIb+rI/Cg==
+  dependencies:
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-provider" "1.0.14"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/jsonrpc-ws-connection" "1.0.14"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "2.1.2"
+    "@walletconnect/relay-api" "1.0.11"
+    "@walletconnect/relay-auth" "1.0.4"
+    "@walletconnect/safe-json" "1.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.15.1"
+    "@walletconnect/utils" "2.15.1"
+    events "3.3.0"
+    lodash.isequal "4.5.0"
+    uint8arrays "3.1.0"
+
 "@walletconnect/environment@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@walletconnect/environment/-/environment-1.0.1.tgz#1d7f82f0009ab821a2ba5ad5e5a7b8ae3b214cd7"
@@ -4604,21 +4626,28 @@
     "@walletconnect/utils" "2.13.0"
     events "3.3.0"
 
+"@walletconnect/ethereum-provider@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/ethereum-provider/-/ethereum-provider-2.15.1.tgz#178c2063d5830671f50450d55abeaaf7627c117b"
+  integrity sha512-3ssEAKc/rLYshwyE2ZIaoTxzi/p9Ws+kj/FIsd1Ed/CC37Rl5l/KYHaRJtevWeni9s4dGqyqKsYkJ0VwwUcnfQ==
+  dependencies:
+    "@walletconnect/jsonrpc-http-connection" "1.0.8"
+    "@walletconnect/jsonrpc-provider" "1.0.14"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/modal" "2.6.2"
+    "@walletconnect/sign-client" "2.15.1"
+    "@walletconnect/types" "2.15.1"
+    "@walletconnect/universal-provider" "2.15.1"
+    "@walletconnect/utils" "2.15.1"
+    events "3.3.0"
+
 "@walletconnect/events@1.0.1", "@walletconnect/events@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@walletconnect/events/-/events-1.0.1.tgz#2b5f9c7202019e229d7ccae1369a9e86bda7816c"
   integrity sha512-NPTqaoi0oPBVNuLv7qPaJazmGHs5JGyO8eEAk5VGKmJzDR7AHzD4k6ilox5kxk1iwiOnFopBOOMLs86Oa76HpQ==
   dependencies:
     keyvaluestorage-interface "^1.0.0"
-    tslib "1.14.1"
-
-"@walletconnect/heartbeat@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/heartbeat/-/heartbeat-1.2.1.tgz#afaa3a53232ae182d7c9cff41c1084472d8f32e9"
-  integrity sha512-yVzws616xsDLJxuG/28FqtZ5rzrTA4gUjdEMTbWB5Y8V1XHRmqq4efAxCw5ie7WjbXFSUyBHaWlMR+2/CpQC5Q==
-  dependencies:
-    "@walletconnect/events" "^1.0.1"
-    "@walletconnect/time" "^1.0.2"
     tslib "1.14.1"
 
 "@walletconnect/heartbeat@1.2.2":
@@ -4649,14 +4678,6 @@
     "@walletconnect/safe-json" "^1.0.2"
     events "^3.3.0"
 
-"@walletconnect/jsonrpc-types@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@walletconnect/jsonrpc-types/-/jsonrpc-types-1.0.3.tgz#65e3b77046f1a7fa8347ae02bc1b841abe6f290c"
-  integrity sha512-iIQ8hboBl3o5ufmJ8cuduGad0CQm3ZlsHtujv9Eu16xq89q+BG7Nh5VLxxUgmtpnrePgFkTwXirCTkwJH1v+Yw==
-  dependencies:
-    keyvaluestorage-interface "^1.0.0"
-    tslib "1.14.1"
-
 "@walletconnect/jsonrpc-types@1.0.4", "@walletconnect/jsonrpc-types@^1.0.2", "@walletconnect/jsonrpc-types@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@walletconnect/jsonrpc-types/-/jsonrpc-types-1.0.4.tgz#ce1a667d79eadf2a2d9d002c152ceb68739c230c"
@@ -4684,7 +4705,7 @@
     events "^3.3.0"
     ws "^7.5.1"
 
-"@walletconnect/keyvaluestorage@1.1.1", "@walletconnect/keyvaluestorage@^1.1.1":
+"@walletconnect/keyvaluestorage@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@walletconnect/keyvaluestorage/-/keyvaluestorage-1.1.1.tgz#dd2caddabfbaf80f6b8993a0704d8b83115a1842"
   integrity sha512-V7ZQq2+mSxAq7MrRqDxanTzu2RcElfK1PfNYiaVnJgJ7Q7G7hTVwF8voIBx92qsRyGHZihrwNPHuZd1aKkd0rA==
@@ -4693,7 +4714,7 @@
     idb-keyval "^6.2.1"
     unstorage "^1.9.0"
 
-"@walletconnect/logger@2.1.2", "@walletconnect/logger@^2.0.1":
+"@walletconnect/logger@2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/logger/-/logger-2.1.2.tgz#813c9af61b96323a99f16c10089bfeb525e2a272"
   integrity sha512-aAb28I3S6pYXZHQm5ESB+V6rDqIYfsnHaQyzFbwUUBFY4H0OXx/YtTl8lvhUNhMMfb9UxbwEBS253TlXUYJWSw==
@@ -4726,10 +4747,17 @@
     "@walletconnect/modal-core" "2.6.2"
     "@walletconnect/modal-ui" "2.6.2"
 
-"@walletconnect/relay-api@1.0.10", "@walletconnect/relay-api@^1.0.9":
+"@walletconnect/relay-api@1.0.10":
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/@walletconnect/relay-api/-/relay-api-1.0.10.tgz#5aef3cd07c21582b968136179aa75849dcc65499"
   integrity sha512-tqrdd4zU9VBNqUaXXQASaexklv6A54yEyQQEXYOCr+Jz8Ket0dmPBDyg19LVSNUN2cipAghQc45/KVmfFJ0cYw==
+  dependencies:
+    "@walletconnect/jsonrpc-types" "^1.0.2"
+
+"@walletconnect/relay-api@1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@walletconnect/relay-api/-/relay-api-1.0.11.tgz#80ab7ef2e83c6c173be1a59756f95e515fb63224"
+  integrity sha512-tLPErkze/HmC9aCmdZOhtVmYZq1wKfWTJtygQHoWtgg722Jd4homo54Cs4ak2RUFUZIGO2RsOpIcWipaua5D5Q==
   dependencies:
     "@walletconnect/jsonrpc-types" "^1.0.2"
 
@@ -4767,6 +4795,21 @@
     "@walletconnect/utils" "2.13.0"
     events "3.3.0"
 
+"@walletconnect/sign-client@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/sign-client/-/sign-client-2.15.1.tgz#95b430164a8c6f3fe629531a5481dec9c9be02b4"
+  integrity sha512-YnLNEmCHgZ8yBpE3hwZnHD/bVznVMguSAlwLBNOoWUH2f4d9mR8bqa6KeVXqZ3e8mVHcxKTJTjTJ3oQMLyKIjw==
+  dependencies:
+    "@walletconnect/core" "2.15.1"
+    "@walletconnect/events" "1.0.1"
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/logger" "2.1.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.15.1"
+    "@walletconnect/utils" "2.15.1"
+    events "3.3.0"
+
 "@walletconnect/time@1.0.2", "@walletconnect/time@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/time/-/time-1.0.2.tgz#6c5888b835750ecb4299d28eecc5e72c6d336523"
@@ -4774,22 +4817,34 @@
   dependencies:
     tslib "1.14.1"
 
-"@walletconnect/types@2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.12.0.tgz#83e1057c795d41afaeecad3a2776aaa4ba12f5d6"
-  integrity sha512-uhB3waGmujQVJcPgJvGOpB8RalgYSBT+HpmVbfl4Qe0xJyqpRUo4bPjQa0UYkrHaW20xIw94OuP4+FMLYdeemg==
-  dependencies:
-    "@walletconnect/events" "^1.0.1"
-    "@walletconnect/heartbeat" "1.2.1"
-    "@walletconnect/jsonrpc-types" "1.0.3"
-    "@walletconnect/keyvaluestorage" "^1.1.1"
-    "@walletconnect/logger" "^2.0.1"
-    events "^3.3.0"
-
 "@walletconnect/types@2.13.0":
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.13.0.tgz#cdac083651f5897084fe9ed62779f11810335ac6"
   integrity sha512-MWaVT0FkZwzYbD3tvk8F+2qpPlz1LUSWHuqbINUtMXnSzJtXN49Y99fR7FuBhNFtDalfuWsEK17GrNA+KnAsPQ==
+  dependencies:
+    "@walletconnect/events" "1.0.1"
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "2.1.2"
+    events "3.3.0"
+
+"@walletconnect/types@2.14.0":
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.14.0.tgz#af3d4799b8ac5d166251af12bc024276f82f9b91"
+  integrity sha512-vevMi4jZLJ55vLuFOicQFmBBbLyb+S0sZS4IsaBdZkQflfGIq34HkN13c/KPl4Ye0aoR4/cUcUSitmGIzEQM5g==
+  dependencies:
+    "@walletconnect/events" "1.0.1"
+    "@walletconnect/heartbeat" "1.2.2"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/keyvaluestorage" "1.1.1"
+    "@walletconnect/logger" "2.1.2"
+    events "3.3.0"
+
+"@walletconnect/types@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-2.15.1.tgz#5a093d28a32581e88fd4246690989099789f0830"
+  integrity sha512-4WkMsHD8ioZI5GmxNT0qMlz6msI7ZajBcTyDxfRncaNZVau0C+Btw1U4jWO+gxwJVDJY+Ue/cb1QKJ5BanZsyw==
   dependencies:
     "@walletconnect/events" "1.0.1"
     "@walletconnect/heartbeat" "1.2.2"
@@ -4813,25 +4868,20 @@
     "@walletconnect/utils" "2.13.0"
     events "3.3.0"
 
-"@walletconnect/utils@2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-2.12.0.tgz#0a48f114d9c344d390730782d0d7a365814371bf"
-  integrity sha512-GIpfHUe1Bjp1Tjda0SkJEizKOT2biuv7VPFnKsOLT1T+8QxEP9NruC+K2UUEvijS1Qr/LKH9P5004RYNgrch+w==
+"@walletconnect/universal-provider@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/universal-provider/-/universal-provider-2.15.1.tgz#2c06faa0f22232ed09fd82b8a4ae047c3e56e9b4"
+  integrity sha512-JvKwHoE/ugWSKOmrEr03go1V79N0bbYV6w24Lqlzz4VAoReZZo8TDKsya7UkJ1L5HUCgKVP+AVktuJv8khzJ6w==
   dependencies:
-    "@stablelib/chacha20poly1305" "1.0.1"
-    "@stablelib/hkdf" "1.0.1"
-    "@stablelib/random" "^1.0.2"
-    "@stablelib/sha256" "1.0.1"
-    "@stablelib/x25519" "^1.0.3"
-    "@walletconnect/relay-api" "^1.0.9"
-    "@walletconnect/safe-json" "^1.0.2"
-    "@walletconnect/time" "^1.0.2"
-    "@walletconnect/types" "2.12.0"
-    "@walletconnect/window-getters" "^1.0.1"
-    "@walletconnect/window-metadata" "^1.0.1"
-    detect-browser "5.3.0"
-    query-string "7.1.3"
-    uint8arrays "^3.1.0"
+    "@walletconnect/jsonrpc-http-connection" "1.0.8"
+    "@walletconnect/jsonrpc-provider" "1.0.14"
+    "@walletconnect/jsonrpc-types" "1.0.4"
+    "@walletconnect/jsonrpc-utils" "1.0.8"
+    "@walletconnect/logger" "2.1.2"
+    "@walletconnect/sign-client" "2.15.1"
+    "@walletconnect/types" "2.15.1"
+    "@walletconnect/utils" "2.15.1"
+    events "3.3.0"
 
 "@walletconnect/utils@2.13.0":
   version "2.13.0"
@@ -4853,6 +4903,46 @@
     query-string "7.1.3"
     uint8arrays "3.1.0"
 
+"@walletconnect/utils@2.14.0":
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-2.14.0.tgz#48493ffe1e902815fda3cbd5cc5409288a066d35"
+  integrity sha512-vRVomYQEtEAyCK2c5bzzEvtgxaGGITF8mWuIL+WYSAMyEJLY97mirP2urDucNwcUczwxUgI+no9RiNFbUHreQQ==
+  dependencies:
+    "@stablelib/chacha20poly1305" "1.0.1"
+    "@stablelib/hkdf" "1.0.1"
+    "@stablelib/random" "1.0.2"
+    "@stablelib/sha256" "1.0.1"
+    "@stablelib/x25519" "1.0.3"
+    "@walletconnect/relay-api" "1.0.10"
+    "@walletconnect/safe-json" "1.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.14.0"
+    "@walletconnect/window-getters" "1.0.1"
+    "@walletconnect/window-metadata" "1.0.1"
+    detect-browser "5.3.0"
+    query-string "7.1.3"
+    uint8arrays "3.1.0"
+
+"@walletconnect/utils@2.15.1":
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-2.15.1.tgz#4f90abe4869ee1cff6c0102c57b45e959811ca8d"
+  integrity sha512-i5AR8XpZdcX8ghaCjYV13Er/KAGe56c1mLaG9c2cv9kmnZMZijeMdInjX/flnSM1RFDUiZXvKPMUNwlCL4NsWw==
+  dependencies:
+    "@stablelib/chacha20poly1305" "1.0.1"
+    "@stablelib/hkdf" "1.0.1"
+    "@stablelib/random" "1.0.2"
+    "@stablelib/sha256" "1.0.1"
+    "@stablelib/x25519" "1.0.3"
+    "@walletconnect/relay-api" "1.0.11"
+    "@walletconnect/safe-json" "1.0.2"
+    "@walletconnect/time" "1.0.2"
+    "@walletconnect/types" "2.15.1"
+    "@walletconnect/window-getters" "1.0.1"
+    "@walletconnect/window-metadata" "1.0.1"
+    detect-browser "5.3.0"
+    query-string "7.1.3"
+    uint8arrays "3.1.0"
+
 "@walletconnect/window-getters@1.0.1", "@walletconnect/window-getters@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@walletconnect/window-getters/-/window-getters-1.0.1.tgz#f36d1c72558a7f6b87ecc4451fc8bd44f63cbbdc"
@@ -4860,7 +4950,7 @@
   dependencies:
     tslib "1.14.1"
 
-"@walletconnect/window-metadata@1.0.1", "@walletconnect/window-metadata@^1.0.1":
+"@walletconnect/window-metadata@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@walletconnect/window-metadata/-/window-metadata-1.0.1.tgz#2124f75447b7e989e4e4e1581d55d25bc75f7be5"
   integrity sha512-9koTqyGrM2cqFRW517BPY/iEtUDx2r1+Pwwu5m7sJ7ka79wi3EyqhqcICk/yDmv6jAS1rjKgTKXlEhanYjijcA==
@@ -4868,105 +4958,116 @@
     "@walletconnect/window-getters" "^1.0.1"
     tslib "1.14.1"
 
-"@web3modal/common@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/common/-/common-5.0.2.tgz#cbc4ed7458873189a59dbac0488a971a8fd8f996"
-  integrity sha512-C/6IfYoqlYXEQsud7sJ9dHR7iMZn4lbyhb4DNJYMipvHzzVzujrsTypdoerLQ5YfveZ/5xBO0SqMu5qOEwGtHg==
+"@web3modal/base@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/base/-/base-5.1.6.tgz#0743569118c58ae8d514005cd2e8311c510b2057"
+  integrity sha512-6oh4YX/mgSW1UoHnIGDX76HRwry/d1sefduAHcZAIZ9pUFxIYaTGx7ivIue3xpqb54fM2IW/d1uDi5Lernpxaw==
+  dependencies:
+    "@walletconnect/utils" "2.14.0"
+    "@web3modal/common" "5.1.6"
+    "@web3modal/core" "5.1.6"
+    "@web3modal/polyfills" "5.1.6"
+    "@web3modal/scaffold-ui" "5.1.6"
+    "@web3modal/scaffold-utils" "5.1.6"
+    "@web3modal/siwe" "5.1.6"
+    "@web3modal/ui" "5.1.6"
+    "@web3modal/wallet" "5.1.6"
+  optionalDependencies:
+    borsh "0.7.0"
+    bs58 "5.0.0"
+
+"@web3modal/common@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/common/-/common-5.1.6.tgz#375c5b064235a5a4ec3688bac0f1f137de3d6c8c"
+  integrity sha512-abqOjGjcyNdGjsOam3GuawTxI7KUAUC/1p8Wah0vVDtmQ34ruRVPlKy09tWe9zD3iHynNmRIyBaRIpwWhwLUAQ==
   dependencies:
     bignumber.js "9.1.2"
     dayjs "1.11.10"
 
-"@web3modal/core@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/core/-/core-5.0.2.tgz#35c13c3177393b0a9dbd8d53477d0660c32514e8"
-  integrity sha512-GkhLH4PWPjmHY8GMkvWRs9sNlycehR1iCt+6uJpApcDEy4SczIt5AvrJODjFFSTpVw4C5GfOHusmSd8u3xs3ng==
+"@web3modal/core@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/core/-/core-5.1.6.tgz#bfc51ac5fede8b731af44ccbc8795d687e3a5481"
+  integrity sha512-PI26WJyrMsBg2u1ehe33YHl4z8UDRQ8JrgM41Anca45N7zj0H/fzybemXk/dtZZqvV4E9MZheylJTucuwpQrBw==
   dependencies:
-    "@web3modal/common" "5.0.2"
-    "@web3modal/wallet" "5.0.2"
+    "@web3modal/common" "5.1.6"
+    "@web3modal/wallet" "5.1.6"
     valtio "1.11.2"
 
-"@web3modal/polyfills@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/polyfills/-/polyfills-5.0.2.tgz#1826ec53061f139e503844dc3b83610397d1bbed"
-  integrity sha512-qpKOnN1VcInlUH3j8ZbdxuaL1ChQGmQZdNkGhYk03Fswp6DctuHNYzVD/rWib6O+2ezaA9dBEHaodBFkNmdVUg==
+"@web3modal/polyfills@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/polyfills/-/polyfills-5.1.6.tgz#8058c1de1a2170537526140337dc3b216cfafb38"
+  integrity sha512-hAqfDsxyO/LupMbSPDVvB0yKVCiNGcTPeDP7cCw7QZuBYyyz+Uqb7sO41n3hVkKGEMbHsA7Q6TfXiPfxEotX/w==
   dependencies:
     buffer "6.0.3"
 
-"@web3modal/scaffold-react@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/scaffold-react/-/scaffold-react-5.0.2.tgz#682e85e78eebb249efd3327d5a811a12649cc3a6"
-  integrity sha512-PmGtyj1QGx0+Jlt4gb8dPVLr2fYG+UDEcmmDf44bIpA/urSvp4uXxH9eInIKJTM6E2d2TpJ8WWc5RPzBZEqOww==
+"@web3modal/scaffold-ui@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/scaffold-ui/-/scaffold-ui-5.1.6.tgz#12370ee4474fb6a073e6e40ad34bc55090056450"
+  integrity sha512-K+bZdvgFATo+uk5HmXx6gAM5aSECBNBIccY2S1pvX+taq6eF/KWVRMlH8vdO7UtXOu5rgJSoW2CSYKjwiWn01w==
   dependencies:
-    "@web3modal/scaffold" "5.0.2"
-
-"@web3modal/scaffold-utils@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/scaffold-utils/-/scaffold-utils-5.0.2.tgz#e779b4cb554231372585a4fd1b2ea95f45af0317"
-  integrity sha512-Me4ShdqdgehnsLY0esFNkTzJs3/Q2fvT70yqBZ2WXT/TCmW4oOx/EjSVXAD5Ha6C9JQEtg8nFN+R+ZdH2Q3fYA==
-  dependencies:
-    "@web3modal/core" "5.0.2"
-    "@web3modal/polyfills" "5.0.2"
-    valtio "1.11.2"
-
-"@web3modal/scaffold-vue@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/scaffold-vue/-/scaffold-vue-5.0.2.tgz#bd8df323d57765db743a518a102392396364d0ef"
-  integrity sha512-94/9ksuNMZqNy3j04VhM2FZkm6S8SvFoAm9+P/hR6bDAQtEOcXrtjikx4M0N9TFhrBc2GAGmigj/7mwnNFPCog==
-  dependencies:
-    "@web3modal/scaffold" "5.0.2"
-
-"@web3modal/scaffold@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/scaffold/-/scaffold-5.0.2.tgz#26b99a1b710835d2589c36256dae875318a15623"
-  integrity sha512-cpjyY76C5hNFsfyDv6T9s5Lr2Hmp2VIIzWRpRHwAUF3IforweN6Ssl2//nBKpz7F1I37izOtd5lZSGILirhnqA==
-  dependencies:
-    "@web3modal/common" "5.0.2"
-    "@web3modal/core" "5.0.2"
-    "@web3modal/scaffold-utils" "5.0.2"
-    "@web3modal/siwe" "5.0.2"
-    "@web3modal/ui" "5.0.2"
-    "@web3modal/wallet" "5.0.2"
+    "@web3modal/common" "5.1.6"
+    "@web3modal/core" "5.1.6"
+    "@web3modal/scaffold-utils" "5.1.6"
+    "@web3modal/siwe" "5.1.6"
+    "@web3modal/ui" "5.1.6"
+    "@web3modal/wallet" "5.1.6"
     lit "3.1.0"
 
-"@web3modal/siwe@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/siwe/-/siwe-5.0.2.tgz#973ead8b1f4435edc6a6a9c8ab57c3a2398b4e6c"
-  integrity sha512-qZrShg3IRvOaZIH9uHrq7I8oincJ+aQ3y4dHra5NoNFZnXn0mR7pDMPLCBHdqs780ukLvgQo5w7cwDT6pwn58A==
+"@web3modal/scaffold-utils@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/scaffold-utils/-/scaffold-utils-5.1.6.tgz#fe4e1122a5ff88864fe9404c8f9e0e0deb9d6480"
+  integrity sha512-u0hDjbhUgSpJ0RilmnkXAHl4iPTT58/z2C4FmF3cpQRYGkF9j70E1yVYVH/a+iXVbbiQdzC+8clT8mAfLjRzzg==
   dependencies:
-    "@walletconnect/utils" "2.12.0"
-    "@web3modal/core" "5.0.2"
-    "@web3modal/scaffold-utils" "5.0.2"
+    "@web3modal/common" "5.1.6"
+    "@web3modal/core" "5.1.6"
+    "@web3modal/polyfills" "5.1.6"
+    "@web3modal/wallet" "5.1.6"
+    valtio "1.11.2"
+
+"@web3modal/siwe@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/siwe/-/siwe-5.1.6.tgz#37e826e5019906f3fc1f2023aee8a917f3f2107f"
+  integrity sha512-0usevyccWYaNNmaVvD8I2mN2xKGFyv3aMgD1fkV5NOVAJ8+mLj/TiQr3Ts/X3x7L7b1Tq/hxXkr/mF2CUh+vCA==
+  dependencies:
+    "@walletconnect/utils" "2.15.1"
+    "@web3modal/common" "5.1.6"
+    "@web3modal/core" "5.1.6"
+    "@web3modal/scaffold-utils" "5.1.6"
+    "@web3modal/ui" "5.1.6"
+    "@web3modal/wallet" "5.1.6"
     lit "3.1.0"
     valtio "1.11.2"
 
-"@web3modal/ui@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/ui/-/ui-5.0.2.tgz#eb2c4af21008653ad5b4beca6b21102900c55746"
-  integrity sha512-lTbfEAfEW2xdY/jYXK2DtCTUPd5VbDxMOJHG9uItGx6Xcqimk+/SAHQ2RXhEOkKeHI3ihhIN1POZdhIBGHmbcg==
+"@web3modal/ui@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/ui/-/ui-5.1.6.tgz#0a75fdbc883e7609061cbd525a7d0b73097a875f"
+  integrity sha512-VOZ/9ioQITtQeH59I5lHQq4o0SXPzzCs4Jw72CocVZV5KhZ+BgCqGmJnAjJ0Ljq8c9ofR6Mj3E0Dzgn2lqoL7Q==
   dependencies:
     lit "3.1.0"
     qrcode "1.5.3"
 
-"@web3modal/wagmi@^5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/wagmi/-/wagmi-5.0.2.tgz#a02c2467660c374290099134056d9d52622a17f7"
-  integrity sha512-ROsyIgb3TIumpi4bxFj6N9SKrdLGBMvw7NsJSnwe/raH8Shrc4oSkWucpka4YKHEVW5F10Rs93kiIwJCpqCaMA==
+"@web3modal/wagmi@^5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/wagmi/-/wagmi-5.1.6.tgz#6afed0323f4a47cdcb5662e57f5f4c366917664b"
+  integrity sha512-zwA+4Tm9PiZxaiLqWrooacCWgzKHbxQlwUOyLtySXtTgVUK6DcLftCNaMk8MPni6ePy0pyPDngi5COUxGHy+OA==
   dependencies:
-    "@walletconnect/ethereum-provider" "2.13.0"
-    "@web3modal/polyfills" "5.0.2"
-    "@web3modal/scaffold" "5.0.2"
-    "@web3modal/scaffold-react" "5.0.2"
-    "@web3modal/scaffold-utils" "5.0.2"
-    "@web3modal/scaffold-vue" "5.0.2"
-    "@web3modal/siwe" "5.0.2"
+    "@walletconnect/ethereum-provider" "2.15.1"
+    "@walletconnect/utils" "2.15.1"
+    "@web3modal/base" "5.1.6"
+    "@web3modal/common" "5.1.6"
+    "@web3modal/polyfills" "5.1.6"
+    "@web3modal/scaffold-utils" "5.1.6"
+    "@web3modal/siwe" "5.1.6"
+    "@web3modal/wallet" "5.1.6"
 
-"@web3modal/wallet@5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@web3modal/wallet/-/wallet-5.0.2.tgz#1a2a3b190cb16f6185946dc8f959cfdf7442c97d"
-  integrity sha512-JKAid92A7cjRDj6WPofnSTaq/oCHp0uO5WB8vdoMwrSnCQXjiR2UQsoG/sDa2VaO4QHGEIxgHcrpjtEElpnUDA==
+"@web3modal/wallet@5.1.6":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@web3modal/wallet/-/wallet-5.1.6.tgz#619ea3c7620c245c7eccb4d3e022d443e201649c"
+  integrity sha512-ai9FquMAyWPelcS4IOSj2p/xIf6chfN9fR37o5f6719wVZzX1j+m+E2WF25QdcN8RjKep21j/dtRYIgDtTpIrA==
   dependencies:
     "@walletconnect/logger" "2.1.2"
-    "@web3modal/polyfills" "5.0.2"
+    "@web3modal/common" "5.1.6"
+    "@web3modal/polyfills" "5.1.6"
     zod "3.22.4"
 
 "@webassemblyjs/ast@1.12.1", "@webassemblyjs/ast@^1.12.1":
@@ -5595,6 +5696,18 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base-x@^3.0.2:
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.10.tgz#62de58653f8762b5d6f8d9fe30fa75f7b2585a75"
+  integrity sha512-7d0s06rR9rYaIWHkpfLIFICM/tkSVdoPC9qYAQRpxn9DdKNWNsKC0uk++akckyLq16Tx2WIinnZ6WRriAt6njQ==
+  dependencies:
+    safe-buffer "^5.0.1"
+
+base-x@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-4.0.0.tgz#d0e3b7753450c73f8ad2389b5c018a4af7b2224a"
+  integrity sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==
+
 base64-js@1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
@@ -5661,6 +5774,15 @@ bn.js@^5.2.0, bn.js@^5.2.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.1.tgz#0bc527a6a0d18d0aa8d5b0538ce4a77dccfa7b70"
   integrity sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==
 
+borsh@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/borsh/-/borsh-0.7.0.tgz#6e9560d719d86d90dc589bca60ffc8a6c51fec2a"
+  integrity sha512-CLCsZGIBCFnPtkNnieW/a8wmreDmfUtjU2m9yHrzPXIlNbqVs0AQrSatSG6vdNYUqdc83tkQi2eHfF98ubzQLA==
+  dependencies:
+    bn.js "^5.2.0"
+    bs58 "^4.0.0"
+    text-encoding-utf-8 "^1.0.2"
+
 bowser@^2.9.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
@@ -5709,6 +5831,20 @@ browserslist@^4.21.10, browserslist@^4.22.2, browserslist@^4.23.0:
     electron-to-chromium "^1.4.668"
     node-releases "^2.0.14"
     update-browserslist-db "^1.0.13"
+
+bs58@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/bs58/-/bs58-5.0.0.tgz#865575b4d13c09ea2a84622df6c8cbeb54ffc279"
+  integrity sha512-r+ihvQJvahgYT50JD05dyJNKlmmSlMoOGwn1lCcEzanPglg7TxYjioQUYehQ9mAR/+hOSd2jRc/Z2y5UxBymvQ==
+  dependencies:
+    base-x "^4.0.0"
+
+bs58@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/bs58/-/bs58-4.0.1.tgz#be161e76c354f6f788ae4071f63f34e8c4f0a42a"
+  integrity sha512-Ok3Wdf5vOIlBrgCvTq96gBkJw+JUEzdBgyaza5HLtPm7yTHkjRy8+JzNyHF7BHa0bNWOQIp3m5YF0nnFcOIKLw==
+  dependencies:
+    base-x "^3.0.2"
 
 bser@2.1.1:
   version "2.1.1"
@@ -11157,16 +11293,7 @@ string-similarity-js@^2.1.4:
   resolved "https://registry.yarnpkg.com/string-similarity-js/-/string-similarity-js-2.1.4.tgz#73716330691946f2ebc435859aba8327afd31307"
   integrity sha512-uApODZNjCHGYROzDSAdCmAHf60L/pMDHnP/yk6TAbvGg7JSPZlSto/ceCI7hZEqzc53/juU2aOJFkM2yUVTMTA==
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -11244,14 +11371,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -11446,6 +11566,11 @@ terser@^5.26.0:
     acorn "^8.8.2"
     commander "^2.20.0"
     source-map-support "~0.5.20"
+
+text-encoding-utf-8@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/text-encoding-utf-8/-/text-encoding-utf-8-1.0.2.tgz#585b62197b0ae437e3c7b5d0af27ac1021e10d13"
+  integrity sha512-8bw4MY9WjdsD2aMtO0OzOCY3pXGYNx2d2FfHRVUKkiCPDWjKuOlhLVASS+pD7VkLTVjW268LYJHwsnPFlBpbAg==
 
 text-table@^0.2.0:
   version "0.2.0"
@@ -11723,7 +11848,7 @@ uint8arrays@3.1.0:
   dependencies:
     multiformats "^9.4.2"
 
-uint8arrays@^3.0.0, uint8arrays@^3.1.0:
+uint8arrays@^3.0.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/uint8arrays/-/uint8arrays-3.1.1.tgz#2d8762acce159ccd9936057572dade9459f65ae0"
   integrity sha512-+QJa8QRnbdXVpHYjLoTpJIdCTiw9Ir62nocClWuXIq2JIh4Uta0cQsTSpFL678p2CN8B+XSApwcU+pQEqVpKWg==
@@ -12245,7 +12370,7 @@ word-wrap@^1.2.5:
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.5.tgz#d2c45c6dd4fbce621a66f136cbe328afd0410b34"
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -12258,15 +12383,6 @@ wrap-ansi@^6.0.1, wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"

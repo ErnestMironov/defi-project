@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable @typescript-eslint/no-shadow */
 import type { Token } from '@0xsquid/squid-types'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
@@ -26,15 +27,13 @@ import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
-import { type ComponentProps, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 import { useTxStore } from '../store/useTxStore'
 
 // -------------------- Types --------------------
-
-interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
 
 interface ResponsiveDialogContentProperties
   extends React.ComponentPropsWithoutRef<typeof DialogContent> {
@@ -47,15 +46,14 @@ interface ResponsiveDialogContentProperties
 /**
  * Renders the trigger for selecting a chain
  */
-const SelectChainTrigger = () => {
-  const { depositFromNetwork } = useTxStore()
-  const chainData = useTokenAsset(depositFromNetwork)
+const SelectChainTrigger = ({ chain }: { chain: ChainType | null }) => {
+  const chainData = useTokenAsset(chain)
 
   return (
     <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
-      {depositFromNetwork && (
+      {chain && (
         <div className="overflow-hidden rounded-full">
-          <TokenIconComponent symbol={depositFromNetwork} className="size-4" />
+          <TokenIconComponent symbol={chain} className="size-4" />
         </div>
       )}
       <span>{chainData?.name || 'All networks'}</span>
@@ -160,13 +158,45 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
   )
 }
 
-// -------------------- Main Component --------------------
+// -------------------- Helper Functions --------------------
 
 /**
- * Renders the SelectDepositAsset component
- * @param _props - Component properties
+ * Sorts tokens by quote in descending order
+ * @param tokens - Array of tokens to sort
  */
-export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) => {
+const sortTokensByQuote = (tokens: ITokenData[]) => {
+  return tokens.sort((a, b) => b.quote - a.quote)
+}
+
+/**
+ * Filters tokens based on supported addresses and non-zero balance
+ * @param tokens - Array of tokens to filter
+ * @param supportedTokensAddr - Array of supported token addresses
+ */
+const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
+  return tokens.filter(
+    (token) =>
+      supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
+      !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
+  )
+}
+
+/**
+ * Searches tokens based on name or symbol
+ * @param tokens - Array of tokens to search
+ * @param searchValue - Search query
+ */
+const searchTokens = (tokens: ITokenData[], searchValue: string) => {
+  return tokens.filter(
+    (token) =>
+      token.contract_name?.toLowerCase().includes(searchValue.toLowerCase()) ||
+      token.contract_ticker_symbol?.toLowerCase().includes(searchValue.toLowerCase()),
+  )
+}
+
+// -------------------- Main Component --------------------
+
+export const SelectDepositAsset = () => {
   const { isBelowDesktop } = useDeviceWidth()
   const [searchValue, setSearchValue] = useState('')
   const [opened, setOpened] = useState(false)
@@ -181,11 +211,11 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     return supportedBySquidTokens?.map((token) => token.address.toLowerCase())
   }, [supportedBySquidTokens])
 
+  const [chain, setNetwork] = useState<ChainType | null>(null)
+
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
-    depositFromNetwork: chain,
-    setDepositFromNetwork: setNetwork,
     setDepositToNetwork,
     setDepositFromNetwork,
     resetStore,
@@ -209,42 +239,6 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     }
 
     setOpened(false)
-  }
-
-  // -------------------- Helper Functions --------------------
-
-  /**
-   * Sorts tokens by quote in descending order
-   * @param tokens - Array of tokens to sort
-   */
-  const sortTokensByQuote = (tokens: ITokenData[]) => {
-    return tokens.sort((a, b) => b.quote - a.quote)
-  }
-
-  /**
-   * Filters tokens based on supported addresses and non-zero balance
-   * @param tokens - Array of tokens to filter
-   * @param supportedTokensAddr - Array of supported token addresses
-   */
-  const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
-    return tokens.filter(
-      (token) =>
-        supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
-        !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
-    )
-  }
-
-  /**
-   * Searches tokens based on name or symbol
-   * @param tokens - Array of tokens to search
-   * @param searchValue - Search query
-   */
-  const searchTokens = (tokens: ITokenData[], searchValue: string) => {
-    return tokens.filter(
-      (token) =>
-        token.contract_name?.toLowerCase().includes(searchValue.toLowerCase()) ||
-        token.contract_ticker_symbol?.toLowerCase().includes(searchValue.toLowerCase()),
-    )
   }
 
   // -------------------- Memoized Values --------------------
@@ -301,19 +295,20 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           </DialogHeader>
           <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4 max-lg:max-w-full">
             <Search />
-            <div className="mx-3 grow">
+            <label htmlFor="search-input" className="mx-3 grow">
               <input
+                id="search-input"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 type="text"
                 className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
                 placeholder="Search"
               />
-            </div>
+            </label>
             <SelectNetworkPopover
               chain={chain}
               onChange={(_network) => setNetwork(_network)}
-              trigger={<SelectChainTrigger />}
+              trigger={<SelectChainTrigger chain={chain} />}
               showAllNetworksOption
             />
           </div>

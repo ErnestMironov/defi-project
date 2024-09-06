@@ -22,15 +22,15 @@ const ShortInfo: React.FC<ShortInfoProperties> = ({
       className="flex cursor-pointer items-center justify-between gap-3 self-stretch rounded-xl border border-main-15 px-6
       py-4 dark:border-stroke-100"
     >
-      <div className="flex flex-col gap-1 text-gray-100">
+      <div className="flex flex-col gap-1 text-gray-100 max-lg:text-[0.8125rem]">
         <b>${summaryAndFees.total.usd}</b>
         <span>ZAP Fee</span>
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center gap-2 rounded-xl bg-light-blue-15 px-3 py-2.5">
           <Lightning className="size-4" />
-          <span className="text-[1.125rem] leading-[120%] text-dark-blue-100">
-            Est.time - {summaryAndFees.estimatedTime}
+          <span className="text-[0.8125rem] leading-[120%] text-dark-blue-100 lg:text-[1.125rem]">
+            ETA - {summaryAndFees.estimatedTime}
           </span>
         </div>
         <ArrowDown className="size-4" />

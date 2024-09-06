@@ -179,6 +179,7 @@ export const WithdrawReviewContent = ({
               <span>
                 {formatAmount(amount, {
                   minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
                 })}{' '}
                 {mtToken?.stable.toUpperCase()}
               </span>
