@@ -28,16 +28,11 @@ export const TokenIconComponent = ({
 
   if (!asset)
     return (
-      <img
-        src={tokenLogoFallback}
-        className={cn(className, 'overflow-visible')}
-        alt=""
-        style={rest.style}
-      />
+      <img src={tokenLogoFallback} className={cn(className)} alt="" style={rest.style} />
     )
 
   const { TokenIcon } = asset
-  return <TokenIcon {...rest} className={cn(className, 'overflow-visible')} />
+  return <TokenIcon {...rest} className={cn('overflow-visible', className)} />
 }
 
 export const IconWithLabelComponent = ({
