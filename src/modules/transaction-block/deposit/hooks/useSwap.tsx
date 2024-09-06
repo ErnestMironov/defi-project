@@ -1,9 +1,6 @@
 import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
 import { AXELAR_SCAN_URL } from '@constants/index'
-import type {
-  IDepositWizardHook,
-  STEP_STATUS,
-} from '@modules/transaction-block/deposit/interfaces'
+import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
@@ -202,23 +199,18 @@ export const waitForSuccessStatus = async (
 // ------------ Hook Definition -----------
 // ---------------------------------------
 
-interface IProperties extends IDepositWizardHook {
-  requestId?: string
-}
-
 /**
  * Hook for handling token swaps
  * @param requestId - Optional request ID
  * @param onSuccessHandler - Function to call on successful swap
  * @returns Object containing swap function, status, error, and deposit hash
  */
-export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
+export const useSwap = () => {
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const [error, setError] = useState('')
   const [depositHash, setDepositHash] = useState<string | null>(null)
 
   const {
-    setCurrentModal,
     getFullState,
     setTransactionHash,
     setTimerDuration,
@@ -248,16 +240,6 @@ export const useSwap = ({ requestId, onSuccessHandler }: IProperties) => {
           status: 'pending',
           timestamp: Date.now(),
         })
-
-        waitForSuccessStatus(
-          data,
-          route?.params?.fromChain!,
-          route?.params?.toChain!,
-          setStatus,
-          onSuccessHandler,
-          () => setCurrentModal('error'),
-          requestId,
-        )
       },
     },
   })

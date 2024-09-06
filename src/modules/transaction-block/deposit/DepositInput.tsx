@@ -2,14 +2,19 @@ import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
-import { formatTokenBalance, formatValueWithPrecision } from '@utils/formatValue'
+import {
+  formatAmount,
+  formatTokenBalance,
+  formatValueWithPrecision,
+} from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput.tsx'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore.ts'
+import { useTokenApy } from './hooks/useTokenApy.ts'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
 import ZapFee from './zap-fee/ZapFee'
@@ -60,10 +65,28 @@ export const DepositInput = () => {
     depositTotalInUSD,
     depositTotalAmount,
     isTxZAP,
+    vault,
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,
   } = useTxStore()
+
+  const { usdcApy, usdtApy, loading } = useTokenApy()
+  console.log('🚀 ~ DepositInput ~ usdtApy:', usdtApy)
+  console.log('🚀 ~ DepositInput ~ usdcApy:', usdcApy)
+  console.log('🚀 ~ yourYearlyEarnings ~ inputValue:', inputValue)
+
+  const yourYearlyEarnings = useMemo(() => {
+    if (!usdcApy || !usdtApy || loading || !depositTotalInUSD) return false
+
+    const totalInUSD = Number(depositTotalInUSD)
+
+    if (vault === 'USDC') {
+      return (totalInUSD / 100) * Number(usdcApy)
+    }
+    return (totalInUSD / 100) * Number(usdtApy)
+  }, [usdcApy, usdtApy, loading, depositTotalInUSD, vault])
+
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
@@ -191,9 +214,15 @@ export const DepositInput = () => {
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
             <DollarInput value={depositTotalInUSD} disabled />
-            <p className="text-[1.125rem] leading-[120%] text-gray-100">
-              + $0.0 over 1 year
-            </p>
+            {yourYearlyEarnings && (
+              <p className="text-[0.8125rem] leading-[120%] text-gray-100 lg:text-[1.125rem]">
+                + $
+                {formatAmount(yourYearlyEarnings, {
+                  minimumFractionDigits: 2,
+                })}{' '}
+                over 1 year
+              </p>
+            )}
           </div>
         )}
       </div>

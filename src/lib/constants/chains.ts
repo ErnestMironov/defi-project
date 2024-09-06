@@ -8,6 +8,17 @@ export const CHAIN_NAMES_BY_ID = {
   5000: 'Mantle',
   56: 'BNB',
   1088: 'Metis',
+
+  2222: 'Kava',
+  8217: 'Klaytn',
+  8822: 'IOTA',
+  1_380_012_617: 'RARI',
+  14: 'Flare',
+  1625: 'Gravity Alpha',
+  167_000: 'Taiko',
+  1329: 'Sei',
+  534_352: 'Scroll',
+  1_313_161_554: 'Aurora',
 } as const
 
 export const CHAIN_IDS_BY_NAME = {
@@ -20,16 +31,29 @@ export const CHAIN_IDS_BY_NAME = {
   Mantle: 5000,
   BNB: 56,
   Metis: 1088,
+
+  Kava: 2222,
+  Kaia: 8217,
+  IOTA: 8822,
+  RARI: 1_380_012_617,
+  Flare: 14,
+  GravityAlpha: 1625,
+  Taiko: 167_000,
+  Sei: 1329,
+  Scroll: 534_352,
+  Aurora: 1_313_161_554,
 } as const
 
 export const CHAINS = [
-  // CHAIN_IDS_BY_NAME.Ethereum,
+  CHAIN_IDS_BY_NAME.Ethereum,
   CHAIN_IDS_BY_NAME.Arbitrum,
   CHAIN_IDS_BY_NAME.Optimism,
   CHAIN_IDS_BY_NAME.Polygon,
-  // CHAIN_IDS_BY_NAME.BNB,
+  CHAIN_IDS_BY_NAME.BNB,
   CHAIN_IDS_BY_NAME.Base,
-  // Chains.MANTLE_MAINNET,
+  CHAIN_IDS_BY_NAME.Mantle,
+  CHAIN_IDS_BY_NAME.Metis,
+  CHAIN_IDS_BY_NAME.Avalanche,
 ] as const
 
 export const DEPOSIT_CHAIN_IDS = [
@@ -41,6 +65,7 @@ export const DEPOSIT_CHAIN_IDS = [
   CHAIN_IDS_BY_NAME.Base,
   CHAIN_IDS_BY_NAME.Mantle,
   CHAIN_IDS_BY_NAME.Metis,
+  CHAIN_IDS_BY_NAME.Avalanche,
 ]
 
 export const CHAINS_WITH_VAULTS = [
@@ -59,7 +84,7 @@ export const CONFIRMATIONS_NUMBER = {
   [CHAIN_IDS_BY_NAME.Base]: 3,
 }
 
-export const ESTIMATED_TIME_OF_CONFIRMATION = 6
+export const ESTIMATED_TIME_OF_CONFIRMATION = 8
 
 export const CHAIN_IDS_BY_NAME_REVERSE = Object.fromEntries(
   Object.entries(CHAIN_IDS_BY_NAME).map(([key, value]) => [value, key]),

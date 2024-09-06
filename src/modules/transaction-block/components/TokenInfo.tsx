@@ -1,6 +1,6 @@
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { cn } from '@utils/cn'
-import { parseFloatLocale } from '@utils/formatValue'
+import { formatAmount, parseFloatLocale } from '@utils/formatValue'
 
 interface TokenInfoProperties {
   type: 'input' | 'deposit'
@@ -32,7 +32,9 @@ export const TokenInfo: React.FC<TokenInfoProperties> = ({
             })}
           >
             {type === 'input' ? '- ' : '+ '}
-            {amount}
+            {formatAmount(amount, {
+              minimumFractionDigits: 2,
+            })}
           </div>
           <TokenWithNetwork
             symbol={symbol}

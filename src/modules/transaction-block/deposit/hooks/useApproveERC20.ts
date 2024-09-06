@@ -33,10 +33,7 @@ export const useApproveERC20 = ({
     functionName: 'allowance',
     args: [address!, transactionRequestTarget as Address],
   })
-  console.log('🚀 ~ account:', address)
-  console.log('🚀 ~ transactionRequestTarget:', transactionRequestTarget)
 
-  console.log('🚀 ~ allowance:', allowance)
   useEffect(() => {
     if (allowance && approveValue && BigInt(allowance) >= BigInt(approveValue)) {
       setStatus('success')

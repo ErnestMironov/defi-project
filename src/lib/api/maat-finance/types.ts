@@ -133,3 +133,8 @@ export type RebalanceVolume = {
   USDT: TokenRebalanceData
   USDC: TokenRebalanceData
 }
+
+export type WithdrawChainsResponse = {
+  USDT: number[]
+  USDC: number[]
+}

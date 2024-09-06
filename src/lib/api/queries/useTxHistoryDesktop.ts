@@ -75,14 +75,8 @@ export const useTxHistoryDesktop = ({
       (_strategy: StrategyStats) => _strategy.strategyId === node.data.strategyId,
     )
 
-    // ! TODO: remove "* 5" when we have real data
     const strategyApy =
-      formatAmountValue(
-        BigNumber(strategy?.apy || '0')
-          .multipliedBy(5)
-          .toString(),
-        2,
-      ) || '0'
+      formatAmountValue(BigNumber(strategy?.apy || '0').toString(), 2) || '0'
     const tvl = strategy
       ? formatAmountValue(
           BigNumber(strategy.deposited)
