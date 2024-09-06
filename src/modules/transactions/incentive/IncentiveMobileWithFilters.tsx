@@ -1,7 +1,6 @@
 import { useInfiniteIncentives } from '@api/queries/useIncentives'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -74,12 +73,12 @@ export const IncentiveMobileWithFilters = (
       }
       case 'chains': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Chains"
             value={selectedChains}
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
-            placeholder="All Chains"
+            // placeholder="All Chains"
           />
         )
       }

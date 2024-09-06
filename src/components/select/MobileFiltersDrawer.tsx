@@ -9,7 +9,8 @@ import {
   DrawerTrigger,
 } from '@components/ui/drawer'
 import { cn } from '@utils/cn'
-import React, { type ComponentProps, useState } from 'react'
+import type { ComponentProps, ForwardedRef } from 'react'
+import { forwardRef, useState } from 'react'
 
 interface MobileFiltersDrawerProperties extends ComponentProps<'div'> {
   resetFilters: () => void
@@ -18,26 +19,30 @@ interface MobileFiltersDrawerProperties extends ComponentProps<'div'> {
   closeOnReset?: boolean
 }
 
-export const DrawerIconTrigger = (
-  props: ComponentProps<'button'> & {
-    Icon: React.ElementType
-    active: boolean
+export const DrawerIconTrigger = forwardRef(
+  (
+    props: ComponentProps<'button'> & {
+      Icon: React.ElementType
+      active: boolean
+    },
+    reference: ForwardedRef<HTMLButtonElement>,
+  ) => {
+    const { Icon, active, className, ...rest } = props
+    return (
+      <button
+        ref={reference}
+        type="button"
+        className={cn(
+          'flex size-10 items-center justify-center rounded-lg bg-cards',
+          className,
+        )}
+        {...rest}
+      >
+        <Icon className={cn('size-6', active && '[&_path]:fill-light-blue-100')} />
+      </button>
+    )
   },
-) => {
-  const { Icon, active, className, ...rest } = props
-  return (
-    <button
-      type="button"
-      className={cn(
-        'flex size-10 items-center justify-center rounded-lg bg-cards',
-        className,
-      )}
-      {...rest}
-    >
-      <Icon className={cn('size-6', active && '[&_path]:fill-light-blue-100')} />
-    </button>
-  )
-}
+)
 
 export const MobileFiltersDrawer = (props: MobileFiltersDrawerProperties) => {
   const {

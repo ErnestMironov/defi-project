@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useMobileCustomStrategiesChartStore } from '../mobile/useMobileStrategiesChartStore'
 
 export const useDesktopStrategies = () => {
-  const { data } = useStrategies({
+  const { data, ...rest } = useStrategies({
     size: 5,
     sort: 'apy',
     orderBy: 'desc',
@@ -21,6 +21,10 @@ export const useDesktopStrategies = () => {
     onCustomStrategiesVisibilityChange,
     onStrategySelect,
   } = useMobileCustomStrategiesChartStore()
+  const currentStrategies =
+    selectedStrategiesType.value === 'Custom'
+      ? customStrategiesWithColors
+      : topStrategiesWithColors
 
   useEffect(() => {
     if (data) {
@@ -57,5 +61,7 @@ export const useDesktopStrategies = () => {
     onStrategySelect,
     onReset,
     strategies: data?.items,
+    currentStrategies,
+    ...rest,
   }
 }

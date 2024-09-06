@@ -219,8 +219,8 @@ const TOKENS: ITokenAsset[] = [
 export const useTokenAsset = (query?: string | number | null) => {
   return useMemo(() => {
     if (!query) return
-    if (typeof query === 'number') {
-      return TOKENS.find((token) => token.chainId === query)
+    if (typeof query === 'number' || !Number.isNaN(Number(query))) {
+      return TOKENS.find((token) => token.chainId === Number(query))
     }
     if (typeof query === 'string') {
       return TOKENS.find(

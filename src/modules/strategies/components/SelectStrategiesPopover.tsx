@@ -13,6 +13,7 @@ interface SelectGraphPopoverProperties {
   options: OptionType[]
   value: OptionType
   onChange: (option: OptionType) => void
+  disabled?: boolean
 }
 
 export const SELECT_STRATEGIES: OptionType[] = [
@@ -26,6 +27,7 @@ export const SELECT_STRATEGIES: OptionType[] = [
 ]
 
 export const SelectStrategiesPopover = ({
+  disabled,
   options,
   value,
   onChange,
@@ -65,7 +67,7 @@ export const SelectStrategiesPopover = ({
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open && !disabled} onOpenChange={setOpen}>
         <PopoverTrigger
           ref={reference}
           className="group flex w-full items-center justify-between rounded-xl border border-stroke-100 p-4 text-lg"

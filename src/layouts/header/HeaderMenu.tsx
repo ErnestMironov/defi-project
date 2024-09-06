@@ -41,13 +41,13 @@ export const MobileFooterMenu = ({
       {menu.map((menuItem) => {
         if (menuItem.href.startsWith('http')) {
           return (
-            <li>
+            <li key={menuItem.href}>
               <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
             </li>
           )
         }
         return (
-          <li className="flex flex-col items-center">
+          <li key={menuItem.href} className="flex flex-col items-center">
             <NavLinkMenuItem
               key={menuItem.href}
               {...{ ...menuItem, dropdown: undefined }}
@@ -135,13 +135,13 @@ export const MobileSidebarMenu = ({
       {menu.map((menuItem) => {
         if (menuItem.href.startsWith('http')) {
           return (
-            <li>
+            <li key={menuItem.href}>
               <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
             </li>
           )
         }
         return (
-          <li>
+          <li key={menuItem.href}>
             <NavMobileLinkMenuItem
               key={menuItem.href}
               {...menuItem}
@@ -254,7 +254,7 @@ export const NavMobileLinkMenuItem = ({
         <ul className="ml-2 mt-10 flex flex-col gap-8">
           {dropdown?.map((item) => {
             return (
-              <li>
+              <li key={item.href}>
                 <SubNavLinkMenuItem {...item} />
               </li>
             )

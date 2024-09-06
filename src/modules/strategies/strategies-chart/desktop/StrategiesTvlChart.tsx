@@ -1,14 +1,13 @@
-import { useStrategies } from '@api/queries/useStrategies'
 import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useEffect, useMemo } from 'react'
+import { type ComponentProps, useMemo } from 'react'
 
-import { COLORS, MultiColoredLineChart } from '../../components/MultiColoredLineChart'
-import { useMobileCustomStrategiesChartStore } from '../mobile/useMobileStrategiesChartStore'
+import { MultiColoredLineChart } from '../../components/MultiColoredLineChart'
 import type { StrategiesMetricsChartData } from './StrategiesCharts'
+import { useDesktopStrategies } from './useDesktopStrategies'
 
 interface StrategiesChartProperties extends ComponentProps<'div'> {}
 
@@ -21,45 +20,12 @@ export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
     onFrameChange,
   } = useFrameSelect()
 
-  const { data } = useStrategies({
-    size: 5,
-    sort: 'apy',
-    orderBy: 'desc',
-  })
   const {
-    topStrategiesWithColors,
-    setTopStrategiesWithColors,
-    customStrategiesWithColors,
-    setCustomStrategiesWithColors,
-    selectedStrategiesType,
-    setSelectedStrategiesType,
-    onCustomStrategiesVisibilityChange,
-    onStrategySelect,
-  } = useMobileCustomStrategiesChartStore()
+    isLoading: isStrategiesLoading,
+    error: strategiesError,
+    currentStrategies,
+  } = useDesktopStrategies()
 
-  const currentStrategies =
-    selectedStrategiesType.value === 'Custom'
-      ? customStrategiesWithColors
-      : topStrategiesWithColors
-
-  useEffect(() => {
-    if (data) {
-      const topColoredStrategies = COLORS.map((color, i) => ({
-        color,
-        strategy: data.items[i],
-        visible: true,
-      }))
-      setTopStrategiesWithColors(topColoredStrategies)
-      if (customStrategiesWithColors.length === 0) {
-        setCustomStrategiesWithColors(topColoredStrategies)
-      }
-    }
-  }, [
-    customStrategiesWithColors.length,
-    data,
-    setCustomStrategiesWithColors,
-    setTopStrategiesWithColors,
-  ])
   const {
     data: strategiesMetrics,
     isLoading,
@@ -88,7 +54,7 @@ export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
     })
   }, [currentStrategies, strategiesMetrics])
 
-  if (isLoading) {
+  if (isLoading || !!error || !!strategiesError || isStrategiesLoading) {
     return <StrategiesChartSkeleton />
   }
 

@@ -4,7 +4,6 @@ import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { ArrowLink } from '@components/link/ArrowLink'
 import { SectionTitle } from '@components/section/SectionTitle'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -63,23 +62,23 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
       }
       case 'protocols': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Protocols"
             value={selectedProtocols}
             options={SELECT_PROTOCOLS}
             onChange={setSelectedProtocols}
-            placeholder="All Protocols"
+            // placeholder="All Protocols"
           />
         )
       }
       case 'chains': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Chains"
             value={selectedChains}
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
-            placeholder="All Chains"
+            // placeholder="All Chains"
           />
         )
       }

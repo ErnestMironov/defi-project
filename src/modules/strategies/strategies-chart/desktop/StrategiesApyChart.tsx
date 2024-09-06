@@ -1,4 +1,3 @@
-import { useStrategies } from '@api/queries/useStrategies'
 import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
@@ -7,8 +6,8 @@ import { cn } from '@utils/cn'
 import { type ComponentProps, useMemo } from 'react'
 
 import { MultiColoredLineChart } from '../../components/MultiColoredLineChart'
-import { useMobileCustomStrategiesChartStore } from '../mobile/useMobileStrategiesChartStore'
 import type { StrategiesMetricsChartData } from './StrategiesCharts'
+import { useDesktopStrategies } from './useDesktopStrategies'
 
 interface StrategiesChartProperties extends ComponentProps<'div'> {}
 
@@ -21,24 +20,11 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
     onFrameChange,
   } = useFrameSelect()
 
-  const { data } = useStrategies({
-    size: 5,
-    sort: 'apy',
-    orderBy: 'desc',
-  })
   const {
-    topStrategiesWithColors,
-    customStrategiesWithColors,
-    selectedStrategiesType,
-    setSelectedStrategiesType,
-    onCustomStrategiesVisibilityChange,
-    onStrategySelect,
-  } = useMobileCustomStrategiesChartStore()
-
-  const currentStrategies =
-    selectedStrategiesType.value === 'Custom'
-      ? customStrategiesWithColors
-      : topStrategiesWithColors
+    isLoading: isStrategiesLoading,
+    error: strategiesError,
+    currentStrategies,
+  } = useDesktopStrategies()
 
   const {
     data: strategiesMetrics,
@@ -68,7 +54,7 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
     })
   }, [currentStrategies, strategiesMetrics])
 
-  if (isLoading) {
+  if (isLoading || !!error || !!strategiesError || isStrategiesLoading) {
     return <StrategiesChartSkeleton title="APY" />
   }
 

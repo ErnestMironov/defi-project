@@ -54,7 +54,7 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
     onStrategySelect,
   } = useMobileCustomStrategiesChartStore()
 
-  const { onReset } = useDesktopStrategies()
+  const { onReset, isLoading, error } = useDesktopStrategies()
   const currentStrategies =
     selectedStrategiesType.value === 'Custom'
       ? customStrategiesWithColors
@@ -92,7 +92,9 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
 
   const renderApyBody = () => {
     switch (true) {
+      case isLoading:
       case isMetricsLoading:
+      case !!error:
       case !!metricsError: {
         return <Skeleton className="size-full rounded-3xl" />
       }
@@ -111,6 +113,8 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
 
   const renderTvlBody = () => {
     switch (true) {
+      case isLoading:
+      case !!error:
       case isMetricsLoading:
       case !!metricsError: {
         return <Skeleton className="size-full rounded-3xl" />
@@ -127,6 +131,49 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
       }
     }
   }
+
+  const renderSelectStrategies = () => {
+    switch (true) {
+      case isLoading:
+      case isMetricsLoading:
+      case !!metricsError: {
+        return <Skeleton className="h-80 w-full rounded-3xl" />
+      }
+      case selectedStrategiesType.label === 'Custom': {
+        return (
+          <>
+            {customStrategiesWithColors.map((strategyWithColor, i) => (
+              <CustomStrategyMobileDrawerItem
+                {...strategyWithColor}
+                key={i}
+                onVisibilityChange={() =>
+                  onCustomStrategiesVisibilityChange(strategyWithColor)
+                }
+                onStrategySelect={(newStrategy) =>
+                  onStrategySelect(newStrategy, strategyWithColor)
+                }
+                strategiesWithColors={customStrategiesWithColors}
+                index={i + 1}
+              />
+            ))}
+          </>
+        )
+      }
+      case selectedStrategiesType.label === 'Top 5 strategies': {
+        return (
+          <>
+            {topStrategiesWithColors.map((strategy, i) => (
+              <StrategyMobileDrawerItem {...strategy} key={i} />
+            ))}
+          </>
+        )
+      }
+      default: {
+        return null
+      }
+    }
+  }
+
   return (
     <section className={cn('mt-[2.5rem]', className, '')} {...rest}>
       <AnimatedTabs
@@ -157,7 +204,10 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
       </div>
       {/* select strategies */}
       <Drawer>
-        <DrawerTrigger className="mt-6 flex w-full items-center rounded-lg bg-cards p-4">
+        <DrawerTrigger
+          disabled={isLoading || !!error}
+          className="mt-6 flex w-full items-center rounded-lg bg-cards p-4"
+        >
           <Filter className="size-6" />
           <span className="ml-2">{selectedStrategiesType.value}</span>
           <ArrowDown className="ml-auto size-4" />
@@ -178,31 +228,7 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
               <Close className="size-6" onClick={onReset} />
             )}
           </div>
-          {selectedStrategiesType.label === 'Custom' && (
-            <div className="mt-4 space-y-2">
-              {customStrategiesWithColors.map((strategyWithColor, i) => (
-                <CustomStrategyMobileDrawerItem
-                  {...strategyWithColor}
-                  key={i}
-                  onVisibilityChange={() =>
-                    onCustomStrategiesVisibilityChange(strategyWithColor)
-                  }
-                  onStrategySelect={(newStrategy) =>
-                    onStrategySelect(newStrategy, strategyWithColor)
-                  }
-                  strategiesWithColors={customStrategiesWithColors}
-                  index={i + 1}
-                />
-              ))}
-            </div>
-          )}
-          {selectedStrategiesType.label === 'Top 5 strategies' && (
-            <div className="mt-4 space-y-2">
-              {topStrategiesWithColors.map((strategy, i) => (
-                <StrategyMobileDrawerItem {...strategy} key={i} />
-              ))}
-            </div>
-          )}
+          <div className="mt-4 space-y-2">{renderSelectStrategies()}</div>
         </DrawerContent>
       </Drawer>
     </section>

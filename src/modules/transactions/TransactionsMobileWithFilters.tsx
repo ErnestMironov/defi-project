@@ -2,7 +2,6 @@ import type { EventsParameters } from '@api/queries/useEvents'
 import { useInfiniteEvents } from '@api/queries/useEvents'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -23,7 +22,7 @@ import {
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
 import { TransactionsMobileList } from './TransactionsMobileList'
 
@@ -97,12 +96,12 @@ export const TransactionsMobileWithFilters = (
       }
       case 'chains': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Chains"
             value={selectedChains}
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
-            placeholder="All Chains"
+            // placeholder="All Chains"
           />
         )
       }
@@ -142,7 +141,9 @@ export const TransactionsMobileWithFilters = (
             />
           }
         >
-          {filters.map((filter) => renderFilters(filter))}
+          {filters.map((filter) => (
+            <Fragment key={filter}>{renderFilters(filter)}</Fragment>
+          ))}
         </MobileFiltersDrawer>
         {/* Sort */}
         <MobileFiltersDrawer

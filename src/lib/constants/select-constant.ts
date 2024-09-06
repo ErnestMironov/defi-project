@@ -3,7 +3,7 @@ import {
   SelectChainWithIcon,
   SelectItemWithIcon,
 } from '@components/select/SelectItemWithIcon'
-import { CHAIN_NAMES_BY_ID, CHAINS } from '@constants/chains'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 
 import { ACTION_TYPE, INCENTIVE_ACTION_TYPE, STATUSES } from './action-type'
 
@@ -38,12 +38,12 @@ export const SORT_BY_TVL: OptionType[] = [
   { label: 'Lowest TVL', value: 'Lowest TVL' },
 ]
 
-export const SELECT_CHAINS: OptionType[] = Object.entries(CHAIN_NAMES_BY_ID)
-  .filter(([key]) => CHAINS.includes(Number(key) as (typeof CHAINS)[number]))
-  .map(([key, value]) => ({
+export const SELECT_CHAINS: OptionType[] = Object.entries(CHAIN_NAMES_BY_ID).map(
+  ([key]) => ({
     label: SelectChainWithIcon({ chainId: Number(key) }),
-    value,
-  }))
+    value: key,
+  }),
+)
 
 export const SELECT_PROTOCOLS: OptionType[] = [
   {

@@ -142,3 +142,33 @@ export type RebalanceVolume = {
   USDT: TokenRebalanceData
   USDC: TokenRebalanceData
 }
+
+export type AdminActionType =
+  | 'STRATEGY_REGISTERED'
+  | 'STRATEGY_DEPRECATED'
+  | 'VAULT_REGISTERED'
+  | 'VAULT_DEPRECATED'
+  | 'ORACLE_CHANGED'
+  | 'INCENTIVE_CONTROLLER_CHANGED'
+  | 'STARGATE_ADAPTER_CHANGED'
+  | 'ADD_STRATEGY'
+  | 'REMOVE_STRATEGY'
+  | 'COMMANDER_CHANGED'
+  | 'WATCHER_CHANGED'
+  | 'WITHDRAW_CANCELING_DELAY'
+  | 'FEE_CHANGED'
+
+export type AdminEvent = {
+  hash: string
+  intention_id: string | null
+  status: string
+  src_chain_id: number
+  dst_chain_id: number | null
+  creation_time: string
+  txFrom: string
+  to: string
+  action_type: AdminActionType
+  arguments: {
+    strategyId?: string
+  }
+}
