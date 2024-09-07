@@ -52,8 +52,8 @@ export const TokenPage = (props: TokensProperties) => {
         <TokenStatsContainer
           withLink={false}
           color="#3883EB"
-          apy="3.34"
-          tvl="567.83"
+          apy={3.34}
+          tvl={567.83}
           rebalancingVolume={4586}
           tokenName={symbol ?? ''}
           img={symbol === 'USDC' ? usdc : usdt}

@@ -17,7 +17,7 @@ import { type ComponentProps, useMemo, useState } from 'react'
 interface TvlTokensChartDesktopProperties extends ComponentProps<'div'> {}
 
 export const TvlTokensChartDesktop = (_props: TvlTokensChartDesktopProperties) => {
-  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange } = useFrameSelect()
   const [selectedChain, setSelectedChain] = useState<OptionType[]>([])
   const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
   const { data, isLoading, error } = useProtocolMetrics()

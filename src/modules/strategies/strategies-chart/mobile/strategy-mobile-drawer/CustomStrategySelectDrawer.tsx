@@ -37,7 +37,7 @@ export const CustomStrategySelectDrawer = (
 
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null)
 
-  const { data, isLoading, error, totalCount, hasNextPage, isFetchingNextPage, ref } =
+  const { data, isLoading, totalCount, hasNextPage, isFetchingNextPage, ref } =
     useInfiniteStrategies({
       sort: 'apy',
       orderBy: 'desc',

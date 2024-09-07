@@ -12,7 +12,6 @@ import { Transactions } from './transactions/Transactions'
 interface StrategiesProperties extends ComponentProps<'div'> {}
 
 export const StrategiesPage = (props: StrategiesProperties) => {
-  const { className, ...rest } = props
   const { isBelowDesktop } = useDeviceWidth()
 
   if (isBelowDesktop) {

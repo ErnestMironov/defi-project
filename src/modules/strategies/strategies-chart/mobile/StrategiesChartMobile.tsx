@@ -44,12 +44,9 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
   const { currentFrame, frames, onFrameChange /* currentTimestamp */ } = useFrameSelect()
   const {
     topStrategiesWithColors,
-    setTopStrategiesWithColors,
     customStrategiesWithColors,
-    setCustomStrategiesWithColors,
     selectedStrategiesType,
     setSelectedStrategiesType,
-    strategiesTypes,
     onCustomStrategiesVisibilityChange,
     onStrategySelect,
   } = useMobileCustomStrategiesChartStore()

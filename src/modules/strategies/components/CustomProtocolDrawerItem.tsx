@@ -75,7 +75,7 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
   const [isOpen, setIsOpen] = useState(false)
   const { children, strategyWithColor, index } = props
   const { color } = strategyWithColor
-  const { customStrategiesWithColors, setCustomStrategiesWithColors, onStrategySelect } =
+  const { customStrategiesWithColors, onStrategySelect } =
     useMobileCustomStrategiesChartStore()
   const [search, setSearch] = useState<string>('')
   const [selectedChain, setSelectedChain] = useState<OptionType[]>([])

@@ -33,7 +33,7 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
   const { className, ...rest } = props
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
-  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange } = useFrameSelect()
 
   const [selectedProtocols, setSelectedProtocols] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
