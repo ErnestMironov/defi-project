@@ -3,6 +3,7 @@ import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { Switch } from '@components/ui/switch.tsx'
 import { cn } from '@utils/cn'
+import { formatAmount } from '@utils/formatValue.ts'
 import BigNumber from 'bignumber.js'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
@@ -39,16 +40,6 @@ function calculateTokenValue(
 ): string {
   return isValidInput(numericValue, lpBalanceBN, balanceBN)
     ? numericValue.multipliedBy(lpBalanceBN).div(balanceBN).toString()
-    : '0'
-}
-
-function calculateUSDValue(
-  numericValue: BigNumber,
-  lpBalanceBN: BigNumber,
-  balanceBN: BigNumber,
-): string {
-  return isValidInput(numericValue, lpBalanceBN, balanceBN)
-    ? numericValue.multipliedBy(balanceBN).div(lpBalanceBN).toFixed(2)
     : '0'
 }
 
@@ -100,11 +91,8 @@ export const WithdrawInput = () => {
     () => new BigNumber(inputValue || '0').times(1e6),
     [inputValue],
   )
+  const balanceBN = useMemo(() => new BigNumber(mtToken?.value || '0'), [mtToken?.value])
   const lpBalanceBN = useMemo(
-    () => new BigNumber(mtToken?.value || '0'),
-    [mtToken?.value],
-  )
-  const balanceBN = useMemo(
     () => new BigNumber(mtToken?.mtToken || '0'),
     [mtToken?.mtToken],
   )
@@ -118,7 +106,7 @@ export const WithdrawInput = () => {
   }, [inputValueInUSD, setWithdrawAmount])
 
   useEffect(() => {
-    if (inputValueBN.isGreaterThan(lpBalanceBN)) {
+    if (inputValueBN.isGreaterThan(balanceBN)) {
       return setValidationError('Exceeds balance')
     }
 
@@ -127,33 +115,43 @@ export const WithdrawInput = () => {
     }
 
     setValidationError('')
-  }, [inputValueBN, lpBalanceBN, inputValueInUSD])
+  }, [inputValueBN, lpBalanceBN, inputValueInUSD, balanceBN])
 
   const handleReview = () => {
     setCurrentModal('review')
   }
 
-  const handleAction = (type: InputType, value: string) => {
-    const numericValue = BigNumber(value)
-
-    switch (type) {
-      case 'usd': {
-        const tokenValue = calculateTokenValue(numericValue, lpBalanceBN, balanceBN)
-        setInputValueInUSD(value)
-        setInputValue(tokenValue)
-        break
-      }
-      case 'token': {
-        const usdValue = calculateUSDValue(numericValue, lpBalanceBN, balanceBN)
-        setInputValue(value)
-        setInputValueInUSD(usdValue.toString())
-        break
-      }
-      default: {
-        console.error('Invalid input type')
-      }
-    }
+  const handleInputChange = (value: string) => {
+    setInputValue(value)
+    setInputValueInUSD(
+      formatAmount(value, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }),
+    )
   }
+
+  // const handleAction = (type: InputType, value: string) => {
+  //   const numericValue = BigNumber(value)
+
+  //   switch (type) {
+  //     case 'usd': {
+  //       const tokenValue = calculateTokenValue(numericValue, lpBalanceBN, balanceBN)
+  //       setInputValueInUSD(value)
+  //       setInputValue(tokenValue)
+  //       break
+  //     }
+  //     case 'token': {
+  //       const usdValue = calculateUSDValue(numericValue, lpBalanceBN, balanceBN)
+  //       setInputValue(value)
+  //       setInputValueInUSD(usdValue.toString())
+  //       break
+  //     }
+  //     default: {
+  //       console.error('Invalid input type')
+  //     }
+  //   }
+  // }
 
   return (
     <div>
@@ -167,7 +165,7 @@ export const WithdrawInput = () => {
               value={inputValue}
               error={validationError}
               decimals={6}
-              onChange={(value) => handleAction('token', value)}
+              onChange={handleInputChange}
               disabled={!isConnected || !mtToken}
             />
           ) : (
@@ -184,12 +182,7 @@ export const WithdrawInput = () => {
         </div>
         {mtToken ? (
           <div className="flex w-full items-center justify-between">
-            <DollarInput
-              disabled={!mtToken || !isConnected}
-              value={inputValueInUSD}
-              onValueChange={(value) => handleAction('usd', value)}
-              error={!!validationError}
-            />
+            <DollarInput disabled value={inputValueInUSD} error={!!validationError} />
 
             <div className="flex items-center">
               <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
@@ -199,7 +192,7 @@ export const WithdrawInput = () => {
               <button
                 type="button"
                 className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                onClick={() => maxBalance && handleAction('token', maxBalance)}
+                onClick={() => maxBalance && handleInputChange(maxBalance)}
               >
                 Max
               </button>
@@ -219,19 +212,13 @@ export const WithdrawInput = () => {
               value={inputValue}
               error={validationError}
               decimals={6}
-              onChange={(value) => handleAction('token', value)}
               disabled
             />
 
             <SelectWithdrawNetworkModal />
           </div>
           <div className="mt-3 flex w-full items-center justify-between">
-            <DollarInput
-              disabled
-              value={inputValueInUSD}
-              onValueChange={(value) => handleAction('usd', value)}
-              error={!!validationError}
-            />
+            <DollarInput disabled value={inputValueInUSD} error={!!validationError} />
           </div>
         </InputWrapper>
       )}

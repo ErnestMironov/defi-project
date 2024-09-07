@@ -1,7 +1,9 @@
+import { useGetWithdrawChains } from '@api/maat-finance/useGetWithdrawChains'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
-import { CHAIN_NAMES_BY_ID, CHAINS } from '@constants/chains'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import { useMemo } from 'react'
 
 import { useTxStore } from '../store/useTxStore'
 import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
@@ -29,14 +31,24 @@ const RenderNetworkItem = (
 }
 
 export const SelectWithdrawNetworkModal = () => {
-  const { withdrawToNetwork, setWithdrawToNetwork, mtToken } = useTxStore()
+  const { withdrawToNetwork, setWithdrawToNetwork, mtToken, vault } = useTxStore()
   const token = useGetMTokenInfo(mtToken)
+
+  const { data, isLoading } = useGetWithdrawChains()
+
+  console.log('🚀 ~ SelectWithdrawNetworkModal ~ data:', data)
+
+  const chains = useMemo(() => {
+    if (!vault || isLoading) return []
+
+    return data?.data[vault]
+  }, [data, vault, isLoading])
 
   return (
     <UniversalSelectModal
       title="Select network"
       selectedItem={withdrawToNetwork}
-      items={[...CHAINS]}
+      items={chains as ChainType[]}
       isLoading={false}
       renderTrigger={() => (
         <ChoiceBox

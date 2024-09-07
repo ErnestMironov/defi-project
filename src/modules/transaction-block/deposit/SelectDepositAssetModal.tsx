@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable @typescript-eslint/no-shadow */
 import type { Token } from '@0xsquid/squid-types'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
@@ -19,29 +20,40 @@ import {
 } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
-import type { ChainType } from '@constants/chains'
+import { CHAIN_IDS_BY_NAME, type ChainType } from '@constants/chains'
+import { SUPPORTED_CHAINS_FOR_REP_TOKENS } from '@constants/eids'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
-import { type ComponentProps, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 import { useTxStore } from '../store/useTxStore'
 
-interface SelectDepositAssetModalProperties extends ComponentProps<'div'> {}
+// -------------------- Types --------------------
 
-const SelectChainTrigger = () => {
-  const { depositFromNetwork } = useTxStore()
-  const chainData = useTokenAsset(depositFromNetwork)
+interface ResponsiveDialogContentProperties
+  extends React.ComponentPropsWithoutRef<typeof DialogContent> {
+  opened: boolean
+  setOpened: (isOpen: boolean) => void
+}
+
+// -------------------- Components --------------------
+
+/**
+ * Renders the trigger for selecting a chain
+ */
+const SelectChainTrigger = ({ chain }: { chain: ChainType | null }) => {
+  const chainData = useTokenAsset(chain)
 
   return (
     <div className="flex items-center gap-[0.38rem] text-lg/[0] font-bold">
-      {depositFromNetwork && (
+      {chain && (
         <div className="overflow-hidden rounded-full">
-          <TokenIconComponent symbol={depositFromNetwork} className="size-4" />
+          <TokenIconComponent symbol={chain} className="size-4" />
         </div>
       )}
       <span>{chainData?.name || 'All networks'}</span>
@@ -49,6 +61,11 @@ const SelectChainTrigger = () => {
   )
 }
 
+/**
+ * Renders a single token item in the list
+ * @param onChange - Function to call when the token is selected
+ * @param token - Token data to display
+ */
 function TokensListItem({
   onChange,
   token,
@@ -68,6 +85,9 @@ function TokensListItem({
         symbol={token.contract_ticker_symbol}
         tokenLogoFallback={token.logo_url}
         network={token.chain_id}
+        classNames={{
+          token: 'rounded-full',
+        }}
         position="bottom-right"
         width="2.14288rem"
       />
@@ -89,12 +109,10 @@ function TokensListItem({
   )
 }
 
-interface ResponsiveDialogContentProperties
-  extends React.ComponentPropsWithoutRef<typeof DialogContent> {
-  opened: boolean
-  setOpened: (isOpen: boolean) => void
-}
-
+/**
+ * Renders a responsive dialog content
+ * @param props - Component properties
+ */
 const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
   className,
   children,
@@ -140,9 +158,48 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
   )
 }
 
-export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) => {
+// -------------------- Helper Functions --------------------
+
+/**
+ * Sorts tokens by quote in descending order
+ * @param tokens - Array of tokens to sort
+ */
+const sortTokensByQuote = (tokens: ITokenData[]) => {
+  return tokens.sort((a, b) => b.quote - a.quote)
+}
+
+/**
+ * Filters tokens based on supported addresses and non-zero balance
+ * @param tokens - Array of tokens to filter
+ * @param supportedTokensAddr - Array of supported token addresses
+ */
+const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
+  return tokens.filter(
+    (token) =>
+      supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
+      !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
+  )
+}
+
+/**
+ * Searches tokens based on name or symbol
+ * @param tokens - Array of tokens to search
+ * @param searchValue - Search query
+ */
+const searchTokens = (tokens: ITokenData[], searchValue: string) => {
+  return tokens.filter(
+    (token) =>
+      token.contract_name?.toLowerCase().includes(searchValue.toLowerCase()) ||
+      token.contract_ticker_symbol?.toLowerCase().includes(searchValue.toLowerCase()),
+  )
+}
+
+// -------------------- Main Component --------------------
+
+export const SelectDepositAsset = () => {
   const { isBelowDesktop } = useDeviceWidth()
   const [searchValue, setSearchValue] = useState('')
+  const [opened, setOpened] = useState(false)
 
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
@@ -154,43 +211,37 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     return supportedBySquidTokens?.map((token) => token.address.toLowerCase())
   }, [supportedBySquidTokens])
 
+  const [chain, setNetwork] = useState<ChainType | null>(null)
+
   const {
     depositAsset: asset,
     setDepositAsset: setAsset,
-    depositFromNetwork: chain,
-    setDepositFromNetwork: setNetwork,
     setDepositToNetwork,
     setDepositFromNetwork,
     resetStore,
   } = useTxStore()
-  const [opened, setOpened] = useState(false)
+
+  // -------------------- Handlers --------------------
+
+  /**
+   * Handles the change of selected asset
+   * @param _asset - The selected asset
+   */
   const onChange = (_asset: ITokenData) => {
     resetStore()
     setAsset(_asset)
-    setDepositToNetwork(_asset.chain_id as ChainType)
     setDepositFromNetwork(_asset.chain_id as ChainType)
+
+    if (SUPPORTED_CHAINS_FOR_REP_TOKENS.includes(_asset.chain_id as ChainType)) {
+      setDepositToNetwork(_asset.chain_id as ChainType)
+    } else {
+      setDepositToNetwork(CHAIN_IDS_BY_NAME.Arbitrum)
+    }
+
     setOpened(false)
   }
 
-  const sortTokensByQuote = (tokens: ITokenData[]) => {
-    return tokens.sort((a, b) => b.quote - a.quote)
-  }
-
-  const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
-    return tokens.filter(
-      (token) =>
-        supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
-        !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
-    )
-  }
-
-  const searchTokens = (tokens: ITokenData[], searchValue: string) => {
-    return tokens.filter(
-      (token) =>
-        token.contract_name?.toLowerCase().includes(searchValue.toLowerCase()) ||
-        token.contract_ticker_symbol?.toLowerCase().includes(searchValue.toLowerCase()),
-    )
-  }
+  // -------------------- Memoized Values --------------------
 
   const filteredByChainTokens = useMemo(() => {
     if (!userTokens || !supportedTokensAddr || supportedBySquidTokens?.length === 0)
@@ -217,6 +268,8 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
     searchValue,
   ])
 
+  // -------------------- Render --------------------
+
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
@@ -242,19 +295,20 @@ export const SelectDepositAsset = (_props: SelectDepositAssetModalProperties) =>
           </DialogHeader>
           <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4 max-lg:max-w-full">
             <Search />
-            <div className="mx-3 grow">
+            <label htmlFor="search-input" className="mx-3 grow">
               <input
+                id="search-input"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 type="text"
                 className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
                 placeholder="Search"
               />
-            </div>
+            </label>
             <SelectNetworkPopover
               chain={chain}
               onChange={(_network) => setNetwork(_network)}
-              trigger={<SelectChainTrigger />}
+              trigger={<SelectChainTrigger chain={chain} />}
               showAllNetworksOption
             />
           </div>

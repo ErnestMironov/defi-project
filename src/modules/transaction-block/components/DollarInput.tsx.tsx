@@ -47,7 +47,7 @@ const DollarInput: React.FC<DollarInputProperties> = ({
       </span>
       <AmountInput
         className={cn(
-          'text-text-80 focus:outline-none inline-flex lg:text-[1.25rem] lg:p-0 leading-none w-fit placeholder:text-text-80',
+          'text-text-80 focus:outline-none inline-flex lg:text-[1.25rem] text-base !p-0 leading-none w-fit placeholder:text-text-80',
           {
             'text-red-500': error,
           },

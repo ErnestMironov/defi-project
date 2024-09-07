@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-shadow */
+
 import type { ParsedSharesBalanceResponse } from '@api/maat-finance/types'
 import { useGetSharesBalance } from '@api/maat-finance/useGetSharesBalance'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { formatAmountValue } from '@utils/formatValue'
-import { type ComponentProps } from 'react'
+import { useMemo } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
@@ -12,8 +13,6 @@ import { useTxStore } from '../store/useTxStore'
 import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
 import { UniversalSelectModal } from './UniversalSelectModal'
-
-interface SelectWithdrawAssetModalProperties extends ComponentProps<'div'> {}
 
 const WithdrawAssetItem = ({
   token,
@@ -54,19 +53,24 @@ const WithdrawAssetItem = ({
   )
 }
 
-export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalProperties) => {
+export const SelectWithdrawAssetModal = () => {
   const { mtToken, setMToken, setWithdrawToNetwork, setWithdrawFromNetwork } =
     useTxStore()
   const { switchChain: _switchChain } = useSwitchChain()
   const { address } = useAccount()
 
   const { data, isLoading } = useGetSharesBalance(address)
-  console.log('🚀 ~ SelectWithdrawAssetModal ~ data:', data)
 
-  const balances =
-    [...(data?.data?.balances || [])].filter((token) => token.value > 9999) || []
+  const balances = useMemo(() => {
+    if (!data?.data?.balances) return []
+
+    return [...data.data.balances]
+      .filter((token) => token.value > 999_999)
+      .sort((a, b) => Number(b.value) - Number(a.value))
+  }, [data?.data?.balances])
 
   const onChange = (_asset: UseGetMTokenInfoReturn) => {
+    console.log('🚀 ~ onChange ~ _asset:', _asset)
     setMToken(_asset)
     if (_asset?.chainData?.chainId) {
       _switchChain({
@@ -97,7 +101,15 @@ export const SelectWithdrawAssetModal = (_props: SelectWithdrawAssetModalPropert
         />
       )}
       renderItem={(token, onItemChange) => (
-        <WithdrawAssetItem key={token?.chain_id} token={token} onChange={onItemChange} />
+        <WithdrawAssetItem
+          key={token?.chain_id}
+          token={token}
+          onChange={(value) => {
+            console.log('🚀 ~ onChange ~ value:', value)
+            console.log('🚀 ~ onChange ~ onItemChange:', onItemChange)
+            onItemChange(value)
+          }}
+        />
       )}
       onChange={onChange}
     />

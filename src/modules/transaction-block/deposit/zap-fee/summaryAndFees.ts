@@ -94,7 +94,7 @@ function configureSummary(route: RouteResponse['route'], summaryAndFees: Summary
     route.estimate.toToken.decimals,
     route.estimate.toToken.symbol,
   )
-  minReceive.usd = route.estimate.fromAmountUSD || '0'
+  minReceive.usd = route.estimate.toAmountMinUSD || '0'
 
   const tokenPrice = route.estimate.exchangeRate.slice(0, valueCharNumber)
 

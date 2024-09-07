@@ -7,9 +7,10 @@ import {
   replaceCommasWithDots,
   trimTrailingZeros,
 } from '@utils/formatValue'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { TokenInfo } from '../components/TokenInfo'
+import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
 import { NativeCrossChainSwap } from './deposit-wizards/NativeCrossChainSwap'
@@ -29,6 +30,9 @@ export const DepositReviewContent = ({
     inputValueInUSD,
     depositFromNetwork,
     depositToNetwork,
+    depositTotalAmount,
+    depositTotalInUSD,
+    setCurrentModal,
   } = useTxStore()
 
   const chainData = useTokenAsset(asset?.chain_id)
@@ -74,6 +78,18 @@ export const DepositReviewContent = ({
     }
   }, [asset, chainData, vault, allStepsCompleted, depositFromNetwork, depositToNetwork])
 
+  const depositStatus = useTransactionStatus('idle')
+
+  useEffect(() => {
+    if (depositStatus === 'success') {
+      setCurrentModal('done')
+    }
+
+    if (depositStatus === 'error') {
+      setCurrentModal('error')
+    }
+  }, [setCurrentModal, depositStatus])
+
   return (
     <>
       <div className="flex flex-col items-start gap-4 self-stretch rounded-2xl border border-stroke-100 p-6">
@@ -89,12 +105,12 @@ export const DepositReviewContent = ({
         <div className="h-px w-full bg-stroke-100" />
         <TokenInfo
           type="deposit"
-          amount={inputValueInUSD}
+          amount={depositTotalAmount}
           tokenInfo={{
             symbol: vault,
             chain_id: depositToNetwork!,
           }}
-          usdAmount={inputValueInUSD}
+          usdAmount={depositTotalInUSD}
         />
       </div>
       {depositFlow}

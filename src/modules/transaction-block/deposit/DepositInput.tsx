@@ -2,14 +2,20 @@ import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
-import { formatTokenBalance } from '@utils/formatValue'
+import {
+  formatAmount,
+  formatTokenBalance,
+  formatValueWithPrecision,
+} from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput.tsx'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore.ts'
+import { useTokenApy } from './hooks/useTokenApy.ts'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
 import ZapFee from './zap-fee/ZapFee'
@@ -58,13 +64,33 @@ export const DepositInput = () => {
     inputValue,
     inputValueInUSD,
     depositTotalInUSD,
+    depositTotalAmount,
+    isTxZAP,
+    vault,
+    squidRoute,
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,
   } = useTxStore()
+
+  const { usdcApy, usdtApy, loading } = useTokenApy()
+
+  const yourYearlyEarnings = useMemo(() => {
+    if (!usdcApy || !usdtApy || loading || !depositTotalInUSD) return false
+
+    const totalInUSD = Number(depositTotalInUSD)
+
+    if (vault === 'USDC') {
+      return (totalInUSD / 100) * Number(usdcApy)
+    }
+    return (totalInUSD / 100) * Number(usdtApy)
+  }, [usdcApy, usdtApy, loading, depositTotalInUSD, vault])
+
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
+
+  const prettyAssetBalance = formatValueWithPrecision(assetBalance, 8)
 
   const [error, setError] = useState('')
 
@@ -97,17 +123,45 @@ export const DepositInput = () => {
   }, [asset, asset?.quote, assetBalance, inputValue, inputValueInUSD, setInputValueInUSD])
 
   const handleAction = (type: InputType, value: string) => {
-    console.log('handleAction', type, value)
-
     if (!value) {
       setInputValue('')
       setInputValueInUSD('')
       return
     }
 
-    const assetBalanceBN = BigNumber(assetBalance)
-    const assetQuoteBN = BigNumber(asset?.quote ?? 1)
+    let assetBalanceBN = BigNumber(assetBalance)
+    let assetQuoteBN = BigNumber(asset?.quote ?? 1)
     const numericValue = BigNumber(value)
+
+    if (squidRoute) {
+      assetBalanceBN = BigNumber(
+        formatUnits(
+          squidRoute?.estimate?.fromAmount,
+          squidRoute.estimate.fromToken.decimals,
+        ),
+      )
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute.params.fromToken.decimals,:',
+        squidRoute.estimate.fromToken.decimals,
+      )
+
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
+        squidRoute?.estimate?.fromAmount,
+      )
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
+        formatUnits(
+          squidRoute?.estimate?.fromAmount,
+          squidRoute.estimate.fromToken.decimals,
+        ),
+      )
+      assetQuoteBN = BigNumber(squidRoute?.estimate?.fromAmountUSD)
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmountUSD:',
+        squidRoute?.estimate?.fromAmountUSD,
+      )
+    }
 
     if (type === 'usd') {
       setInputValueInUSD(value) // Set the input value for USD type
@@ -116,6 +170,7 @@ export const DepositInput = () => {
     } else if (type === 'token') {
       setInputValue(value) // Set the input value for token type
       const usdValue = calculateUSDValue(numericValue, assetQuoteBN, assetBalanceBN) // Calculate USD value based on the exchange rate
+      console.log('🚀 ~ handleAction ~ usdValue:', usdValue)
       setInputValueInUSD(usdValue.toString()) // Set the input value in USD
     }
   }
@@ -159,7 +214,7 @@ export const DepositInput = () => {
               <button
                 type="button"
                 className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                onClick={() => handleAction('token', assetBalance)}
+                onClick={() => handleAction('token', prettyAssetBalance)}
               >
                 Max
               </button>
@@ -176,7 +231,11 @@ export const DepositInput = () => {
       >
         <div className="flex w-full items-center justify-between">
           {isConnected && asset ? (
-            <AmountInput value={depositTotalInUSD} decimals={18} disabled />
+            <AmountInput
+              value={Number(depositTotalAmount).toFixed(2)}
+              decimals={18}
+              disabled
+            />
           ) : (
             <p className="text-md text-gray-100 max-lg:text-sm">
               Select the desired vault...
@@ -187,14 +246,21 @@ export const DepositInput = () => {
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
             <DollarInput value={depositTotalInUSD} disabled />
-            <p className="text-[1.125rem] leading-[120%] text-gray-100">
-              + $0.0 over 1 year
-            </p>
+            {yourYearlyEarnings ? (
+              <p className="text-[0.8125rem] leading-[120%] text-gray-100 lg:text-[1.125rem]">
+                + $
+                {formatAmount(yourYearlyEarnings, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+                over 1 year
+              </p>
+            ) : null}
           </div>
         )}
       </div>
 
-      {inputValue && <ZapFee className="mt-4" />}
+      {inputValue && isTxZAP ? <ZapFee className="mt-4" /> : null}
 
       {isConnected && (
         <Button

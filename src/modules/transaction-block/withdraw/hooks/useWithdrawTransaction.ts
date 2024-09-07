@@ -1,5 +1,4 @@
 import { tokenVaultAbi } from '@constants/abi/token-vault'
-import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
@@ -7,16 +6,16 @@ import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
 import { useState } from 'react'
 import type { Address } from 'viem'
-import { parseUnits } from 'viem'
 import { useAccount, useWriteContract } from 'wagmi'
 
 import { useVaultBalance } from './useVaultBalance'
 
-export const useWithdrawTransaction = () => {
+const ESTIMATED_TIME_TO_COMPLETE_WITHDRAW = 60 * 15
+
+export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
   const { address } = useAccount()
   const {
     setCurrentModal,
-    inputValue,
     mtToken,
     withdrawToNetwork,
     withdrawFromNetwork,
@@ -30,12 +29,11 @@ export const useWithdrawTransaction = () => {
   const { addTransaction } = useTransactionStore()
 
   const [status, setStatus] = useState<STEP_STATUS>('idle')
-  const amount = parseUnits(inputValue, 6)
 
   const { sharesBalance } = useVaultBalance(mtToken?.mtAddress || '0x')
 
   const isEnoughSharesToWithdraw =
-    sharesBalance && amount ? sharesBalance >= amount : undefined
+    sharesBalance && amount ? sharesBalance >= BigInt(amount) : undefined
 
   const { writeContract, ...rest } = useWriteContract({})
 
@@ -57,14 +55,14 @@ export const useWithdrawTransaction = () => {
         abi: tokenVaultAbi,
         functionName: 'requestWithdraw',
         chainId: withdrawFromNetwork,
-        args: [amount as bigint, EIDS_BY_CHAIN_ID[withdrawToNetwork], address, address],
+        args: [BigInt(amount), EIDS_BY_CHAIN_ID[withdrawToNetwork], address, address],
       },
 
       {
         onSuccess: (data) => {
           setStatus('pending')
           setTransactionHash(data)
-          setTimerDuration(ESTIMATED_TIME_OF_CONFIRMATION)
+          setTimerDuration(ESTIMATED_TIME_TO_COMPLETE_WITHDRAW)
           setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)

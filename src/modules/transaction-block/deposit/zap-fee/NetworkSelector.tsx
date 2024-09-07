@@ -35,10 +35,11 @@ const NetworkItem: React.FC<{ chain: any; onClick: () => void }> = ({
   )
 }
 
-interface NetworkPopoverProperties extends PopoverPrimitive.PopoverProps {}
+interface NetworkPopoverProperties extends PopoverPrimitive.PopoverProps {
+  disabled: boolean
+}
 
-
-export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
+export const NetworkSelector: React.FC<NetworkPopoverProperties> = ({ disabled }) => {
   const [isOpened, setIsOpened] = useState(false)
   const { vault, depositToNetwork, setDepositToNetwork } = useTxStore()
   const NetworkData = useTokenAsset(depositToNetwork)
@@ -46,8 +47,13 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
   const filteredChains = useMemo(() => filterChainsByVault([...CHAINS], vault), [vault])
 
   return (
-    <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
-      <PopoverTrigger className="w-full">
+    <Popover
+      open={isOpened}
+      onOpenChange={() => {
+        setIsOpened(!isOpened)
+      }}
+    >
+      <PopoverTrigger className="w-full" disabled={disabled}>
         <Grey3DBox>
           <div className="flex items-center gap-[.66rem] text-[1.1875rem] font-bold leading-[120%] text-text-80">
             <TokenWithNetwork
@@ -67,6 +73,10 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = () => {
       </PopoverTrigger>
       <PopoverContent
         align="end"
+        onInteractOutside={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
         sideOffset={8}
         className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] dark:bg-cards"
       >

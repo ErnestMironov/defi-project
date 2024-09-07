@@ -1,29 +1,39 @@
 import { USDC_TOKENS } from '@api/squid-router/postHook/data/USDC'
 import { USDT_TOKENS } from '@api/squid-router/postHook/data/USDT'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
-import { formatAmountValue } from '@utils/formatValue'
+import {
+  formatAmountValue,
+  formatTokenBalance,
+  formatValueWithPrecision,
+} from '@utils/formatValue'
 import { useEffect } from 'react'
-import type { Address } from 'viem'
+import { type Address } from 'viem'
 
 export const useSetDepositDetails = () => {
   const {
     squidRoute,
-    depositAsset,
     depositFromNetwork,
     depositToNetwork,
     vault,
-    vaultAddress,
     inputValue,
+    depositAsset,
+    vaultAddress,
     setVaultAddress,
     setDepositTotalInUSD,
+    setDepositTotalAmount,
     setTxDifficulty,
     setIsTxZAP,
   } = useTxStore()
 
   useEffect(() => {
-    if (!squidRoute) return
+    if (!squidRoute) {
+      setDepositTotalInUSD(formatValueWithPrecision(inputValue ?? '0', 2) ?? '0')
+      setDepositTotalAmount(inputValue ?? '0')
+      return
+    }
 
-    setDepositTotalInUSD(squidRoute?.estimate?.toAmountMinUSD ?? '0')
+    setDepositTotalInUSD(squidRoute?.estimate?.toAmountUSD ?? '0')
+    setDepositTotalAmount(formatTokenBalance(squidRoute?.estimate?.toAmount, 6) ?? '0')
   }, [
     squidRoute?.estimate?.fromAmountUSD,
     squidRoute?.estimate?.toAmountMinUSD,
@@ -33,6 +43,7 @@ export const useSetDepositDetails = () => {
     depositToNetwork,
     setVaultAddress,
     inputValue,
+    setDepositTotalAmount,
   ])
 
   useEffect(() => {

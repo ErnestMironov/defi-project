@@ -16,8 +16,7 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const { depositAsset, vault, setCurrentModal, currentStep, setCurrentStep } =
-    useTxStore()
+  const { depositAsset, vault, currentStep, setCurrentStep } = useTxStore()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
@@ -36,11 +35,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
     status: _swapAndDepositStatus,
     error: swapAndDepositError,
     depositHash,
-  } = useSwap({
-    onSuccessHandler: () => {
-      setCurrentModal('done')
-    },
-  })
+  } = useSwap()
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 

@@ -2,14 +2,23 @@
 // network icons
 import Binance from '@assets/icons/bnb.svg'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg'
+import Aurora from '@assets/icons/networks/aurora.svg'
 import Avalanche from '@assets/icons/networks/avalanche.svg'
 import Base from '@assets/icons/networks/base.svg'
 import Bsc from '@assets/icons/networks/bsc.svg'
 import Ethereum from '@assets/icons/networks/ethereum.svg'
+import Flare from '@assets/icons/networks/flare.svg'
+import GravityAlpha from '@assets/icons/networks/gravity-alpha.svg'
+import Iota from '@assets/icons/networks/iota.svg'
+import Kaia from '@assets/icons/networks/kaia.svg'
+import Kava from '@assets/icons/networks/kava.svg'
 // import MantleNetowork from '@assets/icons/networks/mantle.svg'
 import Optimism from '@assets/icons/networks/optimism.svg'
 import Polygon from '@assets/icons/networks/polygon.svg'
+import Rari from '@assets/icons/networks/rari.svg'
+import Scroll from '@assets/icons/networks/scroll.svg'
 import Sei from '@assets/icons/networks/sei.svg'
+// import Taiko from '@assets/icons/networks/taiko.svg'
 // protocol icons
 import Aave from '@assets/icons/protocols/aave.svg'
 import Beefy from '@assets/icons/protocols/beefy.svg'
@@ -156,6 +165,67 @@ const TOKENS: ITokenAsset[] = [
     symbol: 'metis-mainnet',
     chainId: 1088,
     name: 'Metis',
+  },
+
+  {
+    TokenIcon: Kava,
+    symbol: 'kava-mainnet',
+    chainId: 2222,
+    name: 'Kava',
+  },
+  {
+    TokenIcon: Kaia,
+    symbol: 'klaytn-mainnet',
+    chainId: 8217,
+    name: 'Klaytn',
+  },
+  {
+    TokenIcon: Iota,
+    symbol: 'iota-mainnet',
+    chainId: 8822,
+    name: 'IOTA',
+  },
+  {
+    TokenIcon: Rari,
+    symbol: 'rari-mainnet',
+    chainId: 1_380_012_617,
+    name: 'RARI',
+  },
+  {
+    TokenIcon: Flare,
+    symbol: 'flare-mainnet',
+    chainId: 14,
+    name: 'Flare',
+  },
+  {
+    TokenIcon: GravityAlpha,
+    symbol: 'gravity-alpha-mainnet',
+    chainId: 1625,
+    name: 'Gravity Alpha',
+  },
+  {
+    TokenIcon: Ethereum,
+    symbol: 'taiko-mainnet',
+    chainId: 167_000,
+    name: 'Taiko',
+  },
+  {
+    TokenIcon: Sei,
+    symbol: 'sei-mainnet',
+    chainId: 1329,
+    name: 'Sei',
+  },
+  {
+    TokenIcon: Scroll,
+    symbol: 'scroll-mainnet',
+    chainId: 534_352,
+    name: 'Scroll',
+  },
+  {
+    TokenIcon: Aurora,
+    symbol: 'aurora-mainnet',
+    chainId: 1_313_161_554,
+    name: 'Aurora',
   },
   // protocol icons
   {

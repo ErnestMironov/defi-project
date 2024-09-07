@@ -172,3 +172,8 @@ export type AdminEvent = {
     strategyId?: string
   }
 }
+
+export type WithdrawChainsResponse = {
+  USDT: number[]
+  USDC: number[]
+}

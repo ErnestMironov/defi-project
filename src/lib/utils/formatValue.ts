@@ -121,6 +121,8 @@ export const formatAmount = (
   value: string | number,
   options?: Intl.NumberFormatOptions,
 ) => {
+  if (!value) return ''
+
   const parsedValue = Number.parseFloat(value.toString())
   return new Intl.NumberFormat('en-US', {
     ...options,
@@ -153,4 +155,22 @@ export function convertBigIntToString(object: any): any {
     )
   }
   return object
+}
+
+/**
+ * Formats the asset balance, keeping up to the specified number of decimal places and removing trailing zeros
+ * @param balance - String or number representing the asset balance
+ * @param decimals - Number of decimal places to keep (default is 8)
+ * @returns Formatted balance string
+ */
+export const formatValueWithPrecision = (
+  balance: string | number,
+  decimals: number = 8,
+): string => {
+  const balanceString = typeof balance === 'number' ? balance.toString() : balance
+  const [integerPart, fractionalPart = ''] = balanceString.split('.')
+  const formattedFractionalPart = fractionalPart.slice(0, decimals)
+  return `${integerPart}${
+    formattedFractionalPart ? '.' : ''
+  }${formattedFractionalPart}`.replace(/\.?0+$/, '')
 }
