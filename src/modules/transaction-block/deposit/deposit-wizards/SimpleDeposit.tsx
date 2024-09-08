@@ -40,7 +40,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
   const vaultAddress = vault === 'USDC' ? USDC_VAULT_ADDRESS : USDT_VAULT_ADDRESS
 
   const { approve, status: approveStatus } = useApproveERC20({
-    approveValue: parseUnits(amount, 6).toString(),
+    approveValue: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     tokenAddress: asset?.contract_address as Address,
     transactionRequestTarget: vaultAddress,
     chainId: asset?.chain_id,
