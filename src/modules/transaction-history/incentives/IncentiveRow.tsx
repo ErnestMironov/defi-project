@@ -3,7 +3,9 @@ import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
+import { Skeleton } from '@components/ui/skeleton'
 import { INCENTIVE_ACTION_TYPE } from '@constants/action-type'
+import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
@@ -56,6 +58,38 @@ export const IncentiveRow = (props: IncentiveRowProperties) => {
       </Table.Cell>
       <Table.Cell className="text-gray-100">
         {getFromNow(dayjs(event.creation_time).toString())}
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+
+export const IncentivesRowSkeleton = (props: ComponentProps<'tr'>) => {
+  const { className, ...rest } = props
+  return (
+    <Table.Row
+      className={cn(
+        '[&>td>*]:inline-block [&>td>*]:align-middle [&>td>*]:leading-[0rem]',
+        className,
+      )}
+      {...rest}
+    >
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-40" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-40" />
+      </Table.Cell>
+      <Table.Cell className="text-gray-100">
+        <Skeleton className="h-8 w-20" />
       </Table.Cell>
     </Table.Row>
   )

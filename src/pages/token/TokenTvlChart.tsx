@@ -8,28 +8,12 @@ import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
-interface TokenTvlChartProperties extends ComponentProps<'div'> {}
-
-const MOCK_TVL_DATA: RechartDataType[] = [
-  {
-    timestamp: 1_700_000_000,
-    value: 10,
-    name: 'Strategy 1',
-  },
-  {
-    timestamp: 170_000_100,
-    value: 2,
-    name: 'Strategy 2',
-  },
-  {
-    timestamp: 170_000_200,
-    value: 10,
-    name: 'Strategy 3',
-  },
-]
+interface TokenTvlChartProperties extends ComponentProps<'div'> {
+  data: RechartDataType[]
+}
 
 export const TokenTvlChart = (props: TokenTvlChartProperties) => {
-  const { className, ...rest } = props
+  const { className, data, ...rest } = props
   const { currentFrame, frames, onFrameChange } = useFrameSelect()
   const [currentChain, setCurrentChain] = useState<OptionType[]>([])
   const [currentProtocol, setCurrentProtocol] = useState<OptionType[]>([])
@@ -61,7 +45,7 @@ export const TokenTvlChart = (props: TokenTvlChartProperties) => {
           />
         </div>
       </div>
-      <AreaChart data={MOCK_TVL_DATA} color="#A6C1FF" yAxisType="usd" />
+      <AreaChart data={data} color="#A6C1FF" yAxisType="usd" />
     </div>
   )
 }

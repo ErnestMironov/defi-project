@@ -1,12 +1,11 @@
 import { SectionTitle } from '@components/section/SectionTitle'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
-import { IncentiveMobileWithFilters } from '@modules/transactions/incentive/IncentiveMobileWithFilters'
+import { IncentivesHistory } from '@pages/strategies/transactions/IncentivesHistory'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
 import { AdminTable } from './admin/AdminTable'
 import { AdminActionMobileWithFilters } from './admin/mobile/AdminActionMobileWithFilters'
-import { IncentivesTable } from './incentives/IncentivesTable'
 import { ReportActionMobileWithFilters } from './reports/mobile/ReportActionMobileWithFilters'
 import { ReportsTable } from './reports/ReportsTable'
 
@@ -27,7 +26,7 @@ export const SystemActions = (props: SystemActionsProperties) => {
           <AdminTable />
         </TabsContent>
         <TabsContent value="incentives">
-          <IncentivesTable />
+          <IncentivesHistory />
         </TabsContent>
         <TabsContent value="reports">
           <ReportsTable />
@@ -52,7 +51,7 @@ export const SystemActionsMobile = (props: SystemActionsProperties) => {
           <AdminActionMobileWithFilters />
         </TabsContent>
         <TabsContent value="incentives">
-          <IncentiveMobileWithFilters />
+          <IncentivesHistory />
         </TabsContent>
         <TabsContent value="reports">
           <ReportActionMobileWithFilters />

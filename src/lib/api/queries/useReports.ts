@@ -1,48 +1,59 @@
 import { apiClient } from '@api/maat-finance/api-client'
 import type {
-  AdminActionType,
-  AdminEvent,
   PaginationResponse,
+  ReportType,
   SortDirection,
   StatusType,
 } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
-export type AdminActionsParameters = {
+export type ReportParameters = {
   limit?: number
-  action_type?: AdminActionType
-  page?: number
-  size?: number
   sort?: 'creation_time' | 'amount'
   orderBy?: SortDirection
   status?: StatusType
+  actions_type?: string[]
+  chain?: (
+    | 'bsc'
+    | 'arbitrum'
+    | 'optimism'
+    | 'base'
+    | 'polygon'
+    | 'avalanche'
+    | 'metis'
+    | 'mantle'
+    | 'sei'
+  )[]
+  token?: ('USDT' | 'USDC')[]
+  page?: number
+  size?: number
   start_timestamp?: string
   end_timestamp?: string
 }
 
-const getAdminActions = (parameters: AdminActionsParameters) => {
-  return apiClient.get<PaginationResponse<AdminEvent>>('/actions/admin', {
+const getReports = (parameters: ReportParameters) => {
+  return apiClient.get<PaginationResponse<ReportType>>('/actions/oracle', {
     params: parameters,
   })
 }
 
-export const useAdminActions = (parameters: AdminActionsParameters) => {
+export const useReports = (parameters: ReportParameters) => {
   return useQuery({
-    queryKey: ['admin-actions', parameters],
+    queryKey: ['reports', parameters],
     queryFn: async () => {
-      const { data } = await getAdminActions(parameters)
+      const { data } = await getReports(parameters)
       return data
     },
   })
 }
 
-export const useInfiniteAdminActions = (parameters: AdminActionsParameters) => {
+export const useInfiniteReports = (parameters: ReportParameters) => {
   const { size, ...rest } = parameters
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
-      queryKey: ['admin-actions', rest],
+      queryKey: ['reports', rest],
       queryFn: async ({ pageParam }) => {
-        const response = await getAdminActions({
+        const response = await getReports({
           size,
           page: pageParam,
           ...rest,

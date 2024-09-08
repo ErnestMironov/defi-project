@@ -1,11 +1,11 @@
 import type { AdminEvent } from '@api/maat-finance/types'
+import Arrow from '@assets/icons/arrow.svg'
 import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { ADMIN_ACTION_TYPE } from '@constants/action-type'
 import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
-import { Arrow } from '@radix-ui/react-hover-card'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
 import dayjs from 'dayjs'
@@ -74,7 +74,9 @@ export const SkeletonAdminActionMobileItem = (
 ) => {
   return (
     <div>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">MAAT Admin</div>
+      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
+        <Skeleton className="h-6 w-20" />
+      </div>
       <div className="mt-4 flex items-center gap-3 text-gray-100">
         <Skeleton className="size-6 rounded-full" />
         <div className="h-[1.0625rem] w-px bg-gray-50" />

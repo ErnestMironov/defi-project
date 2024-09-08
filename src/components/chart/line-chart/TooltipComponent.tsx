@@ -7,7 +7,7 @@ import { getDotStyles } from './utils/chart-helpers'
 
 type TooltipDataType = {
   color: string
-  value?: string
+  value?: any
   apy?: string
   timestamp: string
 }

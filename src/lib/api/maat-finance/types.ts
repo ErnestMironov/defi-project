@@ -177,3 +177,42 @@ export type WithdrawChainsResponse = {
   USDT: number[]
   USDC: number[]
 }
+
+export type ReportType = {
+  hash: string
+  intention_id: null | string
+  status: string
+  src_chain_id: number
+  dst_chain_id: null | number
+  creation_time: string
+  txFrom: string
+  to: string
+  action_type: 'UPDATE_PPS'
+  price_per_share: number
+  vault: {
+    address: string
+    chain_id: number
+    token: {
+      name: string
+      symbol: string
+      decimals: number
+      address: string
+      chain_id: number
+    }
+  }
+}
+
+export type RelatedActionType = {
+  hash: string
+  intention_id: string
+  status: string
+  src_chain_id: number
+  dst_chain_id: number | null
+  creation_time: string
+  txFrom: string
+  to: string
+  amount: number
+  action_type: string
+  strategy: Strategy
+  vault: Vault
+}

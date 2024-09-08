@@ -33,7 +33,7 @@ export const WithdrawReviewContent = ({
   } = useTxStore()
 
   const inputValueInMtToken = useMemo(() => {
-    const parsedAmount = parseUnits(amount, 6)
+    const parsedAmount = parseUnits(amount, mtToken?.decimals ?? 6)
 
     const inputValueBN = new BigNumber(parsedAmount.toString())
     const lpBalanceBN = new BigNumber(mtToken?.mtToken ?? 0)

@@ -2,6 +2,7 @@ import { USDC_TOKENS_RAW } from '@api/squid-router/postHook/data/USDC'
 import { USDT_TOKENS_RAW } from '@api/squid-router/postHook/data/USDT'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
+import { TOKEN_INFO } from '@constants/token-info'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
 import { StrategiesMobile } from '@modules/strategies/StrategiesMobile'
@@ -20,13 +21,23 @@ import { TokenHeader } from './TokenHeader'
 import { TokenInfoMobile } from './TokenInfoMobile'
 import { TokenStrategies } from './TokenStrategies'
 import { TokenTvlChart } from './TokenTvlChart'
+import { useTokenMetrics } from './useTokenMetrics'
 
 interface TokensProperties extends ComponentProps<'div'> {}
 
 export const TokenPage = (props: TokensProperties) => {
+  const { isBelowDesktop } = useDeviceWidth()
+
+  if (isBelowDesktop) {
+    return <TokensMobilePage {...props} />
+  }
+
+  return <TokenDesktopPage {...props} />
+}
+
+export const TokenDesktopPage = (props: TokensProperties) => {
   const { className, ...rest } = props
   const { symbol } = useParams()
-  const { isBelowDesktop } = useDeviceWidth()
 
   const tokenAddresses = useMemo(() => {
     return symbol === 'USDT' ? USDT_TOKENS_RAW : USDC_TOKENS_RAW
@@ -36,25 +47,23 @@ export const TokenPage = (props: TokensProperties) => {
     setSelectedAddress(tokenAddresses[0])
   }, [tokenAddresses])
 
-  if (isBelowDesktop) {
-    return <TokensMobilePage />
-  }
+  const { apyData, tvlData, apy, tvl } = useTokenMetrics(symbol as 'USDT' | 'USDC')
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
       <Breadcrumbs />
       <TokenHeader />
       <div className="mt-[4.62rem] grid grid-cols-2 gap-10 *:h-[18.25rem]">
-        <TokenApyChart />
-        <TokenTvlChart />
+        <TokenApyChart data={apyData} />
+        <TokenTvlChart data={tvlData} />
       </div>
       <div className="mt-12 grid grid-cols-2 gap-10">
         <TokenStatsContainer
           withLink={false}
           color="#3883EB"
-          apy={3.34}
-          tvl={567.83}
-          rebalancingVolume={4586}
+          apy={apy}
+          tvl={tvl}
+          rebalancingVolume={0}
           tokenName={symbol ?? ''}
           img={symbol === 'USDC' ? usdc : usdt}
           imageClassName={
@@ -62,10 +71,7 @@ export const TokenPage = (props: TokensProperties) => {
           }
         />
         <div className="flex flex-col justify-between rounded-[1.75rem] bg-cards p-10 text-[1.25rem]/[1.5rem] normal-case text-text [box-shadow:0px_3px_1px_0px_rgba(56,_118,_203,_0.20)]">
-          <p>
-            USDC is a fully collateralized US dollar stablecoin. USDC is the bridge
-            between dollars and trading on cryptocurrency exchanges.
-          </p>
+          <p>{TOKEN_INFO[symbol?.toUpperCase() as keyof typeof TOKEN_INFO]}</p>
           <p className="mt-auto flex w-full items-center justify-between text-lg">
             <span className="text-gray-100">Contract</span>
             <TokenAddressByChainPopover

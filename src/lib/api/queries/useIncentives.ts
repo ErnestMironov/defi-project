@@ -30,13 +30,11 @@ export const useInfiniteIncentives = (parameters: IncentiveParameters) => {
   const { size, ...rest } = parameters
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
-      queryKey: ['events', rest],
+      queryKey: ['incentives', rest],
       queryFn: async ({ pageParam }) => {
-        //! TODO: remove limit
         const response = await getIncentives({
           size,
           page: pageParam,
-          limit: 100,
           ...rest,
         })
         return response.data

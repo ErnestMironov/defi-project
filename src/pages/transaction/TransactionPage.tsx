@@ -19,6 +19,10 @@ const triggeredTransactions: TransactionType[] = [
 export const TransactionPage = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
   const { isBelowDesktop } = useDeviceWidth()
+  // const { intention_id } = useParams()
+  // const { data } = useRelatedActions(intention_id)
+  // console.log(data)
+
   if (isBelowDesktop) {
     return <TransactionPageMobile {...props} />
   }
