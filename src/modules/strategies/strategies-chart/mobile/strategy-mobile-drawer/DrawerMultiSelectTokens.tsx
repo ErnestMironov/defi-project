@@ -15,7 +15,7 @@ export const DrawerMultiSelectTokens = (props: DrawerMultiSelectTokensProperties
   const { selectedTokens, setSelectedTokens, tokens } = props
   return (
     <Drawer>
-      <DrawerTrigger asChild className="h-11">
+      <DrawerTrigger asChild className="h-11" onClick={(e) => e.stopPropagation()}>
         <div className="flex h-full w-[2.625rem] flex-col items-center justify-center rounded-xl border border-stroke-100 p-2">
           <div className="relative size-6 rounded-full">
             {selectedTokens.length === 0 || selectedTokens.length >= 2 ? (

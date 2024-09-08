@@ -1,7 +1,7 @@
+import type { EventsParameters } from '@api/queries/useEvents'
 import { useInfiniteEvents } from '@api/queries/useEvents'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -11,6 +11,7 @@ import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
 import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
+import { Loader } from '@components/ui/loader'
 import {
   SELECT_ACTIONS,
   SELECT_CHAINS,
@@ -20,9 +21,8 @@ import {
   SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
-import { Loader } from 'lucide-react'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
 import { TransactionsMobileList } from './TransactionsMobileList'
 
@@ -36,12 +36,17 @@ type FilterType =
 
 interface TransactionsMobileWithFiltersProperties extends ComponentProps<'div'> {
   filters?: FilterType[]
+  eventParameters?: EventsParameters
 }
 
 export const TransactionsMobileWithFilters = (
   props: TransactionsMobileWithFiltersProperties,
 ) => {
-  const { className, filters = ['actions', 'statuses', 'chains'] } = props
+  const {
+    className,
+    filters = ['actions', 'statuses', 'chains'],
+    eventParameters = {},
+  } = props
 
   const [search, setSearch] = useState('')
   const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
@@ -54,7 +59,7 @@ export const TransactionsMobileWithFilters = (
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
   const { data, isLoading, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteEvents({ action_type: 'maat' })
+    useInfiniteEvents({ action_type: 'trigger', ...eventParameters })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -91,12 +96,12 @@ export const TransactionsMobileWithFilters = (
       }
       case 'chains': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Chains"
             value={selectedChains}
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
-            placeholder="All Chains"
+            // placeholder="All Chains"
           />
         )
       }
@@ -136,7 +141,9 @@ export const TransactionsMobileWithFilters = (
             />
           }
         >
-          {filters.map((filter) => renderFilters(filter))}
+          {filters.map((filter) => (
+            <Fragment key={filter}>{renderFilters(filter)}</Fragment>
+          ))}
         </MobileFiltersDrawer>
         {/* Sort */}
         <MobileFiltersDrawer
@@ -174,8 +181,8 @@ export const TransactionsMobileWithFilters = (
         error={error}
       />
       {isFetchingNextPage && (
-        <div className="mt-3 flex h-8 w-full animate-spin items-center justify-center">
-          <Loader size="xs" />
+        <div className="flex h-8 w-full items-center justify-center">
+          <Loader />
         </div>
       )}
       {hasNextPage && !isLoading && (

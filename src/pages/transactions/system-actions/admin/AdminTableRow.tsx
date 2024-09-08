@@ -1,47 +1,68 @@
+import type { AdminEvent } from '@api/maat-finance/types'
+import Arrow from '@assets/icons/arrow.svg'
 import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
-import { TokenIconComponent } from '@components/token-icon'
+import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
+import { ADMIN_ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
+import { getFromNow } from '@utils/get-day-difference'
 import { shortenString } from '@utils/transform'
+import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
 
-interface AdminTableRowProperties extends ComponentProps<'tr'> {}
+interface AdminTableRowProperties extends ComponentProps<'tr'> {
+  adminEvent: AdminEvent
+}
 
 export const AdminTableRow = (props: AdminTableRowProperties) => {
-  const { className, ...rest } = props
+  const { adminEvent, className, ...rest } = props
   return (
     <Table.Row className={cn('', className)} {...rest}>
-      <Table.Cell>setIncentivesController</Table.Cell>
+      <Table.Cell>
+        {ADMIN_ACTION_TYPE[adminEvent.action_type as keyof typeof ADMIN_ACTION_TYPE]}
+      </Table.Cell>
       <Table.Cell>MAAT Admin</Table.Cell>
       <Table.Cell>
         <div className="flex items-center">
-          <span>Address Provider</span>
-          <CopyButton text="Address Provider" className="ml-4" />
+          <span>{shortenString(adminEvent.to)}</span>
+          <CopyButton text={adminEvent.to} className="ml-4" />
           <Scan className="ml-3 size-5 shrink-0" />
         </div>
       </Table.Cell>
       <Table.Cell>
-        {/* arguments */}
+        <div className="flex items-center gap-2">
+          {adminEvent.dst_chain_id &&
+          adminEvent.src_chain_id !== adminEvent.dst_chain_id ? (
+            <>
+              <TokenIconComponent
+                symbol={adminEvent.src_chain_id}
+                className="size-8 gap-3"
+              />
+              <Arrow />
+              <TokenIconComponent
+                symbol={adminEvent.dst_chain_id}
+                className="size-8 gap-3"
+              />
+            </>
+          ) : (
+            <IconWithLabelComponent
+              symbol={adminEvent.src_chain_id}
+              className="size-8 gap-3"
+            />
+          )}
+        </div>
+      </Table.Cell>
+      <Table.Cell>
         <div className="flex items-center">
-          <span>{shortenString('0xcdfe9128371239182cj4fb3')}</span>
-          <CopyButton text="0xcdfe9128379182cj4fb3" className="ml-4" />
+          <span>{shortenString(adminEvent.hash)}</span>
+          <CopyButton text={adminEvent.hash} className="ml-4" />
           <Scan className="ml-3 size-5 shrink-0" />
         </div>
       </Table.Cell>
-      <Table.Cell>
-        <TokenIconComponent symbol={43_114} className="inline size-8" />
-        <p className="ml-3 inline">Avalanche</p>
+      <Table.Cell className="text-gray-100">
+        {getFromNow(dayjs(adminEvent.creation_time).toString())}
       </Table.Cell>
-      <Table.Cell>
-        {/* hash */}
-        <div className="flex items-center">
-          <span>{shortenString('0xcdfe9128379112382cj4fb3')}</span>
-          <CopyButton text="0xcdfe9128379182cj4fb3" className="ml-4" />
-          <Scan className="ml-3 size-5 shrink-0" />
-        </div>
-      </Table.Cell>
-      <Table.Cell className="text-gray-100">now</Table.Cell>
     </Table.Row>
   )
 }

@@ -15,12 +15,16 @@ export const Transactions = (props: TransactionHistoryProperties) => {
     <div {...rest} className={cn('', className)}>
       <SectionTitle>Transactions</SectionTitle>
       <Tabs className="mt-12" defaultValue="maat">
-        <TabsList className="*:w-[12.5rem]">
-          <TabsTrigger value="maat">MAAT</TabsTrigger>
-          <TabsTrigger value="incentives">INCENTIVES</TabsTrigger>
+        <TabsList className="flex w-full justify-start">
+          <TabsTrigger className="w-[12.5rem] max-lg:w-full" value="maat">
+            MAAT
+          </TabsTrigger>
+          <TabsTrigger className="w-[12.5rem] max-lg:w-full" value="incentives">
+            INCENTIVES
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="maat">
-          <MaatTransactionsHistory />
+          <MaatTransactionsHistory eventParameters={{ action_type: 'maat' }} />
         </TabsContent>
         <TabsContent value="incentives">
           <IncentivesHistory />

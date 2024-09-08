@@ -1,7 +1,7 @@
-import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
-import { useMaatTokensTvl } from '@api/queries/useMaatTokensTvl'
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import Dot from '@assets/icons/dot.svg'
 import Filter from '@assets/icons/filter.svg'
+import type { RechartDataType } from '@components/chart/line-chart/LineChart'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
@@ -20,7 +20,7 @@ import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 interface TokensChartProperties extends ComponentProps<'div'> {}
 
@@ -33,43 +33,70 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
   const { className, ...rest } = props
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
-  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange } = useFrameSelect()
 
   const [selectedProtocols, setSelectedProtocols] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
 
-  const {
-    data: dataApy,
-    loading: loadingApy,
-    error: errorApy,
-  } = useMaatTokensApy({ from: currentTimestamp })
+  const { data, isLoading, error } = useProtocolMetrics()
+  const formattedData = useMemo(() => {
+    if (!data) return { apyData: [], tvlData: [] }
+    const apyData: RechartDataType[] = []
+    const tvlData: RechartDataType[] = []
+    Object.entries(data.USDC.history).forEach(([key, value]) => {
+      const pvApy = data.USDT.history[key]?.apy
+      const pvTvl = data.USDT.history[key]?.tvl
+      // format timestamp to unix timestamp
+      const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
 
-  const {
-    data: dataTvl,
-    loading: loadingTvl,
-    error: errorTvl,
-  } = useMaatTokensTvl({ from: currentTimestamp })
+      apyData.push({
+        name: key,
+        timestamp,
+        uv: value.apy,
+        pv: pvApy,
+      })
+      tvlData.push({
+        name: key,
+        timestamp,
+        uv: value.tvl,
+        pv: pvTvl,
+      })
+    })
+    return { apyData, tvlData }
+  }, [data])
 
   const renderApyBody = () => {
     switch (true) {
-      case loadingApy:
-      case !!errorApy: {
+      case isLoading:
+      case !!error: {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <LineChartComponent data={dataApy} yPostfix="%" frame={currentFrame} />
+        return (
+          <LineChartComponent
+            data={formattedData.apyData}
+            yAxisType="percentage"
+            frame={currentFrame}
+          />
+        )
       }
     }
   }
 
   const renderTvlBody = () => {
     switch (true) {
-      case loadingTvl:
-      case !!errorTvl: {
+      case isLoading:
+      case !!error: {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <LineChartComponent data={dataTvl} yPrefix="$" frame={currentFrame} />
+        return (
+          <LineChartComponent
+            data={formattedData.tvlData}
+            yAxisType="usd"
+            frame={currentFrame}
+          />
+        )
       }
     }
   }

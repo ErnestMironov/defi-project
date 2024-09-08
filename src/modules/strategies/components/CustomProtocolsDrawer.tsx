@@ -5,65 +5,29 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from '@components/ui/drawer'
 import type { Drawer as DrawerPrimitive } from 'vaul'
 
+import { useMobileCustomStrategiesChartStore } from '../strategies-chart/mobile/useMobileStrategiesChartStore'
 import { CustomProtocolDrawerItem } from './CustomProtocolDrawerItem'
-import { COLORS } from './MultiColoredLineChart'
 
 interface CustomProtocolsDrawerProperties {
   className?: string
 }
-
-const MOCK_STRATEGIES = [
-  {
-    symbol: 'USDT',
-    chain: 'Arbitrum',
-    protocol: 'Yearn',
-    value: '100',
-  },
-  {
-    symbol: 'USDC',
-    protocol: 'Beefy',
-    chain: 'Mantle',
-    value: '100',
-  },
-  {
-    symbol: 'USDT',
-    protocol: 'Sonne',
-    chain: 'Aave',
-    value: '100',
-  },
-  {
-    symbol: 'USDC',
-    chain: 'Arbitrum',
-    protocol: 'Yearn',
-    value: '100',
-  },
-  {
-    symbol: 'USDT',
-    chain: 'Arbitrum',
-    protocol: 'Compound',
-    value: '100',
-  },
-  {
-    symbol: undefined,
-    chain: undefined,
-    protocol: undefined,
-    value: undefined,
-    visible: false,
-  },
-]
 
 export const CustomProtocolsDrawer = (
   props: CustomProtocolsDrawerProperties &
     React.ComponentProps<typeof DrawerPrimitive.Root>,
 ) => {
   const { className, children, ...rest } = props
+  const { customStrategiesWithColors, onCustomStrategiesVisibilityChange } =
+    useMobileCustomStrategiesChartStore()
   return (
     <Drawer {...rest} direction="right">
-      {/* <DrawerTrigger asChild className={className}> */}
-      <div className={className}>{children}</div>
+      <DrawerTrigger asChild className={className}>
+        {children}
+      </DrawerTrigger>
       <DrawerContent
         withDraggable={false}
         position="right"
@@ -75,9 +39,18 @@ export const CustomProtocolsDrawer = (
             <X className="size-7 [&_path]:fill-text" />
           </DrawerClose>
         </DrawerHeader>
-        {MOCK_STRATEGIES.map((strategy, i) => (
-          <CustomProtocolDrawerItem key={i} index={i} color={COLORS[i]} {...strategy} />
-        ))}
+        {customStrategiesWithColors.map((strategyWithColor, i) => {
+          return (
+            <CustomProtocolDrawerItem
+              key={i}
+              index={i}
+              strategyWithColor={strategyWithColor}
+              onVisibleChange={() =>
+                onCustomStrategiesVisibilityChange(strategyWithColor)
+              }
+            />
+          )
+        })}
       </DrawerContent>
     </Drawer>
   )

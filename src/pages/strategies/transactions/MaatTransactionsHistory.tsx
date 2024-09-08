@@ -1,3 +1,4 @@
+import type { EventsParameters } from '@api/queries/useEvents'
 import {
   SELECT_CHAINS,
   SELECT_MAAT_ACTIONS,
@@ -9,14 +10,16 @@ import { MaatTransactionsHistoryTable } from '@modules/transaction-history/maat/
 import { TransactionsMobileWithFilters } from '@modules/transactions/TransactionsMobileWithFilters'
 import type { ComponentProps } from 'react'
 
-interface TransactionsHistoryProperties extends ComponentProps<'div'> {}
+interface TransactionsHistoryProperties extends ComponentProps<'div'> {
+  eventParameters?: EventsParameters
+}
 
 export const MaatTransactionsHistory: React.FC<TransactionsHistoryProperties> = (
   props,
 ) => {
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {
-    return <TransactionsMobileWithFilters className={props.className} />
+    return <TransactionsMobileWithFilters {...props} />
   }
   return (
     <MaatTransactionsHistoryTable

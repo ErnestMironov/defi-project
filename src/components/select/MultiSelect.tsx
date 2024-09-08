@@ -68,7 +68,8 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
       case value.length === 1: {
         return value[0].label
       }
-      case placeholder && !SELECT_ICONS_PLACEHOLDERS.has(placeholder): {
+      case placeholder &&
+        (!SELECT_ICONS_PLACEHOLDERS.has(placeholder) || value.length >= 6): {
         return `${value.length} Selected`
       }
       case value.length > 1: {
@@ -143,7 +144,7 @@ export const MultiSelect = ({
         sideOffset={10}
         align="start"
         className={cn(
-          'w-fit rounded-xl p-6 max-h-96 overflow-scroll',
+          'w-fit rounded-xl p-6 max-h-96 overflow-scroll pointer-events-auto',
           multiSelectVariants({ variant }),
           classNames?.content,
         )}

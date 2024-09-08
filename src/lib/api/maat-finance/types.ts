@@ -53,24 +53,33 @@ export type Token = {
 }
 
 export type Strategy = {
-  address: string
-  apy: number
-  chain_id: number
-  connected_to_vaults: null | any
   id: string
-  info: null | any
+  address: string
+  chain_id: number
   protocol: string
-  token: Token
   tvl: number
+  apy: number
+  token: {
+    name: string
+    symbol: string
+    decimals: number
+    address: string
+    chain_id: number
+  }
+  connected_to_vaults: null | any // Replace 'any' with a more specific type if known
+  info: {
+    name: string
+    strategy_id: string
+    strategy_description: string
+    protocol: {
+      name: string
+      description: string
+      link: string
+    }
+  }
 }
 
-export type ActionType =
-  | 'trigger'
-  | 'handler'
-  | 'incentives'
-  | 'rebalance'
-  | 'maat'
-  | 'oracle'
+export type ActionType = 'trigger' | 'handler' | 'maat'
 
 export type Vault = {
   address: string
@@ -96,22 +105,22 @@ export type Event = {
 type IncentiveActionType = 'INC_HARVEST' | 'INC_COMPOUND' | 'INC_SWAP'
 
 export type IncentiveEvent = {
-  action_type: IncentiveActionType
-  amount_in: number | null
-  amount_out: number | null
-  creation_time: string
-  dst_chain_id: number | null
-  entity_initializer: string
   hash: string
-  intention_id: string | null
-  reward_token: string
-  src_chain_id: number
+  intention_id: null | string
   status: string
-  strategy: string | null
-  to: string
-  token_in: Token | null
-  token_out: Token | null
+  src_chain_id: number
+  dst_chain_id: null | number
+  creation_time: string
   txFrom: string
+  to: string
+  action_type: IncentiveActionType
+  amount_in: number
+  token_in: Token
+  token_out: null | Token
+  amount_out: null | number
+  strategy: Strategy
+  reward_token: null | Token
+  entity_initializer: string
 }
 
 export type MaatStat = {
@@ -132,6 +141,36 @@ export type TokenRebalanceData = {
 export type RebalanceVolume = {
   USDT: TokenRebalanceData
   USDC: TokenRebalanceData
+}
+
+export type AdminActionType =
+  | 'STRATEGY_REGISTERED'
+  | 'STRATEGY_DEPRECATED'
+  | 'VAULT_REGISTERED'
+  | 'VAULT_DEPRECATED'
+  | 'ORACLE_CHANGED'
+  | 'INCENTIVE_CONTROLLER_CHANGED'
+  | 'STARGATE_ADAPTER_CHANGED'
+  | 'ADD_STRATEGY'
+  | 'REMOVE_STRATEGY'
+  | 'COMMANDER_CHANGED'
+  | 'WATCHER_CHANGED'
+  | 'WITHDRAW_CANCELING_DELAY'
+  | 'FEE_CHANGED'
+
+export type AdminEvent = {
+  hash: string
+  intention_id: string | null
+  status: string
+  src_chain_id: number
+  dst_chain_id: number | null
+  creation_time: string
+  txFrom: string
+  to: string
+  action_type: AdminActionType
+  arguments: {
+    strategyId?: string
+  }
 }
 
 export type WithdrawChainsResponse = {

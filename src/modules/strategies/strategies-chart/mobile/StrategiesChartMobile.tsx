@@ -1,212 +1,176 @@
 /* eslint-disable sonarjs/no-small-switch */
-import type { Strategy } from '@api/maat-finance/types'
+import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Close from '@assets/icons/close.svg'
 import Filter from '@assets/icons/filter.svg'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
-import { Select } from '@components/select/Select'
+import type { OptionType } from '@components/select/Select'
 import { AnimatedTabs } from '@components/tab/AnimatedTabs'
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/ui/drawer'
-import {
-  COLORS,
-  MultiColoredLineChart,
-} from '@modules/strategies/components/MultiColoredLineChart'
+import { Skeleton } from '@components/ui/skeleton'
+import { MultiColoredLineChart } from '@modules/strategies/components/MultiColoredLineChart'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 
+import type { StrategiesMetricsChartData } from '../desktop/StrategiesCharts'
+import { useDesktopStrategies } from '../desktop/useDesktopStrategies'
+import { SelectStrategiesMobilePopover } from './SelectStrategiesMobilePopover'
 import { CustomStrategyMobileDrawerItem } from './strategy-mobile-drawer/CustomStrategyMobileDrawerItem'
 import { StrategyMobileDrawerItem } from './strategy-mobile-drawer/StrategyMobileDrawerItem'
 import { useMobileCustomStrategiesChartStore } from './useMobileStrategiesChartStore'
 
+export const SELECT_STRATEGIES: OptionType[] = [
+  { label: 'Top 5 strategies', value: 'Top 5 strategies' },
+  {
+    label: 'Custom',
+    value: 'Custom',
+    Icon: () => <></>,
+    callback: () => {},
+  },
+]
 export type RechartDataType = {
   name: string
   timestamp: number
   values: (number | null)[]
 }
 
-const MOCK_CHART_DATA: RechartDataType[] = [
-  {
-    name: '',
-    timestamp: 1_630_310_400_000,
-    values: [0.1, 0.3, 0.4, 0.5, 0.1],
-  },
-  {
-    name: '',
-    timestamp: 1_630_310_400_000 + 1200,
-    values: [1.2, 0.1, 0.4, null, 1],
-  },
-  {
-    name: '',
-    timestamp: 1_630_310_400_000 + 12_000,
-    values: [0.1, null, 0.3, 0.4, 0.5],
-  },
-  {
-    name: '',
-    timestamp: 1_630_310_400_000 + 12_000_000_000_000,
-    values: [1.2, 0.15, 0.4, 0.3, 1],
-  },
-]
-
-export const MOCK_STRATEGIES: Strategy[] = [
-  {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-    apy: 12.34,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-1',
-    info: null,
-    protocol: 'aave',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 1',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 1_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 23.45,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-2',
-    info: null,
-    protocol: 'stargate',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 2',
-      decimals: 18,
-      address: '0x1234567890abcdef1234567890abcdef12345678',
-    },
-    tvl: 2_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 34.56,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-3',
-    info: null,
-    protocol: 'yearn',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 3',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 3_000_000,
-  },
-  {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
-    apy: 45.67,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-4',
-    info: null,
-    protocol: 'aave',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 4',
-      decimals: 18,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    },
-    tvl: 4_000_000,
-  },
-  {
-    address: '0xabcdefabcdefabcdefabcdefabcdefabcdef',
-    apy: 56.78,
-    chain_id: 1,
-    connected_to_vaults: null,
-    id: 'strategy-5',
-    info: null,
-    protocol: 'stargate',
-    token: {
-      chain_id: 137,
-      symbol: 'usdt',
-      name: 'Token 5',
-      decimals: 18,
-      address: '0x1234567890abcdef1234567890abcdef12345678',
-    },
-    tvl: 5_000_000,
-  },
-]
-
 interface StrategiesChartMobileProperties extends ComponentProps<'div'> {}
 
 export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) => {
   const { className, ...rest } = props
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
-
-  // ----------- strategies -----------
-  // const { data } = useStrategies({
-  //   size: 5,
-  // })
+  const { currentFrame, frames, onFrameChange /* currentTimestamp */ } = useFrameSelect()
   const {
     topStrategiesWithColors,
-    setTopStrategiesWithColors,
     customStrategiesWithColors,
-    setCustomStrategiesWithColors,
     selectedStrategiesType,
     setSelectedStrategiesType,
-    strategiesTypes,
     onCustomStrategiesVisibilityChange,
     onStrategySelect,
   } = useMobileCustomStrategiesChartStore()
 
-  useEffect(() => {
-    // if (data) {
-    const topColoredStrategies = COLORS.map((color, i) => ({
-      color,
-      strategy: MOCK_STRATEGIES[i],
-      visible: true,
-    }))
-    setTopStrategiesWithColors(topColoredStrategies)
-    if (customStrategiesWithColors.length === 0) {
-      setCustomStrategiesWithColors(topColoredStrategies)
-    }
-    // }
-  }, [
-    customStrategiesWithColors.length,
-    setCustomStrategiesWithColors,
-    setTopStrategiesWithColors,
-  ])
-  const onReset = () => {
-    setTopStrategiesWithColors([])
-    setCustomStrategiesWithColors([])
-  }
-  // ---------------------------------
+  const { onReset, isLoading, error } = useDesktopStrategies()
+  const currentStrategies =
+    selectedStrategiesType.value === 'Custom'
+      ? customStrategiesWithColors
+      : topStrategiesWithColors
 
-  const { currentFrame, frames, onFrameChange /* currentTimestamp */ } = useFrameSelect()
+  const {
+    data: strategiesMetrics,
+    isLoading: isMetricsLoading,
+    isFetching: isMetricsFetching,
+    error: metricsError,
+  } = useStrategiesMetrics({
+    strategy_id: currentStrategies.map(({ strategy }) => strategy.id),
+  })
+  const formattedStrategiesMetrics: StrategiesMetricsChartData[] = useMemo(() => {
+    return Object.entries(strategiesMetrics ?? {}).map(([timestamp, strategies]) => {
+      const formattedTimestamp = Number(timestamp) * (timestamp.length === 10 ? 1000 : 1)
+      const formattedValues = currentStrategies.map(({ strategy, visible }) => {
+        if (!visible) return null
+        const strategyData = strategies[strategy.id]
+        return {
+          ...strategyData,
+          apy: strategyData?.apy === 0 ? null : strategyData?.apy,
+          tvl: strategyData?.tvl === 0 ? null : strategyData?.tvl,
+        }
+      })
+      return {
+        name: 'APY',
+        timestamp: formattedTimestamp,
+        values: formattedValues,
+      }
+    })
+  }, [currentStrategies, strategiesMetrics])
+
+  // ---------------------------------
 
   const renderApyBody = () => {
     switch (true) {
-      // case loadingApy:
-      // case !!errorApy: {
-      //   return <Skeleton className="size-full rounded-3xl" />
-      // }
+      case isLoading:
+      case isMetricsLoading:
+      case !!error:
+      case !!metricsError: {
+        return <Skeleton className="size-full rounded-3xl" />
+      }
       default: {
-        return <MultiColoredLineChart data={MOCK_CHART_DATA} yAxisType="percent" />
+        return (
+          <MultiColoredLineChart
+            isFetching={isMetricsFetching}
+            data={formattedStrategiesMetrics}
+            yAxisType="percent"
+            dataKey="apy"
+          />
+        )
       }
     }
   }
 
   const renderTvlBody = () => {
     switch (true) {
-      // case loadingTvl:
-      // case !!errorTvl: {
-      //   return <Skeleton className="size-full rounded-3xl" />
-      // }
+      case isLoading:
+      case !!error:
+      case isMetricsLoading:
+      case !!metricsError: {
+        return <Skeleton className="size-full rounded-3xl" />
+      }
       default: {
-        return <MultiColoredLineChart data={MOCK_CHART_DATA} yAxisType="usd" />
+        return (
+          <MultiColoredLineChart
+            isFetching={isMetricsFetching}
+            data={formattedStrategiesMetrics}
+            yAxisType="usd"
+            dataKey="tvl"
+          />
+        )
       }
     }
   }
+
+  const renderSelectStrategies = () => {
+    switch (true) {
+      case isLoading:
+      case isMetricsLoading:
+      case !!metricsError: {
+        return <Skeleton className="h-80 w-full rounded-3xl" />
+      }
+      case selectedStrategiesType.label === 'Custom': {
+        return (
+          <>
+            {customStrategiesWithColors.map((strategyWithColor, i) => (
+              <CustomStrategyMobileDrawerItem
+                {...strategyWithColor}
+                key={i}
+                onVisibilityChange={() =>
+                  onCustomStrategiesVisibilityChange(strategyWithColor)
+                }
+                onStrategySelect={(newStrategy) =>
+                  onStrategySelect(newStrategy, strategyWithColor)
+                }
+                strategiesWithColors={customStrategiesWithColors}
+                index={i + 1}
+              />
+            ))}
+          </>
+        )
+      }
+      case selectedStrategiesType.label === 'Top 5 strategies': {
+        return (
+          <>
+            {topStrategiesWithColors.map((strategy, i) => (
+              <StrategyMobileDrawerItem {...strategy} key={i} />
+            ))}
+          </>
+        )
+      }
+      default: {
+        return null
+      }
+    }
+  }
+
   return (
     <section className={cn('mt-[2.5rem]', className, '')} {...rest}>
       <AnimatedTabs
@@ -237,7 +201,10 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
       </div>
       {/* select strategies */}
       <Drawer>
-        <DrawerTrigger className="mt-6 flex w-full items-center rounded-lg bg-cards p-4">
+        <DrawerTrigger
+          disabled={isLoading || !!error}
+          className="mt-6 flex w-full items-center rounded-lg bg-cards p-4"
+        >
           <Filter className="size-6" />
           <span className="ml-2">{selectedStrategiesType.value}</span>
           <ArrowDown className="ml-auto size-4" />
@@ -249,41 +216,16 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
         >
           <DrawerTitle className="sr-only">Select strategies</DrawerTitle>
           <div className="flex items-center justify-between gap-6">
-            <Select
-              options={strategiesTypes}
+            <SelectStrategiesMobilePopover
+              options={SELECT_STRATEGIES}
               value={selectedStrategiesType}
               onChange={(value) => setSelectedStrategiesType(value)}
-              leftSection={<Filter className="mr-2 inline-block size-6" />}
             />
             {selectedStrategiesType.label === 'Custom' && (
               <Close className="size-6" onClick={onReset} />
             )}
           </div>
-          {selectedStrategiesType.label === 'Custom' && (
-            <div className="mt-4 space-y-2">
-              {customStrategiesWithColors.map((strategyWithColor, i) => (
-                <CustomStrategyMobileDrawerItem
-                  {...strategyWithColor}
-                  key={i}
-                  onVisibilityChange={() =>
-                    onCustomStrategiesVisibilityChange(strategyWithColor)
-                  }
-                  onStrategySelect={(newStrategy) =>
-                    onStrategySelect(newStrategy, strategyWithColor)
-                  }
-                  strategiesWithColors={customStrategiesWithColors}
-                  index={i + 1}
-                />
-              ))}
-            </div>
-          )}
-          {selectedStrategiesType.label === 'Top 5 strategies' && (
-            <div className="mt-4 space-y-2">
-              {topStrategiesWithColors.map((strategy, i) => (
-                <StrategyMobileDrawerItem {...strategy} key={i} />
-              ))}
-            </div>
-          )}
+          <div className="mt-4 space-y-2">{renderSelectStrategies()}</div>
         </DrawerContent>
       </Drawer>
     </section>

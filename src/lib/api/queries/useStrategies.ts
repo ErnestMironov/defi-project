@@ -1,6 +1,7 @@
 import { apiClient } from '@api/maat-finance/api-client'
-import type { PaginationResponse, Strategy } from '@api/maat-finance/types'
+import type { PaginationResponse, SortDirection, Strategy } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInView } from 'react-intersection-observer'
 
 type StrategiesParameters = {
   page?: number
@@ -8,6 +9,8 @@ type StrategiesParameters = {
   strategy_id?: string
   start_timestamp?: string
   end_timestamp?: string
+  sort?: 'apy' | 'tvl' | 'protocol' | 'chain' | 'token'
+  orderBy?: SortDirection
 }
 
 const getStrategies = (parameters: StrategiesParameters) => {
@@ -28,6 +31,7 @@ export const useStrategies = (parameters: StrategiesParameters) => {
 
 export const useInfiniteStrategies = (parameters: StrategiesParameters) => {
   const { size, ...rest } = parameters
+
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
       queryKey: ['strategies', rest],
@@ -43,7 +47,18 @@ export const useInfiniteStrategies = (parameters: StrategiesParameters) => {
       initialPageParam: 1,
     })
 
+  const { ref, inView } = useInView({
+    threshold: 0,
+    onChange: (isInView) => {
+      if (hasNextPage && !isFetchingNextPage && isInView) {
+        fetchNextPage()
+      }
+    },
+  })
+
   return {
+    ref,
+    inView,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,

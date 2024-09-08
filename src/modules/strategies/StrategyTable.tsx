@@ -17,7 +17,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
     switch (true) {
       case loading:
       case !!error: {
-        return <StrategySkeletonDesktop />
+        return <StrategySkeletonDesktop length={strategies?.length} />
       }
       default: {
         return (
@@ -57,9 +57,12 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
   return renderBody()
 }
 
-const StrategySkeletonDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = (
-  _props,
-) => {
+interface StrategySkeletonDesktopProperties extends React.HTMLAttributes<HTMLDivElement> {
+  length?: number
+}
+
+const StrategySkeletonDesktop: React.FC<StrategySkeletonDesktopProperties> = (props) => {
+  const { length } = props
   return (
     <Table>
       <Table.Head>
@@ -74,7 +77,7 @@ const StrategySkeletonDesktop: React.FC<React.HTMLAttributes<HTMLDivElement>> = 
         </Table.Row>
       </Table.Head>
       <Table.Body>
-        {Array.from({ length: 6 })?.map((_, index) => {
+        {Array.from({ length: length ?? 6 })?.map((_, index) => {
           return (
             <Table.Row key={index}>
               <Table.Cell>

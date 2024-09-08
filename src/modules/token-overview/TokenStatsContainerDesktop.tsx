@@ -43,24 +43,24 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
           {formatPercentValue(apy, {
             maximumFractionDigits: 2,
           })}
-          <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
+          {/* <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
             {formatPercentValue('27', {
               maximumFractionDigits: 0,
               signDisplay: 'exceptZero',
             })}
-          </span>
+          </span> */}
         </p>
       </BaseContainer>
       <BaseContainer>
         <h6>{tokenName} tvl</h6>
         <p className="text-3xl">
           {tvl && formatUsdValue(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
-          <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
+          {/* <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
             {formatPercentValue('27', {
               maximumFractionDigits: 0,
               signDisplay: 'exceptZero',
             })}
-          </span>
+          </span> */}
         </p>
       </BaseContainer>
       <BaseContainer>

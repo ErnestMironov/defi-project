@@ -4,7 +4,6 @@ import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { ArrowLink } from '@components/link/ArrowLink'
 import { SectionTitle } from '@components/section/SectionTitle'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -14,6 +13,7 @@ import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
 import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
+import { Loader } from '@components/ui/loader'
 import {
   SELECT_CHAINS,
   SELECT_PROTOCOLS,
@@ -23,7 +23,6 @@ import {
 } from '@constants/select-constant'
 import { StrategyMobileList } from '@modules/strategies/StrategyMobileList'
 import { cn } from '@utils/cn'
-import { Loader } from 'lucide-react'
 import { useState } from 'react'
 
 type StrategyFilters = 'tokens' | 'protocols' | 'chains'
@@ -63,23 +62,23 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
       }
       case 'protocols': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Protocols"
             value={selectedProtocols}
             options={SELECT_PROTOCOLS}
             onChange={setSelectedProtocols}
-            placeholder="All Protocols"
+            // placeholder="All Protocols"
           />
         )
       }
       case 'chains': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Chains"
             value={selectedChains}
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
-            placeholder="All Chains"
+            // placeholder="All Chains"
           />
         )
       }
@@ -161,8 +160,8 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
         error={error}
       />
       {isFetchingNextPage && (
-        <div className="mt-3 flex h-8 w-full animate-spin items-center justify-center">
-          <Loader size="xs" />
+        <div className="flex h-8 w-full items-center justify-center">
+          <Loader />
         </div>
       )}
       {hasNextPage && !isLoading && (

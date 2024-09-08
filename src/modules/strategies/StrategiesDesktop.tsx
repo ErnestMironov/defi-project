@@ -27,6 +27,8 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
   const { data, isLoading, error, isPlaceholderData } = useStrategies({
     page,
     size,
+    orderBy: 'desc',
+    sort: 'apy',
   })
 
   return (

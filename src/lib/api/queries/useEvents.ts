@@ -8,7 +8,7 @@ import type {
 } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
-type EventsParameters = {
+export type EventsParameters = {
   limit?: number
   action_type: ActionType
   page?: number
