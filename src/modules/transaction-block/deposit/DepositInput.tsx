@@ -76,15 +76,22 @@ export const DepositInput = () => {
   const { usdcApy, usdtApy, loading } = useTokenApy()
 
   const yourYearlyEarnings = useMemo(() => {
-    if (!usdcApy || !usdtApy || loading || !depositTotalInUSD) return false
+    if (
+      !depositTotalInUSD ||
+      depositTotalInUSD === '0.00' ||
+      loading ||
+      !usdcApy ||
+      !usdtApy
+    )
+      return 0
 
-    const totalInUSD = Number(depositTotalInUSD)
+    const totalInUSD = BigNumber(depositTotalInUSD)
 
     if (vault === 'USDC') {
-      return (totalInUSD / 100) * Number(usdcApy)
+      return totalInUSD.div(100).multipliedBy(BigNumber(usdcApy))
     }
-    return (totalInUSD / 100) * Number(usdtApy)
-  }, [usdcApy, usdtApy, loading, depositTotalInUSD, vault])
+    return totalInUSD.div(100).multipliedBy(BigNumber(usdtApy))
+  }, [depositTotalInUSD, loading, usdcApy, usdtApy, vault])
 
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
@@ -245,11 +252,17 @@ export const DepositInput = () => {
         </div>
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
-            <DollarInput value={depositTotalInUSD} disabled />
+            <DollarInput
+              value={formatAmount(depositTotalInUSD, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+              disabled
+            />
             {yourYearlyEarnings ? (
               <p className="text-[0.8125rem] leading-[120%] text-gray-100 lg:text-[1.125rem]">
                 + $
-                {formatAmount(yourYearlyEarnings, {
+                {formatAmount(yourYearlyEarnings.toString(), {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}{' '}
