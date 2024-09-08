@@ -15,6 +15,8 @@ export const TxReviewModal = () => {
   const {
     currentModal,
     setCurrentModal,
+    setCurrentStep,
+    currentStep,
     isTransactionCanBeCollapsed,
     txType,
     resetStore,
@@ -31,15 +33,19 @@ export const TxReviewModal = () => {
     // Add any additional logic here
   }
 
+  const isTransactionSent =
+    (isTransactionFromStore || isTransactionCanBeCollapsed) && currentStep === 3
+
   const handleClose = () => {
-    if (isTransactionFromStore) {
+    if (isTransactionSent) {
       resetStore()
     }
+    setCurrentStep(1)
     setCurrentModal(null)
   }
 
   const renderCloseButton = () => {
-    if (isTransactionCanBeCollapsed) {
+    if (isTransactionSent) {
       return (
         <CollapseIcon className="size-6 [&_path]:stroke-text-80" onClick={handleClose} />
       )

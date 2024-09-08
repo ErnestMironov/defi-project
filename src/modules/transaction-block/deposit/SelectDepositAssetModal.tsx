@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable @typescript-eslint/no-shadow */
 import type { Token } from '@0xsquid/squid-types'
+import { SupportedChainIds } from '@api/squid-router/postHook/constants'
 import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
@@ -21,7 +22,6 @@ import {
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_IDS_BY_NAME, type ChainType } from '@constants/chains'
-import { SUPPORTED_CHAINS_FOR_REP_TOKENS } from '@constants/eids'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
@@ -232,7 +232,7 @@ export const SelectDepositAsset = () => {
     setAsset(_asset)
     setDepositFromNetwork(_asset.chain_id as ChainType)
 
-    if (SUPPORTED_CHAINS_FOR_REP_TOKENS.includes(_asset.chain_id as ChainType)) {
+    if (SupportedChainIds.includes(_asset.chain_id)) {
       setDepositToNetwork(_asset.chain_id as ChainType)
     } else {
       setDepositToNetwork(CHAIN_IDS_BY_NAME.Arbitrum)

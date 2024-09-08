@@ -57,7 +57,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     data: depositHash,
   } = useDepositTransaction({
     address: asset?.contract_address as Address,
-    amount: BigInt(parseUnits(amount, 6)),
+    amount: BigInt(parseUnits(amount, asset?.contract_decimals ?? 6)),
   })
 
   const depositStatus = useTransactionStatus(_depositStatus)
