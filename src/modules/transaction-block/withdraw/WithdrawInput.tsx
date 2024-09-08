@@ -58,11 +58,13 @@ export const WithdrawInput = () => {
 
   const [validationError, setValidationError] = useState('')
 
-  const maxBalance = mtToken?.value ? formatUnits(BigInt(mtToken?.value), 6) : '0'
+  const maxBalance = mtToken?.value
+    ? formatUnits(BigInt(mtToken?.value), mtToken?.decimals ?? 6)
+    : '0'
 
   const inputValueBN = useMemo(
-    () => new BigNumber(inputValue || '0').times(1e6),
-    [inputValue],
+    () => new BigNumber(inputValue || '0').times(mtToken?.decimals ?? 6),
+    [inputValue, mtToken?.decimals],
   )
   const balanceBN = useMemo(() => new BigNumber(mtToken?.value || '0'), [mtToken?.value])
   const lpBalanceBN = useMemo(
@@ -138,7 +140,7 @@ export const WithdrawInput = () => {
             <div className="flex items-center">
               <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {maxBalance}
+                {Number(maxBalance).toFixed(6)}
               </p>
               <button
                 type="button"

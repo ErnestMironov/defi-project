@@ -42,11 +42,11 @@ const WithdrawAssetItem = ({
       </div>
       <div className="ml-auto flex flex-col items-end gap-1">
         <p className="text-base text-text">
-          {formatAmountValue(formatUnits(BigInt(token.value), 6))}{' '}
+          {formatAmountValue(formatUnits(BigInt(token.value), token?.decimals))}{' '}
           {tokenData?.stable.toUpperCase()}
         </p>
         <p className="text-semi-base font-bold text-gray-80">
-          ${formatAmountValue(formatUnits(BigInt(token.value), 6), 2)}{' '}
+          ${formatAmountValue(formatUnits(BigInt(token.value), token?.decimals), 2)}{' '}
         </p>
       </div>
     </button>
