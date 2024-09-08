@@ -9,8 +9,7 @@ import { formatAmount } from '@utils/formatValue'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  const { data: protocolMetrics, isLoading: isProtocolMetricsLoading } =
-    useProtocolMetrics()
+  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics()
 
   // TODO: replace with protocol metrics
   const usdcApy = 8.91

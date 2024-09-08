@@ -73,8 +73,7 @@ export const DepositInput = () => {
     setInputValueInUSD,
   } = useTxStore()
 
-  const { data: protocolMetrics, isLoading: isProtocolMetricsLoading } =
-    useProtocolMetrics()
+  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics()
 
   // TODO: replace with protocol metrics
   const usdcApy = 8.91
