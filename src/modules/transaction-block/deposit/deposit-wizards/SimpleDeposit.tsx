@@ -2,7 +2,6 @@ import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
-import type { ChainType } from '@constants/chains'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
@@ -27,7 +26,6 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     vault,
     currentStep,
     setCurrentStep,
-    setCurrentModal,
   } = useTxStore()
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
@@ -77,7 +75,10 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           >
             {getButtonContent(
               switchStatus,
-              `Switch to ${CHAIN_NAMES_BY_ID[asset?.chain_id as ChainType]}`,
+              `Switch to ${
+                CHAIN_NAMES_BY_ID[asset?.chain_id as keyof typeof CHAIN_NAMES_BY_ID] ??
+                'Unknown Chain'
+              }`,
             )}
           </Button>
         )
@@ -122,7 +123,10 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
         <WizardStep
           icon={<TokenIconComponent width="2rem" symbol={asset?.chain_id} />}
           activeStep={currentStep === 1}
-          title={`Switch to ${CHAIN_NAMES_BY_ID[asset?.chain_id as ChainType]}`}
+          title={`Switch to ${
+            CHAIN_NAMES_BY_ID[asset?.chain_id as keyof typeof CHAIN_NAMES_BY_ID] ??
+            'Unknown Chain'
+          }`}
           status={allStepsCompleted ? 'success' : switchStatus}
         />
         <WizardStep

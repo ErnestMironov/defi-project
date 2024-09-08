@@ -143,7 +143,7 @@ export const DepositInput = () => {
     if (squidRoute) {
       assetBalanceBN = BigNumber(
         formatUnits(
-          squidRoute?.estimate?.fromAmount,
+          BigInt(squidRoute?.estimate?.fromAmount || '0'),
           squidRoute.estimate.fromToken.decimals,
         ),
       )
@@ -159,11 +159,11 @@ export const DepositInput = () => {
       console.log(
         '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
         formatUnits(
-          squidRoute?.estimate?.fromAmount,
+          BigInt(squidRoute?.estimate?.fromAmount || '0'),
           squidRoute.estimate.fromToken.decimals,
         ),
       )
-      assetQuoteBN = BigNumber(squidRoute?.estimate?.fromAmountUSD)
+      assetQuoteBN = BigNumber(squidRoute?.estimate?.fromAmountUSD || '0')
       console.log(
         '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmountUSD:',
         squidRoute?.estimate?.fromAmountUSD,

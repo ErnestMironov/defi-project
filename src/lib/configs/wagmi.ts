@@ -41,7 +41,7 @@ export const wagmiConfig = defaultWagmiConfig({
 
 createWeb3Modal({
   themeMode: 'light',
-  wagmiConfig,
+  wagmiConfig: wagmiConfig as any,
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
   enableOnramp: true, // Optional - false as default
