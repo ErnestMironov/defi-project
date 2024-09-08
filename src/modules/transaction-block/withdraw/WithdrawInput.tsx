@@ -16,33 +16,6 @@ import { useTxStore } from '../store/useTxStore'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork.tsx'
 
-type InputType = 'usd' | 'token'
-
-function isValidInput(
-  value: BigNumber,
-  lpBalance: BigNumber,
-  balance: BigNumber,
-): boolean {
-  return (
-    !value.isZero() &&
-    !lpBalance.isZero() &&
-    !balance.isZero() &&
-    !value.isNaN() &&
-    !lpBalance.isNaN() &&
-    !balance.isNaN()
-  )
-}
-
-function calculateTokenValue(
-  numericValue: BigNumber,
-  lpBalanceBN: BigNumber,
-  balanceBN: BigNumber,
-): string {
-  return isValidInput(numericValue, lpBalanceBN, balanceBN)
-    ? numericValue.multipliedBy(lpBalanceBN).div(balanceBN).toString()
-    : '0'
-}
-
 interface InputWrapperProperties extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   validationError: string
@@ -85,11 +58,13 @@ export const WithdrawInput = () => {
 
   const [validationError, setValidationError] = useState('')
 
-  const maxBalance = mtToken?.value ? formatUnits(BigInt(mtToken?.value), 6) : '0'
+  const maxBalance = mtToken?.value
+    ? formatUnits(BigInt(mtToken?.value), mtToken?.decimals ?? 6)
+    : '0'
 
   const inputValueBN = useMemo(
-    () => new BigNumber(inputValue || '0').times(1e6),
-    [inputValue],
+    () => new BigNumber(inputValue || '0').times(mtToken?.decimals ?? 6),
+    [inputValue, mtToken?.decimals],
   )
   const balanceBN = useMemo(() => new BigNumber(mtToken?.value || '0'), [mtToken?.value])
   const lpBalanceBN = useMemo(
@@ -131,28 +106,6 @@ export const WithdrawInput = () => {
     )
   }
 
-  // const handleAction = (type: InputType, value: string) => {
-  //   const numericValue = BigNumber(value)
-
-  //   switch (type) {
-  //     case 'usd': {
-  //       const tokenValue = calculateTokenValue(numericValue, lpBalanceBN, balanceBN)
-  //       setInputValueInUSD(value)
-  //       setInputValue(tokenValue)
-  //       break
-  //     }
-  //     case 'token': {
-  //       const usdValue = calculateUSDValue(numericValue, lpBalanceBN, balanceBN)
-  //       setInputValue(value)
-  //       setInputValueInUSD(usdValue.toString())
-  //       break
-  //     }
-  //     default: {
-  //       console.error('Invalid input type')
-  //     }
-  //   }
-  // }
-
   return (
     <div>
       <InputWrapper
@@ -187,7 +140,7 @@ export const WithdrawInput = () => {
             <div className="flex items-center">
               <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {maxBalance}
+                {Number(maxBalance).toFixed(6)}
               </p>
               <button
                 type="button"

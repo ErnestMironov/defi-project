@@ -3,7 +3,7 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
-import { formatAmountValue } from '@utils/formatValue'
+import { formatAmount } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -52,10 +52,10 @@ export const DoneModal = () => {
   const amount = useMemo(() => {
     switch (txType) {
       case 'deposit': {
-        return depositTotalInUSD
+        return formatAmount(depositTotalInUSD, { maximumFractionDigits: 2 })
       }
       case 'withdraw': {
-        return formatAmountValue(withdrawAmount)
+        return formatAmount(withdrawAmount, { maximumFractionDigits: 2 })
       }
       default: {
         return ''

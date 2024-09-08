@@ -1,11 +1,7 @@
 import { USDC_TOKENS } from '@api/squid-router/postHook/data/USDC'
 import { USDT_TOKENS } from '@api/squid-router/postHook/data/USDT'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
-import {
-  formatAmountValue,
-  formatTokenBalance,
-  formatValueWithPrecision,
-} from '@utils/formatValue'
+import { formatTokenBalance } from '@utils/formatValue'
 import { useEffect } from 'react'
 import { type Address } from 'viem'
 
@@ -27,7 +23,8 @@ export const useSetDepositDetails = () => {
 
   useEffect(() => {
     if (!squidRoute) {
-      setDepositTotalInUSD(formatValueWithPrecision(inputValue ?? '0', 2) ?? '0')
+      console.log('🚀 ~ useEffect ~ inputValue:', inputValue)
+      setDepositTotalInUSD(inputValue)
       setDepositTotalAmount(inputValue ?? '0')
       return
     }
@@ -73,7 +70,7 @@ export const useSetDepositDetails = () => {
       depositAsset?.contract_address.toLowerCase() === vaultAddress?.toLowerCase()
     ) {
       setIsTxZAP(false)
-      setDepositTotalInUSD(formatAmountValue(inputValue ?? '0', 2) ?? '0')
+      setDepositTotalInUSD(inputValue)
       return
     }
 
