@@ -99,9 +99,7 @@ export const AreaChart = (props: AreaChartComponentProperties) => {
                       chain: 'BASE',
                       protocol: 'Beefy',
                       color: item.color || '',
-                      value: formatPercentValue(
-                        item.value as string | number | undefined,
-                      ),
+                      value: item.value,
                     }))}
                   />
                 )

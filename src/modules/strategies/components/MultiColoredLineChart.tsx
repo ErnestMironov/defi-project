@@ -101,9 +101,7 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
                         chain: item.payload.values[i]?.chain,
                         protocol: item.payload.values[i]?.protocol,
                         color: item.stroke || '',
-                        value: formatPercentValue(
-                          item.value as string | number | undefined,
-                        ),
+                        value: tooltipFormatter(item.value as string),
                       }
                     })}
                   />

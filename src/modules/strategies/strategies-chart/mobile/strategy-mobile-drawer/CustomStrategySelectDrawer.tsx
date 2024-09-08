@@ -37,7 +37,7 @@ export const CustomStrategySelectDrawer = (
 
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null)
 
-  const { data, isLoading, totalCount, hasNextPage, isFetchingNextPage, ref } =
+  const { data, totalCount, hasNextPage, isFetchingNextPage, ref } =
     useInfiniteStrategies({
       sort: 'apy',
       orderBy: 'desc',
@@ -108,8 +108,8 @@ export const CustomStrategySelectDrawer = (
             </div>
           ))}
           {hasNextPage && <div ref={ref} className="h-1 w-full" />}
-          {(isLoading || isFetchingNextPage) && (
-            <div ref={ref} className="flex h-8 w-full items-center justify-center">
+          {isFetchingNextPage && (
+            <div ref={ref} className="mt-6 flex h-8 w-full items-center justify-center">
               <Loader />
             </div>
           )}

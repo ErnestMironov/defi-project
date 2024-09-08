@@ -1,4 +1,4 @@
-import { useTxHistory } from '@api/queries/useTxHistory'
+import { useInfiniteReports } from '@api/queries/useReports'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
@@ -10,13 +10,13 @@ import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
 import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
+import { Loader } from '@components/ui/loader'
 import {
   SELECT_CHAINS,
   SELECT_PPS,
   SELECT_TOKENS,
   SORT_BY_DATE,
 } from '@constants/select-constant'
-import { usePages } from '@hooks/common/usePages'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
@@ -40,12 +40,11 @@ export const ReportActionMobileWithFilters = (
   const [selectedPPS, setSelectedPPS] = useState<OptionType[]>([])
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
-  const { page, size } = usePages()
-  // TODO: replace with useEvents
-  const { data, loading, error } = useTxHistory({
-    perPage: size,
-    page,
-  })
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteReports({
+      sort: 'creation_time',
+      orderBy: 'desc',
+    })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -138,12 +137,19 @@ export const ReportActionMobileWithFilters = (
       <ReportActionMobileList
         className="mt-3"
         reportActions={data}
-        loading={loading}
+        loading={isLoading}
         error={error}
       />
-      <Button className="mt-6 h-[3.185rem]" size="lg">
-        View more
-      </Button>
+      {isFetchingNextPage && (
+        <div className="flex items-center justify-center">
+          <Loader className="mt-6" />
+        </div>
+      )}
+      {hasNextPage && (
+        <Button className="mt-6 h-[3.185rem]" size="lg" onClick={() => fetchNextPage()}>
+          View more
+        </Button>
+      )}
     </div>
   )
 }

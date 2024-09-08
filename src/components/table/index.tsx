@@ -99,13 +99,16 @@ interface TableComponent
 export const Table = forwardRef<
   HTMLTableElement,
   { children: ReactNode } & HTMLAttributes<HTMLTableElement>
->((props, reference) => (
+>(({ className, children, ...rest }, reference) => (
   <table
     ref={reference}
-    className="w-full border-separate border-spacing-y-2 text-xl font-normal leading-6"
-    {...props}
+    className={cn(
+      'w-full border-separate border-spacing-y-2 text-xl font-normal leading-6',
+      className,
+    )}
+    {...rest}
   >
-    {props.children}
+    {children}
   </table>
 )) as TableComponent
 
