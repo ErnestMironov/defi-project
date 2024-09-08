@@ -28,7 +28,10 @@ export const AdminTable = (props: AdminTableProperties) => {
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const { page, size, onPageChange, onPageSizeChange } = usePages()
-  const { data, isLoading, error } = useAdminActions({ page, size })
+  const { data, isLoading, error, isPlaceholderData } = useAdminActions({
+    page,
+    size,
+  })
   const renderBody = () => {
     if (isLoading || !!error) {
       return (
@@ -49,7 +52,7 @@ export const AdminTable = (props: AdminTableProperties) => {
   return (
     <div className={cn('', className)} {...rest}>
       <TableFilters filters={filters} setFilters={setFilters} />
-      <Table>
+      <Table className={cn('', isPlaceholderData && 'animate-pulse')}>
         <Table.Head>
           <Table.Row>
             <Table.HeadCell>Function</Table.HeadCell>

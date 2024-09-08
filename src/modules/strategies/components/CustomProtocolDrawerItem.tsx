@@ -81,7 +81,7 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
   const [selectedChain, setSelectedChain] = useState<OptionType[]>([])
   const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
   const [selectedToken, setSelectedToken] = useState<OptionType[]>([])
-  const { data, hasNextPage, isFetchingNextPage, ref, totalCount, isLoading } =
+  const { data, hasNextPage, isFetchingNextPage, ref, totalCount } =
     useInfiniteStrategies({
       sort: 'apy',
       orderBy: 'desc',
@@ -174,8 +174,8 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
             </div>
           ))}
           {hasNextPage && <div ref={ref} className="h-1 w-full" />}
-          {(isLoading || isFetchingNextPage) && (
-            <div ref={ref} className="flex h-8 w-full items-center justify-center">
+          {isFetchingNextPage && (
+            <div ref={ref} className="mt-6 flex h-8 w-full items-center justify-center">
               <Loader />
             </div>
           )}

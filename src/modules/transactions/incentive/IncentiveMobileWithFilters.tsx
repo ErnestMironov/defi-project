@@ -156,7 +156,7 @@ export const IncentiveMobileWithFilters = (
         error={error}
       />
       {isFetchingNextPage && (
-        <div className="flex h-8 w-full items-center justify-center">
+        <div className="mt-6 flex h-8 w-full items-center justify-center">
           <Loader />
         </div>
       )}

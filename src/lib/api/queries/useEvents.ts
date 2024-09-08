@@ -41,8 +41,7 @@ export const useInfiniteEvents = (parameters: EventsParameters) => {
     useInfiniteQuery({
       queryKey: ['events', rest],
       queryFn: async ({ pageParam }) => {
-        //! TODO: remove limit
-        const response = await getEvents({ size, page: pageParam, limit: 100, ...rest })
+        const response = await getEvents({ size, page: pageParam, ...rest })
         return response.data
       },
       getNextPageParam: (lastPage) => {

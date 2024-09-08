@@ -8,6 +8,7 @@ import { type ComponentProps, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { TokenAddressByChainDrawerMobile } from './TokenAdressesByChainDrawer'
+import { useTokenMetrics } from './useTokenMetrics'
 
 interface TokenInfoMobileProperties extends ComponentProps<'div'> {}
 
@@ -23,6 +24,8 @@ export const TokenInfoMobile = (props: TokenInfoMobileProperties) => {
     setSelectedAddress(tokenAddresses[0])
   }, [tokenAddresses])
 
+  const { apy, tvl } = useTokenMetrics(symbol as 'USDT' | 'USDC')
+
   return (
     <div
       className={cn(
@@ -33,27 +36,17 @@ export const TokenInfoMobile = (props: TokenInfoMobileProperties) => {
     >
       <div className="flex flex-col items-start justify-center gap-1">
         <h6 className="text-[0.75rem]/[0.9rem] text-gray-100">{symbol} APY</h6>
-        <p className="flex items-start gap-1 text-2xl">
-          {formatPercentValue(384)}
-          <span className="text-[0.75rem]/[0.9rem] text-main-80">
-            {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
-          </span>
-        </p>
+        <p className="flex items-start gap-1 text-2xl">{formatPercentValue(apy)}</p>
       </div>
       <div className="flex flex-col items-start justify-center gap-1">
         <h6 className="text-[0.75rem]/[0.9rem] text-gray-100">{symbol} TVL</h6>
-        <p className="flex items-start gap-1 text-2xl">
-          {formatUsdValue(567.83)}
-          <span className="text-[0.75rem]/[0.9rem] text-main-80">
-            {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
-          </span>
-        </p>
+        <p className="flex items-start gap-1 text-2xl">{formatUsdValue(tvl)}</p>
       </div>
       <div className="relative col-span-2 mt-3 flex flex-col items-start justify-center gap-1 overflow-hidden">
         <h6 className="text-[0.75rem]/[0.9rem] uppercase text-gray-100">
           Rebalancing volume
         </h6>
-        <p className="flex items-start gap-1 text-2xl">{formatUsdValue(4567.83)}</p>
+        <p className="flex items-start gap-1 text-2xl">{0}</p>
         <img
           src={symbol === 'USDC' ? usdc : usdt}
           alt={symbol}

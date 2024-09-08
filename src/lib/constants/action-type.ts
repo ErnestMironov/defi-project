@@ -36,3 +36,7 @@ export const ADMIN_ACTION_TYPE = {
   REMOVE_STRATEGY: 'Remove strategy',
   COMMANDER_CHANGED: 'Commander changed',
 } as const
+
+export const REPORT_ACTION_TYPE = {
+  UPDATE_PPS: 'Update PPS',
+} as const
