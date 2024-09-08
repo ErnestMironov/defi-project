@@ -1,4 +1,4 @@
-import { useEvents } from '@api/queries/useEvents'
+import { useIncentives } from '@api/queries/useIncentives'
 import Sort from '@assets/icons/sort.svg'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
@@ -23,10 +23,9 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
   const [filters, setFilters] = useState(initialFilters)
 
   const { onPageChange, page, size, onPageSizeChange } = usePages()
-  const { data, isLoading, error, isPlaceholderData } = useEvents({
+  const { data, isLoading, error, isPlaceholderData } = useIncentives({
     size,
     page,
-    action_type: 'incentives',
     limit: 100,
   })
 
@@ -58,7 +57,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
             </Table.Head>
             <Table.Body>
               {data?.items?.map((event, index) => (
-                <IncentiveRow key={index} event={event as any} />
+                <IncentiveRow key={index} event={event} />
               ))}
             </Table.Body>
           </Table>

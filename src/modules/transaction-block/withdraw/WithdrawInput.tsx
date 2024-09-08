@@ -3,7 +3,7 @@ import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { Switch } from '@components/ui/switch.tsx'
 import { cn } from '@utils/cn'
-import { formatValueWithPrecision } from '@utils/formatValue.ts'
+import { formatAmount } from '@utils/formatValue.ts'
 import BigNumber from 'bignumber.js'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
@@ -15,33 +15,6 @@ import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholde
 import { useTxStore } from '../store/useTxStore'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork.tsx'
-
-type InputType = 'usd' | 'token'
-
-function isValidInput(
-  value: BigNumber,
-  lpBalance: BigNumber,
-  balance: BigNumber,
-): boolean {
-  return (
-    !value.isZero() &&
-    !lpBalance.isZero() &&
-    !balance.isZero() &&
-    !value.isNaN() &&
-    !lpBalance.isNaN() &&
-    !balance.isNaN()
-  )
-}
-
-function calculateTokenValue(
-  numericValue: BigNumber,
-  lpBalanceBN: BigNumber,
-  balanceBN: BigNumber,
-): string {
-  return isValidInput(numericValue, lpBalanceBN, balanceBN)
-    ? numericValue.multipliedBy(lpBalanceBN).div(balanceBN).toString()
-    : '0'
-}
 
 interface InputWrapperProperties extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
@@ -123,30 +96,13 @@ export const WithdrawInput = () => {
 
   const handleInputChange = (value: string) => {
     setInputValue(value)
-    setInputValueInUSD(formatValueWithPrecision(value, 2))
+    setInputValueInUSD(
+      formatAmount(value, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }),
+    )
   }
-
-  // const handleAction = (type: InputType, value: string) => {
-  //   const numericValue = BigNumber(value)
-
-  //   switch (type) {
-  //     case 'usd': {
-  //       const tokenValue = calculateTokenValue(numericValue, lpBalanceBN, balanceBN)
-  //       setInputValueInUSD(value)
-  //       setInputValue(tokenValue)
-  //       break
-  //     }
-  //     case 'token': {
-  //       const usdValue = calculateUSDValue(numericValue, lpBalanceBN, balanceBN)
-  //       setInputValue(value)
-  //       setInputValueInUSD(usdValue.toString())
-  //       break
-  //     }
-  //     default: {
-  //       console.error('Invalid input type')
-  //     }
-  //   }
-  // }
 
   return (
     <div>

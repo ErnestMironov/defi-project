@@ -69,7 +69,7 @@ export const TokenWithNetwork = (
       />
       <div
         className={cn(
-          'scale-[0.8] absolute flex w-1/2  items-center justify-center rounded-full bg-cards overflow-hidden',
+          'scale-[0.8] absolute flex w-1/2  items-center justify-center rounded-full bg-cards !overflow-hidden',
           positionClassName,
           classNames?.network,
         )}

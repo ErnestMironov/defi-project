@@ -7,7 +7,7 @@ import { wagmiConfig } from './wagmi'
 
 export function Web3ModalProvider({ children }: PropsWithChildren) {
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider config={wagmiConfig as any}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </WagmiProvider>
   )

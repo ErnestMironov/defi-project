@@ -1,7 +1,6 @@
-import { useTxHistory } from '@api/queries/useTxHistory'
+import { useInfiniteAdminActions } from '@api/queries/useAdminActions'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -11,16 +10,16 @@ import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
 import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
+import { Loader } from '@components/ui/loader'
 import {
   SELECT_ADMIN_FROM,
   SELECT_ADMIN_FUNCTIONS,
   SELECT_CHAINS,
   SORT_BY_DATE,
 } from '@constants/select-constant'
-import { usePages } from '@hooks/common/usePages'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
 import { AdminActionMobileList } from './AdminActionMobileList'
 
@@ -41,12 +40,8 @@ export const AdminActionMobileWithFilters = (
   const [selectedAdminFrom, setSelectedAdminFrom] = useState<OptionType[]>([])
   const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
-  const { page, size } = usePages()
-  // TODO: replace with useEvents
-  const { data, loading, error } = useTxHistory({
-    perPage: size,
-    page,
-  })
+  const { data, isLoading, error, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useInfiniteAdminActions({})
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -62,12 +57,12 @@ export const AdminActionMobileWithFilters = (
       }
       case 'chains': {
         return (
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             label="Chains"
             value={selectedChains}
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
-            placeholder="All Chains"
+            // placeholder="All Chains"
           />
         )
       }
@@ -118,7 +113,9 @@ export const AdminActionMobileWithFilters = (
             />
           }
         >
-          {filters.map((filter) => renderFilters(filter))}
+          {filters.map((filter) => (
+            <Fragment key={filter}>{renderFilters(filter)}</Fragment>
+          ))}
         </MobileFiltersDrawer>
         {/* Sort */}
         <MobileFiltersDrawer
@@ -140,12 +137,24 @@ export const AdminActionMobileWithFilters = (
       <AdminActionMobileList
         className="mt-3"
         adminActions={data}
-        loading={loading}
+        loading={isLoading || !!error}
         error={error}
       />
-      <Button className="mt-6 h-[3.185rem]" size="lg">
-        View more
-      </Button>
+      {isFetchingNextPage && (
+        <div className="mt-6 flex h-8 w-full items-center justify-center">
+          <Loader />
+        </div>
+      )}
+      {hasNextPage && !isLoading && (
+        <Button
+          disabled={isFetchingNextPage}
+          onClick={() => fetchNextPage()}
+          className="mt-6 h-[3.185rem]"
+          size="lg"
+        >
+          View more
+        </Button>
+      )}
     </div>
   )
 }

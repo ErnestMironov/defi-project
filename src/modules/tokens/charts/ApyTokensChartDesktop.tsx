@@ -1,6 +1,7 @@
 /* eslint-disable sonarjs/no-identical-functions */
-import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import Dot from '@assets/icons/dot.svg'
+import type { RechartDataType } from '@components/chart/line-chart/LineChart'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
@@ -11,23 +12,46 @@ import { Skeleton } from '@components/ui/skeleton'
 import { CHART_TOKENS } from '@constants/chart-tokens'
 import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useState } from 'react'
+import { type ComponentProps, useMemo, useState } from 'react'
 
 interface ApyTokensChartDesktopProperties extends ComponentProps<'div'> {}
 
 export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) => {
-  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
-  const { data, loading, error } = useMaatTokensApy({ from: currentTimestamp })
+  const { currentFrame, frames, onFrameChange } = useFrameSelect()
   const [selectedChain, setSelectedChain] = useState<OptionType[]>([])
   const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
+  const { data, isLoading, error } = useProtocolMetrics()
+
+  const formatteApyData: RechartDataType[] = useMemo(() => {
+    if (!data) return []
+    return Object.entries(data.USDC.history).map(([key, value]) => {
+      const pv = data.USDT.history[key]?.apy
+      // format timestamp to unix timestamp
+      const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
+
+      return {
+        name: key,
+        timestamp,
+        uv: value.apy,
+        pv,
+      }
+    })
+  }, [data])
+
   const renderBody = () => {
     switch (true) {
-      case loading:
+      case isLoading:
       case !!error: {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <LineChartComponent data={data} yPostfix="%" frame={currentFrame} />
+        return (
+          <LineChartComponent
+            data={formatteApyData}
+            yAxisType="percentage"
+            frame={currentFrame}
+          />
+        )
       }
     }
   }

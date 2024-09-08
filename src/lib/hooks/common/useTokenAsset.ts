@@ -24,6 +24,7 @@ import Aave from '@assets/icons/protocols/aave.svg'
 import Beefy from '@assets/icons/protocols/beefy.svg'
 import Compound from '@assets/icons/protocols/compound.svg'
 import Gnosis from '@assets/icons/protocols/gnosis.svg'
+import Harvest from '@assets/icons/protocols/harvest.svg'
 import Lendle from '@assets/icons/protocols/lendle.svg'
 import Mantle from '@assets/icons/protocols/mantle.svg'
 import Metis from '@assets/icons/protocols/metis.svg'
@@ -104,6 +105,12 @@ const TOKENS: ITokenAsset[] = [
     symbol: 'eth-mainnet',
     chainId: 1,
     name: 'Ethereum',
+  },
+  {
+    TokenIcon: Sei,
+    symbol: 'SEI',
+    chainId: 1329,
+    name: 'Sei',
   },
   {
     TokenIcon: Optimism,
@@ -227,6 +234,11 @@ const TOKENS: ITokenAsset[] = [
     name: 'Aave',
   },
   {
+    TokenIcon: Harvest,
+    symbol: 'Harvest',
+    name: 'Harvest',
+  },
+  {
     TokenIcon: Lendle,
     symbol: 'Lendle',
     name: 'Lendle',
@@ -277,8 +289,8 @@ const TOKENS: ITokenAsset[] = [
 export const useTokenAsset = (query?: string | number | null) => {
   return useMemo(() => {
     if (!query) return
-    if (typeof query === 'number') {
-      return TOKENS.find((token) => token.chainId === query)
+    if (typeof query === 'number' || !Number.isNaN(Number(query))) {
+      return TOKENS.find((token) => token.chainId === Number(query))
     }
     if (typeof query === 'string') {
       return TOKENS.find(

@@ -24,7 +24,9 @@ const RenderNetworkItem = (
       <TokenWithNetwork symbol={token?.stable} network={chain} className="size-8" />
       <div className="flex flex-col items-start text-[1.25rem]/[1.75rem]">
         {token?.stable?.toUpperCase()}
-        <span className="text-gray-80">{CHAIN_NAMES_BY_ID[chain]}</span>
+        <span className="text-gray-80">
+          {CHAIN_NAMES_BY_ID[chain as keyof typeof CHAIN_NAMES_BY_ID] ?? 'Unknown Chain'}
+        </span>
       </div>
     </button>
   )

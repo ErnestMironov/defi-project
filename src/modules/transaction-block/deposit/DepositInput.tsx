@@ -9,6 +9,7 @@ import {
 } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
+import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput.tsx'
@@ -66,26 +67,31 @@ export const DepositInput = () => {
     depositTotalAmount,
     isTxZAP,
     vault,
+    squidRoute,
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,
   } = useTxStore()
 
   const { usdcApy, usdtApy, loading } = useTokenApy()
-  console.log('🚀 ~ DepositInput ~ usdtApy:', usdtApy)
-  console.log('🚀 ~ DepositInput ~ usdcApy:', usdcApy)
-  console.log('🚀 ~ yourYearlyEarnings ~ inputValue:', inputValue)
 
   const yourYearlyEarnings = useMemo(() => {
-    if (!usdcApy || !usdtApy || loading || !depositTotalInUSD) return false
+    if (
+      !depositTotalInUSD ||
+      depositTotalInUSD === '0.00' ||
+      loading ||
+      !usdcApy ||
+      !usdtApy
+    )
+      return 0
 
-    const totalInUSD = Number(depositTotalInUSD)
+    const totalInUSD = BigNumber(depositTotalInUSD)
 
     if (vault === 'USDC') {
-      return (totalInUSD / 100) * Number(usdcApy)
+      return totalInUSD.div(100).multipliedBy(BigNumber(usdcApy))
     }
-    return (totalInUSD / 100) * Number(usdtApy)
-  }, [usdcApy, usdtApy, loading, depositTotalInUSD, vault])
+    return totalInUSD.div(100).multipliedBy(BigNumber(usdtApy))
+  }, [depositTotalInUSD, loading, usdcApy, usdtApy, vault])
 
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
@@ -124,17 +130,45 @@ export const DepositInput = () => {
   }, [asset, asset?.quote, assetBalance, inputValue, inputValueInUSD, setInputValueInUSD])
 
   const handleAction = (type: InputType, value: string) => {
-    console.log('handleAction', type, value)
-
     if (!value) {
       setInputValue('')
       setInputValueInUSD('')
       return
     }
 
-    const assetBalanceBN = BigNumber(assetBalance)
-    const assetQuoteBN = BigNumber(asset?.quote ?? 1)
+    let assetBalanceBN = BigNumber(assetBalance)
+    let assetQuoteBN = BigNumber(asset?.quote ?? 1)
     const numericValue = BigNumber(value)
+
+    if (squidRoute) {
+      assetBalanceBN = BigNumber(
+        formatUnits(
+          BigInt(squidRoute?.estimate?.fromAmount || '0'),
+          squidRoute.estimate.fromToken.decimals,
+        ),
+      )
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute.params.fromToken.decimals,:',
+        squidRoute.estimate.fromToken.decimals,
+      )
+
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
+        squidRoute?.estimate?.fromAmount,
+      )
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
+        formatUnits(
+          BigInt(squidRoute?.estimate?.fromAmount || '0'),
+          squidRoute.estimate.fromToken.decimals,
+        ),
+      )
+      assetQuoteBN = BigNumber(squidRoute?.estimate?.fromAmountUSD || '0')
+      console.log(
+        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmountUSD:',
+        squidRoute?.estimate?.fromAmountUSD,
+      )
+    }
 
     if (type === 'usd') {
       setInputValueInUSD(value) // Set the input value for USD type
@@ -143,6 +177,7 @@ export const DepositInput = () => {
     } else if (type === 'token') {
       setInputValue(value) // Set the input value for token type
       const usdValue = calculateUSDValue(numericValue, assetQuoteBN, assetBalanceBN) // Calculate USD value based on the exchange rate
+      console.log('🚀 ~ handleAction ~ usdValue:', usdValue)
       setInputValueInUSD(usdValue.toString()) // Set the input value in USD
     }
   }
@@ -203,7 +238,11 @@ export const DepositInput = () => {
       >
         <div className="flex w-full items-center justify-between">
           {isConnected && asset ? (
-            <AmountInput value={depositTotalAmount} decimals={18} disabled />
+            <AmountInput
+              value={Number(depositTotalAmount).toFixed(2)}
+              decimals={18}
+              disabled
+            />
           ) : (
             <p className="text-md text-gray-100 max-lg:text-sm">
               Select the desired vault...
@@ -213,16 +252,23 @@ export const DepositInput = () => {
         </div>
         {isConnected && asset && (
           <div className="mt-3 flex w-full items-center justify-between">
-            <DollarInput value={depositTotalInUSD} disabled />
-            {yourYearlyEarnings && (
+            <DollarInput
+              value={formatAmount(depositTotalInUSD, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+              disabled
+            />
+            {yourYearlyEarnings ? (
               <p className="text-[0.8125rem] leading-[120%] text-gray-100 lg:text-[1.125rem]">
                 + $
-                {formatAmount(yourYearlyEarnings, {
+                {formatAmount(yourYearlyEarnings.toString(), {
                   minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
                 })}{' '}
                 over 1 year
               </p>
-            )}
+            ) : null}
           </div>
         )}
       </div>

@@ -1,5 +1,4 @@
 import { tokenVaultAbi } from '@constants/abi/token-vault'
-import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
 import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
@@ -10,6 +9,8 @@ import type { Address } from 'viem'
 import { useAccount, useWriteContract } from 'wagmi'
 
 import { useVaultBalance } from './useVaultBalance'
+
+const ESTIMATED_TIME_TO_COMPLETE_WITHDRAW = 60 * 15
 
 export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
   const { address } = useAccount()
@@ -61,7 +62,7 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
         onSuccess: (data) => {
           setStatus('pending')
           setTransactionHash(data)
-          setTimerDuration(ESTIMATED_TIME_OF_CONFIRMATION)
+          setTimerDuration(ESTIMATED_TIME_TO_COMPLETE_WITHDRAW)
           setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)

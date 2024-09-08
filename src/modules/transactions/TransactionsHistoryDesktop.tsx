@@ -28,7 +28,7 @@ export const TransactionsHistoryDesktop = (
     size,
     page,
     limit: 100,
-    action_type: 'maat',
+    action_type: 'trigger',
   })
 
   const renderBody = () => {
@@ -99,12 +99,22 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
       <Table.Head>
         <Table.Row>
           <Table.HeadCell>Action</Table.HeadCell>
-          <Table.HeadCell>Amount</Table.HeadCell>
-          <Table.HeadCell>Strategy / Weekly APY / TVL</Table.HeadCell>
+          <Table.HeadCell>Status</Table.HeadCell>
+          <Table.HeadCell>
+            <div className="flex items-center gap-[0.79rem]">
+              <span>Amount</span>
+              <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+            </div>
+          </Table.HeadCell>
+          <Table.HeadCell>Chain</Table.HeadCell>
           <Table.HeadCell>From</Table.HeadCell>
           <Table.HeadCell>Tx Hash</Table.HeadCell>
-          <Table.HeadCell>Created</Table.HeadCell>
-          <Table.HeadCell>Nonce</Table.HeadCell>
+          <Table.HeadCell>
+            <div className="flex items-center gap-[0.79rem]">
+              <span>Created</span>
+              <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+            </div>
+          </Table.HeadCell>
         </Table.Row>
       </Table.Head>
       <Table.Body>

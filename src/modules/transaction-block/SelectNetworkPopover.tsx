@@ -75,7 +75,7 @@ export const SelectNetworkPopover = ({
   }
 
   return (
-    <Popover open={isOpened} onOpenChange={() => setIsOpened(true)}>
+    <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
       <PopoverTrigger className="flex items-center gap-2">
         {trigger}
         <ArrowDown

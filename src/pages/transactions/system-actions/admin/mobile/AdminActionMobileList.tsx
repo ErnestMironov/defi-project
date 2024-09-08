@@ -1,12 +1,15 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import { Skeleton } from '@components/ui/skeleton'
+import type { AdminEvent } from '@api/maat-finance/types'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
-import { type AdminAction, AdminActionMobileItem } from './AdminActionMobileItem'
+import {
+  AdminActionMobileItem,
+  SkeletonAdminActionMobileItem,
+} from './AdminActionMobileItem'
 
 interface AdminActionMobileListProperties extends ComponentProps<'div'> {
-  adminActions?: AdminAction[]
+  adminActions?: AdminEvent[]
   loading?: boolean
   error?: any
 }
@@ -50,30 +53,6 @@ export const AdminActionMobileList = (props: AdminActionMobileListProperties) =>
       {...rest}
     >
       {renderBody()}
-    </div>
-  )
-}
-
-const SkeletonAdminActionMobileItem = (props: ComponentProps<'div'>) => {
-  const { ...rest } = props
-
-  return (
-    <div {...rest}>
-      <div className="flex items-center gap-3">
-        <Skeleton className="size-6 rounded-full" />
-        <Skeleton className="h-6 w-20 text-lg" />
-      </div>
-      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-[0.82rem] even:[&>*]:justify-self-end [&_h6]:text-base [&_h6]:leading-normal">
-        <h6>Chain | Protocol</h6>
-        <div className="flex items-center space-x-[-0.44rem]">
-          <Skeleton className="size-6 rounded-full" />
-          <Skeleton className="size-6 rounded-full" />
-        </div>
-        <h6>Projected APY</h6>
-        <Skeleton className="h-6 w-20 text-lg" />
-        <h6>TVL</h6>
-        <Skeleton className="h-6 w-20 text-lg" />
-      </div>
     </div>
   )
 }

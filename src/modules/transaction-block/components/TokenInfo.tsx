@@ -26,7 +26,7 @@ export const TokenInfo: React.FC<TokenInfoProperties> = ({
         <span>{type === 'input' ? 'You input' : 'You will deposit '} </span>
         <div className="flex items-center gap-2">
           <div
-            className={cn('rounded-[3rem] px-2 py-1', {
+            className={cn('min-w-max rounded-[3rem] px-2 py-1', {
               'bg-red-5 text-red-80': type === 'input',
               'bg-green-15 text-green-100': type === 'deposit',
             })}
@@ -34,6 +34,7 @@ export const TokenInfo: React.FC<TokenInfoProperties> = ({
             {type === 'input' ? '- ' : '+ '}
             {formatAmount(amount, {
               minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
             })}
           </div>
           <TokenWithNetwork

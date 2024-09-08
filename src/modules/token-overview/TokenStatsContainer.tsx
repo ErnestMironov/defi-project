@@ -7,8 +7,8 @@ import { TokenStatsContainerMobile } from './TokenStatsContainerMobile'
 export interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   color: string
   tokenName: string
-  apy?: string
-  tvl?: string
+  apy?: number
+  tvl?: number
   rebalancingVolume?: number
   img: string
   imageClassName?: string

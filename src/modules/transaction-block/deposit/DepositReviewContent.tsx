@@ -30,6 +30,8 @@ export const DepositReviewContent = ({
     inputValueInUSD,
     depositFromNetwork,
     depositToNetwork,
+    depositTotalAmount,
+    depositTotalInUSD,
     setCurrentModal,
   } = useTxStore()
 
@@ -103,12 +105,12 @@ export const DepositReviewContent = ({
         <div className="h-px w-full bg-stroke-100" />
         <TokenInfo
           type="deposit"
-          amount={inputValueInUSD}
+          amount={depositTotalAmount}
           tokenInfo={{
             symbol: vault,
             chain_id: depositToNetwork!,
           }}
-          usdAmount={inputValueInUSD}
+          usdAmount={depositTotalInUSD}
         />
       </div>
       {depositFlow}

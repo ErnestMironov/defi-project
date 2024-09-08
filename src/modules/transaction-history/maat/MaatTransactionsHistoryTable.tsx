@@ -1,3 +1,4 @@
+import type { EventsParameters } from '@api/queries/useEvents'
 import { useEvents } from '@api/queries/useEvents'
 import Sort from '@assets/icons/sort.svg'
 import type { TableFiltersType } from '@components/filters/TableFilters'
@@ -14,6 +15,7 @@ import { MaatTransactionHistoryRow } from './MaatTransactionHistoryRow'
 
 interface TransactionsHistoryProperties extends ComponentProps<'div'> {
   filters: TableFiltersType
+  eventParameters?: EventsParameters
 }
 
 export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryProperties> = (

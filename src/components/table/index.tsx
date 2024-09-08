@@ -36,7 +36,7 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
       <tr
         {...rest}
         className={cn(
-          'bg-cards text-text [&:hover>td]:[box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]',
+          'bg-cards text-text hover:[box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] rounded-l-[1.5rem] rounded-r-[1.5rem]',
           rest.className,
         )}
         ref={reference}

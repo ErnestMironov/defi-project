@@ -48,8 +48,8 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       </Table.Cell>
       <Table.Cell className="max-w-[12.1rem]">
         <div className="flex w-full items-center">
-          <p className="w-[6.9rem]">{shortenString(strategy.id, 5)}</p>
-          <CopyButton text={strategy.id} className="ml-4 size-6 shrink-0" />
+          <p className="w-[6.9rem]">{shortenString(strategy.address, 5)}</p>
+          <CopyButton text={strategy.address} className="ml-4 size-6 shrink-0" />
           <Scan className="ml-3 size-5 shrink-0" />
         </div>
       </Table.Cell>

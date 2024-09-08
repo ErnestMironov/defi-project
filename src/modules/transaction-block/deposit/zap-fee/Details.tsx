@@ -52,7 +52,7 @@ interface DetailsProperties {
 }
 
 const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandler }) => {
-  const { boostMode, setBoostMode } = useTxStore()
+  const { boostMode, txDifficulty, setBoostMode } = useTxStore()
 
   return (
     <Dialog open={open} onOpenChange={() => closeHandler()}>
@@ -71,13 +71,21 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandl
             <ArrowDown className="size-6" />
           </button>
         </DialogTitle>
-        <div>
+        <div
+          style={{
+            opacity: txDifficulty === 'cross_chain' ? 1 : 0.4,
+          }}
+        >
           <Grey3DBox>
             <div className="flex items-center gap-2 text-[1.1875rem] font-bold leading-[120%] text-text-80">
               <Lightning className="size-6" />
               Boost
             </div>
-            <Switch checked={boostMode} onCheckedChange={setBoostMode} />
+            <Switch
+              disabled={txDifficulty !== 'cross_chain'}
+              checked={boostMode}
+              onCheckedChange={setBoostMode}
+            />
           </Grey3DBox>
           <Text className="mt-3">
             Boost is a special feature of Axelar and Squid that reduces transaction time
@@ -85,8 +93,12 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandl
             value of $20,000 USD.
           </Text>
         </div>
-        <div>
-          <NetworkSelector />
+        <div
+          style={{
+            opacity: txDifficulty === 'cross_chain' ? 1 : 0.4,
+          }}
+        >
+          <NetworkSelector disabled={txDifficulty !== 'cross_chain'} />
           <Text className="mt-3">
             Representation tokens can be given only on supported chains. <br /> You can
             change network.

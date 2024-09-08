@@ -58,7 +58,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
       </Table.Cell>
       <Table.Cell>
         <div className="flex items-center gap-2">
-          {event.dst_chain_id ? (
+          {event.dst_chain_id && event.src_chain_id !== event.dst_chain_id ? (
             <>
               <TokenIconComponent symbol={event.src_chain_id} className="size-8 gap-3" />
               <Arrow />
