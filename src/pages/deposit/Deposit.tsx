@@ -12,8 +12,8 @@ export const Deposit = () => {
   const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics()
 
   // TODO: replace with protocol metrics
-  const usdcApy = 8.91
-  const usdtApy = 9.84
+  const usdcApy = 12.8
+  const usdtApy = 14.1
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
