@@ -23,7 +23,6 @@ export const useSetDepositDetails = () => {
 
   useEffect(() => {
     if (!squidRoute) {
-      console.log('🚀 ~ useEffect ~ inputValue:', inputValue)
       setDepositTotalInUSD(inputValue)
       setDepositTotalAmount(inputValue ?? '0')
       return
