@@ -1,21 +1,28 @@
 import { apiClient } from '@api/maat-finance/api-client'
 import type { PaginationResponse, SortDirection, Strategy } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import qs from 'qs'
 import { useInView } from 'react-intersection-observer'
 
-type StrategiesParameters = {
+export type StrategiesParameters = {
   page?: number
   size?: number
   strategy_id?: string
   start_timestamp?: string
   end_timestamp?: string
-  sort?: 'apy' | 'tvl' | 'protocol' | 'chain' | 'token'
+  sort?: 'apy' | 'tvl'
   orderBy?: SortDirection
+  chain?: string[]
+  protocol?: string[]
+  token?: string[]
 }
 
 const getStrategies = (parameters: StrategiesParameters) => {
   return apiClient.get<PaginationResponse<Strategy>>('/overview/strategies', {
     params: parameters,
+    paramsSerializer: (parameters_) => {
+      return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+    },
   })
 }
 

@@ -4,7 +4,10 @@ import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
-import { TransactionMobileItem } from './TransactionMobileItem'
+import {
+  SkeletonTransactionMobileItem,
+  TransactionMobileItem,
+} from './TransactionMobileItem'
 
 interface TransactionsMobileListProperties extends ComponentProps<'div'> {
   events?: Event[]
@@ -22,7 +25,7 @@ export const TransactionsMobileList = (props: TransactionsMobileListProperties) 
         return (
           <>
             {Array.from({ length: 6 }).map((_, i) => (
-              <SkeletonStrategyMobileCard key={i} />
+              <SkeletonTransactionMobileItem key={i} />
             ))}
           </>
         )

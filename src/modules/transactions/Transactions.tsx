@@ -1,6 +1,7 @@
+import type { EventsParameters } from '@api/queries/useEvents'
 import {
-  SELECT_ACTIONS,
   SELECT_CHAINS,
+  SELECT_LAST_EVENT_ACTIONS,
   SELECT_STATUSES,
 } from '@constants/select-constant'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
@@ -11,6 +12,7 @@ import { TransactionsHistoryMobile } from './TransactionsHistoryMobile'
 
 export interface EventsProperties extends ComponentProps<'div'> {
   withLink?: boolean
+  parameters?: EventsParameters
 }
 
 export const Transactions = (props: EventsProperties) => {
@@ -22,7 +24,11 @@ export const Transactions = (props: EventsProperties) => {
     <TransactionsHistoryDesktop
       filters={{
         search: { value: '', placeholder: 'Tx hash  / Address' },
-        action: { items: SELECT_ACTIONS, value: [], placeholder: 'All Actions' },
+        actions_type: {
+          items: SELECT_LAST_EVENT_ACTIONS,
+          value: [],
+          placeholder: 'All Actions',
+        },
         status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
         chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
       }}

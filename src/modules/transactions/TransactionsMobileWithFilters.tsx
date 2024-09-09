@@ -12,9 +12,11 @@ import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import { Loader } from '@components/ui/loader'
+import type { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
+import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import {
-  SELECT_ACTIONS,
   SELECT_CHAINS,
+  SELECT_LAST_EVENT_ACTIONS,
   SELECT_STATUSES,
   SELECT_TOKENS,
   SORT_BY_AMOUNT,
@@ -22,7 +24,7 @@ import {
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { Fragment, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 
 import { TransactionsMobileList } from './TransactionsMobileList'
 
@@ -36,7 +38,7 @@ type FilterType =
 
 interface TransactionsMobileWithFiltersProperties extends ComponentProps<'div'> {
   filters?: FilterType[]
-  eventParameters?: EventsParameters
+  parameters?: EventsParameters
 }
 
 export const TransactionsMobileWithFilters = (
@@ -45,7 +47,7 @@ export const TransactionsMobileWithFilters = (
   const {
     className,
     filters = ['actions', 'statuses', 'chains'],
-    eventParameters = {},
+    parameters = {},
   } = props
 
   const [search, setSearch] = useState('')
@@ -53,13 +55,38 @@ export const TransactionsMobileWithFilters = (
   const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
   const [selectedStatuses, setSelectedStatuses] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
-  const [selectedSortByAmount, setSelectedSortByAmount] = useState<
-    OptionType | undefined
-  >()
-  const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
+  const [selectedSort, setSelectedSort] = useState<OptionType | undefined>()
 
+  const currentSort: EventsParameters = useMemo(() => {
+    switch (selectedSort?.value) {
+      case 'Highest Amount': {
+        return { orderBy: 'desc', sort: 'amount' }
+      }
+      case 'Lowest Amount': {
+        return { orderBy: 'asc', sort: 'amount' }
+      }
+      case 'Created earlier': {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+      case 'Created later': {
+        return { orderBy: 'asc', sort: 'creation_time' }
+      }
+      default: {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+    }
+  }, [selectedSort])
   const { data, isLoading, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteEvents({ action_type: 'trigger', ...eventParameters })
+    useInfiniteEvents({
+      ...parameters,
+      ...currentSort,
+      chain: selectedChains.map(
+        (chain) => chain.value as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES,
+      ),
+      action_type: selectedActions.map(
+        (action) => action.value,
+      ) as (keyof typeof LAST_EVENT_ACTION_TYPE)[],
+    })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -68,7 +95,7 @@ export const TransactionsMobileWithFilters = (
           <MobileCheckboxSelect
             label="Actions"
             value={selectedActions}
-            options={SELECT_ACTIONS}
+            options={SELECT_LAST_EVENT_ACTIONS}
             onChange={setSelectedActions}
           />
         )
@@ -150,27 +177,21 @@ export const TransactionsMobileWithFilters = (
           title="Sorting"
           closeOnReset
           resetFilters={() => {
-            setSelectedSortByAmount(undefined)
-            setSelectedSortByDate(undefined)
+            setSelectedSort(undefined)
           }}
-          trigger={
-            <DrawerIconTrigger
-              Icon={Sort}
-              active={!!selectedSortByAmount || !!selectedSortByDate}
-            />
-          }
+          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
         >
           <MobileRadioSelect
             label="Amount"
             options={SORT_BY_AMOUNT}
-            value={selectedSortByAmount}
-            onChange={setSelectedSortByAmount}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
           <MobileRadioSelect
             label="Created"
             options={SORT_BY_DATE}
-            value={selectedSortByDate}
-            onChange={setSelectedSortByDate}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
         </MobileFiltersDrawer>
       </div>

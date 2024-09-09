@@ -5,6 +5,7 @@ import { Pagination } from '@components/pagination/Pagination'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { Button } from '@components/ui/button'
 import { usePages } from '@hooks/common/usePages'
+import { useSort } from '@hooks/common/useSort'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -22,13 +23,28 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
   const { filters: initialFilters, className, withLink = false } = props
   const [filters, setFilters] = useState(initialFilters)
   const navigate = useNavigate()
-
+  const { search: _search, ...selectFilters } = filters
   const { onPageChange, page, size, onPageSizeChange } = usePages()
+
+  const { sort, orderBy, onSortChange } = useSort(['apy', 'tvl'], {
+    orderBy: 'desc',
+    sort: 'apy',
+  })
   const { data, isLoading, error, isPlaceholderData } = useStrategies({
     page,
     size,
-    orderBy: 'desc',
-    sort: 'apy',
+    sort,
+    orderBy,
+    ...Object.fromEntries(
+      Object.entries(selectFilters)
+        .filter(([_, v]) => v.value && v.value.length > 0)
+        .map(([key, value]) => {
+          const filterValue = Array.isArray(value.value)
+            ? value.value.map((v) => v.value || v).filter(Boolean)
+            : value.value
+          return [key, filterValue]
+        }),
+    ),
   })
 
   return (
@@ -44,6 +60,8 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
         strategies={data?.items}
         loading={isLoading || isPlaceholderData}
         error={error}
+        currentSort={{ sort, orderBy }}
+        onSortChange={onSortChange}
       />
       {data && (
         <Pagination

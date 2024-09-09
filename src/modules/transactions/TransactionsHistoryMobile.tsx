@@ -6,7 +6,7 @@ import type { EventsProperties } from './Transactions'
 import { TransactionsMobileWithFilters } from './TransactionsMobileWithFilters'
 
 export const TransactionsHistoryMobile = (props: EventsProperties) => {
-  const { withLink, className } = props
+  const { withLink, className, parameters } = props
 
   return (
     <div {...props} className={cn('flex flex-col', className)}>
@@ -14,7 +14,7 @@ export const TransactionsHistoryMobile = (props: EventsProperties) => {
         <SectionTitle>Events</SectionTitle>
         {withLink && <ArrowLink to="/transactions" />}
       </div>
-      <TransactionsMobileWithFilters className="mt-4" />
+      <TransactionsMobileWithFilters className="mt-4" parameters={parameters} />
     </div>
   )
 }

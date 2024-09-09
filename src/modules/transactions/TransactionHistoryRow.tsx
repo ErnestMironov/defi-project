@@ -4,6 +4,7 @@ import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
+import { Skeleton } from '@components/ui/skeleton'
 import { ACTION_TYPE } from '@constants/action-type'
 import { STATUS_COLOR } from '@constants/status-color'
 import { ROUTES } from '@routes/routes'
@@ -87,6 +88,33 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
       </Table.Cell>
       <Table.Cell className="text-gray-100">
         {getFromNow(dayjs(event.creation_time).toString())}
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+export const TransactionHistoryRowSkeleton = (_props: ComponentProps<'tr'>) => {
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-8 w-20" />
       </Table.Cell>
     </Table.Row>
   )

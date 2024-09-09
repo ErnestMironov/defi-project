@@ -107,4 +107,4 @@ export const CHAIN_IDS_BY_BACKEND_NAMES = {
   bsc: CHAIN_IDS_BY_NAME.BNB,
   mantle: CHAIN_IDS_BY_NAME.Mantle,
   metis: CHAIN_IDS_BY_NAME.Metis,
-}
+} as const
