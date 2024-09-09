@@ -3,10 +3,12 @@ import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
+import { Skeleton } from '@components/ui/skeleton'
 import { ROUTES } from '@routes/routes'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
 import { formatUnits } from 'ethers'
+import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 interface StrategyRowProperties {
@@ -52,6 +54,33 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
           <CopyButton text={strategy.address} className="ml-4 size-6 shrink-0" />
           <Scan className="ml-3 size-5 shrink-0" />
         </div>
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+export const StrategyRowSkeleton = (_props: ComponentProps<'tr'>) => {
+  return (
+    <Table.Row>
+      <Table.Cell className="px-10 py-6">
+        <Skeleton className="h-6 w-full" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-full" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-full" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-full" />
+      </Table.Cell>
+      <Table.Cell className="font-bold">
+        <Skeleton className="h-6 w-full" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-full" />
+      </Table.Cell>
+      <Table.Cell className="max-w-[12.1rem]">
+        <Skeleton className="h-6 w-full" />
       </Table.Cell>
     </Table.Row>
   )

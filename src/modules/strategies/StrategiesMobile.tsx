@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/no-useless-undefined */
+import type { StrategiesParameters } from '@api/queries/useStrategies'
 import { useInfiniteStrategies } from '@api/queries/useStrategies'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
@@ -23,7 +24,7 @@ import {
 } from '@constants/select-constant'
 import { StrategyMobileList } from '@modules/strategies/StrategyMobileList'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 type StrategyFilters = 'tokens' | 'protocols' | 'chains'
 
@@ -42,11 +43,35 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
   const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
   const [selectedProtocols, setSelectedProtocols] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
-  const [selectedSortByApy, setSelectedSortByApy] = useState<OptionType | undefined>()
-  const [selectedSortByTvl, setSelectedSortByTvl] = useState<OptionType | undefined>()
+  const [selectedSort, setSelectedSort] = useState<OptionType | undefined>()
+
+  const currentSort: StrategiesParameters = useMemo(() => {
+    switch (selectedSort?.value) {
+      case 'Highest APY': {
+        return { orderBy: 'desc', sort: 'apy' }
+      }
+      case 'Lowest APY': {
+        return { orderBy: 'asc', sort: 'apy' }
+      }
+      case 'Highest TVL': {
+        return { orderBy: 'desc', sort: 'tvl' }
+      }
+      case 'Lowest TVL': {
+        return { orderBy: 'asc', sort: 'tvl' }
+      }
+      default: {
+        return { orderBy: 'desc', sort: 'apy' }
+      }
+    }
+  }, [selectedSort])
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteStrategies({})
+    useInfiniteStrategies({
+      chain: selectedChains.map((chain) => chain.value),
+      protocol: selectedProtocols.map((protocol) => protocol.value),
+      token: selectedTokens.map((token) => token.value),
+      ...currentSort,
+    })
 
   const renderFilters = (filter: StrategyFilters) => {
     switch (filter) {
@@ -129,27 +154,21 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
           title="Sorting"
           closeOnReset
           resetFilters={() => {
-            setSelectedSortByApy(undefined)
-            setSelectedSortByTvl(undefined)
+            setSelectedSort(undefined)
           }}
-          trigger={
-            <DrawerIconTrigger
-              Icon={Sort}
-              active={!!selectedSortByApy || !!selectedSortByTvl}
-            />
-          }
+          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
         >
           <MobileRadioSelect
             label="APY"
             options={SORT_BY_APY}
-            value={selectedSortByApy}
-            onChange={setSelectedSortByApy}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
           <MobileRadioSelect
             label="TVL"
             options={SORT_BY_TVL}
-            value={selectedSortByTvl}
-            onChange={setSelectedSortByTvl}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
         </MobileFiltersDrawer>
       </div>

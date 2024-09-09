@@ -63,7 +63,7 @@ export const AdminTable = (props: AdminTableProperties) => {
             <Table.HeadCell>
               <div className="flex items-center gap-[0.79rem]">
                 <span>Created</span>
-                <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+                <Sort className="size-5 shrink-0" />
               </div>
             </Table.HeadCell>
           </Table.Row>
