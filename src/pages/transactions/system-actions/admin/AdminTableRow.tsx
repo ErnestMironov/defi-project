@@ -1,7 +1,7 @@
 import type { AdminEvent } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { ADMIN_ACTION_TYPE } from '@constants/action-type'
@@ -27,7 +27,11 @@ export const AdminTableRow = (props: AdminTableRowProperties) => {
         <div className="flex items-center">
           <span>{shortenString(adminEvent.to)}</span>
           <CopyButton text={adminEvent.to} className="ml-4" />
-          <Scan className="ml-3 size-5 shrink-0" />
+          <ScanLink
+            chainId={adminEvent.src_chain_id}
+            address={adminEvent.to}
+            className="ml-3 size-5 shrink-0"
+          />
         </div>
       </Table.Cell>
       <Table.Cell>
@@ -57,7 +61,11 @@ export const AdminTableRow = (props: AdminTableRowProperties) => {
         <div className="flex items-center">
           <span>{shortenString(adminEvent.hash)}</span>
           <CopyButton text={adminEvent.hash} className="ml-4" />
-          <Scan className="ml-3 size-5 shrink-0" />
+          <ScanLink
+            chainId={adminEvent.src_chain_id}
+            txHash={adminEvent.hash}
+            className="ml-3 size-5 shrink-0"
+          />
         </div>
       </Table.Cell>
       <Table.Cell className="text-gray-100">

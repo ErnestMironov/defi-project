@@ -1,7 +1,7 @@
 import type { Event } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { ACTION_TYPE } from '@constants/action-type'
@@ -71,7 +71,11 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
         <h6>Tx Hash</h6>
         <div className="flex w-full items-center justify-end gap-2">
           <p>{shortenString(event.hash)}</p>
-          <Scan className="size-5 shrink-0" />
+          <ScanLink
+            chainId={event.src_chain_id}
+            txHash={event.hash}
+            className="size-5 shrink-0"
+          />
           <CopyButton text={event.hash} className="size-6 shrink-0" />
         </div>
       </div>
