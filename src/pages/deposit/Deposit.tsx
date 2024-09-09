@@ -1,19 +1,24 @@
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
-import { useTokenApy } from '@modules/transaction-block/deposit/hooks/useTokenApy'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
+import { formatAmount } from '@utils/formatValue'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  const { usdcApy, usdtApy, loading } = useTokenApy()
+  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics()
+
+  // TODO: replace with protocol metrics
+  const usdcApy = 12.8
+  const usdtApy = 14.1
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
   useEffect(() => {
-    if (!vaultSet.current && !loading) {
+    if (!vaultSet.current && !isProtocolMetricsLoading) {
       if (usdcApy !== undefined && usdtApy !== undefined) {
         if (Number(usdcApy) > Number(usdtApy)) {
           setVault('USDC')
@@ -29,13 +34,13 @@ export const Deposit = () => {
       }
       vaultSet.current = true
     }
-  }, [usdcApy, usdtApy, setVault, loading])
+  }, [usdcApy, usdtApy, setVault, isProtocolMetricsLoading])
 
   return (
     <div className="flex w-full justify-center">
       <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:mt-[2.62rem] max-lg:gap-4">
         <div className="grid grid-cols-2 gap-3">
-          {loading ? (
+          {isProtocolMetricsLoading ? (
             <>
               {Array.from({ length: 2 }).map((_, i) => (
                 <Skeleton
@@ -48,7 +53,13 @@ export const Deposit = () => {
             <>
               <ShadowBoxWithValue
                 label="USDС APY"
-                value={usdcApy ? `${usdcApy}%` : '0.00%'}
+                value={
+                  usdcApy
+                    ? `${formatAmount(usdcApy, {
+                        maximumFractionDigits: 2,
+                      })}%`
+                    : '0.00%'
+                }
               >
                 <img
                   src={usdc}
@@ -58,7 +69,13 @@ export const Deposit = () => {
               </ShadowBoxWithValue>
               <ShadowBoxWithValue
                 label="USDT APY"
-                value={usdtApy ? `${usdtApy}%` : '0.00%'}
+                value={
+                  usdtApy
+                    ? `${formatAmount(usdtApy, {
+                        maximumFractionDigits: 2,
+                      })}%`
+                    : '0.00%'
+                }
               >
                 <img
                   src={usdt}

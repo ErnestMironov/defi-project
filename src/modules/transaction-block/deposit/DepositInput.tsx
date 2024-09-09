@@ -1,3 +1,4 @@
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics.ts'
 import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
@@ -15,7 +16,6 @@ import { useAccount } from 'wagmi'
 import DollarInput from '../components/DollarInput.tsx'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore.ts'
-import { useTokenApy } from './hooks/useTokenApy.ts'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
 import ZapFee from './zap-fee/ZapFee'
@@ -73,13 +73,17 @@ export const DepositInput = () => {
     setInputValueInUSD,
   } = useTxStore()
 
-  const { usdcApy, usdtApy, loading } = useTokenApy()
+  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics()
+
+  // TODO: replace with protocol metrics
+  const usdcApy = 12.8
+  const usdtApy = 14.1
 
   const yourYearlyEarnings = useMemo(() => {
     if (
       !depositTotalInUSD ||
       depositTotalInUSD === '0.00' ||
-      loading ||
+      isProtocolMetricsLoading ||
       !usdcApy ||
       !usdtApy
     )
@@ -91,7 +95,7 @@ export const DepositInput = () => {
       return totalInUSD.div(100).multipliedBy(BigNumber(usdcApy))
     }
     return totalInUSD.div(100).multipliedBy(BigNumber(usdtApy))
-  }, [depositTotalInUSD, loading, usdcApy, usdtApy, vault])
+  }, [depositTotalInUSD, isProtocolMetricsLoading, usdcApy, usdtApy, vault])
 
   const assetBalance = BigNumber(asset?.balance?.toString() || '0')
     .div(10 ** (asset?.contract_decimals || 6))
