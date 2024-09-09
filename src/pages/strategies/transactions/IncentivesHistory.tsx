@@ -19,7 +19,7 @@ export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) 
     <IncentivesHistoryDesktop
       filters={{
         search: { value: '', placeholder: 'Tx Hash' },
-        action: {
+        actions_type: {
           items: SELECT_INCENTIVES_ACTIONS,
           placeholder: 'All Actions',
           value: [],

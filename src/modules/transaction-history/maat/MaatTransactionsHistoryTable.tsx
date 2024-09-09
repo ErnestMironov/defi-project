@@ -28,7 +28,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
   const { data, isLoading, error, isPlaceholderData } = useEvents({
     size,
     page,
-    action_type: 'maat',
+    transaction_type: 'maat',
     limit: 100,
   })
 
@@ -49,7 +49,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
                 <Table.HeadCell>
                   <div className="flex items-center gap-[0.79rem]">
                     <span>Amount</span>
-                    <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+                    <Sort className="size-5 shrink-0" />
                   </div>
                 </Table.HeadCell>
                 <Table.HeadCell>Chain</Table.HeadCell>
@@ -57,7 +57,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
                 <Table.HeadCell>
                   <div className="flex items-center gap-[0.79rem]">
                     <span>Created</span>
-                    <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+                    <Sort className="size-5 shrink-0" />
                   </div>
                 </Table.HeadCell>
               </Table.Row>
@@ -102,7 +102,7 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
           <Table.HeadCell>
             <div className="flex items-center gap-[0.79rem]">
               <span>Amount</span>
-              <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+              <Sort className="size-5 shrink-0" />
             </div>
           </Table.HeadCell>
           <Table.HeadCell>Chain</Table.HeadCell>
@@ -110,7 +110,7 @@ const TransactionsHistoryDesktopSkeleton: React.FC<
           <Table.HeadCell>
             <div className="flex items-center gap-[0.79rem]">
               <span>Created</span>
-              <Sort className="h-[1.06619rem] w-[0.66175rem] shrink-0" />
+              <Sort className="size-5 shrink-0" />
             </div>
           </Table.HeadCell>
         </Table.Row>

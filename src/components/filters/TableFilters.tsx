@@ -12,7 +12,7 @@ export type SelectOption = {
 export type SearchOption = { value: string; placeholder?: string }
 
 type SelectFilters =
-  | 'action'
+  | 'actions_type'
   | 'token'
   | 'status'
   | 'chain'

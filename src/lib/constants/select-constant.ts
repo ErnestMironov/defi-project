@@ -3,18 +3,19 @@ import {
   SelectChainWithIcon,
   SelectItemWithIcon,
 } from '@components/select/SelectItemWithIcon'
-import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 
-import { ACTION_TYPE, INCENTIVE_ACTION_TYPE, STATUSES } from './action-type'
+import { INCENTIVE_ACTION_TYPE, LAST_EVENT_ACTION_TYPE, STATUSES } from './action-type'
+import { PROTOCOL_IDS_BY_BACKEND_NAMES } from './protocols'
 
 export const SELECT_TOKENS: OptionType[] = [
   {
     label: SelectItemWithIcon({ symbol: 'USDC' }),
-    value: 'usdc',
+    value: 'USDC',
   },
   {
     label: SelectItemWithIcon({ symbol: 'USDT' }),
-    value: 'usdt',
+    value: 'USDT',
   },
 ]
 
@@ -38,46 +39,26 @@ export const SORT_BY_TVL: OptionType[] = [
   { label: 'Lowest TVL', value: 'Lowest TVL' },
 ]
 
-export const SELECT_CHAINS: OptionType[] = Object.entries(CHAIN_NAMES_BY_ID).map(
-  ([key]) => ({
-    label: SelectChainWithIcon({ chainId: Number(key) }),
-    value: key,
-  }),
-)
-
-export const SELECT_PROTOCOLS: OptionType[] = [
-  {
-    label: SelectItemWithIcon({ symbol: 'Compound' }),
-    value: 'Compound',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'SonneFi' }),
-    value: 'SonneFi',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Spark' }),
-    value: 'Spark',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'AAVE' }),
-    value: 'AAVE',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Beefy' }),
-    value: 'Beefy',
-  },
-  {
-    label: SelectItemWithIcon({ symbol: 'Yearn' }),
-    value: 'Yearn',
-  },
-]
-
-export const SELECT_ACTIONS: OptionType[] = Object.entries(ACTION_TYPE).map(
+export const SELECT_CHAINS: OptionType[] = Object.entries(CHAIN_IDS_BY_BACKEND_NAMES).map(
   ([key, value]) => ({
-    label: value,
-    value: key,
+    label: SelectChainWithIcon({ chainId: Number(value) }),
+    value: key as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES,
   }),
 )
+
+export const SELECT_PROTOCOLS: OptionType[] = Object.entries(
+  PROTOCOL_IDS_BY_BACKEND_NAMES,
+).map(([key, value]) => ({
+  label: SelectItemWithIcon({ symbol: value }),
+  value: key,
+}))
+
+export const SELECT_LAST_EVENT_ACTIONS: OptionType[] = Object.entries(
+  LAST_EVENT_ACTION_TYPE,
+).map(([key, value]) => ({
+  label: value,
+  value: key,
+}))
 
 export const SELECT_STATUSES: OptionType[] = STATUSES.map((value) => ({
   label: value.charAt(0).toUpperCase() + value.slice(1),

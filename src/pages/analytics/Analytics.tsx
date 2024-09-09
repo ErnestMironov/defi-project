@@ -12,7 +12,10 @@ export const Analytics = () => {
       <TokenOverview className="mt-12 max-lg:mt-8" />
       <Strategies withLink className="mt-[6.25rem]" />
       <SankeyDiagramBasicDemo className="mt-[6.25rem]" />
-      <Transactions className="mt-28 max-lg:mt-14" />
+      <Transactions
+        className="mt-28 max-lg:mt-14"
+        // parameters={{ transaction_type: 'trigger' }}
+      />
       <Footer className="mt-[7.5rem] max-lg:mt-[5.25rem]" />
     </>
   )

@@ -1,19 +1,24 @@
 import { apiClient } from '@api/maat-finance/api-client'
 import type {
-  ActionType,
   Event,
   PaginationResponse,
   SortDirection,
   StatusType,
 } from '@api/maat-finance/types'
+import type { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
+import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import qs from 'qs'
 
 export type EventsParameters = {
   limit?: number
-  action_type: ActionType
+  action_type?: (keyof typeof LAST_EVENT_ACTION_TYPE)[]
+  transaction_type?: 'maat' | 'trigger' | 'handler'
+  chain?: (keyof typeof CHAIN_IDS_BY_BACKEND_NAMES)[]
   page?: number
   size?: number
-  sort?: SortDirection
+  orderBy?: SortDirection
+  sort?: 'creation_time' | 'amount'
   status?: StatusType
   start?: string
   end?: string
@@ -22,6 +27,9 @@ export type EventsParameters = {
 const getEvents = (parameters: EventsParameters) => {
   return apiClient.get<PaginationResponse<Event>>('/actions/last', {
     params: parameters,
+    paramsSerializer: (parameters_) => {
+      return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+    },
   })
 }
 
