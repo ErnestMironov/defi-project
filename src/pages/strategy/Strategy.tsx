@@ -1,8 +1,8 @@
 import {
-  SELECT_LAST_EVENT_ACTIONS,
   SELECT_CHAINS,
   SELECT_INCENTIVES_ACTIONS,
   SELECT_INCENTIVES_FROM,
+  SELECT_LAST_EVENT_ACTIONS,
   SELECT_STATUSES,
 } from '@constants/select-constant'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
@@ -41,12 +41,16 @@ export const Strategy = (props: StrategyProperties) => {
         className="mt-[6.25rem]"
         maatFilters={{
           search: { value: '', placeholder: 'Tx Hash' },
-          action: { items: SELECT_LAST_EVENT_ACTIONS, value: [], placeholder: 'All Actions' },
+          actions_type: {
+            items: SELECT_LAST_EVENT_ACTIONS,
+            value: [],
+            placeholder: 'All Actions',
+          },
           status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
         }}
         incentivesFilters={{
           search: { value: '', placeholder: 'Tx Hash' },
-          action: {
+          actions_type: {
             items: SELECT_INCENTIVES_ACTIONS,
             value: [],
           },

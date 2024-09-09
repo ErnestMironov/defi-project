@@ -24,7 +24,7 @@ export const Transactions = (props: TransactionHistoryProperties) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="maat">
-          <MaatTransactionsHistory eventParameters={{ action_type: 'maat' }} />
+          <MaatTransactionsHistory eventParameters={{ transaction_type: 'maat' }} />
         </TabsContent>
         <TabsContent value="incentives">
           <IncentivesHistory />

@@ -26,7 +26,11 @@ export const MaatTransactionsHistory: React.FC<TransactionsHistoryProperties> = 
       {...props}
       filters={{
         search: { value: '', placeholder: 'Tx Hash' },
-        action: { items: SELECT_MAAT_ACTIONS, value: [], placeholder: 'All Actions' },
+        actions_type: {
+          items: SELECT_MAAT_ACTIONS,
+          value: [],
+          placeholder: 'All Actions',
+        },
         status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
         token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
         chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
