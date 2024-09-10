@@ -54,7 +54,8 @@ export const useTokenMetrics = (symbol: 'USDT' | 'USDC') => {
     tvl,
     volume: tokenRebalancingVolume,
     ...rest,
-    isLoading: isProtocolMetricsLoading || isRebalancingVolumeLoading,
+    isLoading: isProtocolMetricsLoading || !!protocolMetricsError,
+    volumeLoading: isRebalancingVolumeLoading || !!rebalancingVolumeError,
     error: protocolMetricsError || rebalancingVolumeError,
   }
 }

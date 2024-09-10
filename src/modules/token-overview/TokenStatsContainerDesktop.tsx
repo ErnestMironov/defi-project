@@ -11,7 +11,6 @@ import type { TokenStatsContainerProperties } from './TokenStatsContainer'
 export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties) => {
   const {
     className,
-    color,
     apy,
     tvl,
     rebalancingVolume,
@@ -20,7 +19,7 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
     tokenName,
     withLink = true,
     loading,
-    error,
+    loadingVolume,
     ...rest
   } = props
 
@@ -37,40 +36,31 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
     >
       <BaseContainer>
         <h6>{tokenName} Apy</h6>
-
         <p className="text-3xl">
           {formatPercentValue(apy, {
             maximumFractionDigits: 2,
           })}
-          {/* <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
-            {formatPercentValue('27', {
-              maximumFractionDigits: 0,
-              signDisplay: 'exceptZero',
-            })}
-          </span> */}
         </p>
       </BaseContainer>
       <BaseContainer>
         <h6>{tokenName} tvl</h6>
         <p className="text-3xl">
           {tvl && formatUsdValue(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
-          {/* <span className="ml-2 align-top text-xl/[1.375rem]" style={{ color }}>
-            {formatPercentValue('27', {
-              maximumFractionDigits: 0,
-              signDisplay: 'exceptZero',
-            })}
-          </span> */}
         </p>
       </BaseContainer>
       <BaseContainer>
         <h6>Rebalancing volume</h6>
-        <p className="text-3xl">
-          {rebalancingVolume &&
-            formatUsdValue(rebalancingVolume, {
-              notation: 'compact',
-              minimumFractionDigits: 2,
-            })}
-        </p>
+        {loadingVolume ? (
+          <Skeleton className="h-8 w-[9.1rem]" />
+        ) : (
+          <p className="text-3xl">
+            {rebalancingVolume &&
+              formatUsdValue(rebalancingVolume, {
+                notation: 'compact',
+                minimumFractionDigits: 2,
+              })}
+          </p>
+        )}
         {withLink && (
           <Link
             to={`${ROUTES.TOKENS}/${tokenName}`}
@@ -96,7 +86,16 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
 const SkeletonTokenStatsContainer = (
   _props: Omit<TokenStatsContainerProperties, 'color'>,
 ) => {
-  const { className, tokenName, img, imageClassName, withLink = true, ...rest } = _props
+  const {
+    className,
+    tokenName,
+    img,
+    imageClassName,
+    withLink = true,
+    loadingVolume,
+    loading,
+    ...rest
+  } = _props
   return (
     <div
       className={cn(
