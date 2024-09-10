@@ -9,11 +9,11 @@ import { formatAmount } from '@utils/formatValue'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics()
+  const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
+    useProtocolMetrics()
 
-  // TODO: replace with protocol metrics
-  const usdcApy = 12.8
-  const usdtApy = 14.1
+  const usdcApy = protocolMetrics?.USDC?.apy
+  const usdtApy = protocolMetrics?.USDT?.apy
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
