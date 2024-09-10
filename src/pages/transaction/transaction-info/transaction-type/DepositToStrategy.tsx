@@ -1,7 +1,6 @@
 import type { Action } from '@api/maat-finance/types'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import type { ComponentProps } from 'react'
-import { useParams } from 'react-router-dom'
 import { formatUnits } from 'viem'
 
 import {
@@ -21,8 +20,6 @@ interface DepositToStrategyProperties extends ComponentProps<'div'> {
 
 export const DepositToStrategy = (props: DepositToStrategyProperties) => {
   const { className, data, ...rest } = props
-  console.log('🚀 ~ DepositToStrategy ~ data:', data)
-  const { tx_hash } = useParams()
 
   const chainData = useTokenAsset(data?.src_chain_id)
 
@@ -39,8 +36,8 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
         date={new Date().toISOString()}
       />
       <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
-        <TransactionHash value={tx_hash} className="col-span-3" />
-        <Status status="success" className="col-span-3" />
+        <TransactionHash value={data?.hash} className="col-span-3" />
+        <Status status={data?.status} className="col-span-3" />
         <TokenAmount
           value={formatUnits(
             BigInt(data?.amount ?? 0),

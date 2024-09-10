@@ -1,6 +1,7 @@
 import type { Action } from '@api/maat-finance/types'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import type { ComponentProps } from 'react'
-import { useParams } from 'react-router-dom'
+import { formatUnits } from 'viem'
 
 import {
   DestinationChain,
@@ -18,28 +19,40 @@ interface BridgeProperties extends ComponentProps<'div'> {
 }
 
 export const Bridge = (props: BridgeProperties) => {
-  const { className, ...rest } = props
-  const { txHash } = useParams()
+  const { className, data, ...rest } = props
+  const chainFromData = useTokenAsset(data?.src_chain_id)
+  const chainToData = useTokenAsset(data?.dst_chain_id)
+
+  if (!data) {
+    return <></>
+  }
+
   return (
     <TransactionInfoContainer className={className} {...rest}>
       <TransactionInfoHeader
         title="Bridge"
         tags={['USER', 'TRIGGER']}
-        status="success"
+        status={data?.status}
         date={new Date().toISOString()}
       />
       <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
-        <TransactionHash value={txHash} className="col-span-3" />
-        <Status status="success" className="col-span-3" />
-        <SourceChain value="Ethereum" className="col-span-3" />
-        <DestinationChain value="Arbitrum" className="col-span-3" />
+        <TransactionHash value={data?.hash} className="col-span-3" />
+        <Status status={data?.status} className="col-span-3" />
+        <SourceChain value={chainFromData?.name} className="col-span-3" />
+        <DestinationChain value={chainToData?.name} className="col-span-3" />
         <TokenAmount
-          value="20000"
-          symbol="USDC"
-          usdValue="20000"
+          value={formatUnits(
+            BigInt(data?.amount ?? 0),
+            data?.vault?.token?.decimals ?? 6,
+          )}
+          symbol={data?.vault?.token?.symbol ?? ''}
+          usdValue={formatUnits(
+            BigInt(data?.amount ?? 0),
+            data?.vault?.token?.decimals ?? 6,
+          )}
           className="col-span-3"
         />
-        <Timestamp value={new Date().toISOString()} className="col-span-3" />
+        <Timestamp value={data?.creation_time} className="col-span-3" />
       </div>
     </TransactionInfoContainer>
   )

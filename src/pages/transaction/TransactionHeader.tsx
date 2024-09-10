@@ -1,6 +1,7 @@
 import { useGetTransactionInfo } from '@api/maat-finance/useGetTransactionInfo'
 import TagRight from '@assets/icons/tag-right.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
@@ -20,7 +21,11 @@ export const TransactionHeader = (props: ComponentProps<'div'>) => {
     <div className={cn('mt-[4.5rem] flex', className)} {...rest}>
       <TagRight className="size-10" />
       <div className="ml-4 flex flex-col gap-3">
-        <h2 className="text-2.5xl/[2.1rem] uppercase">Deposit</h2>
+        <h2 className="text-2.5xl/[2.1rem] uppercase">
+          {data?.action?.action_type
+            ? LAST_EVENT_ACTION_TYPE[data.action.action_type]
+            : ''}
+        </h2>
         <p className="flex items-center text-xl/[1.925rem] text-gray-100">
           Intention ID {shortenAddress(data?.action?.intention_id ?? '')}
           <CopyButton
@@ -42,7 +47,11 @@ export const TransactionHeaderMobile = (props: ComponentProps<'div'>) => {
     <div className={cn('mt-8', className)} {...rest}>
       <div className="flex items-center gap-4">
         <TagRight className="size-7" />
-        <h2 className="text-2xl/[0rem] uppercase">Deposit</h2>
+        <h2 className="text-2xl/[0rem] uppercase">
+          {data?.action?.action_type
+            ? LAST_EVENT_ACTION_TYPE[data.action.action_type]
+            : ''}
+        </h2>
       </div>
       <p className="mt-3 flex items-center text-base text-gray-100">
         Intention ID {shortenAddress(data?.action?.intention_id ?? '')}

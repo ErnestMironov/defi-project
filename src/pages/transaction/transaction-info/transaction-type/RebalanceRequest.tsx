@@ -1,6 +1,7 @@
 import type { Action } from '@api/maat-finance/types'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import type { ComponentProps } from 'react'
-import { useParams } from 'react-router-dom'
+import { formatUnits } from 'viem'
 
 import {
   Chain,
@@ -19,27 +20,38 @@ interface RebalanceRequestProperties extends ComponentProps<'div'> {
 
 export const RebalanceRequest = (props: RebalanceRequestProperties) => {
   const { className, data, ...rest } = props
-  const { txHash } = useParams()
+  const chainData = useTokenAsset(data?.src_chain_id)
+
+  if (!data) {
+    return <></>
+  }
+
   return (
     <TransactionInfoContainer className={className} {...rest}>
       <TransactionInfoHeader
         title="Rebalance request"
         tags={['USER', 'TRIGGER']}
-        status="success"
-        date={new Date().toISOString()}
+        status={data?.status}
+        date={data?.creation_time}
       />
       <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
-        <TransactionHash value={txHash} className="col-span-3" />
-        <Status status="success" className="col-span-3" />
+        <TransactionHash value={data?.hash} className="col-span-3" />
+        <Status status={data?.status} className="col-span-3" />
         <TokenAmount
-          value="20000"
-          symbol="USDC"
-          usdValue="20000"
+          value={formatUnits(
+            BigInt(data?.amount ?? 0),
+            data?.vault?.token?.decimals ?? 6,
+          )}
+          symbol={data?.vault?.token?.symbol ?? ''}
+          usdValue={formatUnits(
+            BigInt(data?.amount ?? 0),
+            data?.vault?.token?.decimals ?? 6,
+          )}
           className="col-span-3"
         />
-        <Vault value="USDC" className="col-span-3" />
-        <Chain value="Ethereum" className="col-span-3" />
-        <Timestamp value={new Date().toISOString()} className="col-span-3" />
+        <Vault value={data?.vault?.token?.symbol ?? ''} className="col-span-3" />
+        <Chain value={chainData?.name ?? ''} className="col-span-3" />
+        <Timestamp value={data?.creation_time} className="col-span-3" />
       </div>
     </TransactionInfoContainer>
   )
