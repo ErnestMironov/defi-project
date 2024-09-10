@@ -1,3 +1,4 @@
+import type { Action } from '@api/maat-finance/types'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -13,10 +14,12 @@ import {
 import { TransactionInfoHeader } from '../transaction-info-header/TransactionInfoHeader'
 import { TransactionInfoContainer } from '../TransactionInfoContainer'
 
-interface WithdrawRequestProperties extends ComponentProps<'div'> {}
+interface WithdrawRequestProperties extends ComponentProps<'div'> {
+  data?: Action
+}
 
 export const WithdrawRequest = (props: WithdrawRequestProperties) => {
-  const { className, ...rest } = props
+  const { className, data, ...rest } = props
   const { txHash } = useParams()
   return (
     <TransactionInfoContainer className={className} {...rest}>

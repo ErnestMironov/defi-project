@@ -1,3 +1,4 @@
+import type { Action } from '@api/maat-finance/types'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -11,7 +12,9 @@ import {
 import { TransactionInfoHeader } from '../transaction-info-header/TransactionInfoHeader'
 import { TransactionInfoContainer } from '../TransactionInfoContainer'
 
-interface WithdrawFulfillmentProperties extends ComponentProps<'div'> {}
+interface WithdrawFulfillmentProperties extends ComponentProps<'div'> {
+  data?: Action
+}
 
 export const WithdrawFulfillment = (props: WithdrawFulfillmentProperties) => {
   const { className, ...rest } = props

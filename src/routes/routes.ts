@@ -5,7 +5,7 @@ export const ROUTES = {
   TOKEN: '/analytics/tokens/:symbol',
   STRATEGIES: '/analytics/strategies',
   TRANSACTIONS: '/analytics/transactions',
-  TRANSACTION: '/analytics/transactions/:intention_id',
+  TRANSACTION: '/analytics/transactions/:tx_hash',
   STRATEGY: '/analytics/strategies/:id',
 } as const
 

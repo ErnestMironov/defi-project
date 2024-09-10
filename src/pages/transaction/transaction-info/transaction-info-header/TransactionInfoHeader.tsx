@@ -11,7 +11,7 @@ import { TransactionTags } from './TransactionTags'
 interface TransactionInfoHeaderProperties extends ComponentProps<'div'> {
   title: string
   tags: Tag[]
-  status: StatusType
+  status?: StatusType
   date: string
 }
 

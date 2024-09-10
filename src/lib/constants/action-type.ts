@@ -34,6 +34,9 @@ export const LAST_EVENT_ACTION_TYPE = {
   VAULT_DEPRECATED: 'Vault deprecated',
 } as const
 
+// Create a type from the keys of ACTION_TYPE
+export type LAST_EVENT_ACTION = keyof typeof LAST_EVENT_ACTION_TYPE
+
 export const INCENTIVE_ACTION_TYPE = {
   INC_HARVEST: 'Harvest',
   INC_COMPOUND: 'Compound',

@@ -1,14 +1,17 @@
+import { useGetTransactionInfo } from '@api/maat-finance/useGetTransactionInfo'
 import TagRight from '@assets/icons/tag-right.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
+import type { Address } from 'viem'
 
 export const TransactionHeader = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
-  const { txHash } = useParams()
+  const { tx_hash } = useParams()
+  const { data } = useGetTransactionInfo(tx_hash as Address)
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {
     return <TransactionHeaderMobile {...props} />
@@ -19,8 +22,11 @@ export const TransactionHeader = (props: ComponentProps<'div'>) => {
       <div className="ml-4 flex flex-col gap-3">
         <h2 className="text-2.5xl/[2.1rem] uppercase">Deposit</h2>
         <p className="flex items-center text-xl/[1.925rem] text-gray-100">
-          Intention ID {shortenString(txHash ?? '')}
-          <CopyButton className="ml-3 inline-block" text={txHash ?? ''} />
+          Intention ID {shortenAddress(data?.action?.intention_id ?? '')}
+          <CopyButton
+            className="ml-3 inline-block"
+            text={data?.action?.intention_id ?? ''}
+          />
         </p>
       </div>
     </div>
@@ -29,7 +35,8 @@ export const TransactionHeader = (props: ComponentProps<'div'>) => {
 
 export const TransactionHeaderMobile = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
-  const { txHash } = useParams()
+  const { tx_hash } = useParams()
+  const { data } = useGetTransactionInfo(tx_hash as Address)
 
   return (
     <div className={cn('mt-8', className)} {...rest}>
@@ -38,8 +45,11 @@ export const TransactionHeaderMobile = (props: ComponentProps<'div'>) => {
         <h2 className="text-2xl/[0rem] uppercase">Deposit</h2>
       </div>
       <p className="mt-3 flex items-center text-base text-gray-100">
-        Intention ID {shortenString(txHash ?? '')}
-        <CopyButton className="ml-3 inline-block" text={txHash ?? ''} />
+        Intention ID {shortenAddress(data?.action?.intention_id ?? '')}
+        <CopyButton
+          className="ml-3 inline-block"
+          text={data?.action?.intention_id ?? ''}
+        />
       </p>
     </div>
   )

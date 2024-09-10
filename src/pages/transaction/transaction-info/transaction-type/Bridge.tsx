@@ -1,3 +1,4 @@
+import type { Action } from '@api/maat-finance/types'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -12,7 +13,9 @@ import {
 import { TransactionInfoHeader } from '../transaction-info-header/TransactionInfoHeader'
 import { TransactionInfoContainer } from '../TransactionInfoContainer'
 
-interface BridgeProperties extends ComponentProps<'div'> {}
+interface BridgeProperties extends ComponentProps<'div'> {
+  data?: Action
+}
 
 export const Bridge = (props: BridgeProperties) => {
   const { className, ...rest } = props

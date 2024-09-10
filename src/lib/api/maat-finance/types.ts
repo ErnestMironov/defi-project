@@ -1,3 +1,4 @@
+import type { LAST_EVENT_ACTION } from '@constants/action-type'
 import type { Address } from 'viem'
 
 export interface ApiResponse<T> {
@@ -90,7 +91,7 @@ export type Vault = {
 export type Event = {
   hash: string
   intention_id: string
-  status: string
+  status: StatusType
   src_chain_id: number
   dst_chain_id: number | null
   creation_time: string
@@ -107,7 +108,7 @@ type IncentiveActionType = 'INC_HARVEST' | 'INC_COMPOUND' | 'INC_SWAP'
 export type IncentiveEvent = {
   hash: string
   intention_id: null | string
-  status: string
+  status: StatusType
   src_chain_id: number
   dst_chain_id: null | number
   creation_time: string
@@ -181,7 +182,7 @@ export type WithdrawChainsResponse = {
 export type ReportType = {
   hash: string
   intention_id: null | string
-  status: string
+  status: StatusType
   src_chain_id: number
   dst_chain_id: null | number
   creation_time: string
@@ -202,17 +203,22 @@ export type ReportType = {
   }
 }
 
-export type RelatedActionType = {
+export interface Action {
   hash: string
   intention_id: string
-  status: string
+  status: StatusType
   src_chain_id: number
   dst_chain_id: number | null
   creation_time: string
   txFrom: string
   to: string
   amount: number
-  action_type: string
+  action_type: LAST_EVENT_ACTION
   strategy: Strategy
   vault: Vault
+}
+
+export interface TxInfoResponse {
+  related_actions: Action[]
+  action: Action
 }
