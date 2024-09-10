@@ -50,6 +50,7 @@ export const useSetDepositDetails = () => {
 
   useEffect(() => {
     if (!vault) return
+    console.log('🚀 ~ useEffect ~ vault:', vault)
 
     // eslint-disable-next-line default-case
     switch (vault) {
@@ -67,6 +68,12 @@ export const useSetDepositDetails = () => {
         )
       }
     }
+
+    console.log(
+      '🚀 ~ useEffect ~ vault:',
+      USDT_TOKENS.find((token) => token.chainId === depositToNetwork)
+        ?.address as unknown as Address,
+    )
   }, [depositFromNetwork, depositToNetwork, setTxDifficulty, setVaultAddress, vault])
 
   useEffect(() => {
