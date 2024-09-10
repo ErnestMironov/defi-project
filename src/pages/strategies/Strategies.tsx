@@ -25,7 +25,7 @@ const StrategiesDesktop = (props: StrategiesProperties) => {
   const { className, ...rest } = props
 
   return (
-    <div className={cn(className, 'mt-[5.31rem]')} {...rest}>
+    <div className={cn(className, 'mt-[4.5rem]')} {...rest}>
       <Breadcrumbs className="mb-[2.63rem]" />
       <StrategiesCharts />
       <Strategies className="mt-[6.25rem]" />

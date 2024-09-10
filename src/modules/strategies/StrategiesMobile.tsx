@@ -31,6 +31,7 @@ type StrategyFilters = 'tokens' | 'protocols' | 'chains'
 interface StrategiesMobileProperties extends React.HTMLAttributes<HTMLDivElement> {
   withLink?: boolean
   filters?: StrategyFilters[]
+  params?: StrategiesParameters
 }
 
 export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) => {
@@ -38,6 +39,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
     className,
     withLink = true,
     filters = ['tokens', 'protocols', 'chains'],
+    params,
   } = props
   const [search, setSearch] = useState('')
   const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
@@ -64,13 +66,14 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
       }
     }
   }, [selectedSort])
-
+  console.log('params', params)
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteStrategies({
       chain: selectedChains.map((chain) => chain.value),
       protocol: selectedProtocols.map((protocol) => protocol.value),
       token: selectedTokens.map((token) => token.value),
       ...currentSort,
+      ...params,
     })
 
   const renderFilters = (filter: StrategyFilters) => {

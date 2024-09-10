@@ -3,7 +3,6 @@ import { Skeleton } from '@components/ui/skeleton'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { formatUnits } from 'ethers'
 import { Link } from 'react-router-dom'
 
 import type { TokenStatsContainerProperties } from './TokenStatsContainer'
@@ -26,7 +25,7 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
     <div className={cn('hide-scrollbar overflow-scroll w-screen px-4 pb-1', className)}>
       <BaseContainer
         className={cn(
-          'flex flex-col gap-[0.62rem] sm:w-full w-fit rounded-[1rem] px-5 py-4',
+          'flex flex-col gap-[0.62rem] w-full max-sm:min-w-[30.75rem] rounded-[1rem] px-5 py-4',
         )}
       >
         <div className="flex items-center space-x-6 *:flex *:flex-col *:justify-center *:space-y-1 sm:w-full [&>*]:h-14 [&_h6]:whitespace-nowrap [&_h6]:text-[0.75rem]/[0.9rem] [&_h6]:text-gray-100 [&_p]:text-[1.5rem]/[1.8rem] [&_p]:text-text">
@@ -57,7 +56,7 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
             <h6>Rebalancing volume</h6>
             <p>
               {rebalancingVolume &&
-                formatUsdValue(formatUnits(BigInt(rebalancingVolume), 6), {
+                formatUsdValue(rebalancingVolume, {
                   notation: 'compact',
                   minimumFractionDigits: 2,
                 })}
