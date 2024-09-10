@@ -103,7 +103,7 @@ export function useGetSquidSwapRoute() {
     queryFn: async () => getRoute(parameters),
     enabled:
       !!parameters &&
-      depositAsset?.contract_ticker_symbol.toLowerCase() !== vaultAddress?.toLowerCase(),
+      depositAsset?.contract_address.toLowerCase() !== vaultAddress?.toLowerCase(),
     staleTime: 1000 * 60 * 5, // 5 minutes
     refetchInterval: 1000 * 60 * 5, // 5 minutes
     refetchIntervalInBackground: true,
