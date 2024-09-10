@@ -29,12 +29,18 @@ export const useSetDepositDetails = () => {
     }
 
     setDepositTotalInUSD(squidRoute?.estimate?.toAmountUSD ?? '0')
-    setDepositTotalAmount(formatTokenBalance(squidRoute?.estimate?.toAmount, 6) ?? '0')
+    setDepositTotalAmount(
+      formatTokenBalance(
+        squidRoute?.estimate?.toAmount,
+        squidRoute?.estimate?.toToken?.decimals ?? 6,
+      ) ?? '0',
+    )
   }, [
     squidRoute?.estimate?.fromAmountUSD,
     squidRoute?.estimate?.toAmountMinUSD,
     setDepositTotalInUSD,
     squidRoute,
+    depositAsset,
     vault,
     depositToNetwork,
     setVaultAddress,

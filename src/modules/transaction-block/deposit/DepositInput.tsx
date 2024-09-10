@@ -151,27 +151,8 @@ export const DepositInput = () => {
           squidRoute.estimate.fromToken.decimals,
         ),
       )
-      console.log(
-        '🚀 ~ handleAction ~ squidRoute.params.fromToken.decimals,:',
-        squidRoute.estimate.fromToken.decimals,
-      )
 
-      console.log(
-        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
-        squidRoute?.estimate?.fromAmount,
-      )
-      console.log(
-        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmount:',
-        formatUnits(
-          BigInt(squidRoute?.estimate?.fromAmount || '0'),
-          squidRoute.estimate.fromToken.decimals,
-        ),
-      )
       assetQuoteBN = BigNumber(squidRoute?.estimate?.fromAmountUSD || '0')
-      console.log(
-        '🚀 ~ handleAction ~ squidRoute?.estimate?.fromAmountUSD:',
-        squidRoute?.estimate?.fromAmountUSD,
-      )
     }
 
     if (type === 'usd') {
@@ -181,7 +162,6 @@ export const DepositInput = () => {
     } else if (type === 'token') {
       setInputValue(value) // Set the input value for token type
       const usdValue = calculateUSDValue(numericValue, assetQuoteBN, assetBalanceBN) // Calculate USD value based on the exchange rate
-      console.log('🚀 ~ handleAction ~ usdValue:', usdValue)
       setInputValueInUSD(usdValue.toString()) // Set the input value in USD
     }
   }
