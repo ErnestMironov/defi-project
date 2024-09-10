@@ -1,5 +1,4 @@
-import { useMaatTokensApy } from '@api/queries/useMaatTokensApy'
-import { useMaatTokensTvl } from '@api/queries/useMaatTokensTvl'
+import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import Dot from '@assets/icons/dot.svg'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
@@ -8,8 +7,10 @@ import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import { AnimatedTabs } from '@components/tab/AnimatedTabs'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
+import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 export type RechartDataType = {
   name: string
@@ -17,77 +18,68 @@ export type RechartDataType = {
   value: number | null
 }
 
-const MOCK_APY_DATA: RechartDataType[] = [
-  {
-    timestamp: 1_700_000_000,
-    value: 10,
-    name: 'Strategy 1',
-  },
-  {
-    timestamp: 170_000_100,
-    value: 2,
-    name: 'Strategy 2',
-  },
-  {
-    timestamp: 170_000_200,
-    value: 10,
-    name: 'Strategy 3',
-  },
-]
-export const MOCK_TVL_DATA: RechartDataType[] = [
-  {
-    timestamp: 1_700_000_000,
-    value: 10,
-    name: 'Strategy 1',
-  },
-  {
-    timestamp: 170_000_100,
-    value: 4,
-    name: 'Strategy 2',
-  },
-  {
-    timestamp: 170_000_200,
-    value: 10,
-    name: 'Strategy 3',
-  },
-]
-
 interface TokenChartProperties extends ComponentProps<'div'> {}
 
 export const TokenChartMobile = (props: TokenChartProperties) => {
   const { className, ...rest } = props
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
-  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange } = useFrameSelect()
 
-  const { loading: loadingApy, error: errorApy } = useMaatTokensApy({
-    from: currentTimestamp,
-  })
+  const { id } = useParams()
+  const {
+    data: apyData,
+    isLoading,
+    isError,
+  } = useStrategiesMetrics({ strategy_id: [String(id)] }, !!id)
+  const formattedData: { apy: RechartDataType[]; tvl: RechartDataType[] } =
+    useMemo(() => {
+      if (!id) return { apy: [], tvl: [] }
+      const data = Object.entries(apyData ?? {}).map(([timestamp, strategies]) => {
+        const formattedTimestamp =
+          Number(timestamp) * (timestamp.length === 10 ? 1000 : 1)
+        const apy = strategies[id]?.apy === 0 ? null : strategies[id]?.apy
+        const tvl = strategies[id]?.tvl === 0 ? null : strategies[id]?.tvl
+        return {
+          apy: {
+            name: 'APY',
+            timestamp: formattedTimestamp,
+            value: apy,
+          },
+          tvl: {
+            name: 'TVL',
+            timestamp: formattedTimestamp,
+            value: tvl,
+          },
+        }
+      })
 
-  const { loading: loadingTvl, error: errorTvl } = useMaatTokensTvl({
-    from: currentTimestamp,
-  })
+      return {
+        apy: data.map((item) => item.apy),
+        tvl: data.map((item) => item.tvl),
+      }
+    }, [apyData, id])
 
   const renderApyBody = () => {
     switch (true) {
-      case loadingApy:
-      case !!errorApy: {
+      case isLoading:
+      case isError: {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <AreaChart data={MOCK_APY_DATA} color="#6160FF" yAxisType="percent" />
+        return <AreaChart data={formattedData.apy} color="#6160FF" yAxisType="percent" />
       }
     }
   }
 
   const renderTvlBody = () => {
     switch (true) {
-      case loadingTvl:
-      case !!errorTvl: {
+      case isLoading:
+      case isError: {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <AreaChart data={MOCK_TVL_DATA} color="#A6C1FF" yAxisType="usd" />
+        return <AreaChart data={formattedData.tvl} color="#A6C1FF" yAxisType="usd" />
       }
     }
   }
@@ -117,7 +109,11 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
               )}
             />
             <span className="text-[0.75rem]/[0.9rem] font-bold text-text">
-              {activeTab === 'apy' ? '384%' : '$123,456'}
+              {activeTab === 'apy'
+                ? formatPercentValue(formattedData.apy.at(-1)?.value ?? 0)
+                : formatUsdValue(formattedData.tvl.at(-1)?.value ?? 0, {
+                    notation: 'compact',
+                  })}
             </span>
           </div>
         </div>

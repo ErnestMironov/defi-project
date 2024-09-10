@@ -22,7 +22,7 @@ export const TvlTokensChartDesktop = (_props: TvlTokensChartDesktopProperties) =
   const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
   const { data, isLoading, error } = useProtocolMetrics()
 
-  const formatteTvlData: RechartDataType[] = useMemo(() => {
+  const formattedTvlData: RechartDataType[] = useMemo(() => {
     if (!data) return []
     return Object.entries(data.USDC.history).map(([key, value]) => {
       const pv = data.USDT.history[key]?.tvl
@@ -46,7 +46,7 @@ export const TvlTokensChartDesktop = (_props: TvlTokensChartDesktopProperties) =
       default: {
         return (
           <LineChartComponent
-            data={formatteTvlData}
+            data={formattedTvlData}
             yAxisType="usd"
             frame={currentFrame}
           />

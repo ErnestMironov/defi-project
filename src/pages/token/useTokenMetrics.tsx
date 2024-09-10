@@ -1,10 +1,24 @@
 import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { useRebalanceVolume } from '@api/queries/useRebalanceVolume'
 import { useMemo } from 'react'
 
 import type { RechartDataType } from './TokenChartMobile'
 
 export const useTokenMetrics = (symbol: 'USDT' | 'USDC') => {
-  const { data, ...rest } = useProtocolMetrics()
+  const {
+    data,
+    isLoading: isProtocolMetricsLoading,
+    error: protocolMetricsError,
+    ...rest
+  } = useProtocolMetrics()
+  const {
+    data: rebalancingVolume,
+    isLoading: isRebalancingVolumeLoading,
+    error: rebalancingVolumeError,
+  } = useRebalanceVolume()
+
+  const tokenRebalancingVolume =
+    rebalancingVolume?.[symbol?.toUpperCase() as 'USDT' | 'USDC'].volume
   const formattedData = useMemo(() => {
     if (!data) return { apy: [], tvl: [] }
 
@@ -33,5 +47,14 @@ export const useTokenMetrics = (symbol: 'USDT' | 'USDC') => {
   const apy = data?.[symbol?.toUpperCase() as keyof typeof data].apy
   const tvl = data?.[symbol?.toUpperCase() as keyof typeof data].tvl
 
-  return { apyData: formattedData.apy, tvlData: formattedData.tvl, apy, tvl, ...rest }
+  return {
+    apyData: formattedData.apy,
+    tvlData: formattedData.tvl,
+    apy,
+    tvl,
+    volume: tokenRebalancingVolume,
+    ...rest,
+    isLoading: isProtocolMetricsLoading || isRebalancingVolumeLoading,
+    error: protocolMetricsError || rebalancingVolumeError,
+  }
 }

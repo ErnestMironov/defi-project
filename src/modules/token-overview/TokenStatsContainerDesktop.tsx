@@ -4,7 +4,6 @@ import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { formatUnits } from 'ethers'
 import { Link } from 'react-router-dom'
 
 import type { TokenStatsContainerProperties } from './TokenStatsContainer'
@@ -67,7 +66,7 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
         <h6>Rebalancing volume</h6>
         <p className="text-3xl">
           {rebalancingVolume &&
-            formatUsdValue(formatUnits(BigInt(rebalancingVolume), 6), {
+            formatUsdValue(rebalancingVolume, {
               notation: 'compact',
               minimumFractionDigits: 2,
             })}

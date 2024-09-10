@@ -46,7 +46,10 @@ export const TransactionsHistoryDesktop = (
       Object.entries(selectFilters)
         .filter(([_, v]) => v.value && v.value.length > 0)
         .map(([key, value]) => {
-          return [key, value.value]
+          const filterValue = Array.isArray(value.value)
+            ? value.value.map((v) => v.value || v).filter(Boolean)
+            : value.value
+          return [key, filterValue]
         }),
     ),
     ...parameters,

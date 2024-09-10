@@ -47,22 +47,23 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
   },
 )
 
-const TableCell = forwardRef<HTMLTableCellElement, HTMLAttributes<HTMLTableCellElement>>(
-  ({ children, ...rest }, reference) => {
-    return (
-      <td
-        {...rest}
-        className={cn(
-          'bg-transparent px-9 py-8 text-left text-lg leading-[140%] first:rounded-l-[1.5rem] last:rounded-r-[1.5rem] transition-all',
-          rest.className,
-        )}
-        ref={reference}
-      >
-        {children}
-      </td>
-    )
-  },
-)
+const TableCell = forwardRef<
+  HTMLTableCellElement,
+  HTMLAttributes<HTMLTableCellElement> & { colspan?: number }
+>(({ children, ...rest }, reference) => {
+  return (
+    <td
+      {...rest}
+      className={cn(
+        'bg-transparent px-9 py-8 text-left text-lg leading-[140%] first:rounded-l-[1.5rem] last:rounded-r-[1.5rem] transition-all',
+        rest.className,
+      )}
+      ref={reference}
+    >
+      {children}
+    </td>
+  )
+})
 
 const TableHeadCell = forwardRef<
   HTMLTableCellElement,

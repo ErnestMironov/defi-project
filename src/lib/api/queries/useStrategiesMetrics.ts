@@ -45,13 +45,16 @@ const getStrategiesMetrics = (parameters: StrategiesMetricsParameters) => {
   })
 }
 
-export const useStrategiesMetrics = (parameters: StrategiesMetricsParameters) => {
+export const useStrategiesMetrics = (
+  parameters: StrategiesMetricsParameters,
+  enabled = true,
+) => {
   return useQuery({
     queryKey: ['strategies', parameters],
     queryFn: async () => {
       const { data } = await getStrategiesMetrics(parameters)
       return data
     },
-    enabled: !!parameters.strategy_id?.length,
+    enabled: enabled && !!parameters.strategy_id?.length,
   })
 }

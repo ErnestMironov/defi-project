@@ -11,6 +11,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenString } from '@utils/transform'
+import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -41,18 +42,14 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
         <h6 className="text-[0.75rem]/[0.9rem] text-gray-100">APY</h6>
         <p className="flex items-start gap-2 text-2xl">
           {formatPercentValue(strategy?.apy)}
-          {/* <span className="text-[0.75rem]/[0.9rem] text-main-80">
-            {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
-          </span> */}
         </p>
       </div>
       <div className="flex flex-col items-start justify-center gap-1">
         <h6 className="text-[0.75rem]/[0.9rem] text-gray-100">TVL</h6>
         <p className="flex items-start gap-2 text-2xl">
-          {formatUsdValue(strategy?.tvl ?? 0)}
-          {/* <span className="text-[0.75rem]/[0.9rem] text-main-80">
-            {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
-          </span> */}
+          {formatUsdValue(formatUnits(strategy?.tvl ?? 0, strategy?.token.decimals), {
+            notation: 'compact',
+          })}
         </p>
       </div>
       <div className="col-span-2 flex flex-col gap-4">
@@ -116,18 +113,12 @@ const StrategyInfoMobileSkeleton = (props: ComponentProps<'div'>) => {
         <h6 className="text-[0.75rem]/[0.9rem] text-gray-100">APY</h6>
         <p className="flex items-start gap-2 text-2xl">
           <Skeleton className="h-8 w-40" />
-          {/* <span className="text-[0.75rem]/[0.9rem] text-main-80">
-            {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
-          </span> */}
         </p>
       </div>
       <div className="flex flex-col items-start justify-center gap-1">
         <h6 className="text-[0.75rem]/[0.9rem] text-gray-100">TVL</h6>
         <p className="flex items-start gap-2 text-2xl">
           <Skeleton className="h-8 w-40" />
-          {/* <span className="text-[0.75rem]/[0.9rem] text-main-80">
-            {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
-          </span> */}
         </p>
       </div>
       <div className="col-span-2 flex flex-col gap-4">

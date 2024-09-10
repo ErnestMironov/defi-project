@@ -5,7 +5,12 @@ import {
 } from '@components/select/SelectItemWithIcon'
 import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 
-import { INCENTIVE_ACTION_TYPE, LAST_EVENT_ACTION_TYPE, STATUSES } from './action-type'
+import {
+  ADMIN_ACTION_TYPE,
+  INCENTIVE_ACTION_TYPE,
+  LAST_EVENT_ACTION_TYPE,
+  STATUSES,
+} from './action-type'
 import { PROTOCOL_IDS_BY_BACKEND_NAMES } from './protocols'
 
 export const SELECT_TOKENS: OptionType[] = [
@@ -108,6 +113,13 @@ export const SELECT_ADMIN_FROM: OptionType[] = [
   { label: 'MAAT Admin', value: 'MAAT Admin' },
   { label: 'Yield Searcher', value: 'Yield Searcher' },
 ]
+
+export const SELECT_ADMIN_ACTION_TYPES: OptionType[] = Object.entries(
+  ADMIN_ACTION_TYPE,
+).map(([key, value]) => ({
+  label: value,
+  value: key,
+}))
 
 export const SELECT_PPS: OptionType[] = [
   { label: '1.0001', value: '1.0001' },

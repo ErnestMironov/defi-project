@@ -6,27 +6,35 @@ import type {
   SortDirection,
   StatusType,
 } from '@api/maat-finance/types'
+import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import qs from 'qs'
 
 export type AdminActionsParameters = {
   limit?: number
-  action_type?: AdminActionType
+  action_type?: AdminActionType[]
   page?: number
   size?: number
   sort?: 'creation_time' | 'amount'
+  chain?: (keyof typeof CHAIN_IDS_BY_BACKEND_NAMES)[]
   orderBy?: SortDirection
-  status?: StatusType
+  status?: StatusType[]
   start_timestamp?: string
   end_timestamp?: string
 }
 
 const getAdminActions = (parameters: AdminActionsParameters) => {
+  console.log('parameters', parameters)
   return apiClient.get<PaginationResponse<AdminEvent>>('/actions/admin', {
     params: parameters,
+    paramsSerializer: (parameters_) => {
+      return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+    },
   })
 }
 
 export const useAdminActions = (parameters: AdminActionsParameters) => {
+  console.log('parameters', parameters)
   return useQuery({
     queryKey: ['admin-actions', parameters],
     queryFn: async () => {

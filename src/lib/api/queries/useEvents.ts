@@ -22,6 +22,7 @@ export type EventsParameters = {
   status?: StatusType
   start?: string
   end?: string
+  token?: ('USDT' | 'USDC')[]
 }
 
 const getEvents = (parameters: EventsParameters) => {

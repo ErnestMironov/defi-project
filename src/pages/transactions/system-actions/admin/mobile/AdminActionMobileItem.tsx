@@ -2,6 +2,7 @@ import type { AdminEvent } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
 import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { ADMIN_ACTION_TYPE } from '@constants/action-type'
@@ -33,7 +34,11 @@ export const AdminActionMobileItem = (props: AdminActionMobileItemProperties) =>
         <h6>To</h6>
         <div className="flex w-full items-center justify-end gap-2">
           <p className="whitespace-nowrap">{shortenString(adminAction.to)}</p>
-          <Scan className="size-5 shrink-0" />
+          <ScanLink
+            chainId={adminAction.src_chain_id}
+            address={adminAction.to}
+            className="size-5 shrink-0"
+          />
           <CopyButton text={adminAction.to} className="size-6 shrink-0" />
         </div>
         <h6>Chain</h6>
@@ -61,7 +66,11 @@ export const AdminActionMobileItem = (props: AdminActionMobileItemProperties) =>
         <h6>Tx Hash</h6>
         <div className="flex w-full items-center justify-end gap-2">
           <p>{shortenString(adminAction.hash)}</p>
-          <Scan className="size-5 shrink-0" />
+          <ScanLink
+            chainId={adminAction.src_chain_id}
+            txHash={adminAction.hash}
+            className="size-5 shrink-0"
+          />
           <CopyButton text={adminAction.hash} className="size-6 shrink-0" />
         </div>
       </div>
