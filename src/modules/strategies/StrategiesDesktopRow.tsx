@@ -25,7 +25,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
     >
       <Table.Cell className="px-10 py-6">
         <div className="flex items-center gap-2">
-          <p className="min-w-[8.5rem]">{shortenAddress(strategy.id, 5)}</p>
+          <p className="min-w-[8.5rem]">{shortenAddress(strategy.id)}</p>
           <CopyButton text={strategy.id} />
         </div>
       </Table.Cell>
@@ -50,7 +50,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       </Table.Cell>
       <Table.Cell className="max-w-[12.1rem]">
         <div className="flex w-full items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(strategy.address, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(strategy.address)}</p>
           <CopyButton text={strategy.address} className="ml-4 size-6 shrink-0" />
           <ScanLink
             chainId={strategy.chain_id}

@@ -74,7 +74,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
       </Table.Cell>
       <Table.Cell>
         <div className="flex w-full items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(event.hash, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(event.hash)}</p>
           <CopyButton text={event.hash} className="ml-4 size-6 shrink-0" />
           <ScanLink
             chainId={event.src_chain_id}

@@ -27,7 +27,7 @@ export const TokenAddressByChainPopover = (
     <Popover open={isOpen} onOpenChange={toggle}>
       <PopoverTrigger className={cn('flex items-center gap-2 text-lg', className)}>
         <TokenIconComponent className="size-6" symbol={value.chainId} />
-        <p className="ml-1">{shortenAddress(value.addr, 6)}</p>
+        <p className="ml-1">{shortenAddress(value.addr)}</p>
         <CopyButton className="size-6" text={value.addr} />
         <div className="mx-3 h-6 w-[2px] bg-stroke-100" />
         <ArrowDown className={cn('size-6 transition', isOpen && 'rotate-180')} />

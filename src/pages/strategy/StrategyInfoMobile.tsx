@@ -66,7 +66,7 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
         <div className="flex items-center justify-between">
           <p className="text-base text-gray-100">Strategy ID</p>
           <div className="flex items-center gap-3 text-base text-text">
-            <span>{shortenAddress(id ?? '', 5)}</span>
+            <span>{shortenAddress(id ?? '')}</span>
             <CopyButton text={id ?? ''} />
           </div>
         </div>

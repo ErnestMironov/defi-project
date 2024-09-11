@@ -22,6 +22,7 @@ interface TransactionHistoryRowProperties extends ComponentProps<'div'> {
 
 export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) => {
   const { event } = props
+
   const navigate = useNavigate()
   return (
     <Table.Row
@@ -75,13 +76,13 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
       </Table.Cell>
       <Table.Cell>
         <div className="flex w-full items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(event.txFrom, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(event.txFrom)}</p>
           <CopyButton text={event.txFrom} className="ml-4 size-6 shrink-0" />
         </div>
       </Table.Cell>
       <Table.Cell>
         <div className="flex w-full items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(event.hash, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(event.hash)}</p>
           <CopyButton text={event.hash} className="ml-4 size-6 shrink-0" />
           <ScanLink
             chainId={event.src_chain_id}
