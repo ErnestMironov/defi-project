@@ -68,7 +68,7 @@ export const TokenAddressByChainDrawerMobile = (
                   <p className="leading-[0rem]">{chainName}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <p>{shortenAddress(item.addr, 7)}</p>
+                  <p>{shortenAddress(item.addr)}</p>
                   {value === item ? (
                     <Check className="size-[1.125rem]" />
                   ) : (

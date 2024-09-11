@@ -47,9 +47,6 @@ export const StrategyInfoDesktop = (props: StrategyInfoProperties) => {
         <h6 className="text-lg text-gray-100">APY</h6>
         <p className="flex items-start gap-2 text-3xl">
           {formatPercentValue(strategy?.apy)}
-          {/* <span className="text-lg text-main-80">
-            {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
-          </span> */}
         </p>
       </div>
       <div className="row-span-2 flex flex-col gap-6 px-10 py-8">
@@ -58,7 +55,7 @@ export const StrategyInfoDesktop = (props: StrategyInfoProperties) => {
         <div className="mt-auto flex items-center justify-between">
           <p className="text-lg text-gray-100">Strategy ID</p>
           <div className="flex items-center gap-2 text-lg/[1.35rem] text-text">
-            <span>{shortenAddress(id ?? '', 7)}</span>
+            <span>{shortenAddress(id ?? '')}</span>
             <CopyButton text={id ?? ''} />
           </div>
         </div>

@@ -115,24 +115,22 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
         <Tooltip
           content={({ active, payload, coordinate }) => {
             if (active && payload && payload.length > 0 && coordinate) {
-              return (
-                <TooltipComponent
-                  formatter={tooltipFormatter}
-                  data={[
-                    {
-                      color: '#6160FF',
-                      value: payload[0].payload.uv,
+              const value1 = {
+                color: '#6160FF',
+                value: payload[0].payload.uv,
 
-                      timestamp: payload[0].payload.timestamp,
-                    },
-                    {
-                      color: '#A6C1FF',
-                      value: payload[0].payload.pv,
-                      timestamp: payload[0].payload.timestamp,
-                    },
-                  ]}
-                />
-              )
+                timestamp: payload[0].payload.timestamp,
+              }
+              const value2 = {
+                color: '#A6C1FF',
+                value: payload[0].payload.pv,
+                timestamp: payload[0].payload.timestamp,
+              }
+              const tooltipData = [value1, value2]
+              if (value1.value < value2.value) {
+                tooltipData.reverse()
+              }
+              return <TooltipComponent formatter={tooltipFormatter} data={tooltipData} />
             }
 
             return null
