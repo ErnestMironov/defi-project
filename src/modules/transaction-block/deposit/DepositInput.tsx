@@ -77,7 +77,8 @@ export const DepositInput = () => {
     useProtocolMetrics()
 
   const usdcApy = protocolMetrics?.USDC?.apy
-  const usdtApy = protocolMetrics?.USDT?.apy
+  // TODO: remove after getting real data
+  const usdtApy = 10.56
 
   const yourYearlyEarnings = useMemo(() => {
     if (

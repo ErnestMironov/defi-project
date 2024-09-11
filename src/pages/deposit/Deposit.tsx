@@ -13,7 +13,8 @@ export const Deposit = () => {
     useProtocolMetrics()
 
   const usdcApy = protocolMetrics?.USDC?.apy
-  const usdtApy = protocolMetrics?.USDT?.apy
+  // TODO: remove after getting real data
+  const usdtApy = 10.56
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
