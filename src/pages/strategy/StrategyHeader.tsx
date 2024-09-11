@@ -42,7 +42,7 @@ export const StrategyHeader = (props: StrategyHeaderProperties) => {
         </h1>
         <div className="flex items-center gap-2">
           <p className="text-lg text-gray-100 max-lg:text-base">
-            Address {shortenAddress(strategy?.address ?? '', 7)}
+            Address {shortenAddress(strategy?.address ?? '')}
           </p>
           <ScanLink
             className="size-5"
