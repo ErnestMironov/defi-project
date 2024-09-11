@@ -8,25 +8,12 @@ export type RechartDataType = {
   value: number | null
 }
 
-interface AreaChartComponentProperties {}
-const MOCK_APY_DATA: RechartDataType[] = [
-  {
-    timestamp: 1_700_000_000,
-    value: 10,
-    name: 'Strategy 1',
-  },
-  {
-    timestamp: 170_000_100,
-    value: 2,
-    name: 'Strategy 2',
-  },
-  {
-    timestamp: 170_000_200,
-    value: 10,
-    name: 'Strategy 3',
-  },
-]
-export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
+interface AreaChartComponentProperties {
+  data: RechartDataType[]
+}
+
+export const StrategyApyChart = (props: AreaChartComponentProperties) => {
+  const { data } = props
   const { currentFrame, frames, onFrameChange } = useFrameSelect()
 
   return (
@@ -39,7 +26,7 @@ export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
           onFrameChange={onFrameChange}
         />
       </div>
-      <AreaChart data={MOCK_APY_DATA} color="#6160FF" yAxisType="percent" />
+      <AreaChart data={data} color="#6160FF" yAxisType="percent" />
     </div>
   )
 }

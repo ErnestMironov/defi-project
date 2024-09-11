@@ -7,8 +7,8 @@ import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
 import {
+  SELECT_ADMIN_ACTION_TYPES,
   SELECT_ADMIN_FROM,
-  SELECT_ADMIN_FUNCTIONS,
   SELECT_CHAINS,
 } from '@constants/select-constant'
 import { usePages } from '@hooks/common/usePages'
@@ -23,14 +23,29 @@ export const AdminTable = (props: AdminTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Tx Hash / Arguments' },
-    functions: { items: SELECT_ADMIN_FUNCTIONS, value: [], placeholder: 'All Functions' },
+    actions_type: {
+      items: SELECT_ADMIN_ACTION_TYPES,
+      value: [],
+      placeholder: 'All Actions',
+    },
     from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
+  const { search: _search, ...selectFilters } = filters
   const { page, size, onPageChange, onPageSizeChange } = usePages()
   const { data, isLoading, error, isPlaceholderData } = useAdminActions({
     page,
     size,
+    ...Object.fromEntries(
+      Object.entries(selectFilters)
+        .filter(([_, v]) => v.value && v.value.length > 0)
+        .map(([key, value]) => {
+          const filterValue = Array.isArray(value.value)
+            ? value.value.map((v) => v.value || v).filter(Boolean)
+            : value.value
+          return [key, filterValue]
+        }),
+    ),
   })
   const renderBody = () => {
     if (isLoading || !!error) {
@@ -40,6 +55,15 @@ export const AdminTable = (props: AdminTableProperties) => {
             <AdminTableRowSkeleton key={index} />
           ))}
         </>
+      )
+    }
+    if (data?.total_items === 0) {
+      return (
+        <Table.Row className="text-center text-gray-500">
+          <Table.Cell colspan={6} className="py-32 text-center">
+            No data was found
+          </Table.Cell>
+        </Table.Row>
       )
     }
     return (
@@ -70,7 +94,7 @@ export const AdminTable = (props: AdminTableProperties) => {
         </Table.Head>
         <Table.Body>{renderBody()}</Table.Body>
       </Table>
-      {data && (
+      {data && data?.total_items > 0 && (
         <Pagination
           className="mt-6"
           totalCount={data.total_items}

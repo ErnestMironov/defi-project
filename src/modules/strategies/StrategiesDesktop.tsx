@@ -1,3 +1,4 @@
+import type { StrategiesParameters } from '@api/queries/useStrategies'
 import { useStrategies } from '@api/queries/useStrategies'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
@@ -17,10 +18,11 @@ import { StrategyTable } from './StrategyTable'
 interface StrategiesDesktopProperties extends ComponentProps<'div'> {
   filters: TableFiltersType
   withLink?: boolean
+  params?: StrategiesParameters
 }
 
 export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) => {
-  const { filters: initialFilters, className, withLink = false } = props
+  const { filters: initialFilters, className, withLink = false, params } = props
   const [filters, setFilters] = useState(initialFilters)
   const navigate = useNavigate()
   const { search: _search, ...selectFilters } = filters
@@ -45,6 +47,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
           return [key, filterValue]
         }),
     ),
+    ...params,
   })
 
   return (

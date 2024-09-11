@@ -1,11 +1,11 @@
 import { useStrategy } from '@api/queries/useStrategy'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { cn } from '@utils/cn'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -42,9 +42,13 @@ export const StrategyHeader = (props: StrategyHeaderProperties) => {
         </h1>
         <div className="flex items-center gap-2">
           <p className="text-lg text-gray-100 max-lg:text-base">
-            Address {shortenString(strategy?.address ?? '', 7)}
+            Address {shortenAddress(strategy?.address ?? '', 7)}
           </p>
-          <Scan className="size-5" />
+          <ScanLink
+            className="size-5"
+            address={strategy?.address ?? ''}
+            chainId={strategy?.chain_id ?? 0}
+          />
           <CopyButton text={strategy?.address ?? ''} />
         </div>
       </div>

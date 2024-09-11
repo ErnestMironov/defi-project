@@ -1,6 +1,6 @@
 import type { IncentiveEvent } from '@api/maat-finance/types'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
@@ -8,7 +8,7 @@ import { INCENTIVE_ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
@@ -51,9 +51,13 @@ export const IncentiveRow = (props: IncentiveRowProperties) => {
       </Table.Cell>
       <Table.Cell>
         <div className="flex items-center">
-          <p className="w-[6.9rem]">{shortenString(event.hash, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(event.hash, 5)}</p>
           <CopyButton text={event.hash} className="ml-4 size-6 shrink-0" />
-          <Scan className="ml-3 size-5 shrink-0" />
+          <ScanLink
+            chainId={event.src_chain_id}
+            txHash={event.hash}
+            className="ml-3 size-5 shrink-0"
+          />
         </div>
       </Table.Cell>
       <Table.Cell className="text-gray-100">

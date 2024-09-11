@@ -33,7 +33,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
       return formatPercentValue(value)
     }
     if (yAxisType === 'usd') {
-      return formatUsdValue(value)
+      return formatUsdValue(value, { notation: 'compact' })
     }
     return ''
   }

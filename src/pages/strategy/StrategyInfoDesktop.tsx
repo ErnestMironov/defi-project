@@ -4,7 +4,8 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
+import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -26,21 +27,23 @@ export const StrategyInfoDesktop = (props: StrategyInfoProperties) => {
   return (
     <div
       className={cn(
-        'mt-12 grid grid-flow-col grid-cols-[20rem_1fr_28.5625rem] grid-rows-2 gap-4 *:rounded-2xl *:bg-cards *:px-6 *:py-4 *:shadow-[0px_3px_1px_0px_rgba(135,99,243,0.12)]',
+        'mt-12 grid grid-flow-col grid-cols-[20rem_1fr_28.5625rem] grid-rows-2 gap-4 *:rounded-2xl *:bg-cards *:shadow-[0px_3px_1px_0px_rgba(135,99,243,0.12)]',
         className,
       )}
       {...rest}
     >
-      <div className="flex flex-col items-start justify-center gap-[0.62rem]">
+      <div className="flex flex-col items-start justify-center gap-[0.62rem] px-6 py-4">
         <h6 className="text-lg text-gray-100">TVL</h6>
         <p className="flex items-start gap-2 text-3xl">
-          {formatUsdValue(strategy?.tvl ?? 0)}
+          {formatUsdValue(formatUnits(strategy?.tvl ?? 0, strategy?.token.decimals), {
+            notation: 'compact',
+          })}
           {/* <span className="text-lg text-main-80">
             {formatPercentValue(15.72, { signDisplay: 'exceptZero' })}
           </span> */}
         </p>
       </div>
-      <div className="flex flex-col items-start justify-center gap-[0.62rem]">
+      <div className="flex flex-col items-start justify-center gap-[0.62rem] px-6 py-4">
         <h6 className="text-lg text-gray-100">APY</h6>
         <p className="flex items-start gap-2 text-3xl">
           {formatPercentValue(strategy?.apy)}
@@ -55,7 +58,7 @@ export const StrategyInfoDesktop = (props: StrategyInfoProperties) => {
         <div className="mt-auto flex items-center justify-between">
           <p className="text-lg text-gray-100">Strategy ID</p>
           <div className="flex items-center gap-2 text-lg/[1.35rem] text-text">
-            <span>{shortenString(id ?? '', 7)}</span>
+            <span>{shortenAddress(id ?? '', 7)}</span>
             <CopyButton text={id ?? ''} />
           </div>
         </div>
@@ -121,7 +124,7 @@ const StrategyInfoDesktopSkeleton = (props: ComponentProps<'div'>) => {
         </p>
         <div className="mt-auto flex items-center justify-between">
           <p className="text-lg text-gray-100">Link to protocol</p>
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-40" />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import type { ReportType } from '@api/maat-finance/types'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
@@ -8,7 +8,7 @@ import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
 
@@ -46,9 +46,13 @@ export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
         </div>
       </Table.Cell>
       <Table.Cell>
-        <span>{shortenString(report.hash)}</span>
+        <span>{shortenAddress(report.hash)}</span>
         <CopyButton text={report.hash} className="ml-4" />
-        <Scan className="ml-3 size-5 shrink-0" />
+        <ScanLink
+          chainId={report.vault.chain_id}
+          txHash={report.hash}
+          className="ml-3 size-5 shrink-0"
+        />
       </Table.Cell>
       <Table.Cell className="text-gray-100">
         {getFromNow(new Date(report.creation_time).toString())}

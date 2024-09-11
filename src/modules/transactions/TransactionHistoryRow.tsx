@@ -1,7 +1,7 @@
 import type { Event } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
@@ -10,7 +10,7 @@ import { STATUS_COLOR } from '@constants/status-color'
 import { ROUTES } from '@routes/routes'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
@@ -75,15 +75,19 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
       </Table.Cell>
       <Table.Cell>
         <div className="flex w-full items-center">
-          <p className="w-[6.9rem]">{shortenString(event.txFrom, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(event.txFrom, 5)}</p>
           <CopyButton text={event.txFrom} className="ml-4 size-6 shrink-0" />
         </div>
       </Table.Cell>
       <Table.Cell>
         <div className="flex w-full items-center">
-          <p className="w-[6.9rem]">{shortenString(event.hash, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(event.hash, 5)}</p>
           <CopyButton text={event.hash} className="ml-4 size-6 shrink-0" />
-          <Scan className="ml-3 size-5 shrink-0" />
+          <ScanLink
+            chainId={event.src_chain_id}
+            txHash={event.hash}
+            className="ml-3 size-5 shrink-0"
+          />
         </div>
       </Table.Cell>
       <Table.Cell className="text-gray-100">

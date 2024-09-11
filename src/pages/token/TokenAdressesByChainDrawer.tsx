@@ -14,7 +14,7 @@ import {
 } from '@components/ui/drawer'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { cn } from '@utils/cn'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import { type ComponentProps, useState } from 'react'
 
 interface TokenAddressByChainPopoverProperties
@@ -34,7 +34,7 @@ export const TokenAddressByChainDrawerMobile = (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger className={cn('flex items-center gap-2 text-base', className)}>
         <TokenIconComponent className="size-6" symbol={value.chainId} />
-        <p className="ml-1">{shortenString(value.addr)}</p>
+        <p className="ml-1">{shortenAddress(value.addr)}</p>
         <CopyButton className="size-6" text={value.addr} />
         <div className="mx-1 h-6 w-[2px] bg-stroke-100" />
         <ArrowDown className={cn('size-6 transition', isOpen && 'rotate-180')} />
@@ -68,7 +68,7 @@ export const TokenAddressByChainDrawerMobile = (
                   <p className="leading-[0rem]">{chainName}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <p>{shortenString(item.addr, 7)}</p>
+                  <p>{shortenAddress(item.addr, 7)}</p>
                   {value === item ? (
                     <Check className="size-[1.125rem]" />
                   ) : (

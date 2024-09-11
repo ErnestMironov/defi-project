@@ -68,7 +68,7 @@ export const routes = createRoutesFromElements(
             loader: ({ request }) => {
               const url = new URL(request.url)
               if (url.pathname === ROUTES.TOKENS) {
-                return redirect(`${ROUTES.TOKENS}/USDC`)
+                return redirect(`${ROUTES.TOKENS}/USDT`)
               }
               return null
             },
@@ -80,6 +80,14 @@ export const routes = createRoutesFromElements(
         lazy={async () => {
           const { TokenPage } = await import('@pages/token/TokenPage')
           return {
+            loader: ({ request }) => {
+              const url = new URL(request.url)
+              const symbol = url.pathname.replace(`${ROUTES.TOKENS}/`, '')
+              if (!['USDC', 'USDT'].includes(symbol)) {
+                return redirect(`${ROUTES.TOKENS}/USDT`)
+              }
+              return { symbol }
+            },
             Component: TokenPage,
           }
         }}

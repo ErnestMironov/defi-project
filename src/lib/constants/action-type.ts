@@ -56,6 +56,7 @@ export const ADMIN_ACTION_TYPE = {
   ADD_STRATEGY: 'Add strategy',
   REMOVE_STRATEGY: 'Remove strategy',
   COMMANDER_CHANGED: 'Commander changed',
+  FEE_CHANGED: 'Fee changed',
 } as const
 
 export const REPORT_ACTION_TYPE = {

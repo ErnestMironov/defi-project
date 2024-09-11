@@ -46,11 +46,25 @@ export const CHAIN_IDS_BY_NAME = {
 
 export const SCAN_LINK_BY_CHAIN_ID = {
   1: 'https://etherscan.io/',
+  42_161: 'https://arbiscan.io/',
+  137: 'https://polygonscan.com/',
   10: 'https://optimistic.etherscan.io/',
   1329: 'https://seitrace.com/',
   43_114: 'https://snowtrace.io/',
   56: 'https://bscscan.com/',
-}
+  8453: 'https://basescan.org/',
+  5000: 'https://explorer.mantle.xyz/',
+  1088: 'https://explorer.metis.io/',
+  2222: 'https://explorer.kava.io/',
+  8217: 'https://explorer.kaia.io/',
+  8822: 'https://explorer.iota.org/',
+  1_380_012_617: 'https://explorer.rarible.org/',
+  14: 'https://flare.flarescan.com/',
+  1625: 'https://explorer.gravity.xyz/',
+  167_000: 'https://explorer.taiko.xyz/',
+  534_352: 'https://scroll.io/',
+  1_313_161_554: 'https://explorer.aurora.dev/',
+} as const
 
 export const CHAINS = [
   CHAIN_IDS_BY_NAME.Ethereum,

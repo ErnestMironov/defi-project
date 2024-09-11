@@ -5,7 +5,6 @@ import usdt from '@assets/images/usdt-3d.png'
 import { TOKEN_INFO } from '@constants/token-info'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
-import { StrategiesMobile } from '@modules/strategies/StrategiesMobile'
 import { TokenStatsContainer } from '@modules/token-overview/TokenStatsContainer'
 import { Transactions } from '@modules/transactions/Transactions'
 import { TransactionsHistoryMobile } from '@modules/transactions/TransactionsHistoryMobile'
@@ -47,7 +46,8 @@ export const TokenDesktopPage = (props: TokensProperties) => {
     setSelectedAddress(tokenAddresses[0])
   }, [tokenAddresses])
 
-  const { apyData, tvlData, apy, tvl } = useTokenMetrics(symbol as 'USDT' | 'USDC')
+  const { apyData, tvlData, apy, tvl, volume, isLoading, volumeLoading } =
+    useTokenMetrics(symbol as 'USDT' | 'USDC')
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
@@ -59,11 +59,13 @@ export const TokenDesktopPage = (props: TokensProperties) => {
       </div>
       <div className="mt-12 grid grid-cols-2 gap-10">
         <TokenStatsContainer
+          loading={isLoading}
+          loadingVolume={volumeLoading}
           withLink={false}
           color="#3883EB"
           apy={apy}
           tvl={tvl}
-          rebalancingVolume={0}
+          rebalancingVolume={volume}
           tokenName={symbol ?? ''}
           img={symbol === 'USDC' ? usdc : usdt}
           imageClassName={
@@ -82,7 +84,9 @@ export const TokenDesktopPage = (props: TokensProperties) => {
           </p>
         </div>
       </div>
-      <TokenStrategies className="mt-[6.25rem]" />
+      {symbol && (
+        <TokenStrategies className="mt-[6.25rem]" params={{ token: [symbol] }} />
+      )}
       <Transactions className="mt-[6.25rem] max-lg:mt-14" />
       <Footer className="mt-[7.5rem]" />
     </div>
@@ -91,17 +95,13 @@ export const TokenDesktopPage = (props: TokensProperties) => {
 
 const TokensMobilePage = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
-
+  const { symbol } = useParams()
   return (
     <div className={cn('mt-8', className)} {...rest}>
       <TokenHeader />
       <TokenChartMobile className="mt-7" />
       <TokenInfoMobile className="mt-10" />
-      <StrategiesMobile
-        withLink={false}
-        className="mt-10"
-        filters={['protocols', 'chains']}
-      />
+      {symbol && <TokenStrategies className="mt-10" params={{ token: [symbol] }} />}
       <TransactionsHistoryMobile className="mt-16" />
       <Footer className="mt-[5.5rem]" />
     </div>
