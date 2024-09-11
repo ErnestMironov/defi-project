@@ -43,10 +43,10 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
             BigInt(data?.amount ?? 0),
             data?.vault?.token?.decimals ?? 6,
           )}
-          symbol={data?.vault?.token?.symbol ?? ''}
+          symbol={data?.strategy?.token?.symbol ?? ''}
           usdValue={formatUnits(
             BigInt(data?.amount ?? 0),
-            data?.vault?.token?.decimals ?? 6,
+            data?.strategy?.token?.decimals ?? 6,
           )}
           className="col-span-3"
         />
