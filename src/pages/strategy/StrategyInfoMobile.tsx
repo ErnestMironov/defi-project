@@ -10,7 +10,7 @@ import {
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
@@ -66,7 +66,7 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
         <div className="flex items-center justify-between">
           <p className="text-base text-gray-100">Strategy ID</p>
           <div className="flex items-center gap-3 text-base text-text">
-            <span>{shortenString(id ?? '', 5)}</span>
+            <span>{shortenAddress(id ?? '', 5)}</span>
             <CopyButton text={id ?? ''} />
           </div>
         </div>

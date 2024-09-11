@@ -32,8 +32,8 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
       {...rest}
     >
       <TokenStatsContainer
-        loading={isProtocolMetricsLoading || isLoading}
-        error={protocolMetricsError || error}
+        loading={isProtocolMetricsLoading || !!protocolMetricsError}
+        loadingVolume={isLoading || !!error}
         color="#3883EB"
         apy={usdcApy}
         tvl={usdcTvl}
@@ -43,8 +43,8 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
         imageClassName="rotate-[5.207deg]"
       />
       <TokenStatsContainer
-        loading={isProtocolMetricsLoading}
-        error={protocolMetricsError}
+        loading={isProtocolMetricsLoading || !!protocolMetricsError}
+        loadingVolume={isLoading || !!error}
         color="#4CD7B1"
         apy={usdtApy}
         tvl={usdtTvl}

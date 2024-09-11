@@ -9,7 +9,7 @@ import { STATUS_COLOR } from '@constants/status-color'
 import { ROUTES } from '@routes/routes'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
@@ -70,7 +70,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
         )}
         <h6>Tx Hash</h6>
         <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenString(event.hash)}</p>
+          <p>{shortenAddress(event.hash)}</p>
           <ScanLink
             chainId={event.src_chain_id}
             txHash={event.hash}

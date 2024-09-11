@@ -17,6 +17,7 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
     tokenName,
     withLink = true,
     loading,
+    loadingVolume,
   } = props
   if (loading) {
     return <SkeletonTokenStatsContainerMobile {...props} />
@@ -54,13 +55,17 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
           <div className="h-full w-px bg-stroke-100" />
           <div className="sm:flex-1">
             <h6>Rebalancing volume</h6>
-            <p>
-              {rebalancingVolume &&
-                formatUsdValue(rebalancingVolume, {
-                  notation: 'compact',
-                  minimumFractionDigits: 2,
-                })}
-            </p>
+            {loadingVolume ? (
+              <Skeleton className="h-6 w-[9.1rem]" />
+            ) : (
+              <p>
+                {rebalancingVolume &&
+                  formatUsdValue(rebalancingVolume, {
+                    notation: 'compact',
+                    minimumFractionDigits: 2,
+                  })}
+              </p>
+            )}
           </div>
         </div>
         {withLink && (

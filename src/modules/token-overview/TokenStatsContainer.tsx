@@ -15,6 +15,8 @@ export interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   withLink?: boolean
   loading?: boolean
   error?: any
+  loadingVolume?: boolean
+  errorVolume?: any
 }
 
 export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {

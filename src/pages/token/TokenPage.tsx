@@ -46,9 +46,8 @@ export const TokenDesktopPage = (props: TokensProperties) => {
     setSelectedAddress(tokenAddresses[0])
   }, [tokenAddresses])
 
-  const { apyData, tvlData, apy, tvl, volume, isLoading, error } = useTokenMetrics(
-    symbol as 'USDT' | 'USDC',
-  )
+  const { apyData, tvlData, apy, tvl, volume, isLoading, volumeLoading } =
+    useTokenMetrics(symbol as 'USDT' | 'USDC')
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
@@ -60,7 +59,8 @@ export const TokenDesktopPage = (props: TokensProperties) => {
       </div>
       <div className="mt-12 grid grid-cols-2 gap-10">
         <TokenStatsContainer
-          loading={isLoading || !!error}
+          loading={isLoading}
+          loadingVolume={volumeLoading}
           withLink={false}
           color="#3883EB"
           apy={apy}

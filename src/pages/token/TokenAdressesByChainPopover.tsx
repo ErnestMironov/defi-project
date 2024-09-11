@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { useDisclosure } from '@hooks/common/useDisclosure'
 import { cn } from '@utils/cn'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import { type ComponentProps } from 'react'
 
 interface TokenAddressByChainPopoverProperties
@@ -27,7 +27,7 @@ export const TokenAddressByChainPopover = (
     <Popover open={isOpen} onOpenChange={toggle}>
       <PopoverTrigger className={cn('flex items-center gap-2 text-lg', className)}>
         <TokenIconComponent className="size-6" symbol={value.chainId} />
-        <p className="ml-1">{shortenString(value.addr, 6)}</p>
+        <p className="ml-1">{shortenAddress(value.addr, 6)}</p>
         <CopyButton className="size-6" text={value.addr} />
         <div className="mx-3 h-6 w-[2px] bg-stroke-100" />
         <ArrowDown className={cn('size-6 transition', isOpen && 'rotate-180')} />
@@ -51,7 +51,7 @@ export const TokenAddressByChainPopover = (
             >
               <TokenIconComponent className="size-5" symbol={item.chainId} />
               <p className="ml-2 leading-[0rem]">{chainName}</p>
-              <p>{shortenString(item.addr)}</p>
+              <p>{shortenAddress(item.addr)}</p>
               {value === item ? (
                 <Check className="size-[1.125rem]" />
               ) : (
