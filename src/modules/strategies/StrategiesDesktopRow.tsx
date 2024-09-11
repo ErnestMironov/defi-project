@@ -6,7 +6,7 @@ import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { ROUTES } from '@routes/routes'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -24,8 +24,8 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       onClick={() => navigate(`${ROUTES.STRATEGIES}/${strategy.id}`)}
     >
       <Table.Cell className="px-10 py-6">
-        <div className="flex items-center">
-          <p className="w-[7.9rem]">{shortenString(strategy.id, 5)}</p>
+        <div className="flex items-center gap-2">
+          <p className="min-w-[8.5rem]">{shortenAddress(strategy.id, 5)}</p>
           <CopyButton text={strategy.id} />
         </div>
       </Table.Cell>
@@ -50,7 +50,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       </Table.Cell>
       <Table.Cell className="max-w-[12.1rem]">
         <div className="flex w-full items-center">
-          <p className="w-[6.9rem]">{shortenString(strategy.address, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(strategy.address, 5)}</p>
           <CopyButton text={strategy.address} className="ml-4 size-6 shrink-0" />
           <ScanLink
             chainId={strategy.chain_id}

@@ -6,7 +6,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
 
@@ -37,7 +37,7 @@ export const ReportActionMobileItem = (props: ReportActionMobileItemProperties) 
         <IconWithLabelComponent className="size-6" symbol={report.vault.chain_id} />
         <h6>Tx Hash</h6>
         <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenString(report.hash)}</p>
+          <p>{shortenAddress(report.hash)}</p>
           <ScanLink
             chainId={report.vault.chain_id}
             txHash={report.hash}

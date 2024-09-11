@@ -8,7 +8,7 @@ import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
 
@@ -46,7 +46,7 @@ export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
         </div>
       </Table.Cell>
       <Table.Cell>
-        <span>{shortenString(report.hash)}</span>
+        <span>{shortenAddress(report.hash)}</span>
         <CopyButton text={report.hash} className="ml-4" />
         <ScanLink
           chainId={report.vault.chain_id}

@@ -8,7 +8,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { ADMIN_ACTION_TYPE } from '@constants/action-type'
 import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
 
@@ -33,7 +33,7 @@ export const AdminActionMobileItem = (props: AdminActionMobileItemProperties) =>
       <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
         <h6>To</h6>
         <div className="flex w-full items-center justify-end gap-2">
-          <p className="whitespace-nowrap">{shortenString(adminAction.to)}</p>
+          <p className="whitespace-nowrap">{shortenAddress(adminAction.to)}</p>
           <ScanLink
             chainId={adminAction.src_chain_id}
             address={adminAction.to}
@@ -65,7 +65,7 @@ export const AdminActionMobileItem = (props: AdminActionMobileItemProperties) =>
         </div>
         <h6>Tx Hash</h6>
         <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenString(adminAction.hash)}</p>
+          <p>{shortenAddress(adminAction.hash)}</p>
           <ScanLink
             chainId={adminAction.src_chain_id}
             txHash={adminAction.hash}

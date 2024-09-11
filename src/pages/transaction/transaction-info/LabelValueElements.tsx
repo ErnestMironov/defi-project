@@ -6,7 +6,7 @@ import { STATUS_COLOR } from '@constants/status-color'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
 import { formatAmount, formatUsdValue } from '@utils/formatValue'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
 
@@ -24,7 +24,7 @@ export const TransactionHash = (props: InfoPairElementsProperties) => {
     <LabelValueContainer className={className} {...rest}>
       <div>{label || (isBelowDesktop ? 'Tx Hash' : 'Transaction Hash')}</div>
       <div className="flex items-center gap-2">
-        <span className="text-text-90">{shortenString(value ?? '')}</span>
+        <span className="text-text-90">{shortenAddress(value ?? '')}</span>
         <Scan />
         <CopyButton text={value ?? ''} />
       </div>

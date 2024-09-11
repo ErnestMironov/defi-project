@@ -9,7 +9,7 @@ import { STATUS_COLOR } from '@constants/status-color'
 import { ROUTES } from '@routes/routes'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
@@ -74,7 +74,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
       </Table.Cell>
       <Table.Cell>
         <div className="flex w-full items-center">
-          <p className="w-[6.9rem]">{shortenString(event.hash, 5)}</p>
+          <p className="min-w-[7.5rem]">{shortenAddress(event.hash, 5)}</p>
           <CopyButton text={event.hash} className="ml-4 size-6 shrink-0" />
           <ScanLink
             chainId={event.src_chain_id}

@@ -5,7 +5,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { ROUTES } from '@routes/routes'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import { formatUnits } from 'ethers'
 import { type ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -54,7 +54,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
         </div>
         <h6>Strategy ID</h6>
         <div className="flex w-full items-center gap-2">
-          <p>{shortenString(strategy.id)}</p>
+          <p>{shortenAddress(strategy.id)}</p>
           <CopyButton text={strategy.id} className="size-6 shrink-0" />
         </div>
       </div>

@@ -5,7 +5,7 @@ import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { cn } from '@utils/cn'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -42,7 +42,7 @@ export const StrategyHeader = (props: StrategyHeaderProperties) => {
         </h1>
         <div className="flex items-center gap-2">
           <p className="text-lg text-gray-100 max-lg:text-base">
-            Address {shortenString(strategy?.address ?? '', 7)}
+            Address {shortenAddress(strategy?.address ?? '', 7)}
           </p>
           <ScanLink
             className="size-5"

@@ -4,7 +4,7 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
@@ -58,7 +58,7 @@ export const StrategyInfoDesktop = (props: StrategyInfoProperties) => {
         <div className="mt-auto flex items-center justify-between">
           <p className="text-lg text-gray-100">Strategy ID</p>
           <div className="flex items-center gap-2 text-lg/[1.35rem] text-text">
-            <span>{shortenString(id ?? '', 7)}</span>
+            <span>{shortenAddress(id ?? '', 7)}</span>
             <CopyButton text={id ?? ''} />
           </div>
         </div>

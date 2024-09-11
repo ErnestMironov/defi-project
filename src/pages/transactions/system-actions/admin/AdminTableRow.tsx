@@ -7,7 +7,7 @@ import { IconWithLabelComponent, TokenIconComponent } from '@components/token-ic
 import { ADMIN_ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenString } from '@utils/transform'
+import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
 
@@ -25,7 +25,7 @@ export const AdminTableRow = (props: AdminTableRowProperties) => {
       <Table.Cell>MAAT Admin</Table.Cell>
       <Table.Cell>
         <div className="flex items-center">
-          <span>{shortenString(adminEvent.to)}</span>
+          <span>{shortenAddress(adminEvent.to)}</span>
           <CopyButton text={adminEvent.to} className="ml-4" />
           <ScanLink
             chainId={adminEvent.src_chain_id}
@@ -59,7 +59,7 @@ export const AdminTableRow = (props: AdminTableRowProperties) => {
       </Table.Cell>
       <Table.Cell>
         <div className="flex items-center">
-          <span>{shortenString(adminEvent.hash)}</span>
+          <span>{shortenAddress(adminEvent.hash)}</span>
           <CopyButton text={adminEvent.hash} className="ml-4" />
           <ScanLink
             chainId={adminEvent.src_chain_id}
