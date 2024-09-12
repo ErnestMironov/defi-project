@@ -4,6 +4,7 @@ import type {
   PaginationResponse,
   SortDirection,
   StatusType,
+  TokenParameters,
 } from '@api/maat-finance/types'
 import type { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
 import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
@@ -22,7 +23,7 @@ export type EventsParameters = {
   status?: StatusType
   start?: string
   end?: string
-  token?: ('USDT' | 'USDC')[]
+  token?: TokenParameters[]
 }
 
 const getEvents = (parameters: EventsParameters) => {

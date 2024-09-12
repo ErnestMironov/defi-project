@@ -144,7 +144,7 @@ export const MultiSelect = ({
         sideOffset={10}
         align="start"
         className={cn(
-          'w-fit rounded-xl p-6 max-h-96 overflow-scroll pointer-events-auto',
+          'w-fit rounded-xl p-6 max-h-96 overflow-y-scroll pointer-events-auto',
           multiSelectVariants({ variant }),
           classNames?.content,
         )}

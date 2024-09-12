@@ -1,6 +1,14 @@
 import { apiClient } from '@api/maat-finance/api-client'
-import type { IncentiveEvent, PaginationResponse } from '@api/maat-finance/types'
+import type {
+  ChainParameters,
+  IncentiveEvent,
+  PaginationResponse,
+  SortDirection,
+  StatusType,
+  TokenParameters,
+} from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import qs from 'qs'
 
 export type IncentiveParameters = {
   limit?: number
@@ -8,11 +16,21 @@ export type IncentiveParameters = {
   size?: number
   start_timestamp?: string
   end_timestamp?: string
+  search?: string
+  actions_type?: string[]
+  token?: TokenParameters[]
+  status?: StatusType[]
+  chain?: ChainParameters[]
+  sort?: 'creation_time' | 'amount'
+  orderBy?: SortDirection
 }
 
 const getIncentives = (parameters: IncentiveParameters) => {
   return apiClient.get<PaginationResponse<IncentiveEvent>>('/actions/incentives', {
     params: parameters,
+    paramsSerializer: (parameters_) => {
+      return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+    },
   })
 }
 

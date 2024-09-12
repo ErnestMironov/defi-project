@@ -1,11 +1,14 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import { useIncentives } from '@api/queries/useIncentives'
 import Sort from '@assets/icons/sort.svg'
+import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
 import { usePages } from '@hooks/common/usePages'
+import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
@@ -21,12 +24,19 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
 ) => {
   const { filters: initialFilters, className } = props
   const [filters, setFilters] = useState(initialFilters)
-
+  const { search: _search, ...selectFilters } = filters
   const { onPageChange, page, size, onPageSizeChange } = usePages()
+  const { sort, orderBy, onSortChange } = useSort(['creation_time', 'amount'], {
+    orderBy: 'desc',
+    sort: 'creation_time',
+  })
   const { data, isLoading, error, isPlaceholderData } = useIncentives({
     size,
     page,
     limit: 100,
+    sort,
+    orderBy,
+    ...getMultiSelectParameters(selectFilters),
   })
 
   const renderBody = () => {
@@ -34,33 +44,18 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
       case isLoading:
       case isPlaceholderData:
       case !!error: {
-        return <TransactionsHistoryDesktopSkeleton count={size} {...props} />
+        return Array.from({ length: size }).map((_, index) => (
+          <TransactionsHistoryDesktopSkeleton key={index} count={size} {...props} />
+        ))
       }
 
       default: {
         return (
-          <Table>
-            <Table.Head>
-              <Table.Row>
-                <Table.HeadCell>Action</Table.HeadCell>
-                <Table.HeadCell>From</Table.HeadCell>
-                <Table.HeadCell>Amount</Table.HeadCell>
-                <Table.HeadCell>Chain</Table.HeadCell>
-                <Table.HeadCell>Tx Hash</Table.HeadCell>
-                <Table.HeadCell>
-                  <div className="flex items-center gap-[0.79rem]">
-                    <span>Created</span>
-                    <Sort className="size-5 shrink-0" />
-                  </div>
-                </Table.HeadCell>
-              </Table.Row>
-            </Table.Head>
-            <Table.Body>
-              {data?.items?.map((event, index) => (
-                <IncentiveRow key={index} event={event} />
-              ))}
-            </Table.Body>
-          </Table>
+          <>
+            {data?.items?.map((event, index) => (
+              <IncentiveRow key={index} event={event} />
+            ))}
+          </>
         )
       }
     }
@@ -68,7 +63,43 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
   return (
     <div {...props} className={cn('', className)}>
       <TableFilters filters={filters} setFilters={setFilters} />
-      {renderBody()}
+      <Table>
+        <Table.Head>
+          <Table.Row>
+            <Table.HeadCell>Action</Table.HeadCell>
+            <Table.HeadCell
+              className={cn('cursor-pointer')}
+              onClick={() => onSortChange('amount')}
+            >
+              <div className="flex items-center gap-[0.79rem]">
+                <span>Amount</span>
+                {sort === 'amount' && (
+                  <Sort
+                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
+                  />
+                )}
+              </div>
+            </Table.HeadCell>
+            <Table.HeadCell>From</Table.HeadCell>
+            <Table.HeadCell>Chain</Table.HeadCell>
+            <Table.HeadCell>Tx Hash</Table.HeadCell>
+            <Table.HeadCell
+              className={cn('cursor-pointer')}
+              onClick={() => onSortChange('creation_time')}
+            >
+              <div className="flex items-center gap-[0.79rem]">
+                <span>Created</span>
+                {sort === 'creation_time' && (
+                  <Sort
+                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
+                  />
+                )}
+              </div>
+            </Table.HeadCell>
+          </Table.Row>
+        </Table.Head>
+        <Table.Body>{renderBody()}</Table.Body>
+      </Table>
       {data && (
         <Pagination
           className="mt-6"
@@ -85,39 +116,27 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
 
 const TransactionsHistoryDesktopSkeleton: React.FC<
   React.HTMLAttributes<HTMLDivElement> & { count?: number }
-> = (props) => {
+> = (_props) => {
   return (
-    <Table>
-      <Table.Head>
-        <Table.Row>
-          <Table.HeadCell>Action</Table.HeadCell>
-          <Table.HeadCell>From</Table.HeadCell>
-          <Table.HeadCell>Tx Hash</Table.HeadCell>
-          <Table.HeadCell>Chain</Table.HeadCell>
-          <Table.HeadCell>Created</Table.HeadCell>
-        </Table.Row>
-      </Table.Head>
-      <Table.Body>
-        {Array.from({ length: props.count || 4 })?.map((_, index) => (
-          <Table.Row key={index}>
-            <Table.Cell>
-              <Skeleton className="h-10 w-40 rounded-xl" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton className="h-10 w-20 rounded-xl" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton className="h-10 w-60 rounded-xl" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton className="w-30 h-10 rounded-xl" />
-            </Table.Cell>
-            <Table.Cell>
-              <Skeleton className="w-30 h-10 rounded-xl" />
-            </Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
+    <Table.Row>
+      <Table.Cell>
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </Table.Cell>
+    </Table.Row>
   )
 }

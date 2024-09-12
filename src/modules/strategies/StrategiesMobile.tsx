@@ -67,14 +67,21 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
     }
   }, [selectedSort])
   console.log('params', params)
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteStrategies({
-      chain: selectedChains.map((chain) => chain.value),
-      protocol: selectedProtocols.map((protocol) => protocol.value),
-      token: selectedTokens.map((token) => token.value),
-      ...currentSort,
-      ...params,
-    })
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPlaceholderData,
+  } = useInfiniteStrategies({
+    chain: selectedChains.map((chain) => chain.value),
+    protocol: selectedProtocols.map((protocol) => protocol.value),
+    token: selectedTokens.map((token) => token.value),
+    ...currentSort,
+    ...params,
+  })
 
   const renderFilters = (filter: StrategyFilters) => {
     switch (filter) {
@@ -178,7 +185,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
       <StrategyMobileList
         className="mt-3"
         strategies={data}
-        loading={isLoading}
+        loading={isLoading || isPlaceholderData}
         error={error}
       />
       {isFetchingNextPage && (

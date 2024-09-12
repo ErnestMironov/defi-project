@@ -23,6 +23,24 @@
   }
 }
 
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 0.25rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--main-30);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--main-50);
+}
+
 .link-d3 {
   transition: stroke 0.3s ease;
   stroke: gray;
