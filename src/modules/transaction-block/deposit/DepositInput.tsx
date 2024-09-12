@@ -73,11 +73,11 @@ export const DepositInput = () => {
     setInputValueInUSD,
   } = useTxStore()
 
-  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics()
+  const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
+    useProtocolMetrics()
 
-  // TODO: remove after getting real data
-  const usdcApy = 11.36
-  const usdtApy = 10.56
+  const usdcApy = protocolMetrics?.USDC?.apy
+  const usdtApy = protocolMetrics?.USDT?.apy
 
   const yourYearlyEarnings = useMemo(() => {
     if (
