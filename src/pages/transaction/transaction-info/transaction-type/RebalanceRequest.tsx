@@ -43,7 +43,11 @@ export const RebalanceRequest = (props: RebalanceRequestProperties) => {
         date={data?.creation_time}
       />
       <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
-        <TransactionHash value={data?.hash} className="col-span-3" />
+        <TransactionHash
+          value={data?.hash}
+          className="col-span-3"
+          chainId={data?.src_chain_id}
+        />
         <Status status={data?.status} className="col-span-3" />
         <TokenAmount
           value={formatUnits(

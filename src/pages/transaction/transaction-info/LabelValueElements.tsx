@@ -1,7 +1,8 @@
 import type { StatusType } from '@api/maat-finance/types'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { STATUS_COLOR } from '@constants/status-color'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
@@ -15,17 +16,24 @@ import { LabelValueContainer } from './LabelValueContainer'
 interface InfoPairElementsProperties extends ComponentProps<'div'> {
   label?: string
   value?: string
+  chainId?: number
+  type?: 'tx' | 'address'
 }
 
 export const TransactionHash = (props: InfoPairElementsProperties) => {
-  const { className, value, label, ...rest } = props
+  const { className, value, label, chainId, type = 'tx', ...rest } = props
   const { isBelowDesktop } = useDeviceWidth()
   return (
     <LabelValueContainer className={className} {...rest}>
       <div>{label || (isBelowDesktop ? 'Tx Hash' : 'Transaction Hash')}</div>
       <div className="flex items-center gap-2">
         <span className="text-text-90">{shortenAddress(value ?? '')}</span>
-        <Scan />
+        <ScanLink
+          chainId={chainId ?? CHAIN_IDS_BY_NAME.Arbitrum}
+          txHash={type === 'tx' ? value : undefined}
+          address={type === 'address' ? value : undefined}
+          className="ml-3 size-5 shrink-0"
+        />
         <CopyButton text={value ?? ''} />
       </div>
     </LabelValueContainer>
@@ -33,7 +41,7 @@ export const TransactionHash = (props: InfoPairElementsProperties) => {
 }
 
 export const Address = (props: InfoPairElementsProperties) => {
-  return <TransactionHash label="Address" {...props} />
+  return <TransactionHash label="Address" {...props} type="address" />
 }
 
 export const Status = (props: InfoPairElementsProperties & { status: StatusType }) => {

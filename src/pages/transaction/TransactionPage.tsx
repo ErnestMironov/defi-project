@@ -5,7 +5,7 @@ import { MAIN_ACTION_TYPE } from '@constants/action-type'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useMemo, useState } from 'react'
+import { type ComponentProps, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Address } from 'viem'
 
@@ -14,7 +14,7 @@ import { TransactionInfo } from './transaction-info/TransactionInfo'
 import { TransactionHeader } from './TransactionHeader'
 
 function detectMainActionType(action: Action) {
-  return Object.prototype.hasOwnProperty.call(MAIN_ACTION_TYPE, action.action_type)
+  return action.action_type in MAIN_ACTION_TYPE
 }
 
 function sortActionsByDate(actions: Action[]) {
@@ -34,11 +34,21 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
   const [mainAction, setMainAction] = useState<Action | undefined>(undefined)
   const [relatedActions, setRelatedActions] = useState<Action[]>([])
 
-  useMemo(() => {
-    if (!data) return null
+  useEffect(() => {
+    if (!data) return
+
+    if (data?.related_actions?.length === 0 || !data?.related_actions) {
+      console.log('here')
+      setMainAction(data.action)
+      setRelatedActions([])
+      return
+    }
+
     if (detectMainActionType(data.action)) {
+      console.log('here2')
       setMainAction(data.action)
       setRelatedActions(sortActionsByDate([...data.related_actions]))
+      return
     }
 
     const mainActionIndex = findMainActionIndex(data.related_actions)
@@ -82,12 +92,16 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
         data={mainAction}
         withoutRelated={relatedActions.length === 0}
       />
-      <SectionTitle className="mt-[4.44rem]">Triggered transactions</SectionTitle>
-      <div className="mt-8 space-y-4">
-        {relatedActions.map((action, i) => (
-          <TransactionInfo key={i} type={action.action_type} data={action} />
-        ))}
-      </div>
+      {relatedActions?.length > 0 && (
+        <>
+          <SectionTitle className="mt-[4.44rem]">Triggered transactions</SectionTitle>
+          <div className="mt-8 space-y-4">
+            {relatedActions.map((action, i) => (
+              <TransactionInfo key={i} type={action.action_type} data={action} />
+            ))}
+          </div>
+        </>
+      )}
       <Footer className="mt-[7.5rem]" />
     </div>
   )
