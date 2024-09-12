@@ -1,4 +1,5 @@
 import type { Action } from '@api/maat-finance/types'
+import { Skeleton } from '@components/ui/skeleton'
 import type { LAST_EVENT_ACTION } from '@constants/action-type'
 import type { ComponentProps } from 'react'
 
@@ -10,15 +11,40 @@ import { Swap } from './transaction-type/Swap'
 import { WithdrawFromStrategy } from './transaction-type/WithdrawFromStrategy'
 import { WithdrawFulfillment } from './transaction-type/WithdrawFulfillment'
 import { WithdrawRequest } from './transaction-type/WithdrawRequest'
+import { TransactionInfoContainer } from './TransactionInfoContainer'
 
 interface TransactionInfoProperties extends ComponentProps<'div'> {
   type?: LAST_EVENT_ACTION
   data?: Action
   withoutRelated?: boolean
+  isLoading?: boolean
 }
 
 export const TransactionInfo = (props: TransactionInfoProperties) => {
-  const { className, type, data, withoutRelated, ...rest } = props
+  const { className, type, data, withoutRelated, isLoading, ...rest } = props
+
+  if (isLoading) {
+    return (
+      <TransactionInfoContainer className={className} {...rest}>
+        <div className="flex items-center justify-between gap-3">
+          <Skeleton className="h-8 w-60 bg-stroke-100 dark:bg-stroke-100" />
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-6 w-20 bg-stroke-100 dark:bg-stroke-100" />
+            <Skeleton className="h-6 w-20 bg-stroke-100 dark:bg-stroke-100" />
+          </div>
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
+          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
+          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
+          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
+          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
+          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
+        </div>
+      </TransactionInfoContainer>
+    )
+  }
+
   if (type === 'DEPOSIT') {
     return (
       <Deposit

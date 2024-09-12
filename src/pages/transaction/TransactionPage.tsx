@@ -29,7 +29,7 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
   const { isBelowDesktop } = useDeviceWidth()
   const { tx_hash } = useParams()
-  const { data } = useGetTransactionInfo(tx_hash as Address)
+  const { data, isLoading } = useGetTransactionInfo(tx_hash as Address)
 
   const [mainAction, setMainAction] = useState<Action | undefined>(undefined)
   const [relatedActions, setRelatedActions] = useState<Action[]>([])
@@ -55,11 +55,28 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
     return <TransactionPageMobile {...props} />
   }
 
+  if (isLoading || !mainAction) {
+    return (
+      <div className={cn('mt-[4.5rem]', className)} {...rest}>
+        <Breadcrumbs />
+        <TransactionHeader isLoading className="mt-10" />
+        <TransactionInfo isLoading className="mt-10" type="DEPOSIT" />
+        <SectionTitle className="mt-[4.44rem]">Triggered transactions</SectionTitle>
+        <div className="mt-8 space-y-4">
+          <TransactionInfo isLoading />
+          <TransactionInfo isLoading />
+        </div>
+        <Footer className="mt-[7.5rem]" />
+      </div>
+    )
+  }
+
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
       <Breadcrumbs />
-      <TransactionHeader className="mt-10" />
+      <TransactionHeader data={mainAction} className="mt-10" />
       <TransactionInfo
+        isLoading={isLoading}
         className="mt-10"
         type={mainAction?.action_type}
         data={mainAction}
