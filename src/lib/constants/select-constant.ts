@@ -70,25 +70,6 @@ export const SELECT_STATUSES: OptionType[] = STATUSES.map((value) => ({
   value,
 }))
 
-export const SELECT_MAAT_ACTIONS: OptionType[] = [
-  {
-    label: 'Rebalance',
-    value: 'Rebalance',
-  },
-  {
-    label: 'Withdraw Fulfillment',
-    value: 'Withdraw Fulfillment',
-  },
-  {
-    label: 'Deposit Distribution',
-    value: 'Deposit Distribution',
-  },
-  {
-    label: 'Withdraw from strategy',
-    value: 'Withdraw from strategy',
-  },
-]
-
 export const SELECT_INCENTIVES_ACTIONS: OptionType[] = Object.entries(
   INCENTIVE_ACTION_TYPE,
 ).map(([key, value]) => ({

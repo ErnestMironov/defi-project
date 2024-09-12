@@ -1,7 +1,7 @@
 import {
   SELECT_CHAINS,
   SELECT_INCENTIVES_ACTIONS,
-  SELECT_INCENTIVES_FROM,
+  SELECT_TOKENS,
 } from '@constants/select-constant'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { IncentivesHistoryDesktop } from '@modules/transaction-history/incentives/IncentivesHistoryDesktop'
@@ -24,7 +24,7 @@ export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) 
           placeholder: 'All Actions',
           value: [],
         },
-        from: { items: SELECT_INCENTIVES_FROM, placeholder: 'From', value: [] },
+        token: { items: SELECT_TOKENS, placeholder: 'All Tokens', value: [] },
         chain: { items: SELECT_CHAINS, placeholder: 'All Chains', value: [] },
       }}
       {...props}

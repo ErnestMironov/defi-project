@@ -24,7 +24,11 @@ const TableBody = forwardRef<
   HTMLAttributes<HTMLTableSectionElement>
 >(({ children, ...rest }, reference) => {
   return (
-    <tbody className="bg-transparent text-gray-700" {...rest} ref={reference}>
+    <tbody
+      className="bg-transparent text-gray-700 hover:[&>tr]:[box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]"
+      {...rest}
+      ref={reference}
+    >
       {children}
     </tbody>
   )
@@ -36,7 +40,7 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
       <tr
         {...rest}
         className={cn(
-          'bg-cards text-text hover:[box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] rounded-l-[1.5rem] rounded-r-[1.5rem]',
+          'bg-cards text-text rounded-l-[1.5rem] rounded-r-[1.5rem]',
           rest.className,
         )}
         ref={reference}

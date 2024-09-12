@@ -6,7 +6,6 @@ import type {
   SortDirection,
   StatusType,
 } from '@api/maat-finance/types'
-import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import qs from 'qs'
 
@@ -16,7 +15,7 @@ export type AdminActionsParameters = {
   page?: number
   size?: number
   sort?: 'creation_time' | 'amount'
-  chain?: (keyof typeof CHAIN_IDS_BY_BACKEND_NAMES)[]
+  chain?: string[]
   orderBy?: SortDirection
   status?: StatusType[]
   start_timestamp?: string

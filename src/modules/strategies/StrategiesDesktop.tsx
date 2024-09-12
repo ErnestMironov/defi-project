@@ -1,5 +1,6 @@
 import type { StrategiesParameters } from '@api/queries/useStrategies'
 import { useStrategies } from '@api/queries/useStrategies'
+import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
@@ -37,16 +38,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
     size,
     sort,
     orderBy,
-    ...Object.fromEntries(
-      Object.entries(selectFilters)
-        .filter(([_, v]) => v.value && v.value.length > 0)
-        .map(([key, value]) => {
-          const filterValue = Array.isArray(value.value)
-            ? value.value.map((v) => v.value || v).filter(Boolean)
-            : value.value
-          return [key, filterValue]
-        }),
-    ),
+    ...getMultiSelectParameters(selectFilters),
     ...params,
   })
 

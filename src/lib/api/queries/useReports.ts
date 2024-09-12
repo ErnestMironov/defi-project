@@ -1,11 +1,13 @@
 import { apiClient } from '@api/maat-finance/api-client'
 import type {
+  ChainParameters,
   PaginationResponse,
   ReportType,
   SortDirection,
   StatusType,
 } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import qs from 'qs'
 
 export type ReportParameters = {
   limit?: number
@@ -13,18 +15,8 @@ export type ReportParameters = {
   orderBy?: SortDirection
   status?: StatusType
   actions_type?: string[]
-  chain?: (
-    | 'bsc'
-    | 'arbitrum'
-    | 'optimism'
-    | 'base'
-    | 'polygon'
-    | 'avalanche'
-    | 'metis'
-    | 'mantle'
-    | 'sei'
-  )[]
-  token?: ('USDT' | 'USDC')[]
+  chain?: ChainParameters[]
+  token?: string[]
   page?: number
   size?: number
   start_timestamp?: string
@@ -34,6 +26,9 @@ export type ReportParameters = {
 const getReports = (parameters: ReportParameters) => {
   return apiClient.get<PaginationResponse<ReportType>>('/actions/oracle', {
     params: parameters,
+    paramsSerializer: (parameters_) => {
+      return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+    },
   })
 }
 

@@ -245,3 +245,16 @@ export type RebalanceOperation = {
   src_strategies: Strategy[]
   dst_strategies: Strategy[]
 }
+
+export type ChainParameters =
+  | 'bsc'
+  | 'arbitrum'
+  | 'optimism'
+  | 'base'
+  | 'polygon'
+  | 'avalanche'
+  | 'metis'
+  | 'mantle'
+  | 'sei'
+
+export type TokenParameters = 'USDT' | 'USDC'

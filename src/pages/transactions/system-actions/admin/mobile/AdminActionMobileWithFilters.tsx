@@ -1,3 +1,5 @@
+import type { AdminActionType } from '@api/maat-finance/types'
+import type { AdminActionsParameters } from '@api/queries/useAdminActions'
 import { useInfiniteAdminActions } from '@api/queries/useAdminActions'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
@@ -12,18 +14,17 @@ import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import { Loader } from '@components/ui/loader'
 import {
-  SELECT_ADMIN_FROM,
-  SELECT_ADMIN_FUNCTIONS,
+  SELECT_ADMIN_ACTION_TYPES,
   SELECT_CHAINS,
   SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { Fragment, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 
 import { AdminActionMobileList } from './AdminActionMobileList'
 
-type FilterType = 'functions' | 'chains' | 'admin-action-from'
+type FilterType = 'actions' | 'chains'
 
 interface AdminActionMobileWithFiltersProperties extends ComponentProps<'div'> {
   filters?: FilterType[]
@@ -32,26 +33,50 @@ interface AdminActionMobileWithFiltersProperties extends ComponentProps<'div'> {
 export const AdminActionMobileWithFilters = (
   props: AdminActionMobileWithFiltersProperties,
 ) => {
-  const { className, filters = ['functions', 'chains', 'admin-action-from'] } = props
+  const { className, filters = ['actions', 'chains'] } = props
 
   const [search, setSearch] = useState('')
-  const [selectedFunctions, setSelectedFunctions] = useState<OptionType[]>([])
+  const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
-  const [selectedAdminFrom, setSelectedAdminFrom] = useState<OptionType[]>([])
-  const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
+  const [selectedSort, setSelectedSort] = useState<OptionType | undefined>()
 
-  const { data, isLoading, error, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteAdminActions({})
+  const currentSort: AdminActionsParameters = useMemo(() => {
+    switch (selectedSort?.value) {
+      case 'Created earlier': {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+      case 'Created later': {
+        return { orderBy: 'asc', sort: 'creation_time' }
+      }
+      default: {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+    }
+  }, [selectedSort])
+
+  const {
+    data,
+    isLoading,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isPlaceholderData,
+  } = useInfiniteAdminActions({
+    action_type: selectedActions.map((a) => a.value) as AdminActionType[],
+    chain: selectedChains.map((c) => c.value) as string[],
+    ...currentSort,
+  })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
-      case 'functions': {
+      case 'actions': {
         return (
           <MobileCheckboxSelect
             label="Functions"
-            value={selectedFunctions}
-            options={SELECT_ADMIN_FUNCTIONS}
-            onChange={setSelectedFunctions}
+            value={selectedActions}
+            options={SELECT_ADMIN_ACTION_TYPES}
+            onChange={setSelectedActions}
           />
         )
       }
@@ -63,16 +88,6 @@ export const AdminActionMobileWithFilters = (
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
             // placeholder="All Chains"
-          />
-        )
-      }
-      case 'admin-action-from': {
-        return (
-          <MobileCheckboxSelect
-            label="From"
-            value={selectedAdminFrom}
-            options={SELECT_ADMIN_FROM}
-            onChange={setSelectedAdminFrom}
           />
         )
       }
@@ -99,17 +114,14 @@ export const AdminActionMobileWithFilters = (
         <MobileFiltersDrawer
           title="Filters"
           resetFilters={() => {
-            setSelectedFunctions([])
-            setSelectedAdminFrom([])
+            setSelectedActions([])
             setSelectedChains([])
+            setSelectedSort(undefined)
           }}
           trigger={
             <DrawerIconTrigger
               Icon={Filter}
-              active={
-                selectedFunctions.concat(selectedAdminFrom).concat(selectedChains)
-                  .length > 0
-              }
+              active={selectedActions.concat(selectedChains).length > 0}
             />
           }
         >
@@ -122,22 +134,22 @@ export const AdminActionMobileWithFilters = (
           title="Sorting"
           closeOnReset
           resetFilters={() => {
-            setSelectedSortByDate(undefined)
+            setSelectedSort(undefined)
           }}
-          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSortByDate} />}
+          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
         >
           <MobileRadioSelect
             label="Created"
             options={SORT_BY_DATE}
-            value={selectedSortByDate}
-            onChange={setSelectedSortByDate}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
         </MobileFiltersDrawer>
       </div>
       <AdminActionMobileList
         className="mt-3"
         adminActions={data}
-        loading={isLoading || !!error}
+        loading={isLoading || !!error || isPlaceholderData}
         error={error}
       />
       {isFetchingNextPage && (
