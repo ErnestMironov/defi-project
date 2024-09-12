@@ -32,7 +32,9 @@ export interface AreaChartComponentProperties {
 export const AreaChart = (props: AreaChartComponentProperties) => {
   const { data, frame, className, yAxisType, color } = props
   const tooltipFormatter = (value: string) =>
-    yAxisType === 'usd' ? formatUsdValue(value) : formatPercentValue(value)
+    yAxisType === 'usd'
+      ? formatUsdValue(value, { notation: 'compact' })
+      : formatPercentValue(value)
 
   const tickFormatter = (value: string) => {
     let format: string = 'MMM'

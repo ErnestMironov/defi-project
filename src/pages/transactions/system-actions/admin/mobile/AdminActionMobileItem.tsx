@@ -1,11 +1,11 @@
 import type { AdminEvent } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
-import Scan from '@assets/icons/scan.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
-import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
+import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { ADMIN_ACTION_TYPE } from '@constants/action-type'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenAddress } from '@utils/transform'
@@ -57,10 +57,16 @@ export const AdminActionMobileItem = (props: AdminActionMobileItemProperties) =>
               />
             </>
           ) : (
-            <IconWithLabelComponent
-              symbol={adminAction.src_chain_id}
-              className="size-8 gap-3"
-            />
+            <div className="flex items-center gap-2">
+              <TokenIconComponent symbol={adminAction.src_chain_id} className="size-8" />
+              <p>
+                {
+                  CHAIN_NAMES_BY_ID[
+                    adminAction.src_chain_id as keyof typeof CHAIN_NAMES_BY_ID
+                  ]
+                }
+              </p>
+            </div>
           )}
         </div>
         <h6>Tx Hash</h6>
@@ -95,14 +101,10 @@ export const SkeletonAdminActionMobileItem = (
         <h6>From</h6>
         <div className="flex w-full items-center justify-end gap-2">
           <Skeleton className="h-6 w-20 text-lg" />
-          <Scan className="size-5 shrink-0" />
-          <Skeleton className="size-6 shrink-0" />
         </div>
         <h6>To</h6>
         <div className="flex w-full items-center justify-end gap-2">
           <Skeleton className="h-6 w-20 text-lg" />
-          <Scan className="size-5 shrink-0" />
-          <Skeleton className="size-6 shrink-0" />
         </div>
         <h6>Chain</h6>
         <div className="flex items-center gap-2">
@@ -114,8 +116,6 @@ export const SkeletonAdminActionMobileItem = (
       <h6>Tx Hash</h6>
       <div className="flex w-full items-center justify-end gap-2">
         <Skeleton className="h-6 w-20 text-lg" />
-        <Scan className="size-5 shrink-0" />
-        <Skeleton className="size-6 shrink-0" />
       </div>
     </div>
   )

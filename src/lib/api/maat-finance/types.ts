@@ -222,3 +222,26 @@ export interface TxInfoResponse {
   related_actions: Action[]
   action: Action
 }
+
+export type RebalanceOperation = {
+  hash: string
+  intention_id: string
+  status: string
+  src_chain_id: number
+  dst_chain_id: number | null
+  creation_time: string
+  txFrom: string
+  to: string
+  action_type: string
+  amount: number | null
+  volume: number
+  vault: {
+    address: string
+    chain_id: number
+    token: Token
+  }
+  withdraw_from_chains: number[]
+  deposit_to_chains: number[]
+  src_strategies: Strategy[]
+  dst_strategies: Strategy[]
+}
