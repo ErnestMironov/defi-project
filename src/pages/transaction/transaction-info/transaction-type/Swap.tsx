@@ -12,14 +12,16 @@ import {
   TransactionHash,
 } from '../LabelValueElements'
 import { TransactionInfoHeader } from '../transaction-info-header/TransactionInfoHeader'
+import type { Tag } from '../transaction-info-header/TransactionTags'
 import { TransactionInfoContainer } from '../TransactionInfoContainer'
 
 interface SwapProperties extends ComponentProps<'div'> {
   data?: Action
+  withoutRelated?: boolean
 }
 
 export const Swap = (props: SwapProperties) => {
-  const { className, data, ...rest } = props
+  const { className, data, withoutRelated, ...rest } = props
 
   const chainData = useTokenAsset(data?.src_chain_id)
 
@@ -27,11 +29,17 @@ export const Swap = (props: SwapProperties) => {
     return <></>
   }
 
+  const tags: Tag[] = ['SYSTEM']
+
+  if (!withoutRelated) {
+    tags.push('REACTION')
+  }
+
   return (
     <TransactionInfoContainer className={className} {...rest}>
       <TransactionInfoHeader
         title="Swap"
-        tags={['USER', 'TRIGGER']}
+        tags={tags}
         status={data?.status}
         date={data?.creation_time}
       />

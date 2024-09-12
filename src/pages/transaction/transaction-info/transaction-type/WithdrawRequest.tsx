@@ -13,14 +13,16 @@ import {
   Vault,
 } from '../LabelValueElements'
 import { TransactionInfoHeader } from '../transaction-info-header/TransactionInfoHeader'
+import type { Tag } from '../transaction-info-header/TransactionTags'
 import { TransactionInfoContainer } from '../TransactionInfoContainer'
 
 interface WithdrawRequestProperties extends ComponentProps<'div'> {
   data?: Action
+  withoutRelated?: boolean
 }
 
 export const WithdrawRequest = (props: WithdrawRequestProperties) => {
-  const { className, data, ...rest } = props
+  const { className, data, withoutRelated, ...rest } = props
 
   const chainData = useTokenAsset(data?.src_chain_id)
 
@@ -28,11 +30,17 @@ export const WithdrawRequest = (props: WithdrawRequestProperties) => {
     return <></>
   }
 
+  const tags: Tag[] = ['USER']
+
+  if (!withoutRelated) {
+    tags.push('TRIGGER')
+  }
+
   return (
     <TransactionInfoContainer className={className} {...rest}>
       <TransactionInfoHeader
         title="Withdraw request"
-        tags={['USER', 'TRIGGER']}
+        tags={tags}
         status={data?.status}
         date={data?.creation_time}
       />

@@ -14,33 +14,85 @@ import { WithdrawRequest } from './transaction-type/WithdrawRequest'
 interface TransactionInfoProperties extends ComponentProps<'div'> {
   type?: LAST_EVENT_ACTION
   data?: Action
+  withoutRelated?: boolean
 }
 
 export const TransactionInfo = (props: TransactionInfoProperties) => {
-  const { className, type, data, ...rest } = props
+  const { className, type, data, withoutRelated, ...rest } = props
   if (type === 'DEPOSIT') {
-    return <Deposit className={className} data={data} {...rest} />
+    return (
+      <Deposit
+        className={className}
+        data={data}
+        withoutRelated={withoutRelated}
+        {...rest}
+      />
+    )
   }
   if (type === 'INC_SWAP') {
-    return <Swap className={className} data={data} {...rest} />
+    return (
+      <Swap className={className} data={data} withoutRelated={withoutRelated} {...rest} />
+    )
   }
   if (type === 'BRIDGE') {
-    return <Bridge className={className} data={data} {...rest} />
+    return (
+      <Bridge
+        className={className}
+        data={data}
+        withoutRelated={withoutRelated}
+        {...rest}
+      />
+    )
   }
   if (type === 'WITHDRAW_REQUEST') {
-    return <WithdrawRequest className={className} data={data} {...rest} />
+    return (
+      <WithdrawRequest
+        className={className}
+        data={data}
+        withoutRelated={withoutRelated}
+        {...rest}
+      />
+    )
   }
   if (type === 'WITHDRAW_FROM_STRATEGY') {
-    return <WithdrawFromStrategy className={className} data={data} {...rest} />
+    return (
+      <WithdrawFromStrategy
+        className={className}
+        data={data}
+        withoutRelated={withoutRelated}
+        {...rest}
+      />
+    )
   }
   if (type === 'WITHDRAW_FULFILLMENT') {
-    return <WithdrawFulfillment className={className} data={data} {...rest} />
+    return (
+      <WithdrawFulfillment
+        className={className}
+        data={data}
+        withoutRelated={withoutRelated}
+        {...rest}
+      />
+    )
   }
   if (type === 'REBALANCE_REQUEST') {
-    return <RebalanceRequest className={className} data={data} {...rest} />
+    return (
+      <RebalanceRequest
+        className={className}
+        data={data}
+        withoutRelated={withoutRelated}
+        {...rest}
+      />
+    )
   }
   if (type === 'DEPOSIT_IN_STRATEGY') {
-    return <DepositToStrategy className={className} data={data} {...rest} />
+    return (
+      <DepositToStrategy
+        className={className}
+        data={data}
+        withoutRelated={withoutRelated}
+        {...rest}
+      />
+    )
   }
   return <></>
 }

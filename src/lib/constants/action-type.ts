@@ -45,6 +45,12 @@ export const INCENTIVE_ACTION_TYPE = {
 
 export const STATUSES = ['success', 'in progress', 'failed'] as const
 
+export const MAIN_ACTION_TYPE = {
+  DEPOSIT: 'Deposit',
+  REBALANCE_REQUEST: 'Rebalance request',
+  WITHDRAW_REQUEST: 'Withdraw request',
+} as const
+
 export const ADMIN_ACTION_TYPE = {
   STRATEGY_REGISTERED: 'Strategy registered',
   STRATEGY_DEPRECATED: 'Strategy deprecated',
