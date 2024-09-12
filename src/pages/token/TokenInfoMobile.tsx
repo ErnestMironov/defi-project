@@ -1,5 +1,5 @@
-import { USDC_TOKENS_RAW } from '@api/squid-router/postHook/data/USDC'
-import { USDT_TOKENS_RAW } from '@api/squid-router/postHook/data/USDT'
+import type { VaultType } from '@api/maat-finance/types'
+import { useVaults } from '@api/queries/useVaults'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { Skeleton } from '@components/ui/skeleton'
@@ -17,13 +17,17 @@ export const TokenInfoMobile = (props: TokenInfoMobileProperties) => {
   const { className, ...rest } = props
   const { symbol } = useParams()
 
-  const tokenAddresses = useMemo(() => {
-    return symbol === 'USDT' ? USDT_TOKENS_RAW : USDC_TOKENS_RAW
-  }, [symbol])
-  const [selectedAddress, setSelectedAddress] = useState(tokenAddresses[0])
+  const { data: vaults } = useVaults()
+  const tokenVaults = useMemo(() => {
+    if (!vaults) return []
+    return vaults.filter((vault) => vault.token.symbol === symbol)
+  }, [symbol, vaults])
+  const [selectedVault, setSelectedVault] = useState<VaultType | undefined>(undefined)
   useEffect(() => {
-    setSelectedAddress(tokenAddresses[0])
-  }, [tokenAddresses])
+    if (tokenVaults.length > 0) {
+      setSelectedVault(tokenVaults[0])
+    }
+  }, [tokenVaults])
 
   const { apy, tvl, volume, isLoading, error } = useTokenMetrics(
     symbol as 'USDT' | 'USDC',
@@ -70,11 +74,13 @@ export const TokenInfoMobile = (props: TokenInfoMobileProperties) => {
         </p>
         <p className="mt-auto flex w-full items-center justify-between text-base">
           <span className="text-gray-100">Contract</span>
-          <TokenAddressByChainDrawerMobile
-            data={tokenAddresses}
-            value={selectedAddress}
-            onChange={(chain) => setSelectedAddress(chain)}
-          />
+          {selectedVault && vaults && (
+            <TokenAddressByChainDrawerMobile
+              data={tokenVaults}
+              value={selectedVault}
+              onChange={(chain) => setSelectedVault(chain)}
+            />
+          )}
         </p>
       </div>
     </div>

@@ -1,7 +1,8 @@
-import { USDC_TOKENS_RAW } from '@api/squid-router/postHook/data/USDC'
-import { USDT_TOKENS_RAW } from '@api/squid-router/postHook/data/USDT'
+import type { VaultType } from '@api/maat-finance/types'
+import { useVaults } from '@api/queries/useVaults'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
+import { Skeleton } from '@components/ui/skeleton'
 import { TOKEN_INFO } from '@constants/token-info'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
@@ -37,14 +38,17 @@ export const TokenPage = (props: TokensProperties) => {
 export const TokenDesktopPage = (props: TokensProperties) => {
   const { className, ...rest } = props
   const { symbol } = useParams()
-
-  const tokenAddresses = useMemo(() => {
-    return symbol === 'USDT' ? USDT_TOKENS_RAW : USDC_TOKENS_RAW
-  }, [symbol])
-  const [selectedAddress, setSelectedAddress] = useState(tokenAddresses[0])
+  const { data: vaults } = useVaults()
+  const tokenVaults = useMemo(() => {
+    if (!vaults) return []
+    return vaults.filter((vault) => vault.token.symbol === symbol)
+  }, [symbol, vaults])
+  const [selectedVault, setSelectedVault] = useState<VaultType | undefined>(undefined)
   useEffect(() => {
-    setSelectedAddress(tokenAddresses[0])
-  }, [tokenAddresses])
+    if (tokenVaults.length > 0) {
+      setSelectedVault(tokenVaults[0])
+    }
+  }, [tokenVaults])
 
   const { apyData, tvlData, apy, tvl, volume, isLoading, volumeLoading } =
     useTokenMetrics(symbol as 'USDT' | 'USDC')
@@ -76,11 +80,15 @@ export const TokenDesktopPage = (props: TokensProperties) => {
           <p>{TOKEN_INFO[symbol?.toUpperCase() as keyof typeof TOKEN_INFO]}</p>
           <p className="mt-auto flex w-full items-center justify-between text-lg">
             <span className="text-gray-100">Contract</span>
-            <TokenAddressByChainPopover
-              data={tokenAddresses}
-              value={selectedAddress}
-              onChange={(chain) => setSelectedAddress(chain)}
-            />
+            {vaults && selectedVault ? (
+              <TokenAddressByChainPopover
+                data={tokenVaults}
+                value={selectedVault}
+                onChange={(chain) => setSelectedVault(chain)}
+              />
+            ) : (
+              <Skeleton className="h-6 w-60" />
+            )}
           </p>
         </div>
       </div>
