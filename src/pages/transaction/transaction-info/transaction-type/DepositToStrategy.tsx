@@ -12,14 +12,16 @@ import {
   TransactionHash,
 } from '../LabelValueElements'
 import { TransactionInfoHeader } from '../transaction-info-header/TransactionInfoHeader'
+import type { Tag } from '../transaction-info-header/TransactionTags'
 import { TransactionInfoContainer } from '../TransactionInfoContainer'
 
 interface DepositToStrategyProperties extends ComponentProps<'div'> {
   data?: Action
+  withoutRelated?: boolean
 }
 
 export const DepositToStrategy = (props: DepositToStrategyProperties) => {
-  const { className, data, ...rest } = props
+  const { className, data, withoutRelated, ...rest } = props
 
   const chainData = useTokenAsset(data?.src_chain_id)
 
@@ -27,13 +29,19 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
     return <></>
   }
 
+  const tags: Tag[] = ['SYSTEM']
+
+  if (!withoutRelated) {
+    tags.push('REACTION')
+  }
+
   return (
     <TransactionInfoContainer className={className} {...rest}>
       <TransactionInfoHeader
         title="Deposit to Strategy"
-        tags={['USER', 'TRIGGER']}
+        tags={tags}
         status={data?.status}
-        date={new Date().toISOString()}
+        date={data?.creation_time ?? ''}
       />
       <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
         <TransactionHash value={data?.hash} className="col-span-3" />

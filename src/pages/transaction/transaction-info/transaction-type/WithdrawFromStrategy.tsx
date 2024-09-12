@@ -12,25 +12,33 @@ import {
   TransactionHash,
 } from '../LabelValueElements'
 import { TransactionInfoHeader } from '../transaction-info-header/TransactionInfoHeader'
+import type { Tag } from '../transaction-info-header/TransactionTags'
 import { TransactionInfoContainer } from '../TransactionInfoContainer'
 
 interface WithdrawFromStrategyProperties extends ComponentProps<'div'> {
   data?: Action
+  withoutRelated?: boolean
 }
 
 export const WithdrawFromStrategy = (props: WithdrawFromStrategyProperties) => {
-  const { className, data, ...rest } = props
+  const { className, data, withoutRelated, ...rest } = props
   const chainData = useTokenAsset(data?.src_chain_id)
 
   if (!data) {
     return <></>
   }
 
+  const tags: Tag[] = ['SYSTEM']
+
+  if (!withoutRelated) {
+    tags.push('REACTION')
+  }
+
   return (
     <TransactionInfoContainer className={className} {...rest}>
       <TransactionInfoHeader
         title="Withdraw from Strategy"
-        tags={['USER', 'TRIGGER']}
+        tags={tags}
         status={data?.status}
         date={data?.creation_time}
       />
