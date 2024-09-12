@@ -1,7 +1,7 @@
 import type { EventsParameters } from '@api/queries/useEvents'
 import {
   SELECT_CHAINS,
-  SELECT_MAAT_ACTIONS,
+  SELECT_LAST_EVENT_ACTIONS,
   SELECT_STATUSES,
   SELECT_TOKENS,
 } from '@constants/select-constant'
@@ -27,7 +27,7 @@ export const MaatTransactionsHistory: React.FC<TransactionsHistoryProperties> = 
       filters={{
         search: { value: '', placeholder: 'Tx Hash' },
         actions_type: {
-          items: SELECT_MAAT_ACTIONS,
+          items: SELECT_LAST_EVENT_ACTIONS,
           value: [],
           placeholder: 'All Actions',
         },

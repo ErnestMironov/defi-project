@@ -82,7 +82,7 @@ export type Strategy = {
 
 export type ActionType = 'trigger' | 'handler' | 'maat'
 
-export type Vault = {
+export type VaultType = {
   address: string
   chain_id: number
   token: Token
@@ -100,7 +100,7 @@ export type Event = {
   action_type: string
   amount: number | null
   volume: number
-  vault: Vault
+  vault: VaultType
 }
 
 type IncentiveActionType = 'INC_HARVEST' | 'INC_COMPOUND' | 'INC_SWAP'
@@ -215,7 +215,7 @@ export interface Action {
   amount: number
   action_type: LAST_EVENT_ACTION
   strategy: Strategy
-  vault: Vault
+  vault: VaultType
 }
 
 export interface TxInfoResponse {
@@ -245,3 +245,16 @@ export type RebalanceOperation = {
   src_strategies: Strategy[]
   dst_strategies: Strategy[]
 }
+
+export type ChainParameters =
+  | 'bsc'
+  | 'arbitrum'
+  | 'optimism'
+  | 'base'
+  | 'polygon'
+  | 'avalanche'
+  | 'metis'
+  | 'mantle'
+  | 'sei'
+
+export type TokenParameters = 'USDT' | 'USDC'

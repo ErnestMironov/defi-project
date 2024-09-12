@@ -1,3 +1,5 @@
+import type { ChainParameters, TokenParameters } from '@api/maat-finance/types'
+import type { IncentiveParameters } from '@api/queries/useIncentives'
 import { useInfiniteIncentives } from '@api/queries/useIncentives'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
@@ -14,17 +16,17 @@ import { Loader } from '@components/ui/loader'
 import {
   SELECT_CHAINS,
   SELECT_INCENTIVES_ACTIONS,
-  SELECT_INCENTIVES_FROM,
+  SELECT_TOKENS,
   SORT_BY_AMOUNT,
   SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { IncentiveMobileList } from './IncentiveMobileList'
 
-type FilterType = 'actions' | 'from' | 'chains'
+type FilterType = 'actions' | 'tokens' | 'chains'
 
 interface IncentiveMobileWithFiltersProperties extends ComponentProps<'div'> {
   filters?: FilterType[]
@@ -33,21 +35,50 @@ interface IncentiveMobileWithFiltersProperties extends ComponentProps<'div'> {
 export const IncentiveMobileWithFilters = (
   props: IncentiveMobileWithFiltersProperties,
 ) => {
-  const { className, filters = ['actions', 'from', 'chains'] } = props
+  const { className, filters = ['actions', 'tokens', 'chains'] } = props
 
   const [search, setSearch] = useState('')
   const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
   const [selectedStatuses, setSelectedStatuses] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
-  const [selectedSortByAmount, setSelectedSortByAmount] = useState<
-    OptionType | undefined
-  >()
-  const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
+  const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
 
-  const { data, isLoading, error, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useInfiniteIncentives({
-      limit: 100,
-    })
+  const [selectedSort, setSelectedSort] = useState<OptionType | undefined>()
+
+  const currentSort: IncentiveParameters = useMemo(() => {
+    switch (selectedSort?.value) {
+      case 'Highest Amount': {
+        return { orderBy: 'desc', sort: 'amount' }
+      }
+      case 'Lowest Amount': {
+        return { orderBy: 'asc', sort: 'amount' }
+      }
+      case 'Created earlier': {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+      case 'Created later': {
+        return { orderBy: 'asc', sort: 'creation_time' }
+      }
+      default: {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+    }
+  }, [selectedSort])
+  const {
+    data,
+    isLoading,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isPlaceholderData,
+  } = useInfiniteIncentives({
+    limit: 100,
+    actions_type: selectedActions.map((action) => action.value) as string[],
+    token: selectedTokens.map((token) => token.value) as TokenParameters[],
+    chain: selectedChains.map((chain) => chain.value) as ChainParameters[],
+    ...currentSort,
+  })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -61,13 +92,13 @@ export const IncentiveMobileWithFilters = (
           />
         )
       }
-      case 'from': {
+      case 'tokens': {
         return (
           <MobileCheckboxSelect
-            label="From"
-            value={selectedStatuses}
-            options={SELECT_INCENTIVES_FROM}
-            onChange={setSelectedStatuses}
+            label="Tokens"
+            value={selectedTokens}
+            options={SELECT_TOKENS}
+            onChange={setSelectedTokens}
           />
         )
       }
@@ -125,34 +156,28 @@ export const IncentiveMobileWithFilters = (
           title="Sorting"
           closeOnReset
           resetFilters={() => {
-            setSelectedSortByAmount(undefined)
-            setSelectedSortByDate(undefined)
+            setSelectedSort(undefined)
           }}
-          trigger={
-            <DrawerIconTrigger
-              Icon={Sort}
-              active={!!selectedSortByAmount || !!selectedSortByDate}
-            />
-          }
+          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
         >
           <MobileRadioSelect
             label="Amount"
             options={SORT_BY_AMOUNT}
-            value={selectedSortByAmount}
-            onChange={setSelectedSortByAmount}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
           <MobileRadioSelect
             label="Created"
             options={SORT_BY_DATE}
-            value={selectedSortByDate}
-            onChange={setSelectedSortByDate}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
         </MobileFiltersDrawer>
       </div>
       <IncentiveMobileList
         className="mt-3"
         incentives={data}
-        loading={isLoading}
+        loading={isLoading || isPlaceholderData}
         error={error}
       />
       {isFetchingNextPage && (

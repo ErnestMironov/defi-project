@@ -1,17 +1,15 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import { useAdminActions } from '@api/queries/useAdminActions'
 import Sort from '@assets/icons/sort.svg'
+import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
 import { Skeleton } from '@components/ui/skeleton'
-import {
-  SELECT_ADMIN_ACTION_TYPES,
-  SELECT_ADMIN_FROM,
-  SELECT_CHAINS,
-} from '@constants/select-constant'
+import { SELECT_ADMIN_ACTION_TYPES, SELECT_CHAINS } from '@constants/select-constant'
 import { usePages } from '@hooks/common/usePages'
+import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
@@ -28,24 +26,21 @@ export const AdminTable = (props: AdminTableProperties) => {
       value: [],
       placeholder: 'All Actions',
     },
-    from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
+    // from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const { search: _search, ...selectFilters } = filters
   const { page, size, onPageChange, onPageSizeChange } = usePages()
+  const { sort, orderBy, onSortChange } = useSort(['creation_time', 'amount'], {
+    orderBy: 'desc',
+    sort: 'creation_time',
+  })
   const { data, isLoading, error, isPlaceholderData } = useAdminActions({
     page,
     size,
-    ...Object.fromEntries(
-      Object.entries(selectFilters)
-        .filter(([_, v]) => v.value && v.value.length > 0)
-        .map(([key, value]) => {
-          const filterValue = Array.isArray(value.value)
-            ? value.value.map((v) => v.value || v).filter(Boolean)
-            : value.value
-          return [key, filterValue]
-        }),
-    ),
+    orderBy,
+    sort,
+    ...getMultiSelectParameters(selectFilters),
   })
   const renderBody = () => {
     if (isLoading || !!error) {
@@ -84,10 +79,17 @@ export const AdminTable = (props: AdminTableProperties) => {
             <Table.HeadCell>To</Table.HeadCell>
             <Table.HeadCell>Chain</Table.HeadCell>
             <Table.HeadCell>Tx Hash</Table.HeadCell>
-            <Table.HeadCell>
+            <Table.HeadCell
+              className={cn('cursor-pointer')}
+              onClick={() => onSortChange('creation_time')}
+            >
               <div className="flex items-center gap-[0.79rem]">
                 <span>Created</span>
-                <Sort className="size-5 shrink-0" />
+                {sort === 'creation_time' && (
+                  <Sort
+                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
+                  />
+                )}
               </div>
             </Table.HeadCell>
           </Table.Row>

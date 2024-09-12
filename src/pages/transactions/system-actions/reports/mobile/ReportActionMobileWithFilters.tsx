@@ -1,3 +1,5 @@
+import type { ChainParameters, TokenParameters } from '@api/maat-finance/types'
+import type { ReportParameters } from '@api/queries/useReports'
 import { useInfiniteReports } from '@api/queries/useReports'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
@@ -11,19 +13,14 @@ import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import { Loader } from '@components/ui/loader'
-import {
-  SELECT_CHAINS,
-  SELECT_PPS,
-  SELECT_TOKENS,
-  SORT_BY_DATE,
-} from '@constants/select-constant'
+import { SELECT_CHAINS, SELECT_TOKENS, SORT_BY_DATE } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { ReportActionMobileList } from './ReportActionMobileList'
 
-type FilterType = 'tokens' | 'pps' | 'chains'
+type FilterType = 'tokens' | 'chains'
 
 interface ReportActionMobileWithFiltersProperties extends ComponentProps<'div'> {
   filters?: FilterType[]
@@ -32,19 +29,41 @@ interface ReportActionMobileWithFiltersProperties extends ComponentProps<'div'> 
 export const ReportActionMobileWithFilters = (
   props: ReportActionMobileWithFiltersProperties,
 ) => {
-  const { className, filters = ['tokens', 'pps', 'chains'] } = props
+  const { className, filters = ['tokens', 'chains'] } = props
 
   const [search, setSearch] = useState('')
   const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
-  const [selectedPPS, setSelectedPPS] = useState<OptionType[]>([])
-  const [selectedSortByDate, setSelectedSortByDate] = useState<OptionType | undefined>()
 
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteReports({
-      sort: 'creation_time',
-      orderBy: 'desc',
-    })
+  const [selectedSort, setSelectedSort] = useState<OptionType | undefined>()
+
+  const currentSort: ReportParameters = useMemo(() => {
+    switch (selectedSort?.value) {
+      case 'Created earlier': {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+      case 'Created later': {
+        return { orderBy: 'asc', sort: 'creation_time' }
+      }
+      default: {
+        return { orderBy: 'desc', sort: 'creation_time' }
+      }
+    }
+  }, [selectedSort])
+
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPlaceholderData,
+  } = useInfiniteReports({
+    ...currentSort,
+    token: selectedTokens.map((token) => token.value) as TokenParameters[],
+    chain: selectedChains.map((chain) => chain.value) as ChainParameters[],
+  })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -55,16 +74,6 @@ export const ReportActionMobileWithFilters = (
             value={selectedTokens}
             options={SELECT_TOKENS}
             onChange={setSelectedTokens}
-          />
-        )
-      }
-      case 'pps': {
-        return (
-          <MobileCheckboxSelect
-            label="PPS"
-            value={selectedPPS}
-            options={SELECT_PPS}
-            onChange={setSelectedPPS}
           />
         )
       }
@@ -103,15 +112,12 @@ export const ReportActionMobileWithFilters = (
           title="Filters"
           resetFilters={() => {
             setSelectedTokens([])
-            setSelectedPPS([])
             setSelectedChains([])
           }}
           trigger={
             <DrawerIconTrigger
               Icon={Filter}
-              active={
-                selectedTokens.concat(selectedPPS).concat(selectedChains).length > 0
-              }
+              active={selectedTokens.concat(selectedChains).length > 0}
             />
           }
         >
@@ -122,22 +128,22 @@ export const ReportActionMobileWithFilters = (
           title="Sorting"
           closeOnReset
           resetFilters={() => {
-            setSelectedSortByDate(undefined)
+            setSelectedSort(undefined)
           }}
-          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSortByDate} />}
+          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
         >
           <MobileRadioSelect
             label="Created"
             options={SORT_BY_DATE}
-            value={selectedSortByDate}
-            onChange={setSelectedSortByDate}
+            value={selectedSort}
+            onChange={setSelectedSort}
           />
         </MobileFiltersDrawer>
       </div>
       <ReportActionMobileList
         className="mt-3"
         reportActions={data}
-        loading={isLoading}
+        loading={isLoading || isPlaceholderData}
         error={error}
       />
       {isFetchingNextPage && (

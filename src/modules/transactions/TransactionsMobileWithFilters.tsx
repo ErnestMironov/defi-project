@@ -76,17 +76,24 @@ export const TransactionsMobileWithFilters = (
       }
     }
   }, [selectedSort])
-  const { data, isLoading, error, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfiniteEvents({
-      ...parameters,
-      ...currentSort,
-      chain: selectedChains.map(
-        (chain) => chain.value as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES,
-      ),
-      action_type: selectedActions.map(
-        (action) => action.value,
-      ) as (keyof typeof LAST_EVENT_ACTION_TYPE)[],
-    })
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isPlaceholderData,
+  } = useInfiniteEvents({
+    ...parameters,
+    ...currentSort,
+    chain: selectedChains.map(
+      (chain) => chain.value as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES,
+    ),
+    action_type: selectedActions.map(
+      (action) => action.value,
+    ) as (keyof typeof LAST_EVENT_ACTION_TYPE)[],
+  })
 
   const renderFilters = (filter: FilterType) => {
     switch (filter) {
@@ -198,7 +205,7 @@ export const TransactionsMobileWithFilters = (
       <TransactionsMobileList
         className="mt-3"
         events={data}
-        loading={isLoading}
+        loading={isLoading || isPlaceholderData}
         error={error}
       />
       {isFetchingNextPage && (

@@ -1,12 +1,14 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import { useReports } from '@api/queries/useReports'
 import Sort from '@assets/icons/sort.svg'
+import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
-import { SELECT_CHAINS, SELECT_PPS, SELECT_TOKENS } from '@constants/select-constant'
+import { SELECT_CHAINS, SELECT_TOKENS } from '@constants/select-constant'
 import { usePages } from '@hooks/common/usePages'
+import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
@@ -19,15 +21,20 @@ export const ReportsTable = (props: ReportsTableProperties) => {
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Nonce / Tx Hash' },
     token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
-    pps: { items: SELECT_PPS, value: [], placeholder: 'PPS' },
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
+  const { search: _search, ...selectFilters } = filters
   const { page, size, onPageChange, onPageSizeChange } = usePages()
+  const { sort, orderBy, onSortChange } = useSort(['creation_time'], {
+    orderBy: 'desc',
+    sort: 'creation_time',
+  })
   const { data, isLoading, error, isPlaceholderData } = useReports({
     page,
     size,
-    orderBy: 'desc',
-    sort: 'creation_time',
+    orderBy,
+    sort,
+    ...getMultiSelectParameters(selectFilters),
   })
 
   const renderBody = () => {
@@ -55,9 +62,18 @@ export const ReportsTable = (props: ReportsTableProperties) => {
             <Table.HeadCell>PPS</Table.HeadCell>
             <Table.HeadCell>Chain</Table.HeadCell>
             <Table.HeadCell>Tx Hash</Table.HeadCell>
-            <Table.HeadCell>
-              <span className="inline-block align-middle">Created</span>
-              <Sort className="ml-[0.79rem] inline-block h-[1.06619rem] w-[0.66175rem] shrink-0" />
+            <Table.HeadCell
+              className={cn('cursor-pointer')}
+              onClick={() => onSortChange('creation_time')}
+            >
+              <div className="flex items-center gap-[0.79rem]">
+                <span>Created</span>
+                {sort === 'creation_time' && (
+                  <Sort
+                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
+                  />
+                )}
+              </div>
             </Table.HeadCell>
           </Table.Row>
         </Table.Head>
