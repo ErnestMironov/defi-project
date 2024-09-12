@@ -1,6 +1,7 @@
 import Arrow from '@assets/icons/curve-arrow-down.svg'
 import { Skeleton } from '@components/ui/skeleton'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
+import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { Link } from 'react-router-dom'
@@ -10,7 +11,6 @@ import type { TokenStatsContainerProperties } from './TokenStatsContainer'
 export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) => {
   const {
     className,
-    color,
     apy,
     tvl,
     rebalancingVolume,
@@ -44,12 +44,6 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
             <p>
               {tvl &&
                 formatUsdValue(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
-              <span className="ml-1 align-top text-[0.75rem]/[0.9rem]" style={{ color }}>
-                {formatPercentValue('27', {
-                  maximumFractionDigits: 0,
-                  signDisplay: 'exceptZero',
-                })}
-              </span>
             </p>
           </div>
           <div className="h-full w-px bg-stroke-100" />
@@ -70,7 +64,7 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
         </div>
         {withLink && (
           <Link
-            to={`/tokens/${tokenName}`}
+            to={`${ROUTES.TOKENS}/${tokenName}`}
             className="group flex items-center gap-0.5 text-[0.75rem]/[0.9rem] font-bold uppercase text-main-100"
           >
             <span>Go to {tokenName}</span>
@@ -111,7 +105,7 @@ const SkeletonTokenStatsContainerMobile = (
         </div>
         {withLink && (
           <Link
-            to={`/tokens/${tokenName}`}
+            to={`${ROUTES.TOKENS}/${tokenName}`}
             className="group flex items-center gap-0.5 text-[0.75rem]/[0.9rem] font-bold uppercase text-main-100"
           >
             <span>Go to {tokenName}</span>

@@ -77,13 +77,13 @@ export const StrategyRowSkeleton = (_props: ComponentProps<'tr'>) => {
       <Table.Cell>
         <Skeleton className="h-6 w-full" />
       </Table.Cell>
-      <Table.Cell className="font-bold">
+      <Table.Cell className="w-[10.1rem]">
+        <Skeleton className="h-6 w-full" />
+      </Table.Cell>
+      <Table.Cell className="w-[10.1rem]">
         <Skeleton className="h-6 w-full" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-full" />
-      </Table.Cell>
-      <Table.Cell className="max-w-[12.1rem]">
         <Skeleton className="h-6 w-full" />
       </Table.Cell>
     </Table.Row>

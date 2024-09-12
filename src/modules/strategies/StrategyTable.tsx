@@ -47,7 +47,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
           <Table.HeadCell>Chain</Table.HeadCell>
           <Table.HeadCell>Protocol</Table.HeadCell>
           <Table.HeadCell
-            className="cursor-pointer"
+            className="w-[10.1rem] cursor-pointer"
             onClick={() => onSortChange?.('apy')}
           >
             <div className="inline-flex items-center gap-[0.79rem]">
@@ -63,7 +63,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
             </div>
           </Table.HeadCell>
           <Table.HeadCell
-            className="cursor-pointer"
+            className="w-[10.1rem] cursor-pointer"
             onClick={() => onSortChange?.('tvl')}
           >
             <div className="inline-flex items-center gap-[0.79rem]">

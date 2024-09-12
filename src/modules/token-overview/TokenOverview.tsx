@@ -22,6 +22,8 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
   const usdcTvl = protocolMetrics?.USDC?.tvl
   const usdtApy = protocolMetrics?.USDT?.apy
   const usdtTvl = protocolMetrics?.USDT?.tvl
+  const usdcVolume = data?.USDC.volume
+  const usdtVolume = data?.USDT.volume
 
   return (
     <section
@@ -37,7 +39,7 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
         color="#3883EB"
         apy={usdcApy}
         tvl={usdcTvl}
-        rebalancingVolume={data?.USDC.volume}
+        rebalancingVolume={usdcVolume}
         tokenName="USDC"
         img={usdc}
         imageClassName="rotate-[5.207deg]"
@@ -48,7 +50,7 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
         color="#4CD7B1"
         apy={usdtApy}
         tvl={usdtTvl}
-        rebalancingVolume={data?.USDT.volume}
+        rebalancingVolume={usdtVolume}
         tokenName="USDT"
         img={usdt}
         imageClassName="rotate-[-5.207deg] right-[-7.5rem]"

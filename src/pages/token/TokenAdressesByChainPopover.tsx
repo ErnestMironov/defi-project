@@ -2,7 +2,7 @@ import type { USDT_TOKENS_RAW } from '@api/squid-router/postHook/data/USDT'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { CopyButton } from '@components/copy/CopyButton'
-import { TokenIconComponent } from '@components/token-icon'
+import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { useDisclosure } from '@hooks/common/useDisclosure'
@@ -34,7 +34,7 @@ export const TokenAddressByChainPopover = (
       </PopoverTrigger>
       <PopoverContent
         sideOffset={10}
-        className="flex flex-col gap-5 border border-stroke-100 p-6 text-lg"
+        className="flex w-80 flex-col gap-5 border border-stroke-100 p-6 text-lg"
         align="end"
       >
         {data.map((item, i) => {
@@ -42,15 +42,15 @@ export const TokenAddressByChainPopover = (
             CHAIN_NAMES_BY_ID[item.chainId as keyof typeof CHAIN_NAMES_BY_ID]
           return (
             <div
-              className="grid cursor-pointer grid-cols-[1.25rem_0.8fr_0.8fr_1.25rem] items-center justify-between"
+              className="grid cursor-pointer grid-cols-[1.2fr_1.3fr_1.25rem] items-center justify-between"
               key={i}
               onClick={() => {
                 onChange(item)
                 close()
               }}
             >
-              <TokenIconComponent className="size-5" symbol={item.chainId} />
-              <p className="ml-2 leading-[0rem]">{chainName}</p>
+              <IconWithLabelComponent symbol={chainName} className="size-5" />
+              {/* <p className="ml-2 leading-[0rem]">{chainName}</p> */}
               <p>{shortenAddress(item.addr)}</p>
               {value === item ? (
                 <Check className="size-[1.125rem]" />

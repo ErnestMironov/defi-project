@@ -18,8 +18,8 @@ export const MobileCheckboxSelect = (props: CheckboxProperties) => {
     <div className={cn('flex flex-col items-start gap-2', className)}>
       {label && <div className="text-gray-100">{label}</div>}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3.5">
-        {options.map((option) => (
-          <div key={option.value} className="flex items-center gap-2">
+        {options.map((option, i) => (
+          <div key={`${option.value}-${i}`} className="flex items-center gap-2">
             <Checkbox
               id={option.value}
               checked={value.some((v) => v.value === option.value)}
