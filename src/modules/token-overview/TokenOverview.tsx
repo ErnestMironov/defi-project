@@ -22,8 +22,8 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
   const usdcTvl = protocolMetrics?.USDC?.tvl
   const usdtApy = protocolMetrics?.USDT?.apy
   const usdtTvl = protocolMetrics?.USDT?.tvl
-  const usdcVolume = data?.USDC.volume
-  const usdtVolume = data?.USDT.volume
+  const usdcVolume = data?.USDC?.volume
+  const usdtVolume = data?.USDT?.volume
 
   return (
     <section
