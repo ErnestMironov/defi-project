@@ -17,7 +17,7 @@ export type StrategiesParameters = {
   token?: string[]
 }
 
-const getStrategies = (parameters: StrategiesParameters) => {
+export const getStrategies = (parameters: StrategiesParameters) => {
   return apiClient.get<PaginationResponse<Strategy>>('/overview/strategies', {
     params: parameters,
     paramsSerializer: (parameters_) => {
@@ -42,7 +42,7 @@ export const useInfiniteStrategies = (parameters: StrategiesParameters) => {
 
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
-      queryKey: ['strategies', rest],
+      queryKey: ['strategies-infinite', rest],
       queryFn: async ({ pageParam }) => {
         const response = await getStrategies({ size, page: pageParam, ...rest })
         return response.data

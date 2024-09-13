@@ -7,10 +7,13 @@ import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { formatAmount } from '@utils/formatValue'
 import { useEffect, useRef } from 'react'
+import { usePrefetchAnalyticsQueries } from 'src/hooks/usePrefetchAnalyticsQueries'
 
 export const Deposit = () => {
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
     useProtocolMetrics()
+
+  usePrefetchAnalyticsQueries()
 
   const usdcApy = protocolMetrics?.USDC?.apy
   const usdtApy = protocolMetrics?.USDT?.apy

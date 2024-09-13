@@ -16,7 +16,7 @@ type ProtocolMetrics = {
   }
 }
 
-const getProtocolMetrics = () => {
+export const getProtocolMetrics = () => {
   return apiClient.get<ProtocolMetrics>('/stats/protocol/metrics')
 }
 

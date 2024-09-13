@@ -26,7 +26,7 @@ export type EventsParameters = {
   token?: TokenParameters[]
 }
 
-const getEvents = (parameters: EventsParameters) => {
+export const getEvents = (parameters: EventsParameters) => {
   return apiClient.get<PaginationResponse<Event>>('/actions/last', {
     params: parameters,
     paramsSerializer: (parameters_) => {
@@ -49,7 +49,7 @@ export const useInfiniteEvents = (parameters: EventsParameters) => {
   const { size, ...rest } = parameters
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
-      queryKey: ['events', rest],
+      queryKey: ['events-infinite', rest],
       queryFn: async ({ pageParam }) => {
         const response = await getEvents({ size, page: pageParam, ...rest })
         return response.data

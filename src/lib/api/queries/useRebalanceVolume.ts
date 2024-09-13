@@ -2,7 +2,7 @@ import { apiClient } from '@api/maat-finance/api-client'
 import type { RebalanceVolume } from '@api/maat-finance/types'
 import { useQuery } from '@tanstack/react-query'
 
-const getRebalanceVolume = () => {
+export const getRebalanceVolume = () => {
   return apiClient.get<RebalanceVolume>('/stats/rebalance-volume')
 }
 
