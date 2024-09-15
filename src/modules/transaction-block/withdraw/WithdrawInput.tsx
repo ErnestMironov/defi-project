@@ -58,18 +58,17 @@ export const WithdrawInput = () => {
 
   const [validationError, setValidationError] = useState('')
 
-  const maxBalance = mtToken?.value
-    ? formatUnits(BigInt(mtToken?.value), mtToken?.decimals ?? 6)
+  const maxBalance = mtToken?.stableBalance
+    ? formatUnits(BigInt(mtToken?.stableBalance), mtToken?.decimals ?? 6)
     : '0'
 
   const inputValueBN = useMemo(
     () => new BigNumber(inputValue || '0').times(mtToken?.decimals ?? 6),
     [inputValue, mtToken?.decimals],
   )
-  const balanceBN = useMemo(() => new BigNumber(mtToken?.value || '0'), [mtToken?.value])
-  const lpBalanceBN = useMemo(
-    () => new BigNumber(mtToken?.mtToken || '0'),
-    [mtToken?.mtToken],
+  const balanceBN = useMemo(
+    () => new BigNumber(mtToken?.stableBalance?.toString() || '0'),
+    [mtToken?.stableBalance],
   )
 
   useEffect(() => {
@@ -90,7 +89,7 @@ export const WithdrawInput = () => {
     }
 
     setValidationError('')
-  }, [inputValueBN, lpBalanceBN, inputValueInUSD, balanceBN])
+  }, [inputValueBN, inputValueInUSD, balanceBN])
 
   const handleReview = () => {
     setCurrentModal('review')

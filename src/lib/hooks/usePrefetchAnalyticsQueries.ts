@@ -16,12 +16,34 @@ export const usePrefetchAnalyticsQueries = () => {
       queryFn: () => getRebalanceVolume(),
     },
     {
-      queryKey: ['strategies'],
-      queryFn: () => getStrategies({}),
+      queryKey: ['strategies', { page: 1, size: 10, sort: 'apy', orderBy: 'desc' }],
+      queryFn: () =>
+        getStrategies({
+          page: 1,
+          size: 10,
+          sort: 'apy',
+          orderBy: 'desc',
+        }),
     },
     {
-      queryKey: ['events'],
-      queryFn: () => getEvents({}),
+      queryKey: [
+        'events',
+        {
+          size: 10,
+          page: 1,
+          limit: 100,
+          sort: 'creation_time',
+          orderBy: 'desc',
+        },
+      ],
+      queryFn: () =>
+        getEvents({
+          size: 10,
+          page: 1,
+          limit: 100,
+          sort: 'creation_time',
+          orderBy: 'desc',
+        }),
     },
   ]
 

@@ -13,17 +13,17 @@ import Lottie from 'lottie-react'
 import type { HTMLAttributes } from 'react'
 import { useState } from 'react'
 
-interface UniversalSelectModalProperties<T> {
+interface UniversalSelectModalProperties<T, U> {
   title: string
-  selectedItem: T | null
-  onChange: (item: T) => void
+  selectedItem: U | null
+  onChange: (item: U) => void
   items: T[]
   isLoading: boolean
-  renderTrigger: (selectedItem: T | null) => React.ReactNode
-  renderItem: (item: T, onChange: (item: T) => void) => React.ReactNode
+  renderTrigger: (selectedItem: U | null) => React.ReactNode
+  renderItem: (item: T, onChange: (item: U) => void) => React.ReactNode
 }
 
-export function UniversalSelectModal<T>({
+export function UniversalSelectModal<T, U>({
   title,
   selectedItem,
   items,
@@ -31,12 +31,13 @@ export function UniversalSelectModal<T>({
   renderTrigger,
   renderItem,
   onChange,
-}: UniversalSelectModalProperties<T> & Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>) {
+}: UniversalSelectModalProperties<T, U> &
+  Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>) {
   const [opened, setOpened] = useState(false)
 
-  const handleChange = (item: T) => {
+  const handleChange = (item: U) => {
     console.log('🚀 ~ handleChange ~ item:', item)
-    onChange(item)
+    onChange(item as U)
     setOpened(false)
   }
 

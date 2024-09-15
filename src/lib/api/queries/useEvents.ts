@@ -36,6 +36,7 @@ export const getEvents = (parameters: EventsParameters) => {
 }
 
 export const useEvents = (parameters: EventsParameters) => {
+  console.log('🚀 ~ useEvents ~ parameters:', parameters)
   return useQuery({
     queryKey: ['events', parameters],
     queryFn: async () => {

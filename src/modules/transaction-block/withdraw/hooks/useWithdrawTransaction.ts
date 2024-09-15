@@ -30,7 +30,7 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
 
   const [status, setStatus] = useState<STEP_STATUS>('idle')
 
-  const { sharesBalance } = useVaultBalance(mtToken?.mtAddress || '0x')
+  const { sharesBalance } = useVaultBalance(mtToken?.address || '0x')
 
   const isEnoughSharesToWithdraw =
     sharesBalance && amount ? sharesBalance >= BigInt(amount) : undefined
@@ -51,7 +51,7 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
 
     return writeContract(
       {
-        address: mtToken?.mtAddress as Address,
+        address: mtToken?.address as Address,
         abi: tokenVaultAbi,
         functionName: 'requestWithdraw',
         chainId: withdrawFromNetwork,

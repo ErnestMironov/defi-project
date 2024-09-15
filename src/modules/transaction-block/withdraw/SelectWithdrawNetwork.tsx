@@ -7,7 +7,6 @@ import { useMemo } from 'react'
 
 import { useTxStore } from '../store/useTxStore'
 import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
-import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
 import { UniversalSelectModal } from './UniversalSelectModal'
 
 const RenderNetworkItem = (
@@ -34,7 +33,6 @@ const RenderNetworkItem = (
 
 export const SelectWithdrawNetworkModal = () => {
   const { withdrawToNetwork, setWithdrawToNetwork, mtToken, vault } = useTxStore()
-  const token = useGetMTokenInfo(mtToken)
 
   const { data, isLoading } = useGetWithdrawChains()
 
@@ -54,18 +52,20 @@ export const SelectWithdrawNetworkModal = () => {
       isLoading={false}
       renderTrigger={() => (
         <ChoiceBox
-          value={token?.stable?.toUpperCase() || 'Select network'}
+          value={mtToken?.stable?.toUpperCase() || 'Select network'}
           className="min-w-[10.5rem]"
           icon={
             <TokenWithNetwork
-              symbol={token?.symbol}
+              symbol={mtToken?.symbol}
               network={withdrawToNetwork}
               className="size-[2.14288rem] max-lg:size-[1.125rem]"
             />
           }
         />
       )}
-      renderItem={(chain, onItemChange) => RenderNetworkItem(chain, onItemChange, token)}
+      renderItem={(chain, onItemChange) =>
+        RenderNetworkItem(chain, onItemChange, mtToken)
+      }
       onChange={setWithdrawToNetwork}
     />
   )

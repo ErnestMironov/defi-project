@@ -36,8 +36,8 @@ export const WithdrawReviewContent = ({
     const parsedAmount = parseUnits(amount, mtToken?.decimals ?? 6)
 
     const inputValueBN = new BigNumber(parsedAmount.toString())
-    const lpBalanceBN = new BigNumber(mtToken?.mtToken ?? 0)
-    const balanceBN = new BigNumber(mtToken?.value ?? 0)
+    const lpBalanceBN = new BigNumber(mtToken?.balance?.toString() ?? 0)
+    const balanceBN = new BigNumber(mtToken?.stableBalance?.toString() ?? 0)
 
     if (
       inputValueBN.isZero() ||
@@ -51,7 +51,7 @@ export const WithdrawReviewContent = ({
     }
 
     return inputValueBN.multipliedBy(lpBalanceBN).div(balanceBN).toFixed(0)
-  }, [amount, mtToken?.mtToken, mtToken?.value])
+  }, [amount, mtToken?.balance, mtToken?.decimals, mtToken?.stableBalance])
   console.log('🚀 ~ inputValueInMtToken ~ inputValueInMtToken:', inputValueInMtToken)
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
@@ -69,8 +69,8 @@ export const WithdrawReviewContent = ({
     error: approveError,
   } = useApproveERC20({
     approveValue: inputValueInMtToken,
-    tokenAddress: mtToken?.mtAddress,
-    transactionRequestTarget: mtToken?.mtAddress,
+    tokenAddress: mtToken?.address,
+    transactionRequestTarget: mtToken?.address,
     chainId: mtToken?.chainData?.chainId,
     onSuccessHandler: () => {
       if (currentStep === 2) {

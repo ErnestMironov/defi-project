@@ -1,49 +1,35 @@
-import type { ParsedSharesBalanceResponse } from '@api/maat-finance/types'
 import Usdc from '@assets/icons/tokens/usdc.svg'
 import Usdt from '@assets/icons/tokens/usdt.svg'
-import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
+import type { TokenShares } from '@hooks/useGetUserShares'
 import { useMemo } from 'react'
-import type { Address } from 'viem'
 
 export interface IMToken {
   TokenIcon: React.FC<React.SVGProps<SVGElement>>
   symbol: string
-  stable: 'usdt' | 'usdc'
-  mtAddress: Address
 }
 
 const TOKENS: Record<'USDT' | 'USDC', IMToken> = {
   USDT: {
     TokenIcon: Usdt,
     symbol: 'mtUSDT',
-    stable: 'usdt',
-    mtAddress: USDT_VAULT_ADDRESS,
   },
   USDC: {
     TokenIcon: Usdc,
     symbol: 'mtUSDC',
-    stable: 'usdc',
-    mtAddress: USDC_VAULT_ADDRESS,
   },
 }
 
 export type UseGetMTokenInfoReturn = IMToken &
-  ParsedSharesBalanceResponse['balances'][number] & {
+  TokenShares & {
     chainData: ReturnType<typeof useTokenAsset>
   }
 
-export const useGetMTokenInfo = (
-  mToken: ParsedSharesBalanceResponse['balances'][number] | null,
-): UseGetMTokenInfoReturn | null => {
+export const useGetMTokenInfo = (mToken: TokenShares): UseGetMTokenInfoReturn => {
   const tokenData = useMemo(() => {
-    if (!mToken) return null
-
-    return TOKENS[mToken.symbol]
+    return TOKENS[mToken.stable]
   }, [mToken])
-  const chainData = useTokenAsset(mToken?.chain_id)
-
-  if (!tokenData || !mToken) return null
+  const chainData = useTokenAsset(mToken?.chainId)
 
   return {
     ...tokenData,
