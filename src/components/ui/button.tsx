@@ -23,7 +23,7 @@ const buttonVariants = cva(
           'hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50',
         link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50',
         container:
-          'bg-cards text-text hover:bg-[#F1F0F9] disabled:bg-slate-100 dark:hover:bg-[#29273B]',
+          'bg-cards text-text hover:bg-cards-hover disabled:bg-cards dark:bg-cards-hover dark:hover:bg-cards',
       },
       size: {
         default:

@@ -1,4 +1,6 @@
 import { BaseLayout } from '@layouts/BaseLayout'
+import { OtpLayout } from '@pages/otp/layout/OtpLayout'
+import { VALID_OTP_HASH } from '@pages/otp/Otp'
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -20,7 +22,36 @@ function Root() {
 
 export const routes = createRoutesFromElements(
   <Route path="/">
-    <Route Component={Root}>
+    <Route
+      Component={OtpLayout}
+      loader={() => {
+        const otp = window.localStorage.getItem('otp')
+        if (otp === VALID_OTP_HASH) {
+          return redirect(ROUTES.DEPOSIT)
+        }
+        return { Component: OtpLayout }
+      }}
+    >
+      <Route
+        path={ROUTES.OTP}
+        lazy={async () => {
+          const { Otp } = await import('@pages/otp/Otp')
+          return {
+            Component: Otp,
+          }
+        }}
+      />
+    </Route>
+    <Route
+      Component={Root}
+      loader={() => {
+        const otp = window.localStorage.getItem('otp')
+        if (otp !== VALID_OTP_HASH) {
+          return redirect(ROUTES.OTP)
+        }
+        return { Component: Root }
+      }}
+    >
       <Route
         path={ROUTES.DEPOSIT}
         lazy={async () => {
@@ -34,7 +65,6 @@ export const routes = createRoutesFromElements(
         path={ROUTES.ANALYTICS}
         lazy={async () => {
           const { Analytics } = await import('@pages/analytics/Analytics')
-          console.log('🚀 ~ lazy={ ~ Landing:', Analytics)
           return {
             Component: Analytics,
           }

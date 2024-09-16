@@ -7882,6 +7882,11 @@ inherits@2.0.3:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha512-x00IRNXNy63jwGkJmzPigoySHbaqpNuzKbBOmzK+g2OdZpQ9w+sxCN+VSB3ja7IAge2OP2qpfxTjeNcyjmW1uw==
 
+input-otp@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/input-otp/-/input-otp-1.2.5.tgz#7a9ad66085547cc54dbeb44ec66c0930365fe998"
+  integrity sha512-XoRSZyr5NaK++/Ml/0bsTycKiSq9M5u6fWgG5Cqjldj6+ontrKnPRqn+6Bo4fzUwoMXRenUdacVfR7Y68gldKw==
+
 internal-slot@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/internal-slot/-/internal-slot-1.0.7.tgz#c06dcca3ed874249881007b0a5523b172a190802"
