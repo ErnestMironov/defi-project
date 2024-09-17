@@ -50,16 +50,17 @@ export const TokenDesktopPage = (props: TokensProperties) => {
     }
   }, [tokenVaults])
 
-  const { apyData, tvlData, apy, tvl, volume, isLoading, volumeLoading } =
-    useTokenMetrics(symbol as 'USDT' | 'USDC')
+  const { apy, tvl, volume, isLoading, volumeLoading } = useTokenMetrics(
+    symbol as 'USDT' | 'USDC',
+  )
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
       <Breadcrumbs />
       <TokenHeader />
       <div className="mt-[4.62rem] grid grid-cols-2 gap-10 *:h-[18.25rem]">
-        <TokenApyChart data={apyData} />
-        <TokenTvlChart data={tvlData} />
+        <TokenApyChart symbol={symbol as 'USDT' | 'USDC'} />
+        <TokenTvlChart symbol={symbol as 'USDT' | 'USDC'} />
       </div>
       <div className="mt-12 grid grid-cols-2 gap-10">
         <TokenStatsContainer

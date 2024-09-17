@@ -1,3 +1,4 @@
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import Dot from '@assets/icons/dot.svg'
 import Filter from '@assets/icons/filter.svg'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
@@ -16,7 +17,7 @@ import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useTokenMetrics } from './useTokenMetrics'
@@ -34,35 +35,99 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
   const { symbol } = useParams()
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
-  const { currentFrame, frames, onFrameChange } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
 
   const [selectedProtocols, setSelectedProtocols] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
 
-  const { apyData, tvlData, isLoading, error, apy, tvl } = useTokenMetrics(
-    symbol as 'USDT' | 'USDC',
-  )
+  const { apy, tvl } = useTokenMetrics(symbol as 'USDT' | 'USDC')
+
+  const {
+    data: apyData,
+    isLoading: isApyLoading,
+    error: apyError,
+  } = useProtocolMetrics({
+    metrics_type: ['apy'],
+    tokens: [symbol as 'USDT' | 'USDC'],
+    from_timestamp: currentTimestamp,
+    protocols: selectedProtocols.map((item) => item.value),
+    chains: selectedChains.map((item) => item.value),
+  })
+  const {
+    data: tvlData,
+    isLoading: isTvlLoading,
+    error: tvlError,
+  } = useProtocolMetrics({
+    metrics_type: ['tvl'],
+    tokens: [symbol as 'USDT' | 'USDC'],
+    from_timestamp: currentTimestamp,
+    protocols: selectedProtocols.map((item) => item.value),
+    chains: selectedChains.map((item) => item.value),
+  })
+
+  const formattedApyData: RechartDataType[] = useMemo(() => {
+    if (!apyData) return []
+    const tokenApyHistory = apyData?.[symbol as 'USDT' | 'USDC']?.history
+    if (!tokenApyHistory) {
+      return [
+        { name: 'No data', timestamp: currentTimestamp, value: 0 },
+        { name: 'No data', timestamp: Date.now(), value: 0 },
+      ]
+    }
+    if (!tokenApyHistory) return []
+    return Object.entries(tokenApyHistory).map(([key, value]) => {
+      // format timestamp to unix timestamp
+      const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
+
+      return {
+        name: key,
+        timestamp,
+        value: value.apy,
+      }
+    })
+  }, [apyData, symbol, currentTimestamp])
+
+  const formattedTvlData: RechartDataType[] = useMemo(() => {
+    if (!tvlData) return []
+    const tokenTvlHistory = tvlData?.[symbol as 'USDT' | 'USDC']?.history
+    if (!tokenTvlHistory) {
+      return [
+        { name: 'No data', timestamp: currentTimestamp, value: 0 },
+        { name: 'No data', timestamp: Date.now(), value: 0 },
+      ]
+    }
+    return Object.entries(tokenTvlHistory).map(([key, value]) => {
+      // format timestamp to unix timestamp
+      const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
+
+      return {
+        name: key,
+        timestamp,
+        value: value.tvl,
+      }
+    })
+  }, [symbol, tvlData])
 
   const renderApyBody = () => {
     switch (true) {
-      case isLoading:
-      case !!error: {
+      case isApyLoading:
+      case !!apyError: {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <AreaChart data={apyData} color="#6160FF" yAxisType="percent" />
+        return <AreaChart data={formattedApyData} color="#6160FF" yAxisType="percent" />
       }
     }
   }
 
   const renderTvlBody = () => {
     switch (true) {
-      case isLoading:
-      case !!error: {
+      case isTvlLoading:
+      case !!tvlError: {
         return <Skeleton className="size-full rounded-3xl" />
       }
       default: {
-        return <AreaChart data={tvlData} color="#A6C1FF" yAxisType="usd" />
+        return <AreaChart data={formattedTvlData} color="#A6C1FF" yAxisType="usd" />
       }
     }
   }

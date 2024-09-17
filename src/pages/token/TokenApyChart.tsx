@@ -1,22 +1,50 @@
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import type { RechartDataType } from '@components/chart/line-chart/AreaChart'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import { MultiSelect } from '@components/select/MultiSelect'
 import type { OptionType } from '@components/select/Select'
+import { Skeleton } from '@components/ui/skeleton'
 import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useState } from 'react'
+import { type ComponentProps, useMemo, useState } from 'react'
 
 interface TokenApyChartProperties extends ComponentProps<'div'> {
-  data: RechartDataType[]
+  symbol: 'USDT' | 'USDC'
 }
 
 export const TokenApyChart = (props: TokenApyChartProperties) => {
-  const { className, data, ...rest } = props
-  const { currentFrame, frames, onFrameChange } = useFrameSelect()
+  const { className, symbol, ...rest } = props
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
   const [currentChain, setCurrentChain] = useState<OptionType[]>([])
   const [currentProtocol, setCurrentProtocol] = useState<OptionType[]>([])
+
+  const { data, isLoading, error } = useProtocolMetrics({
+    metrics_type: ['apy'],
+    tokens: [symbol],
+    from_timestamp: currentTimestamp,
+    protocols: currentProtocol.map((item) => item.value),
+    chains: currentChain.map((item) => item.value),
+  })
+  const formattedTvlData: RechartDataType[] = useMemo(() => {
+    if (!data) return []
+    return Object.entries(
+      data?.[symbol]?.history ?? {
+        [currentTimestamp]: { apy: 0 },
+        [Date.now()]: { apy: 0 },
+      },
+    ).map(([key, value]) => {
+      // format timestamp to unix timestamp
+      const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
+
+      return {
+        name: key,
+        timestamp,
+        value: value.apy,
+      }
+    })
+  }, [data, symbol])
   return (
     <div className={cn('flex flex-col gap-8', className)} {...rest}>
       <div className="flex items-center justify-between">
@@ -45,7 +73,11 @@ export const TokenApyChart = (props: TokenApyChartProperties) => {
           />
         </div>
       </div>
-      <AreaChart data={data} color="#6160FF" yAxisType="percent" />
+      {isLoading || !!error ? (
+        <Skeleton className="h-80" />
+      ) : (
+        <AreaChart data={formattedTvlData} color="#6160FF" yAxisType="percent" />
+      )}
     </div>
   )
 }
