@@ -150,7 +150,11 @@ module.exports = {
         translateIn: {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateX(0)' },
-        }
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-200%)', width: '50%' },
+          '100%': { transform: 'translateX(calc(100% + 100/50*100%))', width: '50%' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -158,6 +162,7 @@ module.exports = {
         moonArc: 'moonArc 0.3s ease-in-out forwards',
         sunArc: 'sunArc 0.3s ease-in-out forwards',
         translateIn: 'translateIn 0.15s ease-in-out forwards',
+        shimmer: 'shimmer 3s infinite linear',
       },
       fillOpacity: {
         '0': '0',
