@@ -4,10 +4,9 @@ import { Button } from '@components/ui/button'
 import { Switch } from '@components/ui/switch.tsx'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue.ts'
-import BigNumber from 'bignumber.js'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { formatUnits } from 'viem'
+import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput.tsx'
@@ -63,11 +62,11 @@ export const WithdrawInput = () => {
     : '0'
 
   const inputValueBN = useMemo(
-    () => new BigNumber(inputValue || '0').times(mtToken?.decimals ?? 6),
+    () => parseUnits(inputValue, mtToken?.decimals ?? 6),
     [inputValue, mtToken?.decimals],
   )
   const balanceBN = useMemo(
-    () => new BigNumber(mtToken?.stableBalance?.toString() || '0'),
+    () => BigInt(mtToken?.stableBalance?.toString() || '0'),
     [mtToken?.stableBalance],
   )
 
@@ -80,7 +79,7 @@ export const WithdrawInput = () => {
   }, [inputValueInUSD, setWithdrawAmount])
 
   useEffect(() => {
-    if (inputValueBN.isGreaterThan(balanceBN)) {
+    if (inputValueBN > balanceBN) {
       return setValidationError('Exceeds balance')
     }
 
@@ -97,6 +96,7 @@ export const WithdrawInput = () => {
 
   const handleInputChange = (value: string) => {
     setInputValue(value)
+    setWithdrawAmount(value)
     setInputValueInUSD(
       formatAmount(value, {
         maximumFractionDigits: 2,

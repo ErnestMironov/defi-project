@@ -79,16 +79,21 @@ export const DoneModal = () => {
           <p className="mt-1 text-[3.75rem]/[4.5rem] text-text">{amount}</p>
           <div className="mt-[0.38rem] flex items-center gap-3">
             {txType === 'withdraw' ? (
-              <TokenWithNetwork
-                width="1.75rem"
-                position="bottom-right"
-                symbol={mtToken?.stable}
-                network={mtToken?.chainData?.chainId}
-              />
+              <>
+                <TokenWithNetwork
+                  width="1.75rem"
+                  position="bottom-right"
+                  symbol={mtToken?.stable}
+                  network={mtToken?.chainData?.chainId}
+                />
+                <span className="text-2.5xl text-gray-100">{mtToken?.stable}</span>
+              </>
             ) : (
-              <TokenIconComponent symbol={vault} className="size-7" />
+              <>
+                <TokenIconComponent symbol={vault} className="size-7" />
+                <span className="text-2.5xl text-gray-100">{vault}</span>
+              </>
             )}
-            <span className="text-2.5xl text-gray-100">{vault}</span>
           </div>
         </div>
         <Button
