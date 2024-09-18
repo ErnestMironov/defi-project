@@ -60,7 +60,6 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
       const pvTvl = data?.USDT?.history?.[key]?.tvl
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
-      console.log(timestamp)
       apyData.push({
         name: key,
         timestamp,

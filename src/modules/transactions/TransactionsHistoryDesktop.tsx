@@ -46,10 +46,6 @@ export const TransactionsHistoryDesktop = (
     ...parameters,
   })
 
-  console.log('🚀 ~ isLoading:', isLoading)
-  console.log('🚀 ~ isPlaceholderData:', isPlaceholderData)
-  console.log('🚀 ~ error:', error)
-
   const renderBody = () => {
     switch (true) {
       case isLoading:
