@@ -40,7 +40,6 @@ export const TransactionsHistoryDesktop = (
   const { data, isLoading, error, isPlaceholderData } = useEvents({
     size,
     page,
-    limit: 100,
     sort,
     orderBy,
     ...getMultiSelectParameters(selectFilters),
