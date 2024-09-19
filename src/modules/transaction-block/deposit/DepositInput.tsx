@@ -74,7 +74,7 @@ export const DepositInput = () => {
   } = useTxStore()
 
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
-    useProtocolMetrics()
+    useProtocolMetrics({})
 
   const usdcApy = protocolMetrics?.USDC?.apy
   const usdtApy = protocolMetrics?.USDT?.apy

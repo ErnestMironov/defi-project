@@ -40,7 +40,7 @@ export const useEvents = (parameters: EventsParameters) => {
   return useQuery({
     queryKey: ['events', parameters],
     queryFn: async () => {
-      const { data } = await getEvents(parameters)
+      const { data } = await getEvents({ ...parameters, limit: 100 })
       return data
     },
   })
@@ -48,11 +48,12 @@ export const useEvents = (parameters: EventsParameters) => {
 
 export const useInfiniteEvents = (parameters: EventsParameters) => {
   const { size, ...rest } = parameters
+  console.log('🚀 ~ useInfiniteEvents ~ parameters:', parameters)
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
-      queryKey: ['events-infinite', rest],
+      queryKey: ['events', parameters],
       queryFn: async ({ pageParam }) => {
-        const response = await getEvents({ size, page: pageParam, ...rest })
+        const response = await getEvents({ size, page: pageParam, limit: 100, ...rest })
         return response.data
       },
       getNextPageParam: (lastPage) => {

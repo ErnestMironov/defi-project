@@ -1,30 +1,13 @@
 import type { EventsParameters } from '@api/queries/useEvents'
 import { useInfiniteEvents } from '@api/queries/useEvents'
-import Filter from '@assets/icons/filter.svg'
-import Sort from '@assets/icons/mobile-sort.svg'
-import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
-import {
-  DrawerIconTrigger,
-  MobileFiltersDrawer,
-} from '@components/select/MobileFiltersDrawer'
-import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
 import type { OptionType } from '@components/select/Select'
-import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import { Loader } from '@components/ui/loader'
 import type { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
 import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
-import {
-  SELECT_CHAINS,
-  SELECT_LAST_EVENT_ACTIONS,
-  SELECT_STATUSES,
-  SELECT_TOKENS,
-  SORT_BY_AMOUNT,
-  SORT_BY_DATE,
-} from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { Fragment, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { TransactionsMobileList } from './TransactionsMobileList'
 
@@ -44,18 +27,11 @@ interface TransactionsMobileWithFiltersProperties extends ComponentProps<'div'> 
 export const TransactionsMobileWithFilters = (
   props: TransactionsMobileWithFiltersProperties,
 ) => {
-  const {
-    className,
-    filters = ['actions', 'statuses', 'chains'],
-    parameters = {},
-  } = props
+  const { className, parameters = {} } = props
 
-  const [search, setSearch] = useState('')
-  const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
-  const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
-  const [selectedStatuses, setSelectedStatuses] = useState<OptionType[]>([])
-  const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
-  const [selectedSort, setSelectedSort] = useState<OptionType | undefined>()
+  const [selectedActions] = useState<OptionType[]>([])
+  const [selectedChains] = useState<OptionType[]>([])
+  const [selectedSort] = useState<OptionType | undefined>()
 
   const currentSort: EventsParameters = useMemo(() => {
     switch (selectedSort?.value) {
@@ -95,113 +71,8 @@ export const TransactionsMobileWithFilters = (
     ) as (keyof typeof LAST_EVENT_ACTION_TYPE)[],
   })
 
-  const renderFilters = (filter: FilterType) => {
-    switch (filter) {
-      case 'actions': {
-        return (
-          <MobileCheckboxSelect
-            label="Actions"
-            value={selectedActions}
-            options={SELECT_LAST_EVENT_ACTIONS}
-            onChange={setSelectedActions}
-          />
-        )
-      }
-      case 'tokens': {
-        return (
-          <MobileCheckboxSelect
-            label="Tokens"
-            value={selectedTokens}
-            options={SELECT_TOKENS}
-            onChange={setSelectedTokens}
-          />
-        )
-      }
-
-      case 'statuses': {
-        return (
-          <MobileCheckboxSelect
-            label="Statuses"
-            value={selectedStatuses}
-            options={SELECT_STATUSES}
-            onChange={setSelectedStatuses}
-          />
-        )
-      }
-      case 'chains': {
-        return (
-          <MobileCheckboxSelect
-            label="Chains"
-            value={selectedChains}
-            options={SELECT_CHAINS}
-            onChange={setSelectedChains}
-            // placeholder="All Chains"
-          />
-        )
-      }
-      default: {
-        return null
-      }
-    }
-  }
-
   return (
     <div {...props} className={cn('flex flex-col', className)}>
-      <div className="flex items-center gap-2">
-        <SearchInput
-          className="flex-1"
-          placeholder="Tx Hash"
-          classNames={{
-            container: 'bg-cards border-none rounded-[0.5rem] py-[0.81rem] px-3',
-            input: 'mx-2',
-          }}
-          value={search}
-          onValueChange={setSearch}
-        />
-        {/* Filters */}
-        <MobileFiltersDrawer
-          title="Filters"
-          resetFilters={() => {
-            setSelectedActions([])
-            setSelectedStatuses([])
-            setSelectedChains([])
-          }}
-          trigger={
-            <DrawerIconTrigger
-              Icon={Filter}
-              active={
-                selectedActions.concat(selectedStatuses).concat(selectedChains).length > 0
-              }
-            />
-          }
-        >
-          {filters.map((filter) => (
-            <Fragment key={filter}>{renderFilters(filter)}</Fragment>
-          ))}
-        </MobileFiltersDrawer>
-        {/* Sort */}
-        <MobileFiltersDrawer
-          title="Sorting"
-          closeOnReset
-          resetFilters={() => {
-            setSelectedSort(undefined)
-          }}
-          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
-        >
-          <MobileRadioSelect
-            label="Amount"
-            options={SORT_BY_AMOUNT}
-            value={selectedSort}
-            onChange={setSelectedSort}
-          />
-          <MobileRadioSelect
-            label="Created"
-            options={SORT_BY_DATE}
-            value={selectedSort}
-            onChange={setSelectedSort}
-          />
-        </MobileFiltersDrawer>
-      </div>
       <TransactionsMobileList
         className="mt-3"
         events={data}

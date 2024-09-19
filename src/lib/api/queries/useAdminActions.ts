@@ -23,7 +23,6 @@ export type AdminActionsParameters = {
 }
 
 const getAdminActions = (parameters: AdminActionsParameters) => {
-  console.log('parameters', parameters)
   return apiClient.get<PaginationResponse<AdminEvent>>('/actions/admin', {
     params: parameters,
     paramsSerializer: (parameters_) => {
@@ -33,7 +32,6 @@ const getAdminActions = (parameters: AdminActionsParameters) => {
 }
 
 export const useAdminActions = (parameters: AdminActionsParameters) => {
-  console.log('parameters', parameters)
   return useQuery({
     queryKey: ['admin-actions', parameters],
     queryFn: async () => {

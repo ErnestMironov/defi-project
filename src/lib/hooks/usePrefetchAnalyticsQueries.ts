@@ -9,7 +9,7 @@ export const usePrefetchAnalyticsQueries = () => {
   const queries: UseQueryOptions[] = [
     {
       queryKey: ['protocolMetrics'],
-      queryFn: () => getProtocolMetrics(),
+      queryFn: () => getProtocolMetrics({}),
     },
     {
       queryKey: ['rebalanceVolume'],

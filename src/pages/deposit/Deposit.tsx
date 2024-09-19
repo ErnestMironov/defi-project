@@ -3,7 +3,6 @@ import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
-import { usePrefetchAnalyticsQueries } from '@hooks/usePrefetchAnalyticsQueries'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { formatAmount } from '@utils/formatValue'
@@ -11,9 +10,9 @@ import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
-    useProtocolMetrics()
+    useProtocolMetrics({})
 
-  usePrefetchAnalyticsQueries()
+  // usePrefetchAnalyticsQueries()
 
   const usdcApy = protocolMetrics?.USDC?.apy
   const usdtApy = protocolMetrics?.USDT?.apy

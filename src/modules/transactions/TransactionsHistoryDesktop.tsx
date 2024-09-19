@@ -40,16 +40,11 @@ export const TransactionsHistoryDesktop = (
   const { data, isLoading, error, isPlaceholderData } = useEvents({
     size,
     page,
-    limit: 100,
     sort,
     orderBy,
     ...getMultiSelectParameters(selectFilters),
     ...parameters,
   })
-
-  console.log('🚀 ~ isLoading:', isLoading)
-  console.log('🚀 ~ isPlaceholderData:', isPlaceholderData)
-  console.log('🚀 ~ error:', error)
 
   const renderBody = () => {
     switch (true) {

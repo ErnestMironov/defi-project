@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-identical-functions */
 import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import Dot from '@assets/icons/dot.svg'
@@ -17,26 +18,39 @@ import { type ComponentProps, useMemo, useState } from 'react'
 interface ApyTokensChartDesktopProperties extends ComponentProps<'div'> {}
 
 export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) => {
-  const { currentFrame, frames, onFrameChange } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
   const [selectedChain, setSelectedChain] = useState<OptionType[]>([])
   const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
-  const { data, isLoading, error } = useProtocolMetrics()
+  const { data, isLoading, error } = useProtocolMetrics({
+    metrics_type: ['apy'],
+    tokens: ['USDT', 'USDC'],
+    from_timestamp: currentTimestamp,
+    protocols: selectedProtocol.map((item) => item.value),
+    chains: selectedChain.map((item) => item.value),
+  })
 
-  const formatteApyData: RechartDataType[] = useMemo(() => {
+  const formattedApyData: RechartDataType[] = useMemo(() => {
     if (!data) return []
-    return Object.entries(data.USDC.history).map(([key, value]) => {
-      const pv = data.USDT.history[key]?.apy
+    return Object.entries(
+      data?.USDC?.history ??
+        data?.USDT?.history ?? {
+          [currentTimestamp]: {},
+          [Date.now()]: {},
+        },
+    ).map(([key]) => {
+      const uv = data?.USDC?.history?.[key]?.apy ?? 0
+      const pv = data?.USDT?.history?.[key]?.apy ?? 0
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
 
       return {
         name: key,
         timestamp,
-        uv: value.apy,
+        uv,
         pv,
       }
     })
-  }, [data])
+  }, [currentTimestamp, data])
 
   const renderBody = () => {
     switch (true) {
@@ -47,7 +61,7 @@ export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) =
       default: {
         return (
           <LineChartComponent
-            data={formatteApyData}
+            data={formattedApyData}
             yAxisType="percentage"
             frame={currentFrame}
           />

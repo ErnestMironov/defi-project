@@ -33,22 +33,33 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
   const { className, ...rest } = props
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
-  const { currentFrame, frames, onFrameChange } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
 
   const [selectedProtocols, setSelectedProtocols] = useState<OptionType[]>([])
   const [selectedChains, setSelectedChains] = useState<OptionType[]>([])
 
-  const { data, isLoading, error } = useProtocolMetrics()
+  const { data, isLoading, error } = useProtocolMetrics({
+    metrics_type: ['apy', 'tvl'],
+    tokens: ['USDT', 'USDC'],
+    from_timestamp: currentTimestamp,
+    protocols: selectedProtocols.map((item) => item.value),
+    chains: selectedChains.map((item) => item.value),
+  })
   const formattedData = useMemo(() => {
     if (!data) return { apyData: [], tvlData: [] }
     const apyData: RechartDataType[] = []
     const tvlData: RechartDataType[] = []
-    Object.entries(data.USDC.history).forEach(([key, value]) => {
-      const pvApy = data.USDT.history[key]?.apy
-      const pvTvl = data.USDT.history[key]?.tvl
+    Object.entries(
+      data?.USDC?.history ??
+        data?.USDT?.history ?? {
+          [currentTimestamp]: { apy: 0, tvl: 0 },
+          [Date.now().valueOf()]: { apy: 0, tvl: 0 },
+        },
+    ).forEach(([key, value]) => {
+      const pvApy = data?.USDT?.history?.[key]?.apy
+      const pvTvl = data?.USDT?.history?.[key]?.tvl
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
-
       apyData.push({
         name: key,
         timestamp,
@@ -63,7 +74,7 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
       })
     })
     return { apyData, tvlData }
-  }, [data])
+  }, [currentTimestamp, data])
 
   const renderApyBody = () => {
     switch (true) {

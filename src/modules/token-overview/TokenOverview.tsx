@@ -16,7 +16,7 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
     data: protocolMetrics,
     isLoading: isProtocolMetricsLoading,
     error: protocolMetricsError,
-  } = useProtocolMetrics()
+  } = useProtocolMetrics({})
 
   const usdcApy = protocolMetrics?.USDC?.apy
   const usdcTvl = protocolMetrics?.USDC?.tvl

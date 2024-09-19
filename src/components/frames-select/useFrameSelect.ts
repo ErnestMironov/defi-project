@@ -11,19 +11,19 @@ export const useFrameSelect = () => {
     setCurrentFrame(frame)
     switch (frame) {
       case '1D': {
-        setCurrentTimestamp(dayjs().subtract(1, 'day').valueOf())
+        setCurrentTimestamp(dayjs().subtract(1, 'day').unix())
         break
       }
       case '1W': {
-        setCurrentTimestamp(dayjs().subtract(1, 'week').valueOf())
+        setCurrentTimestamp(dayjs().subtract(1, 'week').unix())
         break
       }
       case '1M': {
-        setCurrentTimestamp(dayjs().subtract(1, 'month').valueOf())
+        setCurrentTimestamp(dayjs().subtract(1, 'month').unix())
         break
       }
       case '3M': {
-        setCurrentTimestamp(dayjs().subtract(3, 'month').valueOf())
+        setCurrentTimestamp(dayjs().subtract(3, 'month').unix())
         break
       }
       case 'MAX': {
@@ -35,7 +35,12 @@ export const useFrameSelect = () => {
       }
     }
   }
-  return { currentTimestamp, currentFrame, onFrameChange, frames: FRAMES }
+  return {
+    currentTimestamp,
+    currentFrame,
+    onFrameChange,
+    frames: FRAMES,
+  }
 }
 
 export type FrameSelect = ReturnType<typeof useFrameSelect>
