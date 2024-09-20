@@ -67,6 +67,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
         <Table.Head>
           <Table.Row>
             <Table.HeadCell>Action</Table.HeadCell>
+            <Table.HeadCell>From</Table.HeadCell>
             <Table.HeadCell
               className={cn('cursor-pointer')}
               onClick={() => onSortChange('amount')}
@@ -80,7 +81,6 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
                 )}
               </div>
             </Table.HeadCell>
-            <Table.HeadCell>From</Table.HeadCell>
             <Table.HeadCell>Chain</Table.HeadCell>
             <Table.HeadCell>Tx Hash</Table.HeadCell>
             <Table.HeadCell
