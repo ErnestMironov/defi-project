@@ -44,7 +44,11 @@ export const Bridge = (props: BridgeProperties) => {
         date={new Date().toISOString()}
       />
       <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
-        <TransactionHash value={data?.hash} className="col-span-3" />
+        <TransactionHash
+          value={data?.hash}
+          chainId={data?.src_chain_id}
+          className="col-span-3"
+        />
         <Status status={data?.status} className="col-span-3" />
         <SourceChain value={chainFromData?.name} className="col-span-3" />
         <DestinationChain value={chainToData?.name} className="col-span-3" />
