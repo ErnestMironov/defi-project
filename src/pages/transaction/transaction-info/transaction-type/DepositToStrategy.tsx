@@ -31,7 +31,6 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
   }
 
   const tags: Tag[] = ['SYSTEM']
-
   if (!withoutRelated) {
     tags.push('REACTION')
   }
