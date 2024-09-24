@@ -4,10 +4,42 @@ import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 
+import ArbiScan from './assets/arbiscan.svg'
+import SnowTrace from './assets/avascan.svg'
+import BaseScan from './assets/basescan.svg'
+import BscScan from './assets/bscscan.svg'
+import MantleScan from './assets/mantlescan.svg'
+import MetisScan from './assets/metiscan.svg'
+import OptimisticScan from './assets/opscan.svg'
+import PolygonScan from './assets/polyscan.svg'
+import SeiScan from './assets/seiscan.svg'
+
 type ScanLinkProperties = ComponentProps<'a'> & {
   chainId: number
   address?: string
   txHash?: string
+}
+
+const SCAN_LOGO_BY_CHAIN_ID = {
+  1: Scan,
+  42_161: ArbiScan,
+  137: PolygonScan,
+  10: OptimisticScan,
+  1329: SeiScan,
+  43_114: SnowTrace,
+  56: BscScan,
+  8453: BaseScan,
+  5000: MantleScan,
+  1088: MetisScan,
+  2222: Scan,
+  8217: Scan,
+  8822: Scan,
+  1_380_012_617: Scan,
+  14: Scan,
+  1625: Scan,
+  167_000: Scan,
+  534_352: Scan,
+  1_313_161_554: Scan,
 }
 
 export const SCAN_ADDRESS_PATH_BY_CHAIN_ID = {
@@ -61,7 +93,7 @@ export const ScanLink = (props: ScanLinkProperties) => {
         chainId as keyof typeof SCAN_ADDRESS_PATH_BY_CHAIN_ID
       ] + address
     : SCAN_TX_PATH_BY_CHAIN_ID[chainId as keyof typeof SCAN_TX_PATH_BY_CHAIN_ID] + txHash
-
+  const ScanLogo = SCAN_LOGO_BY_CHAIN_ID[chainId as keyof typeof SCAN_LOGO_BY_CHAIN_ID]
   return (
     <Link
       to={`${
@@ -73,7 +105,7 @@ export const ScanLink = (props: ScanLinkProperties) => {
       }}
       {...rest}
     >
-      <Scan className={cn('size-full', className)} />
+      <ScanLogo className={cn('size-full', className)} />
     </Link>
   )
 }
