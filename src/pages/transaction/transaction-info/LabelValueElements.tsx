@@ -145,7 +145,7 @@ export const Vault = (props: InfoPairElementsProperties) => {
 }
 
 export const Chain = (props: InfoPairElementsProperties) => {
-  return <Vault {...props} label="Chain" />
+  return <Vault {...props} label={props.label ?? 'Chain'} />
 }
 
 export const SourceChain = (props: InfoPairElementsProperties) => {

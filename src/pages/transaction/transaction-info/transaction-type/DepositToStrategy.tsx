@@ -1,4 +1,5 @@
 import type { Action } from '@api/maat-finance/types'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
@@ -65,7 +66,7 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
         <Strategy
           symbols={[
             data?.strategy?.token?.symbol ?? '',
-            data?.src_chain_id?.toString() ?? '',
+            CHAIN_NAMES_BY_ID[data?.src_chain_id as keyof typeof CHAIN_NAMES_BY_ID] ?? '',
             data?.strategy?.protocol ?? '',
           ]}
           className="col-span-3"
