@@ -105,7 +105,7 @@ export const ScanLink = (props: ScanLinkProperties) => {
       }}
       {...rest}
     >
-      <ScanLogo className={cn('size-full', className)} />
+      <ScanLogo className={cn('size-full overflow-visible', className)} />
     </Link>
   )
 }
