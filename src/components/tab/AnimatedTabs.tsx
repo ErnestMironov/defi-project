@@ -39,8 +39,10 @@ export const AnimatedTabs = (props: SpringTabsProperties) => {
             <motion.span
               // layoutId="bubble"
               layoutId={layoutId}
-              className={cn('absolute inset-0 bg-main-100', classNames?.activeTab)}
-              style={{ borderRadius: 9999 }}
+              className={cn(
+                'absolute inset-0 bg-main-100 rounded-full',
+                classNames?.activeTab,
+              )}
               transition={{
                 type: 'spring',
                 bounce: 0.2,
