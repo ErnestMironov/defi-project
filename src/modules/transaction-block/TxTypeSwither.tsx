@@ -29,7 +29,8 @@ export const TxTypeSwitcher = (props: TxTypeSwitcherProperties) => {
       onTabChange={(value) => handleTabChange(value as TxType)}
       classNames={{
         tab: 'w-[9.125rem] max-lg:w-1/2 max-lg:py-[0.62rem] max-lg:text-base',
-        container: 'max-lg:w-full max-lg:p-1',
+        container: 'max-lg:w-full max-lg:p-1 rounded-[1.875rem]',
+        activeTab: 'rounded-3xl',
       }}
     />
   )

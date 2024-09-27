@@ -39,6 +39,10 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
       >
         <div className="flex max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:mb-10 lg:items-center lg:justify-between">
           <TxTypeSwitcher />
+          <div className="flex items-center gap-3 text-[1.25rem] leading-[120%]">
+            <span className="text-[#9998B8]">TVL</span>
+            <span>$ 330 345.23</span>
+          </div>
         </div>
         {txType === TX_TYPE.DEPOSIT && <DepositInput />}
         {txType === TX_TYPE.WITHDRAW && <WithdrawInput />}
