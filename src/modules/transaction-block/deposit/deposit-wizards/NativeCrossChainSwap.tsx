@@ -79,17 +79,15 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
       <div className="flex flex-col gap-2">
         <WizardStep
           icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
-          activeStep={currentStep === 1}
           title={`Switch to ${depositAssetChain?.name}`}
           status={allStepsCompleted ? 'success' : switchToAssetChainStatus}
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
-          activeStep={currentStep === 2}
           error={swapAndDepositError}
           title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
-          showArrow
+          showChain
         />
         {depositHash && (
           <InfoBlock txHash={depositHash} className="mt-4" type="cross_chain" />

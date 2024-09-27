@@ -113,7 +113,6 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
       <div className="flex flex-col gap-2">
         <WizardStep
           icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
-          activeStep={currentStep === 1}
           title="Switch to Arbitrum"
           status={allStepsCompleted ? 'success' : switchStatus}
         />
@@ -125,19 +124,17 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
               width="2rem"
             />
           }
-          activeStep={currentStep === 2}
           title="Approve"
           status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
-          showArrow
+          showChain
           error={approveErrorBeforeSwap?.message}
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
-          activeStep={currentStep === 3}
           title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
           error={swapAndDepositError}
-          showArrow
+          showChain
         />
         {depositHash && (
           <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />

@@ -9,7 +9,6 @@ interface IWizardStepProperties {
   icon: ReactNode
   title: string
   showChain?: boolean
-  activeStep?: boolean
   stepNumber?: number
   maxStepNumber?: number
   status?: STEP_STATUS
@@ -21,7 +20,6 @@ export const WizardStep = ({
   title,
   showChain = false,
   status,
-  activeStep,
   error,
   stepNumber,
   maxStepNumber,

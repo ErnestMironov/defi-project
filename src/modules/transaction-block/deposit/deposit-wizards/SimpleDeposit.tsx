@@ -122,7 +122,6 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
       <div className="flex flex-col gap-2">
         <WizardStep
           icon={<TokenIconComponent width="2rem" symbol={asset?.chain_id} />}
-          activeStep={currentStep === 1}
           title={`Switch to ${
             CHAIN_NAMES_BY_ID[asset?.chain_id as keyof typeof CHAIN_NAMES_BY_ID] ??
             'Unknown Chain'
@@ -137,17 +136,15 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
               width="2rem"
             />
           }
-          activeStep={currentStep === 2}
           title="Approve"
           status={allStepsCompleted ? 'success' : approveStatus}
-          showArrow
+          showChain
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
-          activeStep={currentStep === 3}
           title={`Deposit ${vault}`}
           status={depositStatus}
-          showArrow
+          showChain
         />
         {depositHash && (
           <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />

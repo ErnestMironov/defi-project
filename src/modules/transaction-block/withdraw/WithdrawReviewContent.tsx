@@ -234,7 +234,6 @@ export const WithdrawReviewContent = ({
             icon={
               <TokenIconComponent width="2.625rem" symbol={mtToken?.chainData?.chainId} />
             }
-            activeStep={currentStep === 1}
             title={`Switch network to ${
               CHAIN_NAMES_BY_ID[
                 mtToken?.chainData?.chainId as keyof typeof CHAIN_NAMES_BY_ID
@@ -246,7 +245,6 @@ export const WithdrawReviewContent = ({
           />
           <WizardStep
             icon={<TokenIconComponent symbol={mtToken?.stable} width="2rem" />}
-            activeStep={currentStep === 2}
             title={`Approve ${mtToken?.stable.toUpperCase()} spending`}
             status={allStepsCompleted ? 'success' : approveStatus}
             error={approveError?.message}
@@ -256,7 +254,6 @@ export const WithdrawReviewContent = ({
           />
           <WizardStep
             icon={<WithdrawIcon className="size-[2.625rem]" />}
-            activeStep={currentStep === 3}
             title={`Withdraw ${mtToken?.stable.toUpperCase()}`}
             status={withdrawStatus}
             error={withdrawError?.message}
