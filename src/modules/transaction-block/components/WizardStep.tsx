@@ -12,7 +12,6 @@ interface IWizardStepProperties {
   stepNumber?: number
   maxStepNumber?: number
   status?: STEP_STATUS
-  error?: string | null
 }
 
 export const WizardStep = ({
@@ -20,7 +19,6 @@ export const WizardStep = ({
   title,
   showChain = false,
   status,
-  error,
   stepNumber,
   maxStepNumber,
 }: IWizardStepProperties) => {
@@ -57,11 +55,6 @@ export const WizardStep = ({
             {status === 'success' ? (
               <Check className="[&_path]:stroke-main ml-2 size-6 overflow-visible" />
             ) : null}
-            {status === 'error' && (
-              <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
-                {error?.slice(0, 30)}...
-              </div>
-            )}
           </p>
         </div>
       </div>

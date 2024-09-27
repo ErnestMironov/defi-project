@@ -2,6 +2,7 @@ import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { Switch } from '@components/ui/switch.tsx'
+import type { ChainType } from '@constants/chains.ts'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue.ts'
 import type { HTMLAttributes, ReactNode } from 'react'
@@ -51,6 +52,7 @@ export const WithdrawInput = () => {
     setCurrentModal,
     inputValueInUSD,
     setInputValueInUSD,
+    setWithdrawToNetwork,
   } = useTxStore()
 
   const [withdrawToAnotherChain, setWithdrawToAnotherChain] = useState(false)
@@ -89,6 +91,12 @@ export const WithdrawInput = () => {
 
     setValidationError('')
   }, [inputValueBN, inputValueInUSD, balanceBN])
+
+  useEffect(() => {
+    if (!withdrawToAnotherChain) {
+      setWithdrawToNetwork(mtToken?.chainId as ChainType)
+    }
+  }, [withdrawToAnotherChain, mtToken?.chainId, setWithdrawToNetwork])
 
   const handleReview = () => {
     setCurrentModal('review')
