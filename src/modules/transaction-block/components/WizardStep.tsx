@@ -1,8 +1,6 @@
 import Check from '@assets/icons/check.svg'
-import ArrowDown from '@assets/icons/curve-arrow-down.svg'
-import lottieLoader from '@assets/lottie/deposit-steps-loader.json'
+import DashLine from '@assets/icons/dash-line.svg'
 import { cn } from '@utils/cn'
-import Lottie from 'lottie-react'
 import type { ReactNode } from 'react'
 
 import type { STEP_STATUS } from '../deposit/interfaces'
@@ -10,8 +8,10 @@ import type { STEP_STATUS } from '../deposit/interfaces'
 interface IWizardStepProperties {
   icon: ReactNode
   title: string
-  showArrow?: boolean
+  showChain?: boolean
   activeStep?: boolean
+  stepNumber?: number
+  maxStepNumber?: number
   status?: STEP_STATUS
   error?: string | null
 }
@@ -19,51 +19,54 @@ interface IWizardStepProperties {
 export const WizardStep = ({
   icon,
   title,
-  showArrow = false,
+  showChain = false,
   status,
   activeStep,
   error,
+  stepNumber,
+  maxStepNumber,
 }: IWizardStepProperties) => {
   return (
-    <>
-      {showArrow && <ArrowDown className="h-[1.125rem] w-8" />}
+    <div>
+      <div
+        style={{
+          transition: 'max-height 0.3s ease-in-out',
+          maxHeight: showChain ? '1.8125rem' : '0',
+          overflow: 'hidden',
+        }}
+      >
+        <DashLine className="ml-5 h-[1.8125rem]" />
+      </div>
       <div className="flex items-center gap-4">
-        <div
-          className={cn({
-            'opacity-15': !activeStep && status !== 'success',
-          })}
-        >
+        <div className={cn('flex size-[2.625rem] items-center justify-center')}>
           {icon}
         </div>
-        <p className="flex items-center text-[1.125rem]">
-          <span
-            className={cn(
-              status === 'error' && 'text-red-100',
-              !activeStep && 'text-gray-80',
-              status === 'success' && 'text-[#58CDAD]',
+        <div>
+          {stepNumber && (
+            <div className="text-[0.875rem] leading-4 text-text-dark opacity-40">
+              Step {`${stepNumber} of ${maxStepNumber}`}
+            </div>
+          )}
+          <p className="flex items-center text-[1.125rem]">
+            <span
+              className={cn(
+                status === 'error' && 'text-red-100',
+                status === 'success' && 'opacity-50',
+              )}
+            >
+              {title}
+            </span>
+            {status === 'success' ? (
+              <Check className="[&_path]:stroke-main ml-2 size-6 overflow-visible" />
+            ) : null}
+            {status === 'error' && (
+              <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
+                {error?.slice(0, 30)}...
+              </div>
             )}
-          >
-            {title}
-          </span>
-          {status === 'pending' && (
-            <div className="relative flex size-8 items-center justify-center overflow-hidden">
-              <Lottie
-                className="absolute size-16 [&>svg]:size-full"
-                animationData={lottieLoader}
-                loop
-              />
-            </div>
-          )}
-          {status === 'success' ? (
-            <Check className="ml-2 size-6 overflow-visible [&_path]:stroke-[#58CDAD]" />
-          ) : null}
-          {status === 'error' && (
-            <div className="ml-3 flex items-center justify-center rounded-lg bg-input-error px-2 py-1 text-red-100">
-              {error?.slice(0, 30)}...
-            </div>
-          )}
-        </p>
+          </p>
+        </div>
       </div>
-    </>
+    </div>
   )
 }

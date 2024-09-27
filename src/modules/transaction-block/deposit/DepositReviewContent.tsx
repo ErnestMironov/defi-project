@@ -91,7 +91,7 @@ export const DepositReviewContent = ({
   }, [setCurrentModal, depositStatus])
 
   return (
-    <>
+    <div className="px-8">
       <div className="flex flex-col items-start gap-4 self-stretch rounded-2xl border border-stroke-100 p-6">
         <TokenInfo
           type="input"
@@ -114,6 +114,6 @@ export const DepositReviewContent = ({
         />
       </div>
       {depositFlow}
-    </>
+    </div>
   )
 }
