@@ -136,13 +136,11 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           }
           title="Approve"
           status={allStepsCompleted ? 'success' : approveStatus}
-          error={approveError?.message}
           showChain
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
           title={`Deposit ${vault}`}
-          error={swapAndDepositError}
           status={swapAndDepositStatus}
           showChain
         />

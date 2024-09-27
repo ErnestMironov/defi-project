@@ -80,13 +80,11 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
           icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
           title="Switch to Arbitrum"
           status={allStepsCompleted ? 'success' : switchStatus}
-          error={switchError}
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
           title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
-          error={swapAndDepositError}
           showChain
         />
         {depositHash && (

@@ -1,4 +1,3 @@
-import CollapseIcon from '@assets/icons/collapse.svg'
 import CloseIcon from '@assets/icons/modal-close.svg'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import { cloneElement } from 'react'
@@ -31,15 +30,6 @@ export const TxReviewModal = () => {
     setIntermediateError(null)
     setCurrentStep(1)
     setCurrentModal(null)
-  }
-
-  const renderCloseButton = () => {
-    if (isTransactionSent) {
-      return (
-        <CollapseIcon className="size-6 [&_path]:stroke-text-80" onClick={handleClose} />
-      )
-    }
-    return <CloseIcon className="size-6 [&_path]:fill-text-80" onClick={handleClose} />
   }
 
   const renderContent = () => {
