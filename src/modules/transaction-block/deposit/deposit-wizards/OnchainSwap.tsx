@@ -127,13 +127,11 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
           title="Approve"
           status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
           showChain
-          error={approveErrorBeforeSwap?.message}
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
           title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
-          error={swapAndDepositError}
           showChain
         />
         {depositHash && (

@@ -90,6 +90,12 @@ export interface SelectedAssetState {
   timerDuration: number
   setTimerDuration: (duration: number) => void
 
+  // Error
+  intermediateError: string | null
+  setIntermediateError: (error: string | null) => void
+  transactionError: string | null
+  setTransactionError: (error: string | null) => void
+
   // Utility functions
   getFullState: () => Partial<SelectedAssetState>
   resetStore: () => void
@@ -141,6 +147,12 @@ export const useTxStore = create<SelectedAssetState>()(
       // modal
       currentModal: null,
       setCurrentModal: (by) => set({ currentModal: by }),
+
+      // Add these new properties
+      intermediateError: null,
+      setIntermediateError: (by) => set({ intermediateError: by }),
+      transactionError: null,
+      setTransactionError: (by) => set({ transactionError: by }),
 
       // deposit amount
       depositAmount: '',
@@ -221,6 +233,8 @@ export const useTxStore = create<SelectedAssetState>()(
           txDifficulty: 'on_chain',
           squidRoute: undefined,
           isTxZAP: false,
+          intermediateError: null,
+          transactionError: null,
         }),
     }),
     {

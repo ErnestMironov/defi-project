@@ -31,6 +31,7 @@ export const WithdrawReviewContent = ({
     currentStep,
     withdrawFromNetwork,
     withdrawToNetwork,
+    setIntermediateError,
     setCurrentStep,
     setCurrentModal,
   } = useTxStore()
@@ -109,7 +110,19 @@ export const WithdrawReviewContent = ({
     }
   }, [setCurrentModal, withdrawStatus])
 
+  useEffect(() => {
+    if (approveError || withdrawError || switchStatus === 'error') {
+      setIntermediateError(
+        approveError?.message || withdrawError?.message || switchStatus,
+      )
+    }
+  }, [approveError, withdrawError, switchStatus, setIntermediateError])
   const ActionButton = useMemo(() => {
+    function handleTryAgain(callback: () => void) {
+      setIntermediateError(null)
+      callback()
+    }
+
     switch (currentStep) {
       case 1: {
         return (
@@ -117,7 +130,7 @@ export const WithdrawReviewContent = ({
             disabled={switchStatus === 'confirm_in_wallet'}
             size="lg"
             type="button"
-            onClick={switchChain}
+            onClick={() => handleTryAgain(switchChain)}
           >
             {getButtonContent(
               switchStatus,
@@ -137,7 +150,7 @@ export const WithdrawReviewContent = ({
             size="lg"
             type="button"
             disabled={approveStatus === 'confirm_in_wallet'}
-            onClick={approve}
+            onClick={() => handleTryAgain(approve)}
           >
             {getButtonContent(approveStatus, `Approve ${mtToken?.symbol}`)}
           </Button>
@@ -150,7 +163,7 @@ export const WithdrawReviewContent = ({
             size="lg"
             type="button"
             disabled={withdrawStatus === 'pending' || withdrawStatus === 'success'}
-            onClick={withdraw}
+            onClick={() => handleTryAgain(withdraw)}
           >
             {getButtonContent(withdrawStatus, 'Withdraw')}
           </Button>
@@ -162,68 +175,118 @@ export const WithdrawReviewContent = ({
     }
   }, [
     currentStep,
+    setIntermediateError,
     switchStatus,
-    approveStatus,
-    withdrawStatus,
-    mtToken,
+    mtToken?.chainData?.chainId,
+    mtToken?.symbol,
     switchChain,
+    approveStatus,
     approve,
+    withdrawStatus,
     withdraw,
   ])
 
   const isCrossChain = withdrawFromNetwork !== withdrawToNetwork
 
-  return (
-    <div className="flex flex-col items-stretch gap-8">
-      <div className="flex flex-col items-stretch gap-8 px-8">
-        <Lottie
-          animationData={Scales}
-          loop={isAnyStatusPending()}
-          autoplay={isAnyStatusPending()}
-          className="aspect-square h-28 self-center"
-        />
-
-        <div className="flex items-center gap-2 self-center text-[1.125rem] ">
-          <TokenWithNetwork
-            symbol={mtToken?.stable}
-            network={withdrawFromNetwork}
-            position="bottom-right"
-            width="1.5rem"
-          />
-          <span>
-            {formatAmount(amount, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}{' '}
-            {mtToken?.stable.toUpperCase()}
-          </span>
-          <p className="text-gray-100">$ {parseFloatLocale(withdrawAmountInUSD)}</p>
-        </div>
-
-        {isCrossChain && (
-          <>
-            <div className="h-px w-full bg-stroke-100" />
-            <div className="flex w-full flex-col items-start gap-2 self-stretch">
-              <div className="flex w-full items-center justify-between">
-                <span className="text-text-80">You will receive </span>
-                <div className="flex items-center gap-2">
-                  <TokenWithNetwork
-                    symbol={mtToken?.stable}
-                    network={withdrawToNetwork}
-                    position="bottom-right"
-                    width="2.14288rem"
-                  />
-                  <span>
-                    {amount} {mtToken?.stable.toUpperCase()}
-                  </span>
-                </div>
+  const WithdrawInfo = () => {
+    switch (isCrossChain) {
+      case true: {
+        return (
+          <div className="flex items-center justify-between gap-8">
+            <div className="flex flex-1 flex-col items-center text-[1.125rem]">
+              <span className="text-[0.875rem]">Withdraw</span>
+              <div className="mt-3 flex items-center">
+                <TokenWithNetwork
+                  symbol={mtToken?.stable}
+                  network={withdrawFromNetwork}
+                  position="bottom-right"
+                  className="mr-2"
+                  width="1.5rem"
+                />
+                <span>
+                  {formatAmount(amount, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{' '}
+                  {mtToken?.stable.toUpperCase()}
+                </span>
               </div>
-              <p className="self-end text-base text-gray-100">
+              <p className="text-[0.875rem] text-gray-100">
                 $ {parseFloatLocale(withdrawAmountInUSD)}
               </p>
             </div>
+
+            <Lottie
+              animationData={Scales}
+              loop={isAnyStatusPending()}
+              autoplay={isAnyStatusPending()}
+              className="aspect-square h-28 self-center"
+            />
+
+            <div className="flex flex-1 flex-col items-center text-[1.125rem]">
+              <span className="text-[0.875rem]">Receive</span>
+              <div className="mt-3 flex items-center">
+                <TokenWithNetwork
+                  symbol={mtToken?.stable}
+                  network={withdrawToNetwork}
+                  position="bottom-right"
+                  className="mr-2"
+                  width="1.5rem"
+                />
+                <span>
+                  {formatAmount(amount, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{' '}
+                  {mtToken?.stable.toUpperCase()}
+                </span>
+              </div>
+              <p className="text-[0.875rem] text-gray-100">
+                $ {parseFloatLocale(withdrawAmountInUSD)}
+              </p>
+            </div>
+          </div>
+        )
+      }
+      case false: {
+        return (
+          <>
+            <Lottie
+              animationData={Scales}
+              loop={isAnyStatusPending()}
+              autoplay={isAnyStatusPending()}
+              className="aspect-square h-28 self-center"
+            />
+
+            <div className="flex items-center gap-2 self-center text-[1.125rem] ">
+              <TokenWithNetwork
+                symbol={mtToken?.stable}
+                network={withdrawFromNetwork}
+                position="bottom-right"
+                width="1.5rem"
+              />
+              <span>
+                {formatAmount(amount, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+                {mtToken?.stable.toUpperCase()}
+              </span>
+              <p className="text-gray-100">$ {parseFloatLocale(withdrawAmountInUSD)}</p>
+            </div>
           </>
-        )}
+        )
+      }
+      default: {
+        throw new Error('unknown action type')
+      }
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-stretch gap-8">
+      <div className="flex flex-col items-stretch gap-8 px-8">
+        <WithdrawInfo />
 
         {ActionButton}
       </div>
@@ -247,7 +310,6 @@ export const WithdrawReviewContent = ({
             icon={<TokenIconComponent symbol={mtToken?.stable} width="2rem" />}
             title={`Approve ${mtToken?.stable.toUpperCase()} spending`}
             status={allStepsCompleted ? 'success' : approveStatus}
-            error={approveError?.message}
             showChain={isOpen}
             stepNumber={2}
             maxStepNumber={3}
@@ -256,7 +318,6 @@ export const WithdrawReviewContent = ({
             icon={<WithdrawIcon className="size-[2.625rem]" />}
             title={`Withdraw ${mtToken?.stable.toUpperCase()}`}
             status={withdrawStatus}
-            error={withdrawError?.message}
             showChain={isOpen}
             stepNumber={3}
             maxStepNumber={3}

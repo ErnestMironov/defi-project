@@ -84,7 +84,6 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
         />
         <WizardStep
           icon={<ReceiveSquare className={cn('size-8')} />}
-          error={swapAndDepositError}
           title={`Deposit ${vault}`}
           status={swapAndDepositStatus}
           showChain
