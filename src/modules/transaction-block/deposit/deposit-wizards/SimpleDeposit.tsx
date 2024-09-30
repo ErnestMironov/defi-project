@@ -4,11 +4,13 @@ import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
+import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
+import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { InfoBlock } from '../components/InfoBlock'
@@ -27,6 +29,8 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     currentStep,
     setCurrentStep,
   } = useTxStore()
+
+  const [isOpen, setIsOpen] = useState(false)
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
     chainId: asset?.chain_id,
@@ -118,39 +122,51 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
   }
 
   return (
-    <div className="flex flex-col items-stretch gap-10">
-      <div className="flex flex-col gap-2">
-        <WizardStep
-          icon={<TokenIconComponent width="2rem" symbol={asset?.chain_id} />}
-          title={`Switch to ${
-            CHAIN_NAMES_BY_ID[asset?.chain_id as keyof typeof CHAIN_NAMES_BY_ID] ??
-            'Unknown Chain'
-          }`}
-          status={allStepsCompleted ? 'success' : switchStatus}
-        />
-        <WizardStep
-          icon={
-            <TokenWithNetwork
-              symbol={asset?.contract_ticker_symbol}
-              network={asset?.chain_id}
-              width="2rem"
-            />
-          }
-          title="Approve"
-          status={allStepsCompleted ? 'success' : approveStatus}
-          showChain
-        />
-        <WizardStep
-          icon={<ReceiveSquare className={cn('size-8')} />}
-          title={`Deposit ${vault}`}
-          status={depositStatus}
-          showChain
-        />
-        {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />
-        )}
+    <div className="flex flex-col items-stretch gap-8">
+      <div className="flex w-full flex-col items-stretch px-8 ">
+        <div className="flex flex-col gap-2">
+          {depositHash && (
+            <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />
+          )}
+        </div>
+        {ActionButton()}
       </div>
-      {ActionButton()}
+      <div className="border-t border-stroke-100 px-8 pt-7">
+        <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
+          <WizardStep
+            icon={<TokenIconComponent width="2.625rem" symbol={asset?.chain_id} />}
+            title={`Switch to ${
+              CHAIN_NAMES_BY_ID[asset?.chain_id as keyof typeof CHAIN_NAMES_BY_ID] ??
+              'Unknown Chain'
+            }`}
+            status={allStepsCompleted ? 'success' : switchStatus}
+            stepNumber={1}
+            maxStepNumber={3}
+          />
+          <WizardStep
+            icon={
+              <TokenWithNetwork
+                symbol={asset?.contract_ticker_symbol}
+                network={asset?.chain_id}
+                width="2rem"
+              />
+            }
+            title="Approve"
+            status={allStepsCompleted ? 'success' : approveStatus}
+            isDDOpen={isOpen}
+            stepNumber={2}
+            maxStepNumber={3}
+          />
+          <WizardStep
+            icon={<ReceiveSquare className={cn('size-8')} />}
+            title={`Deposit ${vault}`}
+            status={depositStatus}
+            isDDOpen={isOpen}
+            stepNumber={3}
+            maxStepNumber={3}
+          />
+        </WizardDropDown>
+      </div>
     </div>
   )
 }
