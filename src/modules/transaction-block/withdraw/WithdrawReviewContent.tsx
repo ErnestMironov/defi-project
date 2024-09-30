@@ -267,6 +267,7 @@ export const WithdrawReviewContent = ({
             status={allStepsCompleted ? 'success' : approveStatus}
             stepNumber={2}
             maxStepNumber={3}
+            isDDOpen={isOpen}
           />
           <WizardStep
             icon={<WithdrawIcon className="size-[2.625rem]" />}
@@ -274,6 +275,7 @@ export const WithdrawReviewContent = ({
             status={withdrawStatus}
             stepNumber={3}
             maxStepNumber={3}
+            isDDOpen={isOpen}
           />
         </WizardDropDown>
       </div>
