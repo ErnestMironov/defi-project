@@ -1,15 +1,12 @@
 import WithdrawIcon from '@assets/icons/withdraw.svg'
-import Scales from '@assets/lottie/MAAT_Scales.json'
 import { TokenIconComponent } from '@components/token-icon'
-import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import { formatAmount, parseFloatLocale } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
-import Lottie from 'lottie-react'
 import { useEffect, useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
 
+import { TxReviewInfo } from '../components/TxReviewInfo'
 import { WizardDropDown } from '../components/WizardDropDown'
 import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../deposit/hooks/useApproveERC20'
@@ -192,89 +189,47 @@ export const WithdrawReviewContent = ({
     switch (isCrossChain) {
       case true: {
         return (
-          <div className="flex items-center justify-between gap-8">
-            <div className="flex flex-1 flex-col items-center text-[1.125rem]">
-              <span className="text-[0.875rem]">Withdraw</span>
-              <div className="mt-3 flex items-center">
-                <TokenWithNetwork
-                  symbol={mtToken?.stable}
-                  network={withdrawFromNetwork}
-                  position="bottom-right"
-                  className="mr-2"
-                  width="1.5rem"
-                />
-                <span>
-                  {formatAmount(amount, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{' '}
-                  {mtToken?.stable.toUpperCase()}
-                </span>
-              </div>
-              <p className="text-[0.875rem] text-gray-100">
-                $ {parseFloatLocale(withdrawAmountInUSD)}
-              </p>
-            </div>
-
-            <Lottie
-              animationData={Scales}
-              loop={isAnyStatusPending()}
-              autoplay={isAnyStatusPending()}
-              className="aspect-square h-28 self-center"
-            />
-
-            <div className="flex flex-1 flex-col items-center text-[1.125rem]">
-              <span className="text-[0.875rem]">Receive</span>
-              <div className="mt-3 flex items-center">
-                <TokenWithNetwork
-                  symbol={mtToken?.stable}
-                  network={withdrawToNetwork}
-                  position="bottom-right"
-                  className="mr-2"
-                  width="1.5rem"
-                />
-                <span>
-                  {formatAmount(amount, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{' '}
-                  {mtToken?.stable.toUpperCase()}
-                </span>
-              </div>
-              <p className="text-[0.875rem] text-gray-100">
-                $ {parseFloatLocale(withdrawAmountInUSD)}
-              </p>
-            </div>
-          </div>
+          <TxReviewInfo
+            playAnimation={isAnyStatusPending()}
+            items={[
+              {
+                label: 'Withdraw',
+                value: amount,
+                usdValue: withdrawAmountInUSD,
+                tokenData: {
+                  symbol: mtToken?.stable ?? '',
+                  network: withdrawFromNetwork ?? 1,
+                },
+              },
+              {
+                label: 'Receive',
+                value: amount,
+                usdValue: withdrawAmountInUSD,
+                tokenData: {
+                  symbol: mtToken?.stable ?? '',
+                  network: withdrawToNetwork ?? 1,
+                },
+              },
+            ]}
+          />
         )
       }
       case false: {
         return (
-          <>
-            <Lottie
-              animationData={Scales}
-              loop={isAnyStatusPending()}
-              autoplay={isAnyStatusPending()}
-              className="aspect-square h-28 self-center"
-            />
-
-            <div className="flex items-center gap-2 self-center text-[1.125rem] ">
-              <TokenWithNetwork
-                symbol={mtToken?.stable}
-                network={withdrawFromNetwork}
-                position="bottom-right"
-                width="1.5rem"
-              />
-              <span>
-                {formatAmount(amount, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}{' '}
-                {mtToken?.stable.toUpperCase()}
-              </span>
-              <p className="text-gray-100">$ {parseFloatLocale(withdrawAmountInUSD)}</p>
-            </div>
-          </>
+          <TxReviewInfo
+            playAnimation={isAnyStatusPending()}
+            items={[
+              {
+                label: 'Withdraw',
+                value: amount,
+                usdValue: withdrawAmountInUSD,
+                tokenData: {
+                  symbol: mtToken?.stable ?? '',
+                  network: withdrawFromNetwork ?? 1,
+                },
+              },
+            ]}
+          />
         )
       }
       default: {
@@ -291,7 +246,7 @@ export const WithdrawReviewContent = ({
         {ActionButton}
       </div>
 
-      <div className="border-t border-stroke-100 px-8 pt-8">
+      <div className="border-t border-stroke-100 px-8 pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={
@@ -310,7 +265,6 @@ export const WithdrawReviewContent = ({
             icon={<TokenIconComponent symbol={mtToken?.stable} width="2rem" />}
             title={`Approve ${mtToken?.stable.toUpperCase()} spending`}
             status={allStepsCompleted ? 'success' : approveStatus}
-            showChain={isOpen}
             stepNumber={2}
             maxStepNumber={3}
           />
@@ -318,7 +272,6 @@ export const WithdrawReviewContent = ({
             icon={<WithdrawIcon className="size-[2.625rem]" />}
             title={`Withdraw ${mtToken?.stable.toUpperCase()}`}
             status={withdrawStatus}
-            showChain={isOpen}
             stepNumber={3}
             maxStepNumber={3}
           />

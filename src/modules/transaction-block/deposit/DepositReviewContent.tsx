@@ -9,7 +9,7 @@ import {
 } from '@utils/formatValue'
 import { useEffect, useMemo } from 'react'
 
-import { TokenInfo } from '../components/TokenInfo'
+import { TxReviewInfo } from '../components/TxReviewInfo'
 import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
@@ -91,29 +91,31 @@ export const DepositReviewContent = ({
   }, [setCurrentModal, depositStatus])
 
   return (
-    <div className="px-8">
-      <div className="flex flex-col items-start gap-4 self-stretch rounded-2xl border border-stroke-100 p-6">
-        <TokenInfo
-          type="input"
-          amount={replaceCommasWithDots(trimTrailingZeros(inputValue))}
-          tokenInfo={{
-            symbol: asset?.contract_ticker_symbol,
-            chain_id: depositFromNetwork!,
-          }}
-          usdAmount={inputValueInUSD}
-        />
-        <div className="h-px w-full bg-stroke-100" />
-        <TokenInfo
-          type="deposit"
-          amount={depositTotalAmount}
-          tokenInfo={{
-            symbol: vault,
-            chain_id: depositToNetwork!,
-          }}
-          usdAmount={depositTotalInUSD}
-        />
-      </div>
+    <>
+      <TxReviewInfo
+        playAnimation={false}
+        items={[
+          {
+            label: 'You input',
+            value: replaceCommasWithDots(trimTrailingZeros(inputValue)),
+            usdValue: inputValueInUSD,
+            tokenData: {
+              symbol: asset?.contract_ticker_symbol ?? '',
+              network: depositFromNetwork ?? 1,
+            },
+          },
+          {
+            label: 'You will deposit ',
+            value: depositTotalAmount,
+            usdValue: depositTotalInUSD,
+            tokenData: {
+              symbol: vault ?? '',
+              network: depositToNetwork ?? 1,
+            },
+          },
+        ]}
+      />
       {depositFlow}
-    </div>
+    </>
   )
 }

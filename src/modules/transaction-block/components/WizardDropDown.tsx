@@ -1,3 +1,4 @@
+import DashLine from '@assets/icons/dash-line.svg'
 import { cn } from '@utils/cn'
 import { ChevronDownIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -25,7 +26,21 @@ export const WizardDropDown = ({
       className={cn('flex justify-between cursor-pointer', className)}
       onClick={() => setOpen(!open)}
     >
-      <div className="flex flex-col">
+      <div className="relative flex flex-col">
+        <div
+          className="absolute top-2 -z-10 h-[calc(100%-2rem)] overflow-hidden"
+          style={{
+            transition: 'max-height 0.3s ease-in-out',
+            maxHeight: open ? '20rem' : '0',
+            overflow: 'hidden',
+          }}
+        >
+          {Array.from({ length: childrenArray.length * 2 })
+            .fill(null)
+            .map(() => (
+              <DashLine className="ml-5 h-[1.8125rem]" />
+            ))}
+        </div>
         {childrenArray.map((child, index) => (
           <div
             key={index}

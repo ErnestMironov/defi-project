@@ -46,7 +46,7 @@ export const TxReviewModal = () => {
   return (
     <Dialog open={currentModal === 'review'} onOpenChange={handleClose}>
       <DialogContent
-        className="max-w-[38.75rem] gap-10 overflow-visible rounded-[2rem] text-text max-lg:z-[100] max-lg:max-w-[95vw] lg:px-0 lg:py-10"
+        className="max-w-[38.75rem] gap-10 overflow-visible rounded-[2rem] text-text max-lg:z-[100] max-lg:max-w-[95vw] lg:px-0 lg:pb-7 lg:pt-10"
         showCloseButton={false}
       >
         <div className="absolute right-0 top-0 flex size-12 translate-y-[calc(-100%-.37rem)] cursor-pointer items-center justify-center rounded-full bg-[rgba(255,_255,_255,_0.30)]">
