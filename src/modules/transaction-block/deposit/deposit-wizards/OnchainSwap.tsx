@@ -1,8 +1,9 @@
-import ReceiveSquare from '@assets/icons/receive-square.svg'
+import DepositIcon from '@assets/icons/deposit.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -11,7 +12,6 @@ import { cn } from '@utils/cn'
 import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
-import { InfoBlock } from '../components/InfoBlock'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
@@ -24,6 +24,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
 
   const { depositAsset, vault, inputValue: amount, squidRoute } = useTxStore()
 
+  const [isOpen, setIsOpen] = useState(false)
+
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
     chainId: depositAsset?.chain_id,
     onSuccessHandler: () => {
@@ -33,28 +35,21 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     },
   })
 
-  const {
-    approve: approveBeforeSwap,
-    status: approveStatusBeforeSwap,
-    error: approveErrorBeforeSwap,
-  } = useApproveERC20({
-    approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
-    tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: squidRoute?.transactionRequest?.target,
-    chainId: depositAsset?.chain_id,
-    onSuccessHandler: () => {
-      if (currentStep === 2) {
-        setCurrentStep(3)
-      }
+  const { approve: approveBeforeSwap, status: approveStatusBeforeSwap } = useApproveERC20(
+    {
+      approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
+      tokenAddress: depositAsset?.contract_address as Address,
+      transactionRequestTarget: squidRoute?.transactionRequest?.target,
+      chainId: depositAsset?.chain_id,
+      onSuccessHandler: () => {
+        if (currentStep === 2) {
+          setCurrentStep(3)
+        }
+      },
     },
-  })
+  )
 
-  const {
-    swapTokens: swapAndDeposit,
-    status: _swapAndDepositStatus,
-    error: swapAndDepositError,
-    depositHash,
-  } = useSwap()
+  const { swapTokens: swapAndDeposit, status: _swapAndDepositStatus } = useSwap()
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
@@ -109,36 +104,37 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   }
 
   return (
-    <div className="flex flex-col items-stretch gap-10">
-      <div className="flex flex-col gap-2">
-        <WizardStep
-          icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
-          title="Switch to Arbitrum"
-          status={allStepsCompleted ? 'success' : switchStatus}
-        />
-        <WizardStep
-          icon={
-            <TokenWithNetwork
-              symbol={depositAsset?.contract_ticker_symbol}
-              network="Arbitrum"
-              width="2rem"
-            />
-          }
-          title="Approve"
-          status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
-          showChain
-        />
-        <WizardStep
-          icon={<ReceiveSquare className={cn('size-8')} />}
-          title={`Deposit ${vault}`}
-          status={swapAndDepositStatus}
-          showChain
-        />
-        {depositHash && (
-          <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />
-        )}
+    <div className="flex flex-col items-stretch gap-8">
+      <div className="flex w-full flex-col items-stretch px-8">{ActionButton()}</div>
+      <div className="border-t border-stroke-100 px-8 pt-7">
+        <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
+          <WizardStep
+            icon={
+              <TokenIconComponent width="2.625rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />
+            }
+            title="Switch to Arbitrum"
+            status={allStepsCompleted ? 'success' : switchStatus}
+          />
+          <WizardStep
+            icon={
+              <TokenWithNetwork
+                symbol={depositAsset?.contract_ticker_symbol}
+                network="Arbitrum"
+                width="2rem"
+              />
+            }
+            title="Approve"
+            status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
+            isDDOpen={isOpen}
+          />
+          <WizardStep
+            icon={<DepositIcon className={cn('size-8')} />}
+            title={`Deposit ${vault}`}
+            status={swapAndDepositStatus}
+            isDDOpen={isOpen}
+          />
+        </WizardDropDown>
       </div>
-      {ActionButton()}
     </div>
   )
 }

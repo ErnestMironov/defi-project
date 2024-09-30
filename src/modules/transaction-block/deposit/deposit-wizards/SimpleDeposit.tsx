@@ -1,4 +1,4 @@
-import ReceiveSquare from '@assets/icons/receive-square.svg'
+import DepositIcon from '@assets/icons/deposit.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
@@ -13,7 +13,6 @@ import { cn } from '@utils/cn'
 import { useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
-import { InfoBlock } from '../components/InfoBlock'
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
@@ -55,11 +54,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     },
   })
 
-  const {
-    deposit,
-    status: _depositStatus,
-    data: depositHash,
-  } = useDepositTransaction({
+  const { deposit, status: _depositStatus } = useDepositTransaction({
     address: asset?.contract_address as Address,
     amount: BigInt(parseUnits(amount, asset?.contract_decimals ?? 6)),
   })
@@ -123,14 +118,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
 
   return (
     <div className="flex flex-col items-stretch gap-8">
-      <div className="flex w-full flex-col items-stretch px-8 ">
-        <div className="flex flex-col gap-2">
-          {depositHash && (
-            <InfoBlock txHash={depositHash} className="mt-4" type="on_chain" />
-          )}
-        </div>
-        {ActionButton()}
-      </div>
+      <div className="flex w-full flex-col items-stretch px-8">{ActionButton()}</div>
       <div className="border-t border-stroke-100 px-8 pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
@@ -158,7 +146,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             maxStepNumber={3}
           />
           <WizardStep
-            icon={<ReceiveSquare className={cn('size-8')} />}
+            icon={<DepositIcon className={cn('size-8')} />}
             title={`Deposit ${vault}`}
             status={depositStatus}
             isDDOpen={isOpen}
