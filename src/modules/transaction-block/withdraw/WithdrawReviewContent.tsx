@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
 
-import { TxReviewInfo } from '../components/TxREviewInfo'
+import { TxReviewInfo } from '../components/TxReviewInfo'
 import { WizardDropDown } from '../components/WizardDropDown'
 import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../deposit/hooks/useApproveERC20'

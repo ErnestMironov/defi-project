@@ -9,7 +9,7 @@ import {
 } from '@utils/formatValue'
 import { useEffect, useMemo } from 'react'
 
-import { TxReviewInfo } from '../components/TxREviewInfo'
+import { TxReviewInfo } from '../components/TxReviewInfo'
 import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
