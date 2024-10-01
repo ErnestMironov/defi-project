@@ -5,14 +5,11 @@ import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
-import { formatAmount } from '@utils/formatValue'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
     useProtocolMetrics({})
-
-  // usePrefetchAnalyticsQueries()
 
   const usdcApy = protocolMetrics?.USDC?.apy
   const usdtApy = protocolMetrics?.USDT?.apy
@@ -53,32 +50,14 @@ export const Deposit = () => {
             </>
           ) : (
             <>
-              <ShadowBoxWithValue
-                label="USDС APY"
-                value={
-                  usdcApy
-                    ? `${formatAmount(usdcApy, {
-                        maximumFractionDigits: 2,
-                      })}%`
-                    : '0.00%'
-                }
-              >
+              <ShadowBoxWithValue label="USDС APY" value="18%">
                 <img
                   src={usdc}
                   alt="usdc"
                   className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
               </ShadowBoxWithValue>
-              <ShadowBoxWithValue
-                label="USDT APY"
-                value={
-                  usdtApy
-                    ? `${formatAmount(usdtApy, {
-                        maximumFractionDigits: 2,
-                      })}%`
-                    : '0.00%'
-                }
-              >
+              <ShadowBoxWithValue label="USDT APY" value="18%">
                 <img
                   src={usdt}
                   alt="usdt"
