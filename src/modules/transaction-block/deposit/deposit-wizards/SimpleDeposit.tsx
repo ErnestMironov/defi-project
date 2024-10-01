@@ -10,7 +10,7 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { useApproveERC20 } from '../hooks/useApproveERC20'
@@ -27,11 +27,16 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     vault,
     currentStep,
     setCurrentStep,
+    setIntermediateError,
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
 
-  const { status: switchStatus, switchChain } = useSwitchToTokenChain({
+  const {
+    status: switchStatus,
+    error: switchError,
+    switchChain,
+  } = useSwitchToTokenChain({
     chainId: asset?.chain_id,
     onSuccessHandler: () => {
       if (currentStep === 1) {
@@ -42,7 +47,11 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
 
   const vaultAddress = vault === 'USDC' ? USDC_VAULT_ADDRESS : USDT_VAULT_ADDRESS
 
-  const { approve, status: approveStatus } = useApproveERC20({
+  const {
+    approve,
+    status: approveStatus,
+    error: approveError,
+  } = useApproveERC20({
     approveValue: parseUnits(amount, asset?.contract_decimals ?? 6).toString(),
     tokenAddress: asset?.contract_address as Address,
     transactionRequestTarget: vaultAddress,
@@ -54,7 +63,11 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     },
   })
 
-  const { deposit, status: _depositStatus } = useDepositTransaction({
+  const {
+    deposit,
+    status: _depositStatus,
+    error: depositError,
+  } = useDepositTransaction({
     address: asset?.contract_address as Address,
     amount: BigInt(parseUnits(amount, asset?.contract_decimals ?? 6)),
   })
@@ -115,6 +128,28 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
       }
     }
   }
+
+  useEffect(() => {
+    if (depositStatus === 'error') {
+      setIntermediateError(depositError?.message ?? 'Unknown error')
+    }
+
+    if (approveStatus === 'error') {
+      setIntermediateError(approveError?.message ?? 'Unknown error')
+    }
+
+    if (switchStatus === 'error') {
+      setIntermediateError(switchError ?? 'Unknown error')
+    }
+  }, [
+    depositStatus,
+    approveStatus,
+    switchStatus,
+    setIntermediateError,
+    depositError?.message,
+    approveError?.message,
+    switchError,
+  ])
 
   return (
     <div className="flex flex-col items-stretch gap-8">

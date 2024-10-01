@@ -8,7 +8,7 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { InfoBlock } from '../components/InfoBlock'
 import { useSwap } from '../hooks/useSwap'
@@ -18,10 +18,15 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const { vault, currentStep, setCurrentStep, depositAsset } = useTxStore()
+  const { vault, currentStep, setCurrentStep, depositAsset, setIntermediateError } =
+    useTxStore()
   const [isOpen, setIsOpen] = useState(false)
 
-  const { status: switchStatus, switchChain } = useSwitchToTokenChain({
+  const {
+    status: switchStatus,
+    switchChain,
+    error: switchError,
+  } = useSwitchToTokenChain({
     chainId: depositAsset?.chain_id,
     onSuccessHandler: () => {
       if (currentStep === 1) {
@@ -34,6 +39,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     swapTokens: swapAndDeposit,
     status: _swapAndDepositStatus,
     depositHash,
+    error: swapAndDepositError,
   } = useSwap()
 
   const ActionButton = () => {
@@ -71,6 +77,21 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
+  useEffect(() => {
+    if (swapAndDepositStatus === 'error') {
+      setIntermediateError(swapAndDepositError ?? 'Unknown error')
+    }
+
+    if (switchStatus === 'error') {
+      setIntermediateError(switchError ?? 'Unknown error')
+    }
+  }, [
+    swapAndDepositStatus,
+    setIntermediateError,
+    swapAndDepositError,
+    switchStatus,
+    switchError,
+  ])
   return (
     <div className="flex flex-col items-stretch gap-10">
       <div className="flex flex-col items-stretch gap-2 px-8">{ActionButton()}</div>

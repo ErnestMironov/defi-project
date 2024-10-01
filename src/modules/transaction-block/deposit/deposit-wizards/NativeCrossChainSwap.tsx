@@ -8,7 +8,7 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
@@ -17,23 +17,31 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const { depositAsset, vault, currentStep, setCurrentStep } = useTxStore()
+  const { depositAsset, vault, currentStep, setCurrentStep, setIntermediateError } =
+    useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
-  const { status: switchToAssetChainStatus, switchChain: switchToAssetChain } =
-    useSwitchToTokenChain({
-      chainId: depositAssetChain?.chainId ?? 1,
-      onSuccessHandler: () => {
-        if (currentStep === 1) {
-          setCurrentStep(currentStep + 1)
-        }
-      },
-    })
+  const {
+    status: switchToAssetChainStatus,
+    switchChain: switchToAssetChain,
+    error: switchError,
+  } = useSwitchToTokenChain({
+    chainId: depositAssetChain?.chainId ?? 1,
+    onSuccessHandler: () => {
+      if (currentStep === 1) {
+        setCurrentStep(currentStep + 1)
+      }
+    },
+  })
 
-  const { swapTokens: swapAndDeposit, status: _swapAndDepositStatus } = useSwap()
+  const {
+    swapTokens: swapAndDeposit,
+    status: _swapAndDepositStatus,
+    error: swapAndDepositError,
+  } = useSwap()
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
@@ -71,6 +79,22 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
       }
     }
   }
+
+  useEffect(() => {
+    if (swapAndDepositStatus === 'error') {
+      setIntermediateError(swapAndDepositError ?? 'Unknown error')
+    }
+
+    if (switchToAssetChainStatus === 'error') {
+      setIntermediateError(switchError ?? 'Unknown error')
+    }
+  }, [
+    swapAndDepositStatus,
+    setIntermediateError,
+    swapAndDepositError,
+    switchToAssetChainStatus,
+    switchError,
+  ])
 
   return (
     <div className="flex flex-col items-stretch gap-10">
