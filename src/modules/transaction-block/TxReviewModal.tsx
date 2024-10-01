@@ -44,13 +44,16 @@ export const TxReviewModal = () => {
   }
 
   return (
-    <Dialog open={currentModal === 'review'} onOpenChange={handleClose}>
+    <Dialog open={currentModal === 'review'}>
       <DialogContent
         className="max-w-[38.75rem] gap-10 overflow-visible rounded-[2rem] text-text max-lg:z-[100] max-lg:max-w-[95vw] lg:px-0 lg:pb-7 lg:pt-10"
         showCloseButton={false}
       >
-        <div className="absolute right-0 top-0 flex size-12 translate-y-[calc(-100%-.37rem)] cursor-pointer items-center justify-center rounded-full bg-[rgba(255,_255,_255,_0.30)]">
-          <CloseIcon className="w-4" onClick={handleClose} />
+        <div
+          className="absolute right-0 top-0 flex size-12 translate-y-[calc(-100%-.37rem)] cursor-pointer items-center justify-center rounded-full bg-[rgba(255,_255,_255,_0.30)]"
+          onClick={handleClose}
+        >
+          <CloseIcon className="w-4" />
         </div>
         <div className="absolute right-8 top-10 m-0 flex w-full cursor-pointer justify-end">
           {intermediateError && (

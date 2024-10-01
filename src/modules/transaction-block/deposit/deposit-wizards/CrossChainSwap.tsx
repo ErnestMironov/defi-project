@@ -9,7 +9,7 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { cn } from '@utils/cn'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { useApproveERC20 } from '../hooks/useApproveERC20'
@@ -27,23 +27,31 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     currentStep,
     setCurrentStep,
     squidRoute,
+    setIntermediateError,
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
-  const { status: switchToAssetChainStatus, switchChain: switchToAssetChain } =
-    useSwitchToTokenChain({
-      chainId: depositAssetChain?.chainId ?? 1,
-      onSuccessHandler: () => {
-        if (currentStep === 1) {
-          setCurrentStep(2)
-        }
-      },
-    })
+  const {
+    status: switchToAssetChainStatus,
+    switchChain: switchToAssetChain,
+    error: switchError,
+  } = useSwitchToTokenChain({
+    chainId: depositAssetChain?.chainId ?? 1,
+    onSuccessHandler: () => {
+      if (currentStep === 1) {
+        setCurrentStep(2)
+      }
+    },
+  })
 
-  const { approve, status: approveStatus } = useApproveERC20({
+  const {
+    approve,
+    status: approveStatus,
+    error: approveError,
+  } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
     transactionRequestTarget: squidRoute?.transactionRequest?.target,
@@ -55,7 +63,11 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     },
   })
 
-  const { swapTokens: swapAndDeposit, status: _swapAndDepositStatus } = useSwap()
+  const {
+    swapTokens: swapAndDeposit,
+    status: _swapAndDepositStatus,
+    error: swapAndDepositError,
+  } = useSwap()
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
@@ -110,6 +122,28 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
       }
     }
   }
+
+  useEffect(() => {
+    if (swapAndDepositStatus === 'error') {
+      setIntermediateError(swapAndDepositError ?? 'Unknown error')
+    }
+
+    if (approveStatus === 'error') {
+      setIntermediateError(approveError?.message ?? 'Unknown error')
+    }
+
+    if (switchToAssetChainStatus === 'error') {
+      setIntermediateError(switchError ?? 'Unknown error')
+    }
+  }, [
+    swapAndDepositStatus,
+    setIntermediateError,
+    swapAndDepositError,
+    approveStatus,
+    approveError?.message,
+    switchToAssetChainStatus,
+    switchError,
+  ])
 
   return (
     <div className="flex flex-col items-stretch gap-7">
