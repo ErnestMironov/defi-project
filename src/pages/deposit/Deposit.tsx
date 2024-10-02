@@ -3,6 +3,8 @@ import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
@@ -10,6 +12,8 @@ import { useEffect, useRef } from 'react'
 export const Deposit = () => {
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
     useProtocolMetrics({})
+
+  const { isBelowDesktop } = useDeviceWidth()
 
   const usdcApy = protocolMetrics?.USDC?.apy
   const usdtApy = protocolMetrics?.USDT?.apy
@@ -37,7 +41,9 @@ export const Deposit = () => {
 
   return (
     <div className="flex w-full justify-center">
-      <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:mt-[2.62rem] max-lg:gap-4">
+      <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:mt-8 max-lg:gap-4">
+        {isBelowDesktop && <TVLDisplay />}
+
         <div className="grid grid-cols-2 gap-3">
           {isProtocolMetricsLoading ? (
             <>

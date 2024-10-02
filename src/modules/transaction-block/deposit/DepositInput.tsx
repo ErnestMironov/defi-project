@@ -174,7 +174,7 @@ export const DepositInput = () => {
           error && 'bg-input-error',
         )}
       >
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between gap-2">
           {isConnected && asset ? (
             <AmountInput
               value={inputValue}
@@ -220,7 +220,7 @@ export const DepositInput = () => {
           error && 'bg-input-error',
         )}
       >
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between gap-2">
           {isConnected && asset ? (
             <AmountInput
               value={Number(depositTotalAmount).toFixed(2)}

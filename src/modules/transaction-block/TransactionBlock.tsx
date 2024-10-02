@@ -2,11 +2,13 @@ import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { Button } from '@components/ui/button'
 import { TX_TYPE } from '@constants/txTypes'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import clsx from 'clsx'
 import { type ComponentProps } from 'react'
 import { useAccount } from 'wagmi'
 
+import { TVLDisplay } from './components/TVLDisplay'
 import { DepositInput } from './deposit/DepositInput'
 import { useSetDepositDetails } from './deposit/hooks/useSetDepositDetails'
 import { DoneModal } from './DoneModal'
@@ -20,6 +22,8 @@ interface DepositBlockProperties extends ComponentProps<'div'> {}
 export const TransactionBlock = (props: DepositBlockProperties) => {
   const { className, ...rest } = props
   const { txType } = useTxStore()
+
+  const { isBelowDesktop } = useDeviceWidth()
 
   useGetSquidSwapRoute()
   useSetDepositDetails()
@@ -39,10 +43,7 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
       >
         <div className="flex max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:mb-10 lg:items-center lg:justify-between">
           <TxTypeSwitcher />
-          <div className="flex items-center gap-3 text-[1.25rem] leading-[120%]">
-            <span className="text-[#9998B8]">TVL</span>
-            <span>$ 330 345.23</span>
-          </div>
+          {!isBelowDesktop && <TVLDisplay />}
         </div>
         {txType === TX_TYPE.DEPOSIT && <DepositInput />}
         {txType === TX_TYPE.WITHDRAW && <WithdrawInput />}

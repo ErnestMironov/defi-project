@@ -1,3 +1,4 @@
+import GuidanceArrow from '@assets/icons/guidance-arrow.svg'
 import Scales from '@assets/lottie/MAAT_Scales.json'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
@@ -27,7 +28,7 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
           animationData={Scales}
           loop={playAnimation}
           autoplay={playAnimation}
-          className="aspect-square h-28 self-center"
+          className="aspect-square h-[8.4375rem] self-center lg:h-28"
         />
 
         <div className="flex items-center gap-2 self-center text-[1.125rem] ">
@@ -53,7 +54,7 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
   }
 
   return (
-    <div className="flex items-center justify-between gap-8">
+    <div className="max-lg:grid-cols-auto flex items-center gap-x-6 gap-y-8 max-lg:grid lg:justify-between lg:gap-8">
       <div className="flex flex-1 flex-col items-center text-[1.125rem]">
         <span className="text-[0.875rem]">Withdraw</span>
         <div className="mt-3 flex items-center">
@@ -81,9 +82,10 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
         animationData={Scales}
         loop={playAnimation}
         autoplay={playAnimation}
-        className="aspect-square h-28 self-center"
+        className="aspect-square h-28 self-center max-lg:col-start-1 max-lg:col-end-4 max-lg:row-start-1 max-lg:w-full max-lg:self-center"
       />
 
+      <GuidanceArrow className="justify-self-center lg:hidden" />
       <div className="flex flex-1 flex-col items-center text-[1.125rem]">
         <span className="text-[0.875rem]">Receive</span>
         <div className="mt-3 flex items-center">
