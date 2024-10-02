@@ -32,14 +32,14 @@ export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) =
   const formattedApyData: RechartDataType[] = useMemo(() => {
     if (!data) return []
     return Object.entries(
-      data?.USDC?.history ??
-        data?.USDT?.history ?? {
+      data?.history?.USDC?.timestamps ??
+        data?.history?.USDT?.timestamps ?? {
           [currentTimestamp]: {},
           [Date.now()]: {},
         },
     ).map(([key]) => {
-      const uv = data?.USDC?.history?.[key]?.apy ?? 0
-      const pv = data?.USDT?.history?.[key]?.apy ?? 0
+      const uv = data?.history?.USDC?.timestamps?.[key]?.apy ?? 0
+      const pv = data?.history?.USDT?.timestamps?.[key]?.apy ?? 0
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
 
@@ -50,7 +50,7 @@ export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) =
         pv,
       }
     })
-  }, [currentTimestamp, data])
+  }, [data, currentTimestamp])
 
   const renderBody = () => {
     switch (true) {

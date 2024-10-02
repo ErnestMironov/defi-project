@@ -13,7 +13,7 @@ export const Analytics = () => {
       {/* <SankeyDiagramBasicDemo className="mt-[6.25rem]" /> */}
       <Transactions
         className="mt-28 max-lg:mt-14"
-        // parameters={{ transaction_type: 'trigger' }}
+        parameters={{ transaction_type: 'trigger' }}
       />
       <Footer className="mt-[7.5rem] max-lg:mt-[5.25rem]" />
     </>

@@ -21,6 +21,8 @@ import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useTokenMetrics } from './useTokenMetrics'
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { error } from 'console'
 
 export type RechartDataType = {
   name: string
@@ -67,7 +69,7 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
 
   const formattedApyData: RechartDataType[] = useMemo(() => {
     if (!apyData) return []
-    const tokenApyHistory = apyData?.[symbol as 'USDT' | 'USDC']?.history
+    const tokenApyHistory = apyData?.history?.[symbol as 'USDT' | 'USDC']?.timestamps
     if (!tokenApyHistory) {
       return [
         { name: 'No data', timestamp: currentTimestamp, value: 0 },
@@ -89,7 +91,7 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
 
   const formattedTvlData: RechartDataType[] = useMemo(() => {
     if (!tvlData) return []
-    const tokenTvlHistory = tvlData?.[symbol as 'USDT' | 'USDC']?.history
+    const tokenTvlHistory = tvlData?.history?.[symbol as 'USDT' | 'USDC']?.timestamps
     if (!tokenTvlHistory) {
       return [
         { name: 'No data', timestamp: currentTimestamp, value: 0 },
@@ -106,7 +108,7 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
         value: value.tvl,
       }
     })
-  }, [symbol, tvlData])
+  }, [currentTimestamp, symbol, tvlData])
 
   const renderApyBody = () => {
     switch (true) {

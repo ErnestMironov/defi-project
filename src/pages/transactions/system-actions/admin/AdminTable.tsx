@@ -55,7 +55,7 @@ export const AdminTable = (props: AdminTableProperties) => {
     if (data?.total_items === 0) {
       return (
         <Table.Row className="text-center text-gray-500">
-          <Table.Cell colspan={6} className="py-32 text-center">
+          <Table.Cell colSpan={6} className="py-32 text-center">
             No data was found
           </Table.Cell>
         </Table.Row>

@@ -8,7 +8,7 @@ type StrategiesMetricsParameters = {
   from_timestamp?: string
   to_timestamp?: string
   sort?: 'apy' | 'tvl' | 'protocol' | 'chain' | 'token'
-  orderBy?: SortDirection
+  order_by?: SortDirection
   exclude_metrics?: string[]
 }
 

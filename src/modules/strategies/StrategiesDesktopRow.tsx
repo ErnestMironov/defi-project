@@ -5,6 +5,7 @@ import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { ROUTES } from '@routes/routes'
+import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
 import { formatUnits } from 'ethers'
@@ -62,9 +63,10 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
     </Table.Row>
   )
 }
-export const StrategyRowSkeleton = (_props: ComponentProps<'tr'>) => {
+export const StrategyRowSkeleton = (props: ComponentProps<'tr'>) => {
+  const { className } = props
   return (
-    <Table.Row>
+    <Table.Row className={cn(className)}>
       <Table.Cell className="px-10 py-6">
         <Skeleton className="h-6 w-full" />
       </Table.Cell>

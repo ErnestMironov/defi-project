@@ -24,14 +24,14 @@ export const LAST_EVENT_ACTION_TYPE = {
   DEPOSIT: 'Deposit',
   REBALANCE_REQUEST: 'Rebalance request',
   WITHDRAW_REQUEST: 'Withdraw request',
-  INC_HARVEST: 'Harvest',
-  INC_SWAP: 'Swap',
-  INC_COMPOUND: 'Compound',
-  UPDATE_PPS: 'Update PPS',
-  STRATEGY_REGISTERED: 'Strategy registered',
-  STRATEGY_DEPRECATED: 'Strategy deprecated',
-  VAULT_REGISTERED: 'Vault registered',
-  VAULT_DEPRECATED: 'Vault deprecated',
+  // INC_HARVEST: 'Harvest',
+  // INC_SWAP: 'Swap',
+  // INC_COMPOUND: 'Compound',
+  // UPDATE_PPS: 'Update PPS',
+  // STRATEGY_REGISTERED: 'Strategy registered',
+  // STRATEGY_DEPRECATED: 'Strategy deprecated',
+  // VAULT_REGISTERED: 'Vault registered',
+  // VAULT_DEPRECATED: 'Vault deprecated',
 } as const
 
 // Create a type from the keys of ACTION_TYPE

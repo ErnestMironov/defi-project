@@ -13,13 +13,20 @@ type ProtocolMetricsParameters = {
 }
 
 type ProtocolMetrics = {
-  [currency in CurrencyType]: {
-    apy: number
-    tvl: number
-    history: {
-      [timestamp: string]: {
-        apy: number
-        tvl: number
+  history: {
+    [currency in CurrencyType]: {
+      apy: number
+      tvl: number
+      timestamps: {
+        [timestamp: string]: {
+          apy: number
+          tvl: number
+          chain: string
+          protocol: string
+          token: string
+          token_stats: null
+          strategy_id: string
+        }
       }
     }
   }

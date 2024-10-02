@@ -35,7 +35,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
     page,
     limit: 100,
     sort,
-    orderBy,
+    order_by: orderBy,
     ...getMultiSelectParameters(selectFilters),
   })
 

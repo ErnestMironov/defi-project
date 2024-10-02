@@ -13,14 +13,14 @@ import qs from 'qs'
 
 export type EventsParameters = {
   limit?: number
-  action_type?: (keyof typeof LAST_EVENT_ACTION_TYPE)[]
+  actions_type?: (keyof typeof LAST_EVENT_ACTION_TYPE)[]
   transaction_type?: 'maat' | 'trigger' | 'handler'
   chain?: (keyof typeof CHAIN_IDS_BY_BACKEND_NAMES)[]
   page?: number
   size?: number
-  orderBy?: SortDirection
+  order_by?: SortDirection
   sort?: 'creation_time' | 'amount'
-  status?: StatusType
+  status?: StatusType[]
   start?: string
   end?: string
   token?: TokenParameters[]

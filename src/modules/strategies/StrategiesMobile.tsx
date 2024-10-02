@@ -50,19 +50,19 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
   const currentSort: StrategiesParameters = useMemo(() => {
     switch (selectedSort?.value) {
       case 'Highest APY': {
-        return { orderBy: 'desc', sort: 'apy' }
+        return { order_by: 'desc', sort: 'apy' }
       }
       case 'Lowest APY': {
-        return { orderBy: 'asc', sort: 'apy' }
+        return { order_by: 'asc', sort: 'apy' }
       }
       case 'Highest TVL': {
-        return { orderBy: 'desc', sort: 'tvl' }
+        return { order_by: 'desc', sort: 'tvl' }
       }
       case 'Lowest TVL': {
-        return { orderBy: 'asc', sort: 'tvl' }
+        return { order_by: 'asc', sort: 'tvl' }
       }
       default: {
-        return { orderBy: 'desc', sort: 'apy' }
+        return { order_by: 'desc', sort: 'apy' }
       }
     }
   }, [selectedSort])

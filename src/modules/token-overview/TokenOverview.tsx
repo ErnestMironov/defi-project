@@ -18,12 +18,12 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
     error: protocolMetricsError,
   } = useProtocolMetrics({})
 
-  const usdcApy = protocolMetrics?.USDC?.apy
-  const usdcTvl = protocolMetrics?.USDC?.tvl
-  const usdtApy = protocolMetrics?.USDT?.apy
-  const usdtTvl = protocolMetrics?.USDT?.tvl
-  const usdcVolume = data?.USDC?.volume
-  const usdtVolume = data?.USDT?.volume
+  const usdcApy = protocolMetrics?.history?.USDC?.apy
+  const usdcTvl = protocolMetrics?.history?.USDC?.tvl
+  const usdtApy = protocolMetrics?.history?.USDT?.apy
+  const usdtTvl = protocolMetrics?.history?.USDT?.tvl
+  const usdcVolume = data?.USDC
+  const usdtVolume = data?.USDT
 
   return (
     <section

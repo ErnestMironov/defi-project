@@ -32,14 +32,14 @@ export const TvlTokensChartDesktop = (_props: TvlTokensChartDesktopProperties) =
   const formattedTvlData: RechartDataType[] = useMemo(() => {
     if (!data) return []
     return Object.entries(
-      data?.USDC?.history ??
-        data?.USDT?.history ?? {
+      data?.history?.USDC?.timestamps ??
+        data?.history?.USDT?.timestamps ?? {
           [currentTimestamp]: {},
           [Date.now().valueOf()]: {},
         },
     ).map(([key]) => {
-      const uv = data?.USDC?.history?.[key]?.tvl ?? 0
-      const pv = data?.USDT?.history?.[key]?.tvl ?? 0
+      const uv = data?.history?.USDC?.timestamps?.[key]?.tvl ?? 0
+      const pv = data?.history?.USDT?.timestamps?.[key]?.tvl ?? 0
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
 

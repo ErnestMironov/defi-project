@@ -8,6 +8,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { ACTION_TYPE } from '@constants/action-type'
 import { STATUS_COLOR } from '@constants/status-color'
 import { ROUTES } from '@routes/routes'
+import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenAddress } from '@utils/transform'
@@ -97,29 +98,30 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
     </Table.Row>
   )
 }
-export const TransactionHistoryRowSkeleton = (_props: ComponentProps<'tr'>) => {
+export const TransactionHistoryRowSkeleton = (props: ComponentProps<'tr'>) => {
+  const { className } = props
   return (
-    <Table.Row>
+    <Table.Row className={cn(className)}>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
     </Table.Row>
   )

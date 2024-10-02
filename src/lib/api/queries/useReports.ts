@@ -12,7 +12,7 @@ import qs from 'qs'
 export type ReportParameters = {
   limit?: number
   sort?: 'creation_time' | 'amount'
-  orderBy?: SortDirection
+  order_by?: SortDirection
   status?: StatusType
   actions_type?: string[]
   chain?: ChainParameters[]
