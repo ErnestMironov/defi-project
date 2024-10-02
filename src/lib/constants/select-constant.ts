@@ -8,7 +8,7 @@ import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import {
   ADMIN_ACTION_TYPE,
   INCENTIVE_ACTION_TYPE,
-  LAST_EVENT_ACTION_TYPE,
+  ANALYTICS_PAGE_EVENT_ACTION_TYPE,
   STATUSES,
 } from './action-type'
 import { PROTOCOL_IDS_BY_BACKEND_NAMES } from './protocols'
@@ -59,7 +59,7 @@ export const SELECT_PROTOCOLS: OptionType[] = Object.entries(
 }))
 
 export const SELECT_LAST_EVENT_ACTIONS: OptionType[] = Object.entries(
-  LAST_EVENT_ACTION_TYPE,
+  ANALYTICS_PAGE_EVENT_ACTION_TYPE,
 ).map(([key, value]) => ({
   label: value,
   value: key,

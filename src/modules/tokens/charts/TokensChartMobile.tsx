@@ -40,10 +40,10 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
 
   const { data, isLoading, error } = useProtocolMetrics({
     metrics_type: ['apy', 'tvl'],
-    tokens: ['USDT', 'USDC'],
+    token: ['USDT', 'USDC'],
     from_timestamp: currentTimestamp,
-    protocols: selectedProtocols.map((item) => item.value),
-    chains: selectedChains.map((item) => item.value),
+    protocol: selectedProtocols.map((item) => item.value),
+    chain: selectedChains.map((item) => item.value),
   })
   const formattedData = useMemo(() => {
     if (!data) return { apyData: [], tvlData: [] }

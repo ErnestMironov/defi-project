@@ -93,11 +93,14 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
                 return (
                   <StrategyTooltipComponent
                     timestamp={payload[0].payload.timestamp}
-                    data={payload.map((item, i) => {
+                    data={payload.map((item) => {
+                      const value = item.payload.values.find(
+                        (v: never) => v && v[dataKey] === item.value,
+                      )
                       return {
-                        symbol: item.payload.values[i]?.token,
-                        chain: item.payload.values[i]?.chain,
-                        protocol: item.payload.values[i]?.protocol,
+                        symbol: value?.token,
+                        chain: value?.chain,
+                        protocol: value?.protocol,
                         color: item.stroke || '',
                         value: tooltipFormatter(item.value as string),
                       }

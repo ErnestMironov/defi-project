@@ -13,7 +13,7 @@ import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
 import { Button } from '@components/ui/button'
 import { Loader } from '@components/ui/loader'
-import type { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
+import type { ANALYTICS_PAGE_EVENT_ACTION_TYPE } from '@constants/action-type'
 import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import {
   SELECT_CHAINS,
@@ -85,7 +85,7 @@ export const TransactionsMobileWithFilters = (
     }
     if (selectedActions.length > 0) {
       baseParameters.actions_type = selectedActions.map(
-        (action) => action.value as keyof typeof LAST_EVENT_ACTION_TYPE,
+        (action) => action.value as keyof typeof ANALYTICS_PAGE_EVENT_ACTION_TYPE,
       )
     }
     if (selectedChains.length > 0) {

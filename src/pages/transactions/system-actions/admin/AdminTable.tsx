@@ -38,7 +38,7 @@ export const AdminTable = (props: AdminTableProperties) => {
   const { data, isLoading, error, isPlaceholderData } = useAdminActions({
     page,
     size,
-    orderBy,
+    order_by: orderBy,
     sort,
     ...getMultiSelectParameters(selectFilters),
   })

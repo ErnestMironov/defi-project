@@ -6,7 +6,6 @@ import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { ROUTES } from '@routes/routes'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
-import { formatUnits } from 'ethers'
 import { type ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -47,7 +46,7 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
         <div className="font-bold">{formatPercentValue(strategy.apy)}</div>
         <h6>TVL</h6>
         <div>
-          {formatUsdValue(formatUnits(BigInt(strategy.tvl), strategy.token.decimals), {
+          {formatUsdValue(strategy.tvl, {
             notation: 'compact',
             maximumFractionDigits: 2,
           })}

@@ -5,7 +5,7 @@ import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
+import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
   MobileFiltersDrawer,
@@ -21,8 +21,6 @@ import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { useTokenMetrics } from './useTokenMetrics'
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
-import { error } from 'console'
 
 export type RechartDataType = {
   name: string
@@ -50,10 +48,10 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
     error: apyError,
   } = useProtocolMetrics({
     metrics_type: ['apy'],
-    tokens: [symbol as 'USDT' | 'USDC'],
+    token: [symbol as 'USDT' | 'USDC'],
     from_timestamp: currentTimestamp,
-    protocols: selectedProtocols.map((item) => item.value),
-    chains: selectedChains.map((item) => item.value),
+    protocol: selectedProtocols.map((item) => item.value),
+    chain: selectedChains.map((item) => item.value),
   })
   const {
     data: tvlData,
@@ -61,10 +59,10 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
     error: tvlError,
   } = useProtocolMetrics({
     metrics_type: ['tvl'],
-    tokens: [symbol as 'USDT' | 'USDC'],
+    token: [symbol as 'USDT' | 'USDC'],
     from_timestamp: currentTimestamp,
-    protocols: selectedProtocols.map((item) => item.value),
-    chains: selectedChains.map((item) => item.value),
+    protocol: selectedProtocols.map((item) => item.value),
+    chain: selectedChains.map((item) => item.value),
   })
 
   const formattedApyData: RechartDataType[] = useMemo(() => {
@@ -183,19 +181,17 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
             />
           }
         >
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             options={SELECT_PROTOCOLS}
             onChange={setSelectedProtocols}
             value={selectedProtocols}
             label="Protocol"
-            placeholder="All Protocols"
           />
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
             value={selectedChains}
             label="Chain"
-            placeholder="All Chains"
           />
         </MobileFiltersDrawer>
       </div>

@@ -22,15 +22,15 @@ export const TokenTvlChart = (props: TokenTvlChartProperties) => {
 
   const { data, isLoading, error } = useProtocolMetrics({
     metrics_type: ['tvl'],
-    tokens: [symbol],
+    token: [symbol],
     from_timestamp: currentTimestamp,
-    protocols: currentProtocol.map((item) => item.value),
-    chains: currentChain.map((item) => item.value),
+    protocol: currentProtocol.map((item) => item.value),
+    chain: currentChain.map((item) => item.value),
   })
   const formattedTvlData: RechartDataType[] = useMemo(() => {
     if (!data) return []
     return Object.entries(
-      data?.[symbol]?.history ?? {
+      data?.history?.[symbol].timestamps ?? {
         [currentTimestamp]: { tvl: 0 },
         [Date.now()]: { tvl: 0 },
       },

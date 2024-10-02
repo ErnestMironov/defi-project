@@ -6,14 +6,14 @@ import type {
   StatusType,
   TokenParameters,
 } from '@api/maat-finance/types'
-import type { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
+import type { ANALYTICS_PAGE_EVENT_ACTION_TYPE } from '@constants/action-type'
 import type { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import qs from 'qs'
 
 export type EventsParameters = {
   limit?: number
-  actions_type?: (keyof typeof LAST_EVENT_ACTION_TYPE)[]
+  actions_type?: (keyof typeof ANALYTICS_PAGE_EVENT_ACTION_TYPE)[]
   transaction_type?: 'maat' | 'trigger' | 'handler'
   chain?: (keyof typeof CHAIN_IDS_BY_BACKEND_NAMES)[]
   page?: number

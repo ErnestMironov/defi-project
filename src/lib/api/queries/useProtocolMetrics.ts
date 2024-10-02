@@ -5,10 +5,10 @@ import qs from 'qs'
 type CurrencyType = 'maat' | 'USDT' | 'USDC'
 
 type ProtocolMetricsParameters = {
-  chains?: string[]
-  protocols?: string[]
+  chain?: string[]
+  protocol?: string[]
   from_timestamp?: number
-  tokens?: ('USDT' | 'USDC')[]
+  token?: ('USDT' | 'USDC')[]
   metrics_type?: ('apy' | 'tvl')[]
 }
 

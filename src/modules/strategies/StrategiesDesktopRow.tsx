@@ -8,7 +8,6 @@ import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
-import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -44,7 +43,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
       </Table.Cell>
       <Table.Cell className="font-bold">{formatPercentValue(strategy.apy)}</Table.Cell>
       <Table.Cell>
-        {formatUsdValue(formatUnits(BigInt(strategy.tvl), strategy.token.decimals), {
+        {formatUsdValue(strategy.tvl, {
           notation: 'compact',
           maximumFractionDigits: 2,
         })}
