@@ -14,6 +14,7 @@ interface TxReviewInfoProperties {
     tokenData: {
       symbol: string
       network: ChainType
+      maxDigits?: number
     }
   }[]
 }
@@ -40,8 +41,8 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
           />
           <span>
             {formatAmount(items[0].value, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              minimumFractionDigits: items[0].tokenData.maxDigits ?? 2,
+              maximumFractionDigits: items[0].tokenData.maxDigits ?? 2,
             })}{' '}
             {items[0].tokenData.symbol.toUpperCase()}
           </span>
@@ -67,8 +68,8 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
           />
           <span>
             {formatAmount(items[0].value, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              minimumFractionDigits: items[0].tokenData.maxDigits ?? 2,
+              maximumFractionDigits: items[0].tokenData.maxDigits ?? 2,
             })}{' '}
             {items[0].tokenData.symbol.toUpperCase()}
           </span>
@@ -98,8 +99,8 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
           />
           <span>
             {formatAmount(items[1].value, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
+              minimumFractionDigits: items[1].tokenData.maxDigits ?? 2,
+              maximumFractionDigits: items[1].tokenData.maxDigits ?? 2,
             })}{' '}
             {items[1].tokenData.symbol.toUpperCase()}
           </span>

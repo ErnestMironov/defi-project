@@ -3,6 +3,7 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -21,6 +22,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
   const [currentStep, setCurrentStep] = useState(1)
+
+  const { isBelowDesktop } = useDeviceWidth()
 
   const {
     depositAsset,
@@ -78,6 +81,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
             size="lg"
             type="button"
             onClick={switchChain}
+            className="rounded-2xl max-lg:py-6"
             disabled={switchStatus === 'pending'}
           >
             {getButtonContent(switchStatus, 'Switch to Arbitrum')}
@@ -90,6 +94,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
           <Button
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             onClick={approveBeforeSwap}
             disabled={approveStatusBeforeSwap === 'pending'}
           >
@@ -107,6 +112,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
             size="lg"
             type="button"
             onClick={swapAndDeposit}
+            className="rounded-2xl max-lg:py-6"
             disabled={swapAndDepositStatus === 'pending'}
           >
             {getButtonContent(swapAndDepositStatus, 'Deposit')}
@@ -142,9 +148,13 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   ])
 
   return (
-    <div className="flex flex-col items-stretch gap-8">
-      <div className="flex w-full flex-col items-stretch px-8">{ActionButton()}</div>
-      <div className="border-t border-stroke-100 px-8 pt-7">
+    <div className="flex flex-col items-stretch gap-6 lg:gap-8">
+      {!isBelowDesktop && (
+        <div className="flex w-full flex-col items-stretch px-8">
+          <ActionButton />
+        </div>
+      )}
+      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={
@@ -173,6 +183,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
           />
         </WizardDropDown>
       </div>
+      {isBelowDesktop && <ActionButton />}
     </div>
   )
 }
