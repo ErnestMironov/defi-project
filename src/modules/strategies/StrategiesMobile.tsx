@@ -132,7 +132,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
       <div className="mt-4 flex items-center gap-2">
         <SearchInput
           className="flex-1"
-          placeholder="Name / Address / ID "
+          placeholder="Address / ID "
           classNames={{
             container: 'bg-cards border-none rounded-[0.5rem] py-[0.81rem] px-3',
             input: 'mx-2',

@@ -1,3 +1,4 @@
+import type { EventsParameters } from '@api/queries/useEvents'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
@@ -10,10 +11,11 @@ import { MaatTransactionsHistory } from './maat/MaatTransactionsHistory'
 interface TransactionHistoryProperties extends ComponentProps<'div'> {
   maatFilters: TableFiltersType
   incentivesFilters: TableFiltersType
+  eventParameters?: EventsParameters
 }
 
 export const TransactionHistory = (props: TransactionHistoryProperties) => {
-  const { maatFilters, incentivesFilters, className, ...rest } = props
+  const { maatFilters, incentivesFilters, className, eventParameters, ...rest } = props
 
   return (
     <div {...rest} className={cn('', className)}>
@@ -24,7 +26,10 @@ export const TransactionHistory = (props: TransactionHistoryProperties) => {
           <TabsTrigger value="incentives">INCENTIVES</TabsTrigger>
         </TabsList>
         <TabsContent value="maat">
-          <MaatTransactionsHistory filters={maatFilters} />
+          <MaatTransactionsHistory
+            filters={maatFilters}
+            eventParameters={eventParameters}
+          />
         </TabsContent>
         <TabsContent value="incentives">
           <IncentivesHistory filters={incentivesFilters} />

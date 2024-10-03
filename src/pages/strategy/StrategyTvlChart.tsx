@@ -1,15 +1,48 @@
+import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import type { RechartDataType } from '@components/chart/line-chart/AreaChart'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
+import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 
-interface AreaChartComponentProperties {
-  data: RechartDataType[]
-}
+interface AreaChartComponentProperties {}
 
-export const StrategyTvlChart = (props: AreaChartComponentProperties) => {
-  const { data } = props
-  const { currentFrame, frames, onFrameChange } = useFrameSelect()
+export const StrategyTvlChart = (_props: AreaChartComponentProperties) => {
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const { id } = useParams()
+  const { data: apyData } = useStrategiesMetrics(
+    { strategy_id: [String(id)], from_timestamp: currentTimestamp.toString() },
+    !!id,
+  )
+  const formattedData: { apy: RechartDataType[]; tvl: RechartDataType[] } =
+    useMemo(() => {
+      if (!id) return { apy: [], tvl: [] }
+      const data = Object.entries(apyData ?? {}).map(([timestamp, strategies]) => {
+        const formattedTimestamp =
+          Number(timestamp) * (timestamp.length === 10 ? 1000 : 1)
+        const apy = strategies[id]?.apy === 0 ? null : strategies[id]?.apy
+        const tvl = strategies[id]?.tvl === 0 ? null : strategies[id]?.tvl
+        return {
+          apy: {
+            name: 'APY',
+            timestamp: formattedTimestamp,
+            value: apy,
+          },
+          tvl: {
+            name: 'TVL',
+            timestamp: formattedTimestamp,
+            value: tvl,
+          },
+        }
+      })
+
+      return {
+        apy: data.map((item) => item.apy),
+        tvl: data.map((item) => item.tvl),
+      }
+    }, [apyData, id])
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -20,7 +53,7 @@ export const StrategyTvlChart = (props: AreaChartComponentProperties) => {
           onFrameChange={onFrameChange}
         />
       </div>
-      <AreaChart data={data} color="#A6C1FF" yAxisType="usd" />
+      <AreaChart data={formattedData.tvl} color="#A6C1FF" yAxisType="usd" />
     </div>
   )
 }

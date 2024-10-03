@@ -123,3 +123,7 @@ export const CHAIN_IDS_BY_BACKEND_NAMES = {
   metis: CHAIN_IDS_BY_NAME.Metis,
   sei: CHAIN_IDS_BY_NAME.Sei,
 } as const
+
+export const CHAIN_BACKEND_NAMES_BY_ID = Object.fromEntries(
+  Object.entries(CHAIN_IDS_BY_BACKEND_NAMES).map(([key, value]) => [value, key]),
+) as Record<ChainType, keyof typeof CHAIN_IDS_BY_BACKEND_NAMES>
