@@ -1,4 +1,3 @@
-import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import {
   SELECT_CHAINS,
   SELECT_INCENTIVES_ACTIONS,
@@ -10,11 +9,9 @@ import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
 import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { type ComponentProps } from 'react'
 
 import { Breadcrumbs } from './Breadcrumbs'
-import type { RechartDataType } from './StrategyApyChart'
 import { StrategyApyChart } from './StrategyApyChart'
 import { StrategyHeader } from './StrategyHeader'
 import { StrategyInfoDesktop } from './StrategyInfoDesktop'
@@ -32,37 +29,9 @@ export const Strategy = (props: StrategyProperties) => {
   }
   return <StrategyDesktop {...props} />
 }
+
 export const StrategyDesktop = (props: StrategyProperties) => {
   const { className, ...rest } = props
-  const { id } = useParams()
-  const { data: apyData } = useStrategiesMetrics({ strategy_id: [String(id)] }, !!id)
-  const formattedData: { apy: RechartDataType[]; tvl: RechartDataType[] } =
-    useMemo(() => {
-      if (!id) return { apy: [], tvl: [] }
-      const data = Object.entries(apyData ?? {}).map(([timestamp, strategies]) => {
-        const formattedTimestamp =
-          Number(timestamp) * (timestamp.length === 10 ? 1000 : 1)
-        const apy = strategies[id]?.apy === 0 ? null : strategies[id]?.apy
-        const tvl = strategies[id]?.tvl === 0 ? null : strategies[id]?.tvl
-        return {
-          apy: {
-            name: 'APY',
-            timestamp: formattedTimestamp,
-            value: apy,
-          },
-          tvl: {
-            name: 'TVL',
-            timestamp: formattedTimestamp,
-            value: tvl,
-          },
-        }
-      })
-
-      return {
-        apy: data.map((item) => item.apy),
-        tvl: data.map((item) => item.tvl),
-      }
-    }, [apyData, id])
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
@@ -70,8 +39,8 @@ export const StrategyDesktop = (props: StrategyProperties) => {
       <StrategyHeader />
       <StrategyInfoDesktop />
       <div className="mt-[4.62rem] grid grid-cols-2 gap-10 *:h-[18.25rem]">
-        <StrategyApyChart data={formattedData.apy} />
-        <StrategyTvlChart data={formattedData.tvl} />
+        <StrategyApyChart />
+        <StrategyTvlChart />
       </div>
       <TransactionHistory
         className="mt-[6.25rem]"

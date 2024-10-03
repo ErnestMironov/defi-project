@@ -24,7 +24,7 @@ interface TransactionsHistoryProperties extends ComponentProps<'div'> {
 export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryProperties> = (
   props,
 ) => {
-  const { filters: initialFilters, className } = props
+  const { filters: initialFilters, eventParameters, className } = props
   const [filters, setFilters] = useState(initialFilters)
   const { search: _search, ...selectFilters } = filters
   const { onPageChange, page, size, onPageSizeChange } = usePages()
@@ -33,6 +33,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
     sort: 'creation_time',
   })
   const { data, isLoading, error, isPlaceholderData } = useEvents({
+    ...eventParameters,
     size,
     page,
     transaction_type: 'maat',

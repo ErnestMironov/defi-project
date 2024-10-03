@@ -3,7 +3,7 @@ import type { Strategy } from '@api/maat-finance/types'
 import { useQuery } from '@tanstack/react-query'
 
 const getStrategy = (strategy_id: string) => {
-  return apiClient.get<Strategy>(`/overview/strategies/id/${strategy_id}`, {
+  return apiClient.get<Strategy>(`/overview/strategies/${strategy_id}`, {
     params: {
       strategy_info: true,
     },

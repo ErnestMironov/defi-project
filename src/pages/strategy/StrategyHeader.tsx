@@ -15,6 +15,7 @@ export const StrategyHeader = (props: StrategyHeaderProperties) => {
   const { className, ...rest } = props
   const { id } = useParams()
   const { data: strategy, isLoading, error } = useStrategy(id)
+
   const symbol = strategy?.token?.symbol
   const chain_id = strategy?.token?.chain_id
   const protocol = strategy?.info?.protocol?.name

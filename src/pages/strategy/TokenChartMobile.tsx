@@ -24,14 +24,17 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
   const { className, ...rest } = props
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
-  const { currentFrame, frames, onFrameChange } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
 
   const { id } = useParams()
   const {
     data: apyData,
     isLoading,
     isError,
-  } = useStrategiesMetrics({ strategy_id: [String(id)] }, !!id)
+  } = useStrategiesMetrics(
+    { strategy_id: [String(id)], from_timestamp: currentTimestamp.toString() },
+    !!id,
+  )
   const formattedData: { apy: RechartDataType[]; tvl: RechartDataType[] } =
     useMemo(() => {
       if (!id) return { apy: [], tvl: [] }

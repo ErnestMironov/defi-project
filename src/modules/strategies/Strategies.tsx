@@ -24,7 +24,7 @@ export const Strategies: React.FC<StrategiesProperties> = (props) => {
     <StrategiesDesktop
       {...props}
       filters={{
-        search: { value: '', placeholder: 'Name / Address / ID' },
+        search: { value: '', placeholder: 'Address / ID' },
         token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
         chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
         protocol: { items: SELECT_PROTOCOLS, value: [], placeholder: 'All Protocols' },

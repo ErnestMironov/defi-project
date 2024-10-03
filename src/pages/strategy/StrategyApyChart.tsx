@@ -1,6 +1,9 @@
+import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
+import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 
 export type RechartDataType = {
   name: string
@@ -8,13 +11,42 @@ export type RechartDataType = {
   value: number | null
 }
 
-interface AreaChartComponentProperties {
-  data: RechartDataType[]
-}
+interface AreaChartComponentProperties {}
 
-export const StrategyApyChart = (props: AreaChartComponentProperties) => {
-  const { data } = props
-  const { currentFrame, frames, onFrameChange } = useFrameSelect()
+export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const { id } = useParams()
+  const { data: apyData } = useStrategiesMetrics(
+    { strategy_id: [String(id)], from_timestamp: currentTimestamp.toString() },
+    !!id,
+  )
+  const formattedData: { apy: RechartDataType[]; tvl: RechartDataType[] } =
+    useMemo(() => {
+      if (!id) return { apy: [], tvl: [] }
+      const data = Object.entries(apyData ?? {}).map(([timestamp, strategies]) => {
+        const formattedTimestamp =
+          Number(timestamp) * (timestamp.length === 10 ? 1000 : 1)
+        const apy = strategies[id]?.apy === 0 ? null : strategies[id]?.apy
+        const tvl = strategies[id]?.tvl === 0 ? null : strategies[id]?.tvl
+        return {
+          apy: {
+            name: 'APY',
+            timestamp: formattedTimestamp,
+            value: apy,
+          },
+          tvl: {
+            name: 'TVL',
+            timestamp: formattedTimestamp,
+            value: tvl,
+          },
+        }
+      })
+
+      return {
+        apy: data.map((item) => item.apy),
+        tvl: data.map((item) => item.tvl),
+      }
+    }, [apyData, id])
 
   return (
     <div className="flex flex-col gap-8">
@@ -26,7 +58,7 @@ export const StrategyApyChart = (props: AreaChartComponentProperties) => {
           onFrameChange={onFrameChange}
         />
       </div>
-      <AreaChart data={data} color="#6160FF" yAxisType="percent" />
+      <AreaChart data={formattedData.apy} color="#6160FF" yAxisType="percent" />
     </div>
   )
 }
