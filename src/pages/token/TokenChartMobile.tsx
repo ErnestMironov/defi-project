@@ -5,7 +5,7 @@ import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
+import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
   MobileFiltersDrawer,
@@ -48,10 +48,10 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
     error: apyError,
   } = useProtocolMetrics({
     metrics_type: ['apy'],
-    tokens: [symbol as 'USDT' | 'USDC'],
+    token: [symbol as 'USDT' | 'USDC'],
     from_timestamp: currentTimestamp,
-    protocols: selectedProtocols.map((item) => item.value),
-    chains: selectedChains.map((item) => item.value),
+    protocol: selectedProtocols.map((item) => item.value),
+    chain: selectedChains.map((item) => item.value),
   })
   const {
     data: tvlData,
@@ -59,15 +59,15 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
     error: tvlError,
   } = useProtocolMetrics({
     metrics_type: ['tvl'],
-    tokens: [symbol as 'USDT' | 'USDC'],
+    token: [symbol as 'USDT' | 'USDC'],
     from_timestamp: currentTimestamp,
-    protocols: selectedProtocols.map((item) => item.value),
-    chains: selectedChains.map((item) => item.value),
+    protocol: selectedProtocols.map((item) => item.value),
+    chain: selectedChains.map((item) => item.value),
   })
 
   const formattedApyData: RechartDataType[] = useMemo(() => {
     if (!apyData) return []
-    const tokenApyHistory = apyData?.[symbol as 'USDT' | 'USDC']?.history
+    const tokenApyHistory = apyData?.history?.[symbol as 'USDT' | 'USDC']?.timestamps
     if (!tokenApyHistory) {
       return [
         { name: 'No data', timestamp: currentTimestamp, value: 0 },
@@ -89,7 +89,7 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
 
   const formattedTvlData: RechartDataType[] = useMemo(() => {
     if (!tvlData) return []
-    const tokenTvlHistory = tvlData?.[symbol as 'USDT' | 'USDC']?.history
+    const tokenTvlHistory = tvlData?.history?.[symbol as 'USDT' | 'USDC']?.timestamps
     if (!tokenTvlHistory) {
       return [
         { name: 'No data', timestamp: currentTimestamp, value: 0 },
@@ -106,7 +106,7 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
         value: value.tvl,
       }
     })
-  }, [symbol, tvlData])
+  }, [currentTimestamp, symbol, tvlData])
 
   const renderApyBody = () => {
     switch (true) {
@@ -181,19 +181,17 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
             />
           }
         >
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             options={SELECT_PROTOCOLS}
             onChange={setSelectedProtocols}
             value={selectedProtocols}
             label="Protocol"
-            placeholder="All Protocols"
           />
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
             value={selectedChains}
             label="Chain"
-            placeholder="All Chains"
           />
         </MobileFiltersDrawer>
       </div>

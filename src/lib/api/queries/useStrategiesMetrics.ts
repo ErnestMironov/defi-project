@@ -8,7 +8,7 @@ type StrategiesMetricsParameters = {
   from_timestamp?: string
   to_timestamp?: string
   sort?: 'apy' | 'tvl' | 'protocol' | 'chain' | 'token'
-  orderBy?: SortDirection
+  order_by?: SortDirection
   exclude_metrics?: string[]
 }
 
@@ -37,7 +37,7 @@ type DataStructure = {
 }
 
 const getStrategiesMetrics = (parameters: StrategiesMetricsParameters) => {
-  return apiClient.get<DataStructure>('/overview/strategies/metrics', {
+  return apiClient.get<DataStructure>('/stats/strategies/metrics', {
     params: parameters,
     paramsSerializer: (parameters_) => {
       return qs.stringify(parameters_, { arrayFormat: 'repeat' })

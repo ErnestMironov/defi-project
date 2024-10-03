@@ -76,8 +76,8 @@ export const DepositInput = () => {
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
     useProtocolMetrics({})
 
-  const usdcApy = protocolMetrics?.USDC?.apy
-  const usdtApy = protocolMetrics?.USDT?.apy
+  const usdcApy = protocolMetrics?.history?.USDC?.apy
+  const usdtApy = protocolMetrics?.history?.USDT?.apy
 
   const yourYearlyEarnings = useMemo(() => {
     if (

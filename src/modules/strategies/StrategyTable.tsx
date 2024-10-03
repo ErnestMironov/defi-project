@@ -23,7 +23,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
       case loading:
       case !!error: {
         return Array.from({ length: size }).map((_, index) => (
-          <StrategyRowSkeleton key={index} />
+          <StrategyRowSkeleton key={index} className="h-[6.25rem]" />
         ))
       }
       default: {
@@ -56,7 +56,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
                 <Sort
                   className={cn(
                     'size-5 shrink-0',
-                    currentSort?.orderBy === 'desc' && 'rotate-180',
+                    currentSort?.order_by === 'desc' && 'rotate-180',
                   )}
                 />
               )}
@@ -72,7 +72,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
                 <Sort
                   className={cn(
                     'size-5 shrink-0',
-                    currentSort?.orderBy === 'desc' && 'rotate-180',
+                    currentSort?.order_by === 'desc' && 'rotate-180',
                   )}
                 />
               )}

@@ -38,7 +38,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
     transaction_type: 'maat',
     limit: 100,
     sort,
-    orderBy,
+    order_by: orderBy,
     ...getMultiSelectParameters(selectFilters),
   })
 
@@ -118,26 +118,27 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
 
 const TransactionsHistoryDesktopSkeleton: React.FC<
   React.HTMLAttributes<HTMLDivElement> & { count?: number }
-> = (_props) => {
+> = (props) => {
+  const { className } = props
   return (
-    <Table.Row>
+    <Table.Row className={cn('', className)}>
       <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-6 w-full rounded-xl" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-6 w-full rounded-xl" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-6 w-full rounded-xl" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-6 w-full rounded-xl" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-6 w-full rounded-xl" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
+        <Skeleton className="h-6 w-full rounded-xl" />
       </Table.Cell>
     </Table.Row>
   )

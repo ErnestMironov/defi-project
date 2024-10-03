@@ -1,11 +1,11 @@
 import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
-import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useMemo } from 'react'
 
 import { MultiColoredLineChart } from '../../components/MultiColoredLineChart'
+import { StrategiesChartSkeleton } from './StrategiesApyChart'
 import type { StrategiesMetricsChartData } from './StrategiesCharts'
 import { useDesktopStrategies } from './useDesktopStrategies'
 
@@ -13,12 +13,7 @@ interface StrategiesChartProperties extends ComponentProps<'div'> {}
 
 export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
   const { className, ...rest } = props
-  const {
-    currentFrame,
-    currentTimestamp: _currentTimestamp,
-    frames,
-    onFrameChange,
-  } = useFrameSelect()
+  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect()
 
   const {
     isLoading: isStrategiesLoading,
@@ -33,6 +28,7 @@ export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
     error,
   } = useStrategiesMetrics({
     strategy_id: currentStrategies.map(({ strategy }) => strategy.id),
+    from_timestamp: currentTimestamp.toString(),
   })
   const formattedStrategiesMetrics: StrategiesMetricsChartData[] = useMemo(() => {
     return Object.entries(strategiesMetrics ?? {}).map(([timestamp, strategies]) => {
@@ -55,7 +51,7 @@ export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
   }, [currentStrategies, strategiesMetrics])
 
   if (isLoading || !!error || !!strategiesError || isStrategiesLoading) {
-    return <StrategiesChartSkeleton />
+    return <StrategiesChartSkeleton title="TVL" />
   }
 
   return (
@@ -79,24 +75,6 @@ export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
           yAxisType="usd"
           dataKey="tvl"
         />
-      </div>
-    </div>
-  )
-}
-
-export const StrategiesChartSkeleton = (props: ComponentProps<'div'>) => {
-  const { className, title, ...rest } = props
-
-  return (
-    <div className={cn('flex w-full gap-5', className)} {...rest}>
-      <div className="flex-1">
-        <div className="flex items-center justify-between">
-          <h2 className="text-[2rem]/[2.4rem]">{title}</h2>
-          <Skeleton className="h-10 w-48" />
-        </div>
-        <div className="mt-6 h-[26.5625rem]">
-          <Skeleton className="size-full" />
-        </div>
       </div>
     </div>
   )

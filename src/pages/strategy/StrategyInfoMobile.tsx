@@ -11,7 +11,6 @@ import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
-import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -47,7 +46,7 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
       <div className="flex flex-col items-start justify-center gap-1">
         <h6 className="text-[0.75rem]/[0.9rem] text-gray-100">TVL</h6>
         <p className="flex items-start gap-2 text-2xl">
-          {formatUsdValue(formatUnits(strategy?.tvl ?? 0, strategy?.token.decimals), {
+          {formatUsdValue(strategy?.tvl ?? 0, {
             notation: 'compact',
           })}
         </p>

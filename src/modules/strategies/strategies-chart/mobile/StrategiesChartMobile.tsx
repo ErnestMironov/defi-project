@@ -41,7 +41,7 @@ interface StrategiesChartMobileProperties extends ComponentProps<'div'> {}
 export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) => {
   const { className, ...rest } = props
   const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
-  const { currentFrame, frames, onFrameChange /* currentTimestamp */ } = useFrameSelect()
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
   const {
     topStrategiesWithColors,
     customStrategiesWithColors,
@@ -64,6 +64,7 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
     error: metricsError,
   } = useStrategiesMetrics({
     strategy_id: currentStrategies.map(({ strategy }) => strategy.id),
+    from_timestamp: currentTimestamp.toString(),
   })
   const formattedStrategiesMetrics: StrategiesMetricsChartData[] = useMemo(() => {
     return Object.entries(strategiesMetrics ?? {}).map(([timestamp, strategies]) => {

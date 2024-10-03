@@ -32,7 +32,7 @@ export const ReportsTable = (props: ReportsTableProperties) => {
   const { data, isLoading, error, isPlaceholderData } = useReports({
     page,
     size,
-    orderBy,
+    order_by: orderBy,
     sort,
     ...getMultiSelectParameters(selectFilters),
   })

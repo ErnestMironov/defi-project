@@ -16,6 +16,16 @@ export const ACTION_TYPE = {
   FEE_CHANGED: 'Fee changed',
 } as const
 
+export const ANALYTICS_PAGE_EVENT_ACTION_TYPE = {
+  DEPOSIT_IN_STRATEGY: 'Deposit in strategy',
+  WITHDRAW_FROM_STRATEGY: 'Withdraw from strategy',
+  BRIDGE: 'Bridge',
+  WITHDRAW_FULFILLMENT: 'Withdraw fulfillment',
+  DEPOSIT: 'Deposit',
+  REBALANCE_REQUEST: 'Rebalance request',
+  WITHDRAW_REQUEST: 'Withdraw request',
+} as const
+
 export const LAST_EVENT_ACTION_TYPE = {
   DEPOSIT_IN_STRATEGY: 'Deposit in strategy',
   WITHDRAW_FROM_STRATEGY: 'Withdraw from strategy',
