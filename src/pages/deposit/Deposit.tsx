@@ -15,8 +15,8 @@ export const Deposit = () => {
 
   const { isBelowDesktop } = useDeviceWidth()
 
-  const usdcApy = protocolMetrics?.USDC?.apy
-  const usdtApy = protocolMetrics?.USDT?.apy
+  const usdcApy = 18
+  const usdtApy = 18
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
