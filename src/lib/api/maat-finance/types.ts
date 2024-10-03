@@ -204,10 +204,7 @@ export interface Action {
   vault: VaultType
 }
 
-export interface TxInfoResponse {
-  related_actions: Action[]
-  action: Action
-}
+export type TxInfoResponse = Action[]
 
 export type RebalanceOperation = {
   hash: string

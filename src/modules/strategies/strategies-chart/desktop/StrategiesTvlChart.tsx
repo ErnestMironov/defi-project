@@ -13,12 +13,7 @@ interface StrategiesChartProperties extends ComponentProps<'div'> {}
 
 export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
   const { className, ...rest } = props
-  const {
-    currentFrame,
-    currentTimestamp: _currentTimestamp,
-    frames,
-    onFrameChange,
-  } = useFrameSelect()
+  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect()
 
   const {
     isLoading: isStrategiesLoading,
@@ -33,6 +28,7 @@ export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
     error,
   } = useStrategiesMetrics({
     strategy_id: currentStrategies.map(({ strategy }) => strategy.id),
+    from_timestamp: currentTimestamp.toString(),
   })
   const formattedStrategiesMetrics: StrategiesMetricsChartData[] = useMemo(() => {
     return Object.entries(strategiesMetrics ?? {}).map(([timestamp, strategies]) => {

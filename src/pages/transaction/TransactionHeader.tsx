@@ -58,17 +58,12 @@ export const TransactionHeaderMobile = (props: ComponentProps<'div'>) => {
       <div className="flex items-center gap-4">
         <TagRight className="size-7" />
         <h2 className="text-2xl/[0rem] uppercase">
-          {data?.action?.action_type
-            ? LAST_EVENT_ACTION_TYPE[data.action.action_type]
-            : ''}
+          {data?.[0]?.action_type ? LAST_EVENT_ACTION_TYPE[data?.[0]?.action_type] : ''}
         </h2>
       </div>
       <p className="mt-3 flex items-center text-base text-gray-100">
-        Intention ID {shortenAddress(data?.action?.intention_id ?? '')}
-        <CopyButton
-          className="ml-3 inline-block"
-          text={data?.action?.intention_id ?? ''}
-        />
+        Intention ID {shortenAddress(data?.[0]?.intention_id ?? '')}
+        <CopyButton className="ml-3 inline-block" text={data?.[0]?.intention_id ?? ''} />
       </p>
     </div>
   )
