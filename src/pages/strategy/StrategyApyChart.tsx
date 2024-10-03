@@ -1,7 +1,10 @@
+/* eslint-disable sonarjs/no-small-switch */
 import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
+import { Skeleton } from '@components/ui/skeleton'
+import { cn } from '@utils/cn'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -16,7 +19,11 @@ interface AreaChartComponentProperties {}
 export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
   const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
   const { id } = useParams()
-  const { data: apyData } = useStrategiesMetrics(
+  const {
+    data: apyData,
+    isLoading,
+    isPlaceholderData,
+  } = useStrategiesMetrics(
     { strategy_id: [String(id)], from_timestamp: currentTimestamp.toString() },
     !!id,
   )
@@ -48,6 +55,24 @@ export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
       }
     }, [apyData, id])
 
+  const renderContent = () => {
+    switch (true) {
+      case isLoading: {
+        return <Skeleton className="h-[18.25rem]" />
+      }
+      default: {
+        return (
+          <AreaChart
+            className={cn(isPlaceholderData && 'animate-pulse')}
+            data={formattedData.apy}
+            color="#6160FF"
+            yAxisType="percent"
+          />
+        )
+      }
+    }
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
@@ -58,7 +83,7 @@ export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
           onFrameChange={onFrameChange}
         />
       </div>
-      <AreaChart data={formattedData.apy} color="#6160FF" yAxisType="percent" />
+      {renderContent()}
     </div>
   )
 }

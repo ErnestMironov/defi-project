@@ -86,6 +86,27 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
       }
     }
   }
+
+  const renderDotValue = () => {
+    switch (true) {
+      case isLoading:
+      case isError: {
+        return <Skeleton className="h-5 w-16 rounded-3xl" />
+      }
+      default: {
+        return (
+          <span className="text-[0.75rem]/[0.9rem] font-bold text-text">
+            {activeTab === 'apy'
+              ? formatPercentValue(formattedData.apy.at(-1)?.value ?? 0)
+              : formatUsdValue(formattedData.tvl.at(-1)?.value ?? 0, {
+                  notation: 'compact',
+                })}
+          </span>
+        )
+      }
+    }
+  }
+
   return (
     <section className={cn('mt-[2.5rem]', className, '')} {...rest}>
       <AnimatedTabs
@@ -111,13 +132,7 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
                 'max-lg:size-2 overflow-visible',
               )}
             />
-            <span className="text-[0.75rem]/[0.9rem] font-bold text-text">
-              {activeTab === 'apy'
-                ? formatPercentValue(formattedData.apy.at(-1)?.value ?? 0)
-                : formatUsdValue(formattedData.tvl.at(-1)?.value ?? 0, {
-                    notation: 'compact',
-                  })}
-            </span>
+            {renderDotValue()}
           </div>
         </div>
         <FramesSelect
