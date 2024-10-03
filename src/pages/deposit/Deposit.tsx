@@ -10,12 +10,13 @@ import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics({})
+  const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
+    useProtocolMetrics({})
 
   const { isBelowDesktop } = useDeviceWidth()
 
-  const usdcApy = 18
-  const usdtApy = 18
+  const usdcApy = protocolMetrics?.history?.USDC?.apy
+  const usdtApy = protocolMetrics?.history?.USDT?.apy
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
@@ -55,14 +56,14 @@ export const Deposit = () => {
             </>
           ) : (
             <>
-              <ShadowBoxWithValue label="USDС APY" value="Up to 18%">
+              <ShadowBoxWithValue label="USDС APY" value={`Up to ${usdcApy}%`}>
                 <img
                   src={usdc}
                   alt="usdc"
                   className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
               </ShadowBoxWithValue>
-              <ShadowBoxWithValue label="USDT APY" value="Up to 18%">
+              <ShadowBoxWithValue label="USDT APY" value={`Up to ${usdtApy}%`}>
                 <img
                   src={usdt}
                   alt="usdt"
