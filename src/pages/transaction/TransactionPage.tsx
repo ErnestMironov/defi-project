@@ -36,28 +36,24 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
 
   useEffect(() => {
     if (!data) return
-
-    if (data?.related_actions?.length === 0 || !data?.related_actions) {
-      console.log('here')
-      setMainAction(data.action)
-      setRelatedActions([])
+    const [action, ...restActions] = data
+    setMainAction(action)
+    if (restActions?.length === 0 || !restActions) {
+      setRelatedActions(restActions)
       return
     }
 
-    if (detectMainActionType(data.action)) {
+    if (detectMainActionType(action)) {
       console.log('here2')
-      setMainAction(data.action)
-      setRelatedActions(sortActionsByDate([...data.related_actions]))
+      setMainAction(action)
+      setRelatedActions(sortActionsByDate([...restActions]))
       return
     }
 
-    const mainActionIndex = findMainActionIndex(data.related_actions)
-    setMainAction(data.related_actions[mainActionIndex])
+    const mainActionIndex = findMainActionIndex(restActions)
+    setMainAction(restActions[mainActionIndex])
     setRelatedActions(
-      sortActionsByDate([
-        ...data.related_actions.filter((_, i) => i !== mainActionIndex),
-        data.action,
-      ]),
+      sortActionsByDate([...restActions.filter((_, i) => i !== mainActionIndex), action]),
     )
   }, [data])
 
@@ -115,14 +111,10 @@ export const TransactionPageMobile = (props: ComponentProps<'div'>) => {
   return (
     <div className={cn('mt-8', className)} {...rest}>
       <TransactionHeader />
-      <TransactionInfo
-        className="mt-6"
-        type={data?.action?.action_type}
-        data={data?.action}
-      />
+      <TransactionInfo className="mt-6" type={data?.[0]?.action_type} data={data?.[0]} />
       <SectionTitle className="mt-10">Triggered transactions</SectionTitle>
       <div className="mt-6 space-y-3">
-        {data?.related_actions.map((action, i) => (
+        {data?.map((action, i) => (
           <TransactionInfo key={i} type={action.action_type} data={action} />
         ))}
       </div>

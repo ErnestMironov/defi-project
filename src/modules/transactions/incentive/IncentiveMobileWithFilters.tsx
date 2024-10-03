@@ -48,19 +48,19 @@ export const IncentiveMobileWithFilters = (
   const currentSort: IncentiveParameters = useMemo(() => {
     switch (selectedSort?.value) {
       case 'Highest Amount': {
-        return { orderBy: 'desc', sort: 'amount' }
+        return { order_by: 'desc', sort: 'amount' }
       }
       case 'Lowest Amount': {
-        return { orderBy: 'asc', sort: 'amount' }
+        return { order_by: 'asc', sort: 'amount' }
       }
       case 'Created earlier': {
-        return { orderBy: 'desc', sort: 'creation_time' }
+        return { order_by: 'desc', sort: 'creation_time' }
       }
       case 'Created later': {
-        return { orderBy: 'asc', sort: 'creation_time' }
+        return { order_by: 'asc', sort: 'creation_time' }
       }
       default: {
-        return { orderBy: 'desc', sort: 'creation_time' }
+        return { order_by: 'desc', sort: 'creation_time' }
       }
     }
   }, [selectedSort])

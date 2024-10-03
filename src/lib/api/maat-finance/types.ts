@@ -124,24 +124,10 @@ export type IncentiveEvent = {
   entity_initializer: string
 }
 
-export type MaatStat = {
-  strategy_id: 'maat'
-  token: null
-  chain: null
-  apy: number
-  tvl: number
-  tokens_stats: null
-}
-
-export type TokenRebalanceData = {
-  volume: number
-  asset: string
-  action_type: string
-}
+type CurrencyType = 'USDT' | 'USDC'
 
 export type RebalanceVolume = {
-  USDT: TokenRebalanceData
-  USDC: TokenRebalanceData
+  [currency in CurrencyType]: number
 }
 
 export type AdminActionType =
@@ -218,10 +204,7 @@ export interface Action {
   vault: VaultType
 }
 
-export interface TxInfoResponse {
-  related_actions: Action[]
-  action: Action
-}
+export type TxInfoResponse = Action[]
 
 export type RebalanceOperation = {
   hash: string

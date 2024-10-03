@@ -16,13 +16,13 @@ export const usePrefetchAnalyticsQueries = () => {
       queryFn: () => getRebalanceVolume(),
     },
     {
-      queryKey: ['strategies', { page: 1, size: 10, sort: 'apy', orderBy: 'desc' }],
+      queryKey: ['strategies', { page: 1, size: 10, sort: 'apy', order_by: 'desc' }],
       queryFn: () =>
         getStrategies({
           page: 1,
           size: 10,
           sort: 'apy',
-          orderBy: 'desc',
+          order_by: 'desc',
         }),
     },
     {
@@ -33,7 +33,7 @@ export const usePrefetchAnalyticsQueries = () => {
           page: 1,
           limit: 100,
           sort: 'creation_time',
-          orderBy: 'desc',
+          order_by: 'desc',
         },
       ],
       queryFn: () =>
@@ -42,7 +42,7 @@ export const usePrefetchAnalyticsQueries = () => {
           page: 1,
           limit: 100,
           sort: 'creation_time',
-          orderBy: 'desc',
+          order_by: 'desc',
         }),
     },
   ]

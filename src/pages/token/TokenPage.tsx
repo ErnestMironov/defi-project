@@ -96,7 +96,10 @@ export const TokenDesktopPage = (props: TokensProperties) => {
       {symbol && (
         <TokenStrategies className="mt-[6.25rem]" params={{ token: [symbol] }} />
       )}
-      <Transactions className="mt-[6.25rem] max-lg:mt-14" />
+      <Transactions
+        className="mt-[6.25rem] max-lg:mt-14"
+        parameters={{ token: [symbol as 'USDT' | 'USDC'] }}
+      />
       <Footer className="mt-[7.5rem]" />
     </div>
   )
@@ -111,7 +114,10 @@ const TokensMobilePage = (props: ComponentProps<'div'>) => {
       <TokenChartMobile className="mt-7" />
       <TokenInfoMobile className="mt-10" />
       {symbol && <TokenStrategies className="mt-10" params={{ token: [symbol] }} />}
-      <TransactionsHistoryMobile className="mt-16" />
+      <TransactionsHistoryMobile
+        className="mt-16"
+        parameters={{ token: [symbol as 'USDT' | 'USDC'] }}
+      />
       <Footer className="mt-[5.5rem]" />
     </div>
   )

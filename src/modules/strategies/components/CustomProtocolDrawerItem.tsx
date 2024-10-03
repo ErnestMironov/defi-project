@@ -84,7 +84,7 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
   const { data, hasNextPage, isFetchingNextPage, ref, totalCount } =
     useInfiniteStrategies({
       sort: 'apy',
-      orderBy: 'desc',
+      order_by: 'desc',
       size: 30,
     })
   return (

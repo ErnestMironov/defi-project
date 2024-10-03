@@ -40,24 +40,24 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
 
   const { data, isLoading, error } = useProtocolMetrics({
     metrics_type: ['apy', 'tvl'],
-    tokens: ['USDT', 'USDC'],
+    token: ['USDT', 'USDC'],
     from_timestamp: currentTimestamp,
-    protocols: selectedProtocols.map((item) => item.value),
-    chains: selectedChains.map((item) => item.value),
+    protocol: selectedProtocols.map((item) => item.value),
+    chain: selectedChains.map((item) => item.value),
   })
   const formattedData = useMemo(() => {
     if (!data) return { apyData: [], tvlData: [] }
     const apyData: RechartDataType[] = []
     const tvlData: RechartDataType[] = []
     Object.entries(
-      data?.USDC?.history ??
-        data?.USDT?.history ?? {
+      data?.history?.USDC?.timestamps ??
+        data?.history?.USDT?.timestamps ?? {
           [currentTimestamp]: { apy: 0, tvl: 0 },
           [Date.now().valueOf()]: { apy: 0, tvl: 0 },
         },
     ).forEach(([key, value]) => {
-      const pvApy = data?.USDT?.history?.[key]?.apy
-      const pvTvl = data?.USDT?.history?.[key]?.tvl
+      const pvApy = data?.history?.USDT?.timestamps?.[key]?.apy
+      const pvTvl = data?.history?.USDT?.timestamps?.[key]?.tvl
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
       apyData.push({

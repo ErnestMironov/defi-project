@@ -40,13 +40,13 @@ export const ReportActionMobileWithFilters = (
   const currentSort: ReportParameters = useMemo(() => {
     switch (selectedSort?.value) {
       case 'Created earlier': {
-        return { orderBy: 'desc', sort: 'creation_time' }
+        return { order_by: 'desc', sort: 'creation_time' }
       }
       case 'Created later': {
-        return { orderBy: 'asc', sort: 'creation_time' }
+        return { order_by: 'asc', sort: 'creation_time' }
       }
       default: {
-        return { orderBy: 'desc', sort: 'creation_time' }
+        return { order_by: 'desc', sort: 'creation_time' }
       }
     }
   }, [selectedSort])

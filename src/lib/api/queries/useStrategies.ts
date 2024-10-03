@@ -11,7 +11,7 @@ export type StrategiesParameters = {
   start_timestamp?: string
   end_timestamp?: string
   sort?: 'apy' | 'tvl'
-  orderBy?: SortDirection
+  order_by?: SortDirection
   chain?: string[]
   protocol?: string[]
   token?: string[]

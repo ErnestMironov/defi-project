@@ -16,7 +16,7 @@ export type AdminActionsParameters = {
   size?: number
   sort?: 'creation_time' | 'amount'
   chain?: string[]
-  orderBy?: SortDirection
+  order_by?: SortDirection
   status?: StatusType[]
   start_timestamp?: string
   end_timestamp?: string

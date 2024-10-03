@@ -14,7 +14,11 @@ export const TransactionsHistoryMobile = (props: EventsProperties) => {
         <SectionTitle>Events</SectionTitle>
         {withLink && <ArrowLink to="/transactions" />}
       </div>
-      <TransactionsMobileWithFilters className="mt-4" parameters={parameters} />
+      <TransactionsMobileWithFilters
+        className="mt-4"
+        parameters={parameters}
+        filters={['actions', 'statuses', 'chains']}
+      />
     </div>
   )
 }

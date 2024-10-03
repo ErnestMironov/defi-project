@@ -22,7 +22,7 @@ export type IncentiveParameters = {
   status?: StatusType[]
   chain?: ChainParameters[]
   sort?: 'creation_time' | 'amount'
-  orderBy?: SortDirection
+  order_by?: SortDirection
 }
 
 const getIncentives = (parameters: IncentiveParameters) => {

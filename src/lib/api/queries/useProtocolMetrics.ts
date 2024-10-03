@@ -5,21 +5,28 @@ import qs from 'qs'
 type CurrencyType = 'maat' | 'USDT' | 'USDC'
 
 type ProtocolMetricsParameters = {
-  chains?: string[]
-  protocols?: string[]
+  chain?: string[]
+  protocol?: string[]
   from_timestamp?: number
-  tokens?: ('USDT' | 'USDC')[]
+  token?: ('USDT' | 'USDC')[]
   metrics_type?: ('apy' | 'tvl')[]
 }
 
 type ProtocolMetrics = {
-  [currency in CurrencyType]: {
-    apy: number
-    tvl: number
-    history: {
-      [timestamp: string]: {
-        apy: number
-        tvl: number
+  history: {
+    [currency in CurrencyType]: {
+      apy: number
+      tvl: number
+      timestamps: {
+        [timestamp: string]: {
+          apy: number
+          tvl: number
+          chain: string
+          protocol: string
+          token: string
+          token_stats: null
+          strategy_id: string
+        }
       }
     }
   }

@@ -21,25 +21,25 @@ export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) =
   const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
   const [selectedChain, setSelectedChain] = useState<OptionType[]>([])
   const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
-  const { data, isLoading, error } = useProtocolMetrics({
+  const { data, isLoading, error, isPlaceholderData } = useProtocolMetrics({
     metrics_type: ['apy'],
-    tokens: ['USDT', 'USDC'],
+    token: ['USDT', 'USDC'],
     from_timestamp: currentTimestamp,
-    protocols: selectedProtocol.map((item) => item.value),
-    chains: selectedChain.map((item) => item.value),
+    protocol: selectedProtocol.map((item) => item.value),
+    chain: selectedChain.map((item) => item.value),
   })
 
   const formattedApyData: RechartDataType[] = useMemo(() => {
     if (!data) return []
     return Object.entries(
-      data?.USDC?.history ??
-        data?.USDT?.history ?? {
+      data?.history?.USDC?.timestamps ??
+        data?.history?.USDT?.timestamps ?? {
           [currentTimestamp]: {},
           [Date.now()]: {},
         },
     ).map(([key]) => {
-      const uv = data?.USDC?.history?.[key]?.apy ?? 0
-      const pv = data?.USDT?.history?.[key]?.apy ?? 0
+      const uv = data?.history?.USDC?.timestamps?.[key]?.apy ?? 0
+      const pv = data?.history?.USDT?.timestamps?.[key]?.apy ?? 0
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
 
@@ -50,7 +50,7 @@ export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) =
         pv,
       }
     })
-  }, [currentTimestamp, data])
+  }, [data, currentTimestamp])
 
   const renderBody = () => {
     switch (true) {
@@ -113,7 +113,9 @@ export const ApyTokensChartDesktop = (_props: ApyTokensChartDesktopProperties) =
           )
         })}
       </div>
-      <div className="mt-4 h-72">{renderBody()}</div>
+      <div className={cn('mt-4 h-72', isPlaceholderData && 'animate-pulse')}>
+        {renderBody()}
+      </div>
     </div>
   )
 }

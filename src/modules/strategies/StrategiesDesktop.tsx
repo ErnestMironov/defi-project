@@ -37,7 +37,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
     page,
     size,
     sort,
-    orderBy,
+    order_by: orderBy,
     ...getMultiSelectParameters(selectFilters),
     ...params,
   })
@@ -55,7 +55,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
         strategies={data?.items}
         loading={isLoading || isPlaceholderData}
         error={error}
-        currentSort={{ sort, orderBy }}
+        currentSort={{ sort, order_by: orderBy }}
         onSortChange={onSortChange}
       />
       {data && (

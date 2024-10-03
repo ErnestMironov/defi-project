@@ -53,7 +53,7 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
 
 const TableCell = forwardRef<
   HTMLTableCellElement,
-  HTMLAttributes<HTMLTableCellElement> & { colspan?: number }
+  HTMLAttributes<HTMLTableCellElement> & { colSpan?: number }
 >(({ children, ...rest }, reference) => {
   return (
     <td

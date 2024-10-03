@@ -41,7 +41,7 @@ export const TransactionsHistoryDesktop = (
     size,
     page,
     sort,
-    orderBy,
+    order_by: orderBy,
     ...getMultiSelectParameters(selectFilters),
     ...parameters,
   })
@@ -52,8 +52,17 @@ export const TransactionsHistoryDesktop = (
       case isPlaceholderData:
       case !!error: {
         return Array.from({ length: size }).map((_, index) => (
-          <TransactionHistoryRowSkeleton key={index} />
+          <TransactionHistoryRowSkeleton key={index} className="h-24" />
         ))
+      }
+      case data?.items?.length === 0: {
+        return (
+          <Table.Row className="pointer-events-none h-40">
+            <Table.Cell colSpan={7} className="text-center text-gray-500">
+              No transactions found
+            </Table.Cell>
+          </Table.Row>
+        )
       }
       default: {
         return (

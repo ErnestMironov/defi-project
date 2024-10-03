@@ -9,10 +9,10 @@ export const useTokenMetrics = (symbol: 'USDT' | 'USDC') => {
     ...rest
   } = useProtocolMetrics({
     metrics_type: ['apy', 'tvl'],
-    tokens: [symbol],
+    token: [symbol],
     from_timestamp: 1,
-    protocols: [],
-    chains: [],
+    protocol: [],
+    chain: [],
   })
   const {
     data: rebalancingVolume,
@@ -21,10 +21,10 @@ export const useTokenMetrics = (symbol: 'USDT' | 'USDC') => {
   } = useRebalanceVolume()
 
   const tokenRebalancingVolume =
-    rebalancingVolume?.[symbol?.toUpperCase() as 'USDT' | 'USDC'].volume
+    rebalancingVolume?.[symbol?.toUpperCase() as 'USDT' | 'USDC'] ?? 0
 
-  const apy = data?.[symbol?.toUpperCase() as keyof typeof data]?.apy ?? 0
-  const tvl = data?.[symbol?.toUpperCase() as keyof typeof data]?.tvl ?? 0
+  const apy = data?.history?.[symbol?.toUpperCase() as 'USDT' | 'USDC']?.apy ?? 0
+  const tvl = data?.history?.[symbol?.toUpperCase() as 'USDT' | 'USDC']?.tvl ?? 0
 
   return {
     apy,

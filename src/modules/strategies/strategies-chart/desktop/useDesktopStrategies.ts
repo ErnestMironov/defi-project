@@ -8,7 +8,7 @@ export const useDesktopStrategies = () => {
   const { data, ...rest } = useStrategies({
     size: 5,
     sort: 'apy',
-    orderBy: 'desc',
+    order_by: 'desc',
   })
 
   const {

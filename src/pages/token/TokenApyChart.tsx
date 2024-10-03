@@ -22,29 +22,29 @@ export const TokenApyChart = (props: TokenApyChartProperties) => {
 
   const { data, isLoading, error } = useProtocolMetrics({
     metrics_type: ['apy'],
-    tokens: [symbol],
+    token: [symbol],
     from_timestamp: currentTimestamp,
-    protocols: currentProtocol.map((item) => item.value),
-    chains: currentChain.map((item) => item.value),
+    protocol: currentProtocol.map((item) => item.value),
+    chain: currentChain.map((item) => item.value),
   })
   const formattedTvlData: RechartDataType[] = useMemo(() => {
     if (!data) return []
+
     return Object.entries(
-      data?.[symbol]?.history ?? {
+      data?.history?.[symbol].timestamps ?? {
         [currentTimestamp]: { apy: 0 },
         [Date.now()]: { apy: 0 },
       },
     ).map(([key, value]) => {
       // format timestamp to unix timestamp
       const timestamp = Number(key) * (key.length === 10 ? 1000 : 1)
-
       return {
         name: key,
         timestamp,
         value: value.apy,
       }
     })
-  }, [data, symbol])
+  }, [currentTimestamp, data, symbol])
   return (
     <div className={cn('flex flex-col gap-8', className)} {...rest}>
       <div className="flex items-center justify-between">

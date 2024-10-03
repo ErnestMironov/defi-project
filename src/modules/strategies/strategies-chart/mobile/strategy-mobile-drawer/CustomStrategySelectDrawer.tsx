@@ -40,7 +40,7 @@ export const CustomStrategySelectDrawer = (
   const { data, totalCount, hasNextPage, isFetchingNextPage, ref } =
     useInfiniteStrategies({
       sort: 'apy',
-      orderBy: 'desc',
+      order_by: 'desc',
     })
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
