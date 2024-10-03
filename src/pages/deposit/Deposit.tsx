@@ -7,7 +7,7 @@ import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 export const Deposit = () => {
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
@@ -17,6 +17,22 @@ export const Deposit = () => {
 
   const usdcApy = protocolMetrics?.history?.USDC?.apy
   const usdtApy = protocolMetrics?.history?.USDT?.apy
+
+  const bestUSDCAPy = useMemo(() => {
+    return Math.max(
+      ...(Object.values(protocolMetrics?.history?.USDC?.timestamps ?? {}).map(
+        (t) => t.apy,
+      ) ?? []),
+    )
+  }, [protocolMetrics?.history?.USDC?.timestamps])
+
+  const bestUSDTAPy = useMemo(() => {
+    return Math.max(
+      ...(Object.values(protocolMetrics?.history?.USDT?.timestamps ?? {}).map(
+        (t) => t.apy,
+      ) ?? []),
+    )
+  }, [protocolMetrics?.history?.USDT?.timestamps])
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
@@ -58,7 +74,7 @@ export const Deposit = () => {
             <>
               <ShadowBoxWithValue
                 label="USDС APY"
-                value={`Up to ${Math.round(usdcApy ?? 0)}%`}
+                value={`Up to ${Math.trunc(bestUSDCAPy ?? 0)}%`}
               >
                 <img
                   src={usdc}
@@ -68,7 +84,7 @@ export const Deposit = () => {
               </ShadowBoxWithValue>
               <ShadowBoxWithValue
                 label="USDT APY"
-                value={`Up to ${Math.round(usdtApy ?? 0)}%`}
+                value={`Up to ${Math.trunc(bestUSDTAPy ?? 0)}%`}
               >
                 <img
                   src={usdt}
