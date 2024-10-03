@@ -2,6 +2,7 @@ import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -21,6 +22,8 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
   const { vault, currentStep, setCurrentStep, depositAsset, setIntermediateError } =
     useTxStore()
   const [isOpen, setIsOpen] = useState(false)
+
+  const { isBelowDesktop } = useDeviceWidth()
 
   const {
     status: switchStatus,
@@ -51,6 +54,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
             type="button"
             onClick={switchChain}
             disabled={switchStatus === 'pending'}
+            className="rounded-2xl max-lg:py-6"
           >
             {getButtonContent(switchStatus, 'Switch to Arbitrum')}
           </Button>
@@ -62,6 +66,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
           <Button
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             onClick={swapAndDeposit}
             disabled={swapAndDepositStatus === 'pending'}
           >
@@ -93,9 +98,13 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     switchError,
   ])
   return (
-    <div className="flex flex-col items-stretch gap-10">
-      <div className="flex flex-col items-stretch gap-2 px-8">{ActionButton()}</div>
-      <div className="border-t border-stroke-100 px-8 pt-7">
+    <div className="flex flex-col items-stretch gap-6 lg:gap-8">
+      {!isBelowDesktop && (
+        <div className="flex flex-col items-stretch gap-2 px-8">
+          <ActionButton />
+        </div>
+      )}
+      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
@@ -113,6 +122,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
           )}
         </WizardDropDown>
       </div>
+      {isBelowDesktop && <ActionButton />}
     </div>
   )
 }

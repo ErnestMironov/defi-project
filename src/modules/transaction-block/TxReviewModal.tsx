@@ -46,7 +46,7 @@ export const TxReviewModal = () => {
   return (
     <Dialog open={currentModal === 'review'}>
       <DialogContent
-        className="max-w-[38.75rem] gap-10 overflow-visible rounded-[2rem] text-text max-lg:z-[100] max-lg:max-w-[95vw] lg:px-0 lg:pb-7 lg:pt-10"
+        className="max-w-[38.75rem] gap-8 overflow-visible rounded-[2rem] px-4 text-text max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 max-lg:rounded-b-none lg:gap-10 lg:px-0 lg:pb-7 lg:pt-10"
         showCloseButton={false}
       >
         <div
@@ -55,17 +55,16 @@ export const TxReviewModal = () => {
         >
           <CloseIcon className="w-4" />
         </div>
-        <div className="absolute right-8 top-10 m-0 flex w-full cursor-pointer justify-end">
+
+        <DialogHeader className="flex flex-row justify-between gap-4 lg:px-8">
+          <DialogTitle className="text-2xl font-normal normal-case leading-[2.625rem] max-lg:text-left lg:text-[1.75rem]">
+            {txType === 'deposit' ? 'Deposit' : 'Withdraw'}
+          </DialogTitle>
           {intermediateError && (
-            <div className="max-w-[50%] rounded-[12.5rem] bg-red-5 px-4 py-2 text-red-100">
+            <div className="rounded-[12.5rem] bg-red-5 px-4 py-2 text-red-100">
               {intermediateError.split('.')[0]}
             </div>
           )}
-        </div>
-        <DialogHeader className="px-8">
-          <DialogTitle className="text-[1.75rem] font-normal normal-case leading-[2.625rem]">
-            {txType === 'deposit' ? 'Deposit' : 'Withdraw'}
-          </DialogTitle>
         </DialogHeader>
 
         {renderContent()}

@@ -4,6 +4,7 @@ import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -31,6 +32,8 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
+
+  const { isBelowDesktop } = useDeviceWidth()
 
   const {
     status: switchStatus,
@@ -83,6 +86,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             disabled={switchStatus === 'confirm_in_wallet'}
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             onClick={switchChain}
           >
             {getButtonContent(
@@ -102,6 +106,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             loading={approveStatus === 'pending'}
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             disabled={approveStatus === 'confirm_in_wallet'}
             onClick={approve}
           >
@@ -116,6 +121,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             loading={depositStatus === 'pending'}
             disabled={depositStatus === 'confirm_in_wallet'}
             size="lg"
+            className="rounded-2xl max-lg:py-6"
             type="button"
             onClick={deposit}
           >
@@ -152,9 +158,13 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
   ])
 
   return (
-    <div className="flex flex-col items-stretch gap-8">
-      <div className="flex w-full flex-col items-stretch px-8">{ActionButton()}</div>
-      <div className="border-t border-stroke-100 px-8 pt-7">
+    <div className="flex flex-col items-stretch gap-6 lg:gap-8">
+      {!isBelowDesktop && (
+        <div className="flex w-full flex-col items-stretch px-8">
+          <ActionButton />
+        </div>
+      )}
+      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={<TokenIconComponent width="2.625rem" symbol={asset?.chain_id} />}
@@ -190,6 +200,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           />
         </WizardDropDown>
       </div>
+      {isBelowDesktop && <ActionButton />}
     </div>
   )
 }

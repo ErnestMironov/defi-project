@@ -90,6 +90,8 @@ export const DepositReviewContent = ({
     }
   }, [setCurrentModal, depositStatus])
 
+  console.log(asset)
+
   return (
     <>
       <TxReviewInfo
@@ -102,6 +104,7 @@ export const DepositReviewContent = ({
             tokenData: {
               symbol: asset?.contract_ticker_symbol ?? '',
               network: depositFromNetwork ?? 1,
+              maxDigits: asset?.contract_decimals && asset?.contract_decimals > 6 ? 4 : 2,
             },
           },
           {

@@ -2,6 +2,7 @@ import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
@@ -31,6 +32,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
+
+  const { isBelowDesktop } = useDeviceWidth()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
@@ -78,6 +81,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           <Button
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             onClick={() => {
               switchToAssetChain()
             }}
@@ -95,6 +99,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           <Button
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             onClick={approve}
             disabled={approveStatus === 'pending'}
           >
@@ -146,9 +151,13 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
   ])
 
   return (
-    <div className="flex flex-col items-stretch gap-7">
-      <div className="flex flex-col items-stretch gap-2 px-8">{ActionButton()}</div>
-      <div className="border-t border-stroke-100 px-8 pt-7">
+    <div className="flex flex-col items-stretch gap-6 lg:gap-8">
+      {!isBelowDesktop && (
+        <div className="flex flex-col items-stretch gap-2 px-8">
+          <ActionButton />
+        </div>
+      )}
+      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
@@ -175,6 +184,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           />
         </WizardDropDown>
       </div>
+      {isBelowDesktop && <ActionButton />}
     </div>
   )
 }

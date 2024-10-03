@@ -2,6 +2,7 @@ import WithdrawIcon from '@assets/icons/withdraw.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { parseUnits } from 'viem'
@@ -34,6 +35,8 @@ export const WithdrawReviewContent = ({
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
+
+  const { isBelowDesktop } = useDeviceWidth()
 
   const inputValueInMtToken = useMemo(() => {
     const parsedAmount = parseUnits(amount, mtToken?.decimals ?? 6)
@@ -127,6 +130,7 @@ export const WithdrawReviewContent = ({
             disabled={switchStatus === 'confirm_in_wallet'}
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             onClick={() => handleTryAgain(switchChain)}
           >
             {getButtonContent(
@@ -146,6 +150,7 @@ export const WithdrawReviewContent = ({
             loading={approveStatus === 'pending'}
             size="lg"
             type="button"
+            className="rounded-2xl max-lg:py-6"
             disabled={approveStatus === 'confirm_in_wallet'}
             onClick={() => handleTryAgain(approve)}
           >
@@ -160,6 +165,7 @@ export const WithdrawReviewContent = ({
             size="lg"
             type="button"
             disabled={withdrawStatus === 'pending' || withdrawStatus === 'success'}
+            className="rounded-2xl max-lg:py-6"
             onClick={() => handleTryAgain(withdraw)}
           >
             {getButtonContent(withdrawStatus, 'Withdraw')}
@@ -240,13 +246,13 @@ export const WithdrawReviewContent = ({
 
   return (
     <div className="flex flex-col items-stretch gap-8">
-      <div className="flex flex-col items-stretch gap-8 px-8">
+      <div className="flex flex-col items-stretch gap-8 lg:px-8">
         <WithdrawInfo />
 
-        {ActionButton}
+        {!isBelowDesktop && ActionButton}
       </div>
 
-      <div className="border-t border-stroke-100 px-8 pt-7">
+      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={
@@ -279,6 +285,7 @@ export const WithdrawReviewContent = ({
           />
         </WizardDropDown>
       </div>
+      {isBelowDesktop && ActionButton}
     </div>
   )
 }

@@ -119,7 +119,7 @@ export const WithdrawInput = () => {
         title={mtToken ? 'You withdraw' : undefined}
         validationError={validationError}
       >
-        <div className="flex w-full items-center justify-between ">
+        <div className="flex w-full items-center justify-between gap-2">
           {mtToken ? (
             <AmountInput
               value={inputValue}
@@ -189,7 +189,7 @@ export const WithdrawInput = () => {
 
       {mtToken && (
         <div className="mt-3 flex items-start justify-between self-stretch rounded-2xl border border-stroke-100 p-6">
-          <span className="text-[1.1875rem] leading-[120%] text-text-80">
+          <span className="leading-[120%] text-text-80 lg:text-[1.1875rem]">
             Withdraw to another chain
           </span>
           <Switch

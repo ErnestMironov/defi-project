@@ -23,7 +23,10 @@ export const WizardDropDown = ({
 
   return (
     <div
-      className={cn('flex justify-between cursor-pointer', className)}
+      className={cn(
+        'flex justify-between cursor-pointer max-lg:border max-lg:px-4 max-lg:py-3 rounded-2xl max-lg:pointer-events-none',
+        className,
+      )}
       onClick={() => setOpen(!open)}
     >
       <div className="relative flex flex-col">
@@ -56,7 +59,7 @@ export const WizardDropDown = ({
       </div>
       <ChevronDownIcon
         className={cn(
-          'size-6 transition-transform stroke-[#6160FF] [stroke-opacity:0.5] mt-3',
+          'size-6 transition-transform stroke-[#6160FF] [stroke-opacity:0.5] mt-3 max-lg:hidden',
           open ? 'rotate-180' : '',
         )}
       />
