@@ -66,7 +66,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
       }
     }
   }, [selectedSort])
-  console.log('params', params)
+
   const {
     data,
     isLoading,

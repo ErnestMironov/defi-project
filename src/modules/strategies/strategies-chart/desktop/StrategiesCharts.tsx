@@ -50,7 +50,7 @@ export const StrategiesCharts = () => {
       return <Skeleton className="mt-8 h-[22rem] w-full rounded-xl px-4" />
     return (
       <ScrollArea className="-mx-4 mt-8 px-4">
-        <div className="max-h-[22.75rem] space-y-3">
+        <div className="min-h-fit space-y-3">
           {selectedStrategiesType.value === 'Custom' &&
             customStrategiesWithColors.map(({ strategy, color }, index) => (
               <StrategyRow color={color} strategy={strategy} key={index} />
