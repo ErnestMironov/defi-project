@@ -86,9 +86,11 @@ export interface SelectedAssetState {
   squidRoute: RouteResponse['route'] | undefined
   setSquidRoute: (route: RouteResponse['route'] | undefined) => void
 
-  // Timer
+  // Timer and animation
   timerDuration: number
   setTimerDuration: (duration: number) => void
+  animationStatus: 'idle' | 'playing' | 'error'
+  setAnimationStatus: (status: 'idle' | 'playing' | 'error') => void
 
   // Error
   intermediateError: string | null
@@ -205,8 +207,11 @@ export const useTxStore = create<SelectedAssetState>()(
       isTxZAP: false,
       setIsTxZAP: (value) => set({ isTxZAP: value }),
 
-      timerDuration: 120, // По умолчанию 2 минуты
+      timerDuration: 120,
       setTimerDuration: (duration) => set({ timerDuration: duration }),
+
+      animationStatus: 'idle',
+      setAnimationStatus: (status) => set({ animationStatus: status }),
 
       resetStore: () =>
         set({
@@ -232,6 +237,7 @@ export const useTxStore = create<SelectedAssetState>()(
           transactionHash: null,
           txDifficulty: 'on_chain',
           squidRoute: undefined,
+          animationStatus: 'idle',
           isTxZAP: false,
           intermediateError: null,
           transactionError: null,

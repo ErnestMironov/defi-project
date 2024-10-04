@@ -104,6 +104,7 @@ export const CONFIRMATIONS_NUMBER = {
   [CHAIN_IDS_BY_NAME.Arbitrum]: 24,
   [CHAIN_IDS_BY_NAME.Optimism]: 3,
   [CHAIN_IDS_BY_NAME.Base]: 3,
+  [CHAIN_IDS_BY_NAME.BNB]: 3,
 }
 
 export const ESTIMATED_TIME_OF_CONFIRMATION = 8

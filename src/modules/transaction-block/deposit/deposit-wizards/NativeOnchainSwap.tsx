@@ -19,8 +19,14 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const { vault, currentStep, setCurrentStep, depositAsset, setIntermediateError } =
-    useTxStore()
+  const {
+    vault,
+    currentStep,
+    setCurrentStep,
+    depositAsset,
+    setIntermediateError,
+    setAnimationStatus,
+  } = useTxStore()
   const [isOpen, setIsOpen] = useState(false)
 
   const { isBelowDesktop } = useDeviceWidth()
@@ -97,6 +103,16 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
     switchStatus,
     switchError,
   ])
+
+  useEffect(() => {
+    if (switchStatus === 'pending' || swapAndDepositStatus === 'pending') {
+      setAnimationStatus('playing')
+      return
+    }
+
+    setAnimationStatus('idle')
+  }, [switchStatus, swapAndDepositStatus, setAnimationStatus])
+
   return (
     <div className="flex flex-col items-stretch gap-6 lg:gap-8">
       {!isBelowDesktop && (

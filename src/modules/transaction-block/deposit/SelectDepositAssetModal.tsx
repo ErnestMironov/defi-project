@@ -203,6 +203,7 @@ export const SelectDepositAsset = () => {
 
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
+  console.log('🚀 ~ SelectDepositAsset ~ userTokens:', userTokens)
 
   const { squid } = useSquidSDK()
 

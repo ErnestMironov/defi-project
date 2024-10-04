@@ -10434,6 +10434,13 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
+react-gif-player@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/react-gif-player/-/react-gif-player-0.4.2.tgz#7f7675625bb264a3cfac8956edd5a18b8c196af3"
+  integrity sha512-ub++AT0PgbVxw1S0ahV3Q/4m67772r3vrnE6VqYed0Wi0cB9iremID8UnkFhZJCge77lwumsFOYsk1ShmouAgA==
+  dependencies:
+    prop-types "^15.6.0"
+
 react-hook-form@^7.51.5:
   version "7.51.5"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.51.5.tgz#4afbfb819312db9fea23e8237a3a0d097e128b43"

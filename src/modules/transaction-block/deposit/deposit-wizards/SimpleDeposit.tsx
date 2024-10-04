@@ -27,6 +27,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     inputValue: amount,
     vault,
     currentStep,
+    setAnimationStatus,
     setCurrentStep,
     setIntermediateError,
   } = useTxStore()
@@ -156,6 +157,19 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     approveError?.message,
     switchError,
   ])
+
+  useEffect(() => {
+    if (
+      depositStatus === 'pending' ||
+      approveStatus === 'pending' ||
+      switchStatus === 'pending'
+    ) {
+      setAnimationStatus('playing')
+      return
+    }
+
+    setAnimationStatus('idle')
+  }, [depositStatus, approveStatus, switchStatus, setAnimationStatus])
 
   return (
     <div className="flex flex-col items-stretch gap-6 lg:gap-8">
