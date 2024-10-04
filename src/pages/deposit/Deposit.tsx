@@ -1,4 +1,5 @@
 import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { useStrategies } from '@api/queries/useStrategies'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
@@ -7,11 +8,16 @@ import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
+import { formatAmount } from '@utils/formatValue'
 import { useEffect, useMemo, useRef } from 'react'
 
 export const Deposit = () => {
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
     useProtocolMetrics({})
+
+  const { isLoading: isStrategiesLoading, data: strategies } = useStrategies({
+    size: 100,
+  })
 
   const { isBelowDesktop } = useDeviceWidth()
 
@@ -19,20 +25,37 @@ export const Deposit = () => {
   const usdtApy = protocolMetrics?.history?.USDT?.apy
 
   const bestUSDCAPy = useMemo(() => {
+    const USDCStrategies = strategies?.items.filter(
+      (strategy) => strategy.token.symbol.toUpperCase() === 'USDC',
+    )
+    console.log('🚀 ~ bestUSDCAPy ~ USDCStrategies:', USDCStrategies)
+    console.log(USDCStrategies?.map((strategy) => strategy.apy))
     return Math.max(
-      ...(Object.values(protocolMetrics?.history?.USDC?.timestamps ?? {}).map(
-        (t) => t.apy,
+      ...(USDCStrategies?.map(
+        (strategy) =>
+          +formatAmount(strategy.apy, {
+            maximumFractionDigits: 2,
+          }),
       ) ?? []),
     )
-  }, [protocolMetrics?.history?.USDC?.timestamps])
+  }, [strategies?.items])
+  console.log('🚀 ~ bestUSDCAPy ~ bestUSDCAPy:', bestUSDCAPy)
 
   const bestUSDTAPy = useMemo(() => {
-    return Math.max(
-      ...(Object.values(protocolMetrics?.history?.USDT?.timestamps ?? {}).map(
-        (t) => t.apy,
-      ) ?? []),
+    const USDCStrategies = strategies?.items.filter(
+      (strategy) => strategy.token.symbol.toUpperCase() === 'USDT',
     )
-  }, [protocolMetrics?.history?.USDT?.timestamps])
+    console.log('🚀 ~ bestUSDTAPy ~ USDCStrategies:', USDCStrategies)
+    return Math.max(
+      ...(USDCStrategies?.map(
+        (strategy) =>
+          +formatAmount(strategy.apy, {
+            maximumFractionDigits: 2,
+          }),
+      ) ?? [0]),
+    )
+  }, [strategies?.items])
+  console.log('🚀 ~ bestUSDTAPy ~ bestUSDTAPy:', bestUSDTAPy)
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
@@ -61,7 +84,7 @@ export const Deposit = () => {
         {isBelowDesktop && <TVLDisplay />}
 
         <div className="grid grid-cols-2 gap-3">
-          {isProtocolMetricsLoading ? (
+          {isStrategiesLoading ? (
             <>
               {Array.from({ length: 2 }).map((_, i) => (
                 <Skeleton
@@ -72,20 +95,14 @@ export const Deposit = () => {
             </>
           ) : (
             <>
-              <ShadowBoxWithValue
-                label="USDС APY"
-                value={`Up to ${Math.trunc(bestUSDCAPy ?? 0)}%`}
-              >
+              <ShadowBoxWithValue label="USDС APY" value={`Up to ${bestUSDCAPy ?? 0}%`}>
                 <img
                   src={usdc}
                   alt="usdc"
                   className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
               </ShadowBoxWithValue>
-              <ShadowBoxWithValue
-                label="USDT APY"
-                value={`Up to ${Math.trunc(bestUSDTAPy ?? 0)}%`}
-              >
+              <ShadowBoxWithValue label="USDT APY" value={`Up to ${bestUSDTAPy ?? 0}%`}>
                 <img
                   src={usdt}
                   alt="usdt"
