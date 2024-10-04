@@ -1,4 +1,5 @@
 import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
@@ -25,13 +26,17 @@ export const TVLDisplay: React.FC<TVLDisplayProperties> = ({ className }) => {
       )}
     >
       <span className="text-[#9998B8]">TVL</span>
-      <span>
-        ${' '}
-        {formatAmount(totalTvl, {
-          maximumFractionDigits: 2,
-          currency: 'USD',
-        })}
-      </span>
+      {isProtocolMetricsLoading ? (
+        <Skeleton className="h-6 w-20" />
+      ) : (
+        <span>
+          ${' '}
+          {formatAmount(totalTvl, {
+            maximumFractionDigits: 2,
+            currency: 'USD',
+          })}
+        </span>
+      )}
     </div>
   )
 }
