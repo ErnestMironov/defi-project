@@ -14,7 +14,6 @@ import { TX_TYPE } from '@constants/txTypes'
 import { useMemo } from 'react'
 // @ts-ignore
 import GifPlayer from 'react-gif-player'
-import { useNavigate } from 'react-router-dom'
 
 import { useTransactionStore } from './store/usePendingTransactionsStore'
 import { useTxStore } from './store/useTxStore'
@@ -44,8 +43,6 @@ export const FailModal = () => {
     undefined,
     transactionHash as string | undefined,
   )
-
-  const navigate = useNavigate()
 
   const imageSource = useMemo(() => {
     switch (txType) {
