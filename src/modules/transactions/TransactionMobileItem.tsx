@@ -23,7 +23,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
   const { event } = props
   const navigate = useNavigate()
   return (
-    <div onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.intention_id}`)}>
+    <div onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.hash}`)}>
       <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
         {ACTION_TYPE[event.action_type as keyof typeof ACTION_TYPE]}
       </div>

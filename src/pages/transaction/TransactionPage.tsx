@@ -44,7 +44,6 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
     }
 
     if (detectMainActionType(action)) {
-      console.log('here2')
       setMainAction(action)
       setRelatedActions(sortActionsByDate([...restActions]))
       return
@@ -106,8 +105,23 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
 export const TransactionPageMobile = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
   const { tx_hash } = useParams()
-  const { data } = useGetTransactionInfo(tx_hash as Address)
+  const { data, isLoading } = useGetTransactionInfo(tx_hash as Address)
 
+  if (isLoading || !data) {
+    return (
+      <div className={cn('mt-8', className)} {...rest}>
+        <TransactionHeader isLoading className="mt-10" />
+        <TransactionInfo isLoading className="mt-10" type="DEPOSIT" />
+        <SectionTitle className="mt-[4.44rem]">Triggered transactions</SectionTitle>
+        <div className="mt-8 space-y-4">
+          <TransactionInfo isLoading />
+          <TransactionInfo isLoading />
+          <TransactionInfo isLoading />
+        </div>
+        <Footer className="mt-[7.5rem]" />
+      </div>
+    )
+  }
   return (
     <div className={cn('mt-8', className)} {...rest}>
       <TransactionHeader />

@@ -1,7 +1,5 @@
 import {
-  SELECT_CHAINS,
   SELECT_INCENTIVES_ACTIONS,
-  SELECT_INCENTIVES_FROM,
   SELECT_LAST_EVENT_ACTIONS,
   SELECT_STATUSES,
 } from '@constants/select-constant'
@@ -10,6 +8,7 @@ import { Footer } from '@layouts/footer/Footer'
 import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { Breadcrumbs } from './Breadcrumbs'
 import { StrategyApyChart } from './StrategyApyChart'
@@ -32,7 +31,7 @@ export const Strategy = (props: StrategyProperties) => {
 
 export const StrategyDesktop = (props: StrategyProperties) => {
   const { className, ...rest } = props
-
+  const { id } = useParams()
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
       <Breadcrumbs />
@@ -44,6 +43,7 @@ export const StrategyDesktop = (props: StrategyProperties) => {
       </div>
       <TransactionHistory
         className="mt-[6.25rem]"
+        eventParameters={{ strategy_id: id }}
         maatFilters={{
           search: { value: '', placeholder: 'Tx Hash' },
           actions_type: {
@@ -58,9 +58,8 @@ export const StrategyDesktop = (props: StrategyProperties) => {
           actions_type: {
             items: SELECT_INCENTIVES_ACTIONS,
             value: [],
+            placeholder: 'All Actions',
           },
-          from: { items: SELECT_INCENTIVES_FROM, value: [] },
-          chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
         }}
       />
       <Footer className="mt-[7.5rem]" />
@@ -70,13 +69,13 @@ export const StrategyDesktop = (props: StrategyProperties) => {
 
 const StrategyMobile = (props: StrategyProperties) => {
   const { className, ...rest } = props
-
+  const { id } = useParams()
   return (
     <div className={cn('mt-6', className)} {...rest}>
       <StrategyHeader />
       <StrategyInfoMobile />
       <TokenChartMobile />
-      <StrategyTransactions />
+      <StrategyTransactions params={{ strategy_id: id }} />
       <Footer className="mt-[5.5rem]" />
     </div>
   )

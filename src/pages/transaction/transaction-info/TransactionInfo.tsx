@@ -33,13 +33,13 @@ export const TransactionInfo = (props: TransactionInfoProperties) => {
             <Skeleton className="h-6 w-20 bg-stroke-100 dark:bg-stroke-100" />
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3 max-lg:grid-cols-1">
           <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
           <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
           <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
           <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
           <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
-          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
+          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100 max-lg:hidden" />
         </div>
       </TransactionInfoContainer>
     )

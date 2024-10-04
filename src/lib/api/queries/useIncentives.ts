@@ -23,6 +23,7 @@ export type IncentiveParameters = {
   chain?: ChainParameters[]
   sort?: 'creation_time' | 'amount'
   order_by?: SortDirection
+  hash?: string
 }
 
 const getIncentives = (parameters: IncentiveParameters) => {

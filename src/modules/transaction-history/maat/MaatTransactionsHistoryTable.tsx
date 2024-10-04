@@ -11,6 +11,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
+import { isHashOrAddress } from '@utils/hash-or-address'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 
@@ -26,7 +27,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
 ) => {
   const { filters: initialFilters, eventParameters, className } = props
   const [filters, setFilters] = useState(initialFilters)
-  const { search: _search, ...selectFilters } = filters
+  const { search, ...selectFilters } = filters
   const { onPageChange, page, size, onPageSizeChange } = usePages()
   const { sort, orderBy, onSortChange } = useSort(['creation_time', 'amount'], {
     orderBy: 'desc',
@@ -39,6 +40,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
     transaction_type: 'maat',
     limit: 100,
     sort,
+    hash_or_address: isHashOrAddress(search?.value) ? search?.value : undefined,
     order_by: orderBy,
     ...getMultiSelectParameters(selectFilters),
   })

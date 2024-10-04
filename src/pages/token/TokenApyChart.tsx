@@ -31,7 +31,7 @@ export const TokenApyChart = (props: TokenApyChartProperties) => {
     if (!data) return []
 
     return Object.entries(
-      data?.history?.[symbol].timestamps ?? {
+      data?.history?.[symbol]?.timestamps ?? {
         [currentTimestamp]: { apy: 0 },
         [Date.now()]: { apy: 0 },
       },

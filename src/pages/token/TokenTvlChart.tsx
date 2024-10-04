@@ -30,7 +30,7 @@ export const TokenTvlChart = (props: TokenTvlChartProperties) => {
   const formattedTvlData: RechartDataType[] = useMemo(() => {
     if (!data) return []
     return Object.entries(
-      data?.history?.[symbol].timestamps ?? {
+      data?.history?.[symbol]?.timestamps ?? {
         [currentTimestamp]: { tvl: 0 },
         [Date.now()]: { tvl: 0 },
       },

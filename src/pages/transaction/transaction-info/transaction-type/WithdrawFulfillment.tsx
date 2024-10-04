@@ -36,7 +36,7 @@ export const WithdrawFulfillment = (props: WithdrawFulfillmentProperties) => {
   return (
     <TransactionInfoContainer className={className} {...rest}>
       <TransactionInfoHeader
-        title="Withdraw request"
+        title="Withdraw fulfillment"
         tags={tags}
         status={data?.status}
         date={data?.creation_time}

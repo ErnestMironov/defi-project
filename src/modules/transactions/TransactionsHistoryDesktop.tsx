@@ -11,6 +11,7 @@ import { Table } from '@components/table'
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
+import { isHashOrAddress } from '@utils/hash-or-address'
 import { useState } from 'react'
 
 import {
@@ -29,8 +30,7 @@ export const TransactionsHistoryDesktop = (
 ) => {
   const { filters: initialFilters, className, parameters } = props
   const [filters, setFilters] = useState(initialFilters)
-  const { search: _search, ...selectFilters } = filters
-
+  const { search, ...selectFilters } = filters
   const { onPageChange, page, size, onPageSizeChange } = usePages()
   const { sort, orderBy, onSortChange } = useSort(['creation_time', 'amount'], {
     orderBy: 'desc',
@@ -42,6 +42,7 @@ export const TransactionsHistoryDesktop = (
     page,
     sort,
     order_by: orderBy,
+    hash_or_address: isHashOrAddress(search?.value) ? search?.value : undefined,
     ...getMultiSelectParameters(selectFilters),
     ...parameters,
   })
