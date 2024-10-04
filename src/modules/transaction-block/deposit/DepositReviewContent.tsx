@@ -32,6 +32,7 @@ export const DepositReviewContent = ({
     depositToNetwork,
     depositTotalAmount,
     depositTotalInUSD,
+    animationStatus,
     setCurrentModal,
   } = useTxStore()
 
@@ -93,7 +94,7 @@ export const DepositReviewContent = ({
   return (
     <>
       <TxReviewInfo
-        playAnimation={false}
+        playAnimation={animationStatus === 'playing'}
         items={[
           {
             label: 'You input',

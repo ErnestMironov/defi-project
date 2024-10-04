@@ -29,6 +29,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     setCurrentStep,
     squidRoute,
     setIntermediateError,
+    setAnimationStatus,
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -149,6 +150,20 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     switchToAssetChainStatus,
     switchError,
   ])
+
+  // Добавляем новый useEffect для управления анимацией
+  useEffect(() => {
+    if (
+      switchToAssetChainStatus === 'pending' ||
+      approveStatus === 'pending' ||
+      swapAndDepositStatus === 'pending'
+    ) {
+      setAnimationStatus('playing')
+      return
+    }
+
+    setAnimationStatus('idle')
+  }, [switchToAssetChainStatus, approveStatus, swapAndDepositStatus, setAnimationStatus])
 
   return (
     <div className="flex flex-col items-stretch gap-6 lg:gap-8">

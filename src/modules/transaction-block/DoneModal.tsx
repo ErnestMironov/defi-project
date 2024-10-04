@@ -1,4 +1,4 @@
-// Импортируем стили для GifPlayer
+// @ts-ignore
 import 'react-gif-player/dist/gifplayer.css'
 
 import depositGif from '@assets/gif/Chest_Deposit.gif'
@@ -12,6 +12,7 @@ import { Dialog, DialogContent } from '@components/ui/dialog'
 import { TX_TYPE } from '@constants/txTypes'
 import { formatAmount } from '@utils/formatValue'
 import { useMemo } from 'react'
+// @ts-ignore
 import GifPlayer from 'react-gif-player'
 
 import { useTransactionStore } from './store/usePendingTransactionsStore'
