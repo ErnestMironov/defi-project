@@ -1,6 +1,7 @@
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { Chains } from '@covalenthq/client-sdk'
 import { useQuery } from '@tanstack/react-query'
+import type { Address } from 'viem'
 
 import type { ITokenData } from './api'
 import { getTokenBalances } from './api'
@@ -48,25 +49,30 @@ export const useTokensBalance = ({
   chains: _chains,
 }: UsePortfolioProperties) => {
   const chains = _chains || DEFAULT_CHAINS
-  return useQuery<ChainPortfolio>({
+  return useQuery<Partial<ChainPortfolio>>({
     queryKey: ['portfolio', address, chains],
     queryFn: async () => {
       const portfolio: Partial<ChainPortfolio> = {}
-      await Promise.all(
+      await Promise.allSettled(
         chains.map(async (chainId: (typeof DEFAULT_CHAINS)[number]) => {
-          const tokens = await getTokenBalances(chainId, address)
-          const mappedTokens = tokens.map((token) => ({
-            ...token,
-            chain_id:
-              COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER],
-          }))
+          try {
+            const tokens = await getTokenBalances(chainId, address as Address)
+            const mappedTokens = tokens.map((token) => ({
+              ...token,
+              chain_id:
+                COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER],
+            }))
 
-          portfolio[
-            COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER]
-          ] = mappedTokens
+            portfolio[
+              COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER]
+            ] = mappedTokens
+          } catch (error) {
+            // Log the error, but don't throw it
+            console.error(`Error fetching tokens for chain ${chainId}:`, error)
+          }
         }),
       )
-      return portfolio as ChainPortfolio
+      return portfolio
     },
   })
 }

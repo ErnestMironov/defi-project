@@ -90,8 +90,6 @@ export const DepositReviewContent = ({
     }
   }, [setCurrentModal, depositStatus])
 
-  console.log(asset)
-
   return (
     <>
       <TxReviewInfo

@@ -109,3 +109,12 @@ export const ScanLink = (props: ScanLinkProperties) => {
     </Link>
   )
 }
+
+export const useScanLink = (chainId: number, address?: string, txHash?: string) => {
+  const path = address
+    ? SCAN_ADDRESS_PATH_BY_CHAIN_ID[
+        chainId as keyof typeof SCAN_ADDRESS_PATH_BY_CHAIN_ID
+      ] + address
+    : SCAN_TX_PATH_BY_CHAIN_ID[chainId as keyof typeof SCAN_TX_PATH_BY_CHAIN_ID] + txHash
+  return `${SCAN_LINK_BY_CHAIN_ID[chainId as keyof typeof SCAN_LINK_BY_CHAIN_ID]}${path}`
+}
