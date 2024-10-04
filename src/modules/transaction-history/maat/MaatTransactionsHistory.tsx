@@ -14,14 +14,10 @@ interface TransactionsHistoryProperties extends ComponentProps<'div'> {
 export const MaatTransactionsHistory: React.FC<TransactionsHistoryProperties> = (
   props,
 ) => {
+  const { filters, ...rest } = props
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {
-    return (
-      <TransactionsMobileWithFilters
-        className={props.className}
-        parameters={props.eventParameters}
-      />
-    )
+    return <TransactionsMobileWithFilters {...rest} />
   }
-  return <MaatTransactionsHistoryTable {...props} />
+  return <MaatTransactionsHistoryTable {...rest} filters={filters} />
 }

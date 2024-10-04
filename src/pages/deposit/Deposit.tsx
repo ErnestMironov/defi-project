@@ -10,8 +10,7 @@ import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
-    useProtocolMetrics({})
+  const { isLoading: isProtocolMetricsLoading } = useProtocolMetrics({})
 
   const { isBelowDesktop } = useDeviceWidth()
 
