@@ -1,9 +1,16 @@
+import type { EventsParameters } from '@api/queries/useEvents'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { IncentiveMobileWithFilters } from '@modules/transactions/incentive/IncentiveMobileWithFilters'
 import { TransactionsMobileWithFilters } from '@modules/transactions/TransactionsMobileWithFilters'
+import type { ComponentProps } from 'react'
 
-export const StrategyTransactions = () => {
+interface StrategyTransactionsProperties extends ComponentProps<'div'> {
+  params: EventsParameters
+}
+
+export const StrategyTransactions = (props: StrategyTransactionsProperties) => {
+  const { params } = props
   return (
     <div className="mt-16">
       <SectionTitle>Transactions</SectionTitle>
@@ -16,6 +23,7 @@ export const StrategyTransactions = () => {
           <TransactionsMobileWithFilters
             parameters={{
               transaction_type: 'maat',
+              ...params,
             }}
             filters={['actions', 'statuses']}
           />

@@ -24,6 +24,7 @@ import {
   SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
+import { isHashOrAddress } from '@utils/hash-or-address'
 import type { ComponentProps } from 'react'
 import { Fragment, useMemo, useState } from 'react'
 
@@ -50,7 +51,6 @@ export const TransactionsMobileWithFilters = (
     filters = ['actions', 'statuses', 'chains'],
     parameters = {},
   } = props
-
   const [search, setSearch] = useState('')
   const [selectedActions, setSelectedActions] = useState<OptionType[]>([])
   const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
@@ -80,6 +80,7 @@ export const TransactionsMobileWithFilters = (
   const eventsParameters = useMemo(() => {
     const baseParameters: EventsParameters = {
       size: 10,
+      hash_or_address: isHashOrAddress(search) ? search : undefined,
       ...parameters,
       ...currentSort,
     }
@@ -97,7 +98,7 @@ export const TransactionsMobileWithFilters = (
       baseParameters.status = selectedStatuses.map((status) => status.value as StatusType)
     }
     return baseParameters
-  }, [currentSort, parameters, selectedActions, selectedChains, selectedStatuses])
+  }, [currentSort, parameters, selectedActions, selectedChains, selectedStatuses, search])
 
   const {
     data,

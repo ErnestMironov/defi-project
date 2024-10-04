@@ -38,7 +38,6 @@ export const useStrategies = (parameters: StrategiesParameters) => {
 
 export const useInfiniteStrategies = (parameters: StrategiesParameters) => {
   const { size, ...rest } = parameters
-  console.log('parameters', parameters)
 
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({

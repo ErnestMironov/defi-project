@@ -25,7 +25,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
   return (
     <Table.Row
       className="cursor-pointer"
-      onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.intention_id}`)}
+      onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.hash}`)}
     >
       <Table.Cell>
         {ACTION_TYPE[event.action_type as keyof typeof ACTION_TYPE]}

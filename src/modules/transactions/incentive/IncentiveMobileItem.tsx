@@ -4,6 +4,7 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import { INCENTIVE_ACTION_TYPE } from '@constants/action-type'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenAddress } from '@utils/transform'
@@ -40,7 +41,9 @@ export const IncentiveMobileItem = (props: IncentiveMobileItemProperties) => {
   }
   return (
     <div>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">Harvest</div>
+      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
+        {INCENTIVE_ACTION_TYPE[incentive.action_type]}
+      </div>
       <div className="mt-4 flex items-center gap-3 text-gray-100">
         <span>Vault</span>
         <div className="h-[1.0625rem] w-px bg-gray-50" />
