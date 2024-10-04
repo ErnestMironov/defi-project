@@ -9,6 +9,7 @@ import { useScanLink } from '@components/scan-link/ScanLink'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { Dialog, DialogContent } from '@components/ui/dialog'
+import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { TX_TYPE } from '@constants/txTypes'
 import { formatAmount } from '@utils/formatValue'
 import { useMemo } from 'react'
@@ -24,6 +25,7 @@ export const DoneModal = () => {
   const {
     txType,
     setCurrentModal,
+    depositAsset,
     currentModal,
     depositTotalInUSD,
     withdrawAmount,
@@ -33,7 +35,8 @@ export const DoneModal = () => {
   } = useTxStore()
 
   const scanLink = useScanLink(
-    mtToken?.chainData?.chainId as number,
+    (txType === TX_TYPE.DEPOSIT ? depositAsset?.chain_id : mtToken?.chainData?.chainId) ??
+      CHAIN_IDS_BY_NAME.Arbitrum,
     undefined,
     transactionHash as string | undefined,
   )
@@ -88,14 +91,15 @@ export const DoneModal = () => {
       case TX_TYPE.DEPOSIT: {
         return (
           <>
-            <div>
+            <div className="flex items-center gap-2">
               <TokenWithNetwork
-                width="1.75rem"
+                width="1.5rem"
                 position="bottom-right"
-                symbol={mtToken?.stable}
-                network={mtToken?.chainData?.chainId}
+                symbol={depositAsset?.contract_ticker_symbol}
+                network={depositAsset?.chain_id}
               />
               {formatAmount(depositTotalInUSD, { maximumFractionDigits: 2 })}
+              <span className="text-text-80">{depositAsset?.contract_ticker_symbol}</span>
             </div>
             <span className="text-gray-100">
               ${formatAmount(depositTotalInUSD, { maximumFractionDigits: 2 })}
@@ -111,9 +115,9 @@ export const DoneModal = () => {
       }
     }
   }, [
+    depositAsset?.chain_id,
+    depositAsset?.contract_ticker_symbol,
     depositTotalInUSD,
-    mtToken?.chainData?.chainId,
-    mtToken?.stable,
     txType,
     withdrawAmount,
   ])
@@ -122,7 +126,7 @@ export const DoneModal = () => {
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
       <DialogContent
         onClose={onClose}
-        className="flex flex-col items-center gap-8 self-stretch p-0 pb-8"
+        className="flex flex-col items-center gap-8 self-stretch p-0 pb-8 max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 max-lg:rounded-b-none"
         showCloseButton
       >
         <div className="relative flex w-full flex-col items-center justify-center rounded-[2rem] bg-[rgba(222,_221,_236,_0.10)] px-8 pb-5">
@@ -140,7 +144,9 @@ export const DoneModal = () => {
             />
           </div>
           <p className="text-[1.125rem] font-normal text-green-100">{title}</p>
-          <p className="mt-3 gap-2 text-[1.125rem]/[120%] text-text">{amount}</p>
+          <p className="mt-3 flex items-center gap-3 text-[1.125rem]/[120%] text-text">
+            {amount}
+          </p>
         </div>
         <div className="w-full px-8">
           <a href={scanLink} target="_blank" rel="noreferrer" className="block">
