@@ -18,8 +18,14 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   allStepsCompleted,
 }) => {
-  const { depositAsset, vault, currentStep, setCurrentStep, setIntermediateError } =
-    useTxStore()
+  const {
+    depositAsset,
+    vault,
+    currentStep,
+    setCurrentStep,
+    setIntermediateError,
+    setAnimationStatus,
+  } = useTxStore()
 
   const { isBelowDesktop } = useDeviceWidth()
 
@@ -100,6 +106,15 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
     switchToAssetChainStatus,
     switchError,
   ])
+
+  useEffect(() => {
+    if (switchToAssetChainStatus === 'pending' || swapAndDepositStatus === 'pending') {
+      setAnimationStatus('playing')
+      return
+    }
+
+    setAnimationStatus('idle')
+  }, [switchToAssetChainStatus, swapAndDepositStatus, setAnimationStatus])
 
   return (
     <div className="flex flex-col items-stretch gap-6 lg:gap-8">

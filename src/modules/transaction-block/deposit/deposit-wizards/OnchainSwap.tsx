@@ -31,6 +31,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     inputValue: amount,
     squidRoute,
     setIntermediateError,
+    setAnimationStatus,
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -75,7 +76,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   const ActionButton = () => {
     switch (currentStep) {
       case 1: {
-        console.info('��� ~ OnChainDeposit ~ currentStep:', 'switch to Arbitrum')
+        console.info(' ~ OnChainDeposit ~ currentStep:', 'switch to Arbitrum')
         return (
           <Button
             size="lg"
@@ -89,7 +90,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         )
       }
       case 2: {
-        console.info('��� ~ OnChainDeposit ~ currentStep:', 'approve')
+        console.info(' ~ OnChainDeposit ~ currentStep:', 'approve')
         return (
           <Button
             size="lg"
@@ -106,7 +107,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         )
       }
       case 3: {
-        console.info('��� ~ OnChainDeposit ~ currentStep:', 'deposit')
+        console.info(' ~ OnChainDeposit ~ currentStep:', 'deposit')
         return (
           <Button
             size="lg"
@@ -146,6 +147,19 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     switchStatus,
     switchError,
   ])
+
+  useEffect(() => {
+    if (
+      switchStatus === 'pending' ||
+      approveStatusBeforeSwap === 'pending' ||
+      swapAndDepositStatus === 'pending'
+    ) {
+      setAnimationStatus('playing')
+      return
+    }
+
+    setAnimationStatus('idle')
+  }, [switchStatus, approveStatusBeforeSwap, swapAndDepositStatus, setAnimationStatus])
 
   return (
     <div className="flex flex-col items-stretch gap-6 lg:gap-8">

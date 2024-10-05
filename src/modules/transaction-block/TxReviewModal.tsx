@@ -1,4 +1,3 @@
-import CloseIcon from '@assets/icons/modal-close.svg'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
 import { cloneElement } from 'react'
 
@@ -46,16 +45,10 @@ export const TxReviewModal = () => {
   return (
     <Dialog open={currentModal === 'review'}>
       <DialogContent
+        onClose={handleClose}
         className="max-w-[38.75rem] gap-8 overflow-visible rounded-[2rem] px-4 text-text max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 max-lg:rounded-b-none lg:gap-10 lg:px-0 lg:pb-7 lg:pt-10"
-        showCloseButton={false}
+        showCloseButton
       >
-        <div
-          className="absolute right-0 top-0 flex size-12 translate-y-[calc(-100%-.37rem)] cursor-pointer items-center justify-center rounded-full bg-[rgba(255,_255,_255,_0.30)]"
-          onClick={handleClose}
-        >
-          <CloseIcon className="w-4" />
-        </div>
-
         <DialogHeader className="flex flex-row justify-between gap-4 lg:px-8">
           <DialogTitle className="text-2xl font-normal normal-case leading-[2.625rem] max-lg:text-left lg:text-[1.75rem]">
             {txType === 'deposit' ? 'Deposit' : 'Withdraw'}
