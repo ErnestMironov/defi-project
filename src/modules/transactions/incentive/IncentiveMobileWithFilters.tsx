@@ -21,9 +21,9 @@ import {
   SORT_BY_DATE,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
-import { isHashOrAddress } from '@utils/hash-or-address'
 import type { ComponentProps } from 'react'
 import { useMemo, useState } from 'react'
+import { isHash } from 'viem'
 
 import { IncentiveMobileList } from './IncentiveMobileList'
 
@@ -75,7 +75,7 @@ export const IncentiveMobileWithFilters = (
     isPlaceholderData,
   } = useInfiniteIncentives({
     limit: 100,
-    hash: isHashOrAddress(search) ? search : undefined,
+    hash: isHash(search) ? search : undefined,
     actions_type: selectedActions.map((action) => action.value) as string[],
     token: selectedTokens.map((token) => token.value) as TokenParameters[],
     chain: selectedChains.map((chain) => chain.value) as ChainParameters[],

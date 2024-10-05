@@ -21,6 +21,7 @@ import {
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { Fragment, useMemo, useState } from 'react'
+import { isHash } from 'viem'
 
 import { AdminActionMobileList } from './AdminActionMobileList'
 
@@ -65,6 +66,7 @@ export const AdminActionMobileWithFilters = (
   } = useInfiniteAdminActions({
     action_type: selectedActions.map((a) => a.value) as AdminActionType[],
     chain: selectedChains.map((c) => c.value) as string[],
+    hash: isHash(search) ? search : undefined,
     ...currentSort,
   })
 

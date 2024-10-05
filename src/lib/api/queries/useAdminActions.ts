@@ -10,6 +10,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import qs from 'qs'
 
 export type AdminActionsParameters = {
+  hash?: string
   limit?: number
   action_type?: AdminActionType[]
   page?: number

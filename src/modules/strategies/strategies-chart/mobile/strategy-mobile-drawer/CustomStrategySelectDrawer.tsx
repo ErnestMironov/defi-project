@@ -13,6 +13,7 @@ import {
   SELECT_TOKENS,
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
+import { formatPercentValue } from '@utils/formatValue'
 import { type ComponentProps, useState } from 'react'
 
 import type { StrategyWithColor } from '../useMobileStrategiesChartStore'
@@ -41,6 +42,9 @@ export const CustomStrategySelectDrawer = (
     useInfiniteStrategies({
       sort: 'apy',
       order_by: 'desc',
+      chain: selectedChain.map((chain) => chain.value),
+      protocol: selectedProtocol.map((protocol) => protocol.value),
+      token: selectedTokens.map((token) => token.value),
     })
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
@@ -104,7 +108,9 @@ export const CustomStrategySelectDrawer = (
                   />
                 ),
               )}
-              <p className="ml-auto text-semi-base font-bold">10.57%</p>
+              <p className="ml-auto text-semi-base font-bold">
+                {formatPercentValue(strategy.apy)}
+              </p>
             </div>
           ))}
           {hasNextPage && <div ref={ref} className="h-1 w-full" />}

@@ -10,7 +10,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
-import { isHashOrAddress } from '@utils/hash-or-address'
+import { isHash } from '@utils/hash-or-address'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 
@@ -36,7 +36,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
     page,
     limit: 100,
     sort,
-    hash: isHashOrAddress(search?.value) ? search?.value : undefined,
+    hash: isHash(search?.value) ? search?.value : undefined,
     order_by: orderBy,
     ...getMultiSelectParameters(selectFilters),
   })
