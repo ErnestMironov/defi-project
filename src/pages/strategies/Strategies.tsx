@@ -41,7 +41,7 @@ const StrategiesMobilePage = (props: StrategiesProperties) => {
   return (
     <div className={cn(className, 'mt-6')} {...rest}>
       <StrategiesChartMobile />
-      <Strategies className="mt-14" />
+      <Strategies className="mt-14" withLink={false} />
       <Transactions className="mt-16" />
       <Footer className="mt-[4.5rem]" />
     </div>
