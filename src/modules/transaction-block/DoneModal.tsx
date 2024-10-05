@@ -24,7 +24,10 @@ export const DoneModal = () => {
 
   const {
     txType,
+    depositTotalAmount,
+    depositToNetwork,
     setCurrentModal,
+    vault,
     depositAsset,
     currentModal,
     depositTotalInUSD,
@@ -95,11 +98,11 @@ export const DoneModal = () => {
               <TokenWithNetwork
                 width="1.5rem"
                 position="bottom-right"
-                symbol={depositAsset?.contract_ticker_symbol}
-                network={depositAsset?.chain_id}
+                symbol={vault}
+                network={depositToNetwork}
               />
-              {formatAmount(depositTotalInUSD, { maximumFractionDigits: 2 })}
-              <span className="text-text-80">{depositAsset?.contract_ticker_symbol}</span>
+              {formatAmount(depositTotalAmount, { maximumFractionDigits: 2 })}
+              <span className="text-text-80">{vault}</span>
             </div>
             <span className="text-gray-100">
               ${formatAmount(depositTotalInUSD, { maximumFractionDigits: 2 })}
@@ -108,17 +111,37 @@ export const DoneModal = () => {
         )
       }
       case TX_TYPE.WITHDRAW: {
-        return formatAmount(withdrawAmount, { maximumFractionDigits: 2 })
+        return (
+          <>
+            <div className="flex items-center gap-2">
+              <TokenWithNetwork
+                width="1.5rem"
+                position="bottom-right"
+                symbol={mtToken?.stable}
+                network={mtToken?.chainData?.chainId}
+              />
+              {formatAmount(withdrawAmount, { maximumFractionDigits: 2 })}
+              <span className="text-text-80">{depositAsset?.contract_ticker_symbol}</span>
+            </div>
+            <span className="text-gray-100">
+              ${formatAmount(withdrawAmount, { maximumFractionDigits: 2 })}
+            </span>
+          </>
+        )
       }
       default: {
         return ''
       }
     }
   }, [
-    depositAsset?.chain_id,
     depositAsset?.contract_ticker_symbol,
+    depositToNetwork,
+    depositTotalAmount,
     depositTotalInUSD,
+    mtToken?.chainData?.chainId,
+    mtToken?.stable,
     txType,
+    vault,
     withdrawAmount,
   ])
 
