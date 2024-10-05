@@ -11,6 +11,7 @@ import { SELECT_ADMIN_ACTION_TYPES, SELECT_CHAINS } from '@constants/select-cons
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
+import { isHash } from '@utils/hash-or-address'
 import { type ComponentProps, useState } from 'react'
 
 import { AdminTableRow } from './AdminTableRow'
@@ -20,7 +21,7 @@ interface AdminTableProperties extends ComponentProps<'div'> {}
 export const AdminTable = (props: AdminTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
-    search: { value: '', placeholder: 'Tx Hash / Arguments' },
+    search: { value: '', placeholder: 'Tx Hash' },
     actions_type: {
       items: SELECT_ADMIN_ACTION_TYPES,
       value: [],
@@ -29,7 +30,7 @@ export const AdminTable = (props: AdminTableProperties) => {
     // from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
-  const { search: _search, ...selectFilters } = filters
+  const { search, ...selectFilters } = filters
   const { page, size, onPageChange, onPageSizeChange } = usePages()
   const { sort, orderBy, onSortChange } = useSort(['creation_time', 'amount'], {
     orderBy: 'desc',
@@ -40,6 +41,7 @@ export const AdminTable = (props: AdminTableProperties) => {
     size,
     order_by: orderBy,
     sort,
+    hash: isHash(search?.value) ? search?.value : undefined,
     ...getMultiSelectParameters(selectFilters),
   })
   const renderBody = () => {

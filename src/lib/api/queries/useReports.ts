@@ -10,6 +10,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import qs from 'qs'
 
 export type ReportParameters = {
+  hash?: string
   limit?: number
   sort?: 'creation_time' | 'amount'
   order_by?: SortDirection

@@ -55,9 +55,9 @@ export const TransactionHeaderMobile = (props: ComponentProps<'div'>) => {
 
   return (
     <div className={cn('mt-8', className)} {...rest}>
-      <div className="flex items-center gap-4">
+      <div className="flex items-start gap-4">
         <TagRight className="size-7" />
-        <h2 className="text-2xl/[0rem] uppercase">
+        <h2 className="text-2xl uppercase">
           {data?.[0]?.action_type ? LAST_EVENT_ACTION_TYPE[data?.[0]?.action_type] : ''}
         </h2>
       </div>

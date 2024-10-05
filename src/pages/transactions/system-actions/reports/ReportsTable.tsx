@@ -10,6 +10,7 @@ import { SELECT_CHAINS, SELECT_TOKENS } from '@constants/select-constant'
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
+import { isHash } from '@utils/hash-or-address'
 import { type ComponentProps, useState } from 'react'
 
 import { ReportsTableRow, ReportsTableRowSkeleton } from './ReportsTableRow'
@@ -19,11 +20,11 @@ interface ReportsTableProperties extends ComponentProps<'div'> {}
 export const ReportsTable = (props: ReportsTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
-    search: { value: '', placeholder: 'Nonce / Tx Hash' },
+    search: { value: '', placeholder: 'Tx Hash' },
     token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
     chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
-  const { search: _search, ...selectFilters } = filters
+  const { search, ...selectFilters } = filters
   const { page, size, onPageChange, onPageSizeChange } = usePages()
   const { sort, orderBy, onSortChange } = useSort(['creation_time'], {
     orderBy: 'desc',
@@ -34,6 +35,7 @@ export const ReportsTable = (props: ReportsTableProperties) => {
     size,
     order_by: orderBy,
     sort,
+    hash: isHash(search?.value) ? search?.value : undefined,
     ...getMultiSelectParameters(selectFilters),
   })
 

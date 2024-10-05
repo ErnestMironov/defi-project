@@ -1,168 +1,84 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
 
-import { useRebalance } from '@api/queries/useRebalance'
+import type { Event, Strategy } from '@api/maat-finance/types'
+import { useLastRebalances } from '@api/queries/useLastRebalances'
+import Arrow from '@assets/icons/curve-arrow-down.svg?url'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg?url'
+import Avalanche from '@assets/icons/networks/avalanche.svg?url'
 import Base from '@assets/icons/networks/base.svg?url'
+import Bsc from '@assets/icons/networks/bsc.svg?url'
+import Optimism from '@assets/icons/networks/optimism.svg?url'
+import Polygon from '@assets/icons/networks/polygon.svg?url'
 import Aave from '@assets/icons/protocols/aave.svg?url'
-import Lendle from '@assets/icons/protocols/lendle.svg?url'
+import Harvest from '@assets/icons/protocols/harvest.svg?url'
 import Mantle from '@assets/icons/protocols/mantle.svg?url'
 import Metis from '@assets/icons/protocols/metis.svg?url'
+import Stargate from '@assets/icons/protocols/stargate.svg?url'
 import Yearn from '@assets/icons/protocols/yearn.svg?url'
 import { SectionTitle } from '@components/section/SectionTitle'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 import { STABLE_TYPE, StableSwitcher } from '@components/stable-switcher/StableSwitcher'
 import { Skeleton } from '@components/ui/skeleton'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useDimensions } from '@hooks/common/useDimensions'
 import { cn } from '@utils/cn'
 import type { SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
 import type { ComponentProps } from 'react'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 
 import { D3TooltipComponent } from './D3Tooltip'
+import { createSankeyData } from './getSankeyData'
 
-type ObjectsData = {
-  name: string
-  apy?: string
-}
-export type NodeType = {
-  id: string
-  objects: ObjectsData[]
-}
 export type LinkType = {
   source: string
   target: string
   value: number
 }
 export type SankeyChartDataType = {
-  nodes: NodeType[]
+  nodes: SankeyNodeType[]
   links: LinkType[]
 }
 
 const ICON_URLS_MAP = {
   aave: Aave,
   yearn: Yearn,
-  arbitrum: Arbitrum,
-  base: Base,
-  metis: Metis,
-  mantle: Mantle,
-  lendle: Lendle,
+  stargate: Stargate,
+  harvest: Harvest,
+  42_161: Arbitrum,
+  8453: Base,
+  1088: Metis,
+  5000: Mantle,
+  10: Optimism,
+  43_114: Avalanche,
+  137: Polygon,
+  56: Bsc,
 } as const
 
-// export const mockData: SankeyChartDataType = {
-//   nodes: [
-//     {
-//       id: '1',
-//       objects: [
-//         { name: 'Mantle', icon: Mantle },
-//         { name: 'Aave V3', icon: Aave },
-//       ],
-//     },
-//     {
-//       id: '2',
-//       objects: [
-//         { name: 'Metis', icon: Metis },
-//         { name: 'Aave V3', icon: Aave },
-//       ],
-//     },
-//     {
-//       id: '3',
-//       objects: [
-//         { name: 'Arbitrum', icon: Arbitrum },
-//         { name: 'Aave V3', icon: Aave },
-//       ],
-//     },
-//     {
-//       id: '4',
-//       objects: [
-//         { name: 'Mantle', icon: Mantle },
-//         { name: 'Lendle', icon: Lendle },
-//       ],
-//     },
-//     {
-//       id: '5',
-//       objects: [
-//         { name: 'Metis', icon: Metis },
-//         { name: 'Lendle', icon: Lendle },
-//       ],
-//     },
-//     {
-//       id: '6',
-//       objects: [
-//         { name: 'Arbitrum', icon: Arbitrum },
-//         { name: 'Lendle', icon: Lendle },
-//       ],
-//     },
-//     {
-//       id: '7',
-//       objects: [
-//         { name: 'Mantle', icon: Mantle },
-//         { name: 'Aave V3', icon: Aave },
-//       ],
-//     },
-//     {
-//       id: '8',
-//       objects: [
-//         { name: 'Metis', icon: Metis },
-//         { name: 'Aave V3', icon: Aave },
-//       ],
-//     },
-//     {
-//       id: '9',
-//       objects: [
-//         { name: 'Arbitrum', icon: Arbitrum },
-//         { name: 'Aave V3', icon: Aave },
-//       ],
-//     },
-//     {
-//       id: '10',
-//       objects: [
-//         { name: 'Mantle', icon: Mantle },
-//         { name: 'Lendle', icon: Lendle },
-//       ],
-//     },
-//     {
-//       id: '11',
-//       objects: [
-//         { name: 'Lendle', icon: Lendle },
-//         { name: 'Metis', icon: Metis },
-//       ],
-//     },
-//     {
-//       id: '12',
-//       objects: [
-//         { name: 'Lendle', icon: Lendle },
-//         { name: 'Arbitrum', icon: Arbitrum },
-//       ],
-//     },
-//   ],
-//   links: [
-//     { source: '1', target: '11', value: 10 },
-//     { source: '2', target: '7', value: 20 },
-//     { source: '3', target: '12', value: 10 },
-//     { source: '4', target: '9', value: 20 },
-//     { source: '4', target: '8', value: 20 },
-//     { source: '5', target: '8', value: 10 },
-//     { source: '5', target: '10', value: 10 },
-//     { source: '6', target: '7', value: 12 },
-//   ],
-// }
+const getAssetUrl = (id: string) => {
+  return Object.entries(ICON_URLS_MAP).find(([key]) =>
+    id.toString().match(new RegExp(key, 'i')),
+  )?.[1]
+}
+
 const COLORS = [
   'rgba(135, 99, 243, 0.30)',
   'rgba(254, 244, 154, 0.45)',
-  'rgba(50, 57, 73, 0.23)',
+  'rgba(38, 41, 218, 0.23)',
   'rgba(247, 190, 204, 0.40)',
   'rgba(121, 222, 194, 0.35)',
   'rgba(166, 193, 255, 0.75)',
 ]
-const MARGIN_Y = 0
+const MARGIN_Y = 20
 const MARGIN_X = 0
 
+export type SankeyNodeType = Event & { sankey_id: number; strategy: Strategy }
 type Data = {
-  nodes: { id: string }[]
-  links: { source: string; target: string; value: number }[]
+  nodes: SankeyNodeType[]
+  links: { source: number; target: number; value: number | null }[]
 }
 
 type SankeyProperties = {
@@ -203,13 +119,12 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
       [MARGIN_X, MARGIN_Y],
       [dimensions.width - MARGIN_X, dimensions.height - MARGIN_Y],
     ])
-    .nodeId((node) => (node as NodeType).id)
+    .nodeId((node) => (node as SankeyNodeType).sankey_id)
     .nodeAlign(sankeyCenter)
   // .nodeSort(() => +1)
 
   // Compute nodes and links positions
   const { nodes, links } = sankeyGenerator(data as any)
-
   //
   // Draw the nodes
   //
@@ -234,7 +149,7 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
           />
         </g>
         <Node
-          node={node as SankeyNodeMinimal<{}, {}> & NodeType}
+          node={node as SankeyNodeMinimal<{}, {}> & SankeyNodeType}
           dimensions={dimensions}
         />
       </Fragment>
@@ -250,7 +165,6 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
     const path = linkGenerator(link)
     const color1 = COLORS[Number((link.source as any).index) % COLORS.length]
     const color2 = COLORS[Number((link.target as any).index) % COLORS.length]
-
     return (
       <g key={i}>
         <defs>
@@ -279,9 +193,9 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
             setTooltip({
               symbol,
               value: link.value,
-              apies: [link.source.apy, link.target.apy],
-              timestamp: link.timestamp,
-              hash: link.txHash,
+              apy: link?.source?.strategy?.apy || link?.target?.strategy?.apy,
+              timestamp: link.source.creation_time,
+              hash: link.source.hash,
               x: e.clientX,
               y: e.clientY,
             })
@@ -313,18 +227,23 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
 
 interface SankeyDiagramBasicDemoProperties extends ComponentProps<'div'> {}
 
-export const SankeyDiagramBasicDemo = (props: SankeyDiagramBasicDemoProperties) => {
+export const RebalanceChart = (props: SankeyDiagramBasicDemoProperties) => {
   const { className, ...rest } = props
-  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDC)
-  const { data, loading, error } = useRebalance({ symbol: activeStableType })
+  const [activeStableType, setStableType] = useState<StableType>(STABLE_TYPE.USDT)
+  const { data, isLoading, error } = useLastRebalances()
+
+  const sankeyData = useMemo(
+    () => createSankeyData(data, activeStableType),
+    [data, activeStableType],
+  )
 
   const renderBody = () => {
     switch (true) {
-      case loading:
+      case isLoading:
       case !!error: {
         return <Skeleton className="h-[18.4375rem] rounded-3xl lg:h-[36.1875rem]" />
       }
-      case !data?.links?.length: {
+      case !sankeyData?.links?.length: {
         return (
           <div className="flex h-[18.4375rem] items-center justify-center rounded-3xl bg-cards shadow-md lg:h-[36.1875rem]">
             No rebalance data was found.
@@ -332,7 +251,7 @@ export const SankeyDiagramBasicDemo = (props: SankeyDiagramBasicDemoProperties) 
         )
       }
       default: {
-        return <Sankey data={data} symbol={activeStableType} />
+        return <Sankey data={sankeyData} symbol={activeStableType} />
       }
     }
   }
@@ -356,72 +275,135 @@ const Node = ({
   node,
   dimensions,
 }: {
-  node: SankeyNodeMinimal<{}, {}> & NodeType
+  node: SankeyNodeMinimal<{}, {}> & SankeyNodeType
   dimensions: { width: number; height: number }
 }) => {
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {
+    if (node.action_type === 'BRIDGE') {
+      return (
+        <g key={node.index}>
+          <image
+            href={getAssetUrl(node.src_chain_id.toString())}
+            x={(node?.x1 ?? 0) - 24 * 2}
+            y={((node.y1 as number) + (node.y0 as number)) / 2 - 14}
+            width={24}
+            height={24}
+          />
+          <image
+            href={Arrow}
+            x={(node?.x1 ?? 0) - 32 / 2}
+            y={((node.y1 as number) + (node.y0 as number)) / 2 - 32 / 2}
+            width={32}
+            height={32}
+            transform={`rotate(-90, ${(node?.x1 ?? 0) - 32 / 2 + 14}, ${
+              ((node.y1 as number) + (node.y0 as number)) / 2
+            })`}
+          />
+          <image
+            href={getAssetUrl(node.dst_chain_id?.toString() ?? '')}
+            x={(node.x1 ?? 0) + 24}
+            y={((node.y1 as number) + (node.y0 as number)) / 2 - 14}
+            width={24}
+            height={24}
+          />
+        </g>
+      )
+    }
     return (
       <g key={node.index}>
-        {node.objects.map((object, i) => {
-          const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
-            object.name.match(new RegExp(key, 'i')),
-          )?.[1]
-
-          return (
-            <Fragment key={i}>
-              <image
-                href={assetUrl}
-                x={
-                  (node.x0 as number) < dimensions.width / 2
-                    ? (node.x1 as number) + i * 40 + 6
-                    : (node.x0 as number) - i * 40 - 30
-                }
-                y={((node.y1 as number) + (node.y0 as number)) / 2 - 12}
-                width={24}
-                height={24}
-              />
-            </Fragment>
-          )
-        })}
+        {[node.src_chain_id, node?.strategy?.protocol ?? node.dst_chain_id].map(
+          (object, i) => {
+            const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
+              object.toString().match(new RegExp(key, 'i')),
+            )?.[1]
+            return (
+              <Fragment key={i}>
+                <image
+                  href={assetUrl}
+                  x={
+                    (node.x0 as number) < dimensions.width / 2
+                      ? (node.x1 as number) + i * 40 + 6
+                      : (node.x0 as number) - i * 40 - 30
+                  }
+                  y={((node.y1 as number) + (node.y0 as number)) / 2 - 12}
+                  width={24}
+                  height={24}
+                />
+              </Fragment>
+            )
+          },
+        )}
+      </g>
+    )
+  }
+  if (node.action_type === 'BRIDGE') {
+    return (
+      <g key={node.index}>
+        <image
+          href={getAssetUrl(node.src_chain_id.toString())}
+          x={(node?.x1 ?? 0) - 28 * 2}
+          y={((node.y1 as number) + (node.y0 as number)) / 2 - 14}
+          width={28}
+          height={28}
+        />
+        <image
+          href={Arrow}
+          x={(node?.x1 ?? 0) - 40 / 2}
+          y={((node.y1 as number) + (node.y0 as number)) / 2 - 40 / 2}
+          width={40}
+          height={40}
+          transform={`rotate(-90, ${(node?.x1 ?? 0) - 28 / 2 + 14}, ${
+            ((node.y1 as number) + (node.y0 as number)) / 2
+          })`}
+        />
+        <image
+          href={getAssetUrl(node.dst_chain_id?.toString() ?? '')}
+          x={(node.x1 ?? 0) + 25}
+          y={((node.y1 as number) + (node.y0 as number)) / 2 - 14}
+          width={28}
+          height={28}
+        />
       </g>
     )
   }
   return (
     <g key={node.index}>
-      {node.objects.map((object, i) => {
-        const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
-          object.name.match(new RegExp(key, 'i')),
-        )?.[1]
+      {[node.src_chain_id, node?.strategy?.protocol ?? node.dst_chain_id].map(
+        (object, i) => {
+          const assetUrl = Object.entries(ICON_URLS_MAP).find(([key]) =>
+            object.toString().match(new RegExp(key, 'i')),
+          )?.[1]
 
-        return (
-          <Fragment key={i}>
-            <text
-              x={
-                (node.x0 as number) < dimensions.width / 2
-                  ? (node.x1 as number) + 6 + i * 170 + 40
-                  : (node.x0 as number) - 6 - i * 170 - 100
-              }
-              className="fill-text text-lg uppercase"
-              y={((node.y1 as number) + (node.y0 as number)) / 2}
-              dy="0.3em"
-            >
-              {object.name}
-            </text>
-            <image
-              href={assetUrl}
-              x={
-                (node.x0 as number) < dimensions.width / 2
-                  ? (node.x1 as number) + i * 170 + 10
-                  : (node.x0 as number) - i * 170 - 140
-              }
-              y={((node.y1 as number) + (node.y0 as number)) / 2 - 14}
-              width={28}
-              height={28}
-            />
-          </Fragment>
-        )
-      })}
+          return (
+            <Fragment key={i}>
+              <text
+                x={
+                  (node.x0 as number) < dimensions.width / 2
+                    ? (node.x1 as number) + 6 + i * 170 + 40
+                    : (node.x0 as number) - 6 - i * 170 - 100
+                }
+                className="fill-text text-lg uppercase"
+                y={((node.y1 as number) + (node.y0 as number)) / 2}
+                dy="0.3em"
+              >
+                {CHAIN_NAMES_BY_ID[object as keyof typeof CHAIN_NAMES_BY_ID] || object}
+              </text>
+              <image
+                href={assetUrl}
+                x={
+                  (node.x0 as number) < dimensions.width / 2
+                    ? (node.x1 as number) + i * 170 + 10
+                    : (node.x0 as number) - i * 170 - 140
+                }
+                y={((node.y1 as number) + (node.y0 as number)) / 2 - 14}
+                width={28}
+                height={28}
+              />
+            </Fragment>
+          )
+        },
+      )}
     </g>
   )
 }

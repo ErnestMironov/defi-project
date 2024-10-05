@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Arrow from '@assets/icons/arrow.svg'
 import { TokenIconComponent } from '@components/token-icon'
+import { formatAmount, formatPercentValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
@@ -31,13 +31,17 @@ export const D3TooltipComponent = forwardRef(
             symbol={tooltipContent?.symbol}
             className="size-6 overflow-visible"
           />
-          <p className="text-[1.375rem]">{tooltipContent?.value.toFixed(2)}</p>
+          <p className="text-[1.375rem]">
+            {formatAmount(tooltipContent?.value, {
+              notation: 'compact',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </p>
         </div>
         <div className="text-base text-text-80">
           <div className="flex items-center">
-            <span>{tooltipContent?.apies?.[0]?.toFixed(2)}%</span>
-            <Arrow className="mx-2 [&_path]:fill-text" />
-            <span>{tooltipContent?.apies?.[1]?.toFixed(2)}%</span>
+            <span>{formatPercentValue(tooltipContent?.apy)}</span>
             <span className="ml-1">APY</span>
           </div>
           <div className="mt-2">
