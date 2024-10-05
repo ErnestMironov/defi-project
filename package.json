@@ -12,7 +12,6 @@
     "@0xsquid/sdk": "^2.8.23",
     "@0xsquid/squid-types": "^0.1.84",
     "@amcharts/amcharts5": "^5.9.11",
-    "@apollo/client": "^3.10.6",
     "@covalenthq/client-sdk": "^1.0.2",
     "@floating-ui/react": "^0.26.20",
     "@radix-ui/react-accordion": "^1.2.0",
