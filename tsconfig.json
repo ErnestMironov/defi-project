@@ -34,8 +34,7 @@
       "@hooks/*": ["./src/lib/hooks/*"],
       "@store/*": ["./src/lib/store/*"],
       "@utils/*": ["./src/lib/utils/*"],
-      "@abi/*": ["./src/abi/*"],
-      "@codegen/*": ["./src/__generated__/*"]
+      "@abi/*": ["./src/abi/*"]
     }
   },
   "include": ["src"],
