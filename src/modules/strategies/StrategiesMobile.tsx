@@ -23,6 +23,7 @@ import {
   SORT_BY_TVL,
 } from '@constants/select-constant'
 import { StrategyMobileList } from '@modules/strategies/StrategyMobileList'
+import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
 
@@ -127,7 +128,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
     <div {...props} className={cn('flex flex-col', className)}>
       <div className="flex items-center justify-between">
         <SectionTitle>Strategies</SectionTitle>
-        {withLink && <ArrowLink to="/strategies" />}
+        {withLink && <ArrowLink to={ROUTES.STRATEGIES} />}
       </div>
       <div className="mt-4 flex items-center gap-2">
         <SearchInput

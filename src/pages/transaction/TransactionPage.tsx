@@ -107,6 +107,10 @@ export const TransactionPageMobile = (props: ComponentProps<'div'>) => {
   const { tx_hash } = useParams()
   const { data, isLoading } = useGetTransactionInfo(tx_hash as Address)
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   if (isLoading || !data) {
     return (
       <div className={cn('mt-8', className)} {...rest}>
