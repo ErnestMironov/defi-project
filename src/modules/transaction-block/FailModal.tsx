@@ -77,10 +77,9 @@ export const FailModal = () => {
               still={imageSource.still}
               autoplay
               pauseRef={(pause: any) => {
-                // Останавливаем GIF после одного проигрывания
                 setTimeout(() => {
                   pause()
-                }, 3000) // Предполагаем, что длительность GIF - 3 секунды
+                }, 3000)
               }}
             />
           </div>
