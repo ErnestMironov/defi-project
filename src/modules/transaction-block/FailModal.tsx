@@ -69,8 +69,8 @@ export const FailModal = () => {
 
   return (
     <Dialog open={currentModal === 'error'} onOpenChange={close}>
-      <DialogContent className="max-w-[38.75rem] p-0 pb-8 text-text max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 max-lg:rounded-b-none">
-        <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[2.5rem] bg-[rgba(222,_221,_236,_0.10)] px-8 pb-5">
+      <DialogContent className="max-w-[38.75rem] rounded-[2rem] p-0 pb-8 text-text max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 max-lg:rounded-b-none">
+        <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[2rem] bg-[rgba(222,_221,_236,_0.10)] px-8 pb-5">
           <div className="flex h-80 items-center justify-center overflow-hidden">
             <GifPlayer
               gif={imageSource.gif}

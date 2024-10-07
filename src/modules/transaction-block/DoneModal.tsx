@@ -149,7 +149,7 @@ export const DoneModal = () => {
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
       <DialogContent
         onClose={onClose}
-        className="flex flex-col items-center gap-8 self-stretch p-0 pb-8 max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 max-lg:rounded-b-none"
+        className="flex flex-col items-center gap-8 self-stretch p-0 pb-8 max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 rounded-[2rem] max-lg:rounded-b-none"
         showCloseButton
       >
         <div className="relative flex w-full flex-col items-center justify-center rounded-[2rem] bg-[rgba(222,_221,_236,_0.10)] px-8 pb-5">
