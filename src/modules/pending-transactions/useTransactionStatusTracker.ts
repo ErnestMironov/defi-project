@@ -1,10 +1,11 @@
-import { fetchWithdrawStatus } from '@api/maat-finance/useGetWithdrawStatus'
+import { getEvents } from '@api/queries/useEvents'
 import type { ChainType } from '@constants/chains'
 import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
 import { waitForSuccessStatus } from '@modules/transaction-block/deposit/hooks/useSwap'
 import type { IPendingTransactionData } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { type Config, waitForTransactionReceipt } from '@wagmi/core'
+import type { AxiosError } from 'axios'
 import { useCallback, useEffect } from 'react'
 import type { Address } from 'viem'
 import { useConfig } from 'wagmi'
@@ -97,9 +98,12 @@ export const useTransactionStatusChecker = () => {
   const checkWithdrawStatus = useCallback(
     async (tx: IPendingTransactionData) => {
       try {
-        const { data } = await fetchWithdrawStatus(tx.transactionHash as `0x${string}`)
+        const { data } = await getEvents({
+          hash_or_address: tx.transactionHash as `0x${string}`,
+          limit: 1,
+        })
 
-        switch (data) {
+        switch (data.items[0].status) {
           case 'success': {
             updateTransaction(tx.transactionHash, 'success')
             setTimeout(() => {
@@ -116,6 +120,10 @@ export const useTransactionStatusChecker = () => {
           }
         }
       } catch (error) {
+        if ((error as AxiosError)?.response?.status === 404) {
+          return false
+        }
+
         console.error('Error checking withdraw status:', error)
         updateTransaction(tx.transactionHash, 'error')
         return true
