@@ -101,7 +101,7 @@ export const DepositInput = () => {
     .div(10 ** (asset?.contract_decimals || 6))
     .toString()
 
-  const prettyAssetBalance = formatValueWithPrecision(assetBalance, 8)
+  const prettyAssetBalance = formatValueWithPrecision(assetBalance, 5)
 
   const [error, setError] = useState('')
 

@@ -95,7 +95,7 @@ export const SelectWithdrawAssetModal = () => {
       isLoading={isUserSharesLoading}
       renderTrigger={(selectedItem) => (
         <ChoiceBox
-          value={selectedItem?.stable?.toUpperCase() || 'Any token'}
+          value={selectedItem?.stable?.toUpperCase() || 'Select asset'}
           className="min-w-[10.5rem]"
           icon={
             <TokenWithNetwork
