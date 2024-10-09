@@ -25,7 +25,9 @@ interface MultiSelectProperties
   label?: string
   classNames?: {
     content?: string
+    trigger?: string
   }
+  align?: 'start' | 'center' | 'end'
 }
 
 interface MultiSelectTriggerProperties
@@ -105,7 +107,7 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
         )}
       >
         {renderValue()}
-        <ArrowDown className="size-4 transition group-data-[state=open]:rotate-180" />
+        <ArrowDown className="ml-1 size-4 transition group-data-[state=open]:rotate-180" />
       </div>
     </button>
   )
@@ -120,6 +122,7 @@ export const MultiSelect = ({
   className,
   classNames,
   variant,
+  align = 'start',
 }: MultiSelectProperties) => {
   const [open, setOpen] = React.useState(false)
   const reference = React.useRef<HTMLButtonElement>(null)
@@ -131,7 +134,7 @@ export const MultiSelect = ({
           value={value}
           placeholder={placeholder}
           label={label}
-          className={className}
+          className={cn(className, classNames?.trigger)}
           variant={variant}
         />
       </PopoverTrigger>
@@ -142,7 +145,7 @@ export const MultiSelect = ({
             : `${reference.current?.offsetWidth}px`,
         }}
         sideOffset={10}
-        align="start"
+        align={align}
         className={cn(
           'w-fit rounded-xl p-6 max-h-96 overflow-y-scroll pointer-events-auto',
           multiSelectVariants({ variant }),

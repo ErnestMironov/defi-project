@@ -85,11 +85,15 @@ module.exports = {
         },
         'red': {
           100: 'var(--red-100)',
+          50: 'var(--red-50)',
           80: 'var(--red-80)',
           15: 'var(--red-15)',
           5: 'var(--red-5)',
         },
-        'orange-15': 'var(--orange-15)',
+        'orange': {
+          100: 'var(--orange-100)',
+          15: 'var(--orange-15)',
+        },
         'green': {
           100: 'var(--green-100)',
           15: 'var(--green-15)',
@@ -102,6 +106,7 @@ module.exports = {
           80: 'var(--gray-80)',
           70: 'var(--gray-70)',
           50: 'var(--gray-50)',
+          20: 'var(--gray-20)',
         },
         'dark-bg': 'var(--dark-bg)',
         'cards': 'var(--cards)',

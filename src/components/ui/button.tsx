@@ -22,14 +22,15 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50',
         link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50',
-        container: 'bg-white text-text hover:bg-[#F1F0F9] disabled:bg-slate-100',
+        container:
+          'bg-cards text-text hover:bg-[#F1F0F9] disabled:bg-slate-100 dark:hover:bg-[#29273B]',
       },
       size: {
         default:
           'h-auto rounded-2xl px-12 py-5 text-[1.25rem] font-bold uppercase leading-[120%]',
         sm: 'h-9 rounded-md px-3',
         lg: 'rounded-xl px-9 py-6 text-lg max-lg:py-[0.91rem] max-lg:text-base',
-        icon: 'size-10 rounded-xl p-3',
+        icon: 'size-12 rounded-xl p-3',
       },
     },
     defaultVariants: {

@@ -32,7 +32,7 @@ export const MobileFooterMenu = ({
   callback,
   ...rest
 }: HeaderMenuProperties) => {
-  const menu = useShortMenuArray()
+  const menu = useShortMenuArray(true)
   return (
     <ul
       className={cn('flex flex-col items-center gap-6 [&_*]:text-base', className)}
@@ -123,13 +123,11 @@ export const MobileSidebarMenu = ({
   callback,
   ...rest
 }: HeaderMenuProperties) => {
-  const menu = useShortMenuArray()
+  const menu = useShortMenuArray(true)
+
   return (
     <ul
-      className={cn(
-        'flex flex-col gap-16 align-end flex-1 items-start justify-center',
-        className,
-      )}
+      className={cn('flex flex-col gap-16 items-center justify-center', className)}
       {...rest}
     >
       {menu.map((menuItem) => {
@@ -240,7 +238,7 @@ export const NavMobileLinkMenuItem = ({
       key={label}
       className={({ isActive }) =>
         clsx(
-          'relative flex cursor-pointer flex-col items-start text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem]',
+          'relative flex cursor-pointer flex-col items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem]',
           {
             '[&>span]:text-main-100 [&>span]:underline decoration-[2px] underline-offset-4':
               isActive,

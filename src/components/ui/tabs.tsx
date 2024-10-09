@@ -21,12 +21,18 @@ TabsList.displayName = TabsPrimitive.List.displayName
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, reference) => (
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
+    variant?: 'base' | 'unstyled'
+  }
+>(({ className, variant = 'base', ...props }, reference) => (
   <TabsPrimitive.Trigger
     ref={reference}
     className={cn(
-      'inline-flex uppercase bg-[rgba(153,_152,_184,_0.10)] items-center justify-center whitespace-nowrap rounded-[1.25rem] max-lg:rounded-[0.75rem] p-6 max-lg:py-4 max-lg:px-[2.5rem] text-[1.25rem] max-lg:text-base font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-main-15 data-[state=active]:text-main-100',
+      variant === 'unstyled' && 'data-[state=active]:text-text text-text-50 text-lg',
+      variant === 'base' &&
+        'uppercase bg-[rgba(153,_152,_184,_0.10)] rounded-[1.25rem] max-lg:rounded-[0.75rem] p-6 max-lg:py-4 max-lg:px-[2.5rem] text-[1.25rem] max-lg:text-base font-bold data-[state=active]:bg-main-15 data-[state=active]:text-main-100',
+
+      'inline-flex items-center justify-center whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       className,
     )}
     {...props}

@@ -1,14 +1,19 @@
 import Burger from '@assets/icons/burger.svg'
 import EmptyWallet from '@assets/icons/empty-wallet.svg'
 import Close from '@assets/icons/menu-close.svg'
+import BgDark from '@assets/images/background-dark.png'
+import BgLight from '@assets/images/background-light.jpg'
 import { Logo } from '@components/ui/logo'
 import { useDisclosure } from '@hooks/common/useDisclosure'
-import { ThemeToggle } from '@modules/theme/ThemeToggler'
+import { useScrollLock } from '@hooks/common/useScrollLock'
+import { useTheme } from '@modules/theme/ThemeProvider'
+import { ThemeTogglerV1 } from '@modules/theme/ThemeTogglerV1'
+import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import clsx from 'clsx'
 import { type ComponentProps, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { MobileSidebarMenu } from './HeaderMenu'
 
@@ -18,9 +23,20 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
   const { className, ...rest } = props
   const [opened, { toggle, close }] = useDisclosure()
   const { open: openConnectModal } = useWeb3Modal()
+  const { lock, unlock } = useScrollLock()
+
   useEffect(() => {
-    document.body.style.overflow = opened ? 'hidden' : 'auto'
-  }, [opened])
+    if (opened) {
+      lock()
+    } else {
+      unlock()
+    }
+  }, [opened, lock, unlock])
+
+  const { theme } = useTheme()
+  const { pathname } = useLocation()
+  const customBgPage = [ROUTES.PORTFOLIO, ROUTES.DEPOSIT].includes(pathname as never)
+
   return (
     <header {...rest} className={clsx('flex items-center', className)}>
       <Link onClick={close} to="/" className="flex items-center justify-center">
@@ -42,9 +58,16 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
           opened && 'translate-x-0',
         )}
       >
+        {customBgPage && (
+          <img
+            src={theme === 'light' ? BgLight : BgDark}
+            alt="background-light"
+            className="pointer-events-none fixed inset-0 z-[-1] h-screen w-screen bg-bg object-cover"
+          />
+        )}
         <div className="space-y-16">
           <MobileSidebarMenu callback={close} />
-          <ThemeToggle />
+          <ThemeTogglerV1 className="mx-auto" />
         </div>
       </div>
     </header>
