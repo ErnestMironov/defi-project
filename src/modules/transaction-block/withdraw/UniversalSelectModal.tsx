@@ -48,7 +48,7 @@ export function UniversalSelectModal<T, U>({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-2">
+        <div className="max-h-[60vh] space-y-2 overflow-scroll">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center gap-2">
               <Lottie className="w-60" animationData={horus} loop />

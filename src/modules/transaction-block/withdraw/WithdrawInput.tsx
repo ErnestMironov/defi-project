@@ -4,7 +4,7 @@ import { Button } from '@components/ui/button'
 import { Switch } from '@components/ui/switch.tsx'
 import type { ChainType } from '@constants/chains.ts'
 import { cn } from '@utils/cn'
-import { formatAmount } from '@utils/formatValue.ts'
+import { formatAmount, formatValueWithPrecision } from '@utils/formatValue.ts'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
@@ -113,6 +113,8 @@ export const WithdrawInput = () => {
     )
   }
 
+  const prettyMaxBalance = formatValueWithPrecision(maxBalance, 5)
+
   return (
     <div>
       <InputWrapper
@@ -147,12 +149,12 @@ export const WithdrawInput = () => {
             <div className="flex items-center">
               <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
               <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {Number(maxBalance).toFixed(6)}
+                {prettyMaxBalance}
               </p>
               <button
                 type="button"
                 className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                onClick={() => maxBalance && handleInputChange(maxBalance)}
+                onClick={() => maxBalance && handleInputChange(prettyMaxBalance)}
               >
                 Max
               </button>

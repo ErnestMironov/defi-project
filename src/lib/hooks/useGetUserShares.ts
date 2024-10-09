@@ -66,7 +66,7 @@ export const useUserShares = (userAddress?: Address) => {
     const sharesMap: Record<string, TokenShares> = {}
     const newErrors: Errors = []
 
-    await Promise.all(
+    await Promise.allSettled(
       networks.map(async ({ chain, vaultAddress, token }) => {
         try {
           const client = createPublicClient({
