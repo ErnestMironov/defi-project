@@ -87,7 +87,7 @@ const SCAN_TX_PATH_BY_CHAIN_ID = {
 }
 
 export const ScanLink = (props: ScanLinkProperties) => {
-  const { chainId, className, address, txHash, ...rest } = props
+  const { chainId, className, address, txHash, children, ...rest } = props
   const path = address
     ? SCAN_ADDRESS_PATH_BY_CHAIN_ID[
         chainId as keyof typeof SCAN_ADDRESS_PATH_BY_CHAIN_ID
@@ -105,7 +105,7 @@ export const ScanLink = (props: ScanLinkProperties) => {
       }}
       {...rest}
     >
-      <ScanLogo className={cn('size-full overflow-visible', className)} />
+      {children || <ScanLogo className={cn('size-full overflow-visible', className)} />}
     </Link>
   )
 }

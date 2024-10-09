@@ -23,7 +23,7 @@ export function ThemeTogglerV1(props: ThemeToggleProperties) {
       variant="container"
       onClick={handleThemeToggle}
       className={cn(
-        'flex size-12 justify-center items-center *:size-[1.75rem] overflow-hidden',
+        'flex size-12 justify-center items-center overflow-hidden',
         className,
       )}
     >
@@ -37,7 +37,11 @@ export function ThemeTogglerV1(props: ThemeToggleProperties) {
             y: { type: 'spring', stiffness: 500, damping: 25 },
           }}
         >
-          {theme === 'dark' ? <MoonV1Svg /> : <SunV1Svg />}
+          {theme === 'dark' ? (
+            <MoonV1Svg className="size-7 overflow-visible" />
+          ) : (
+            <SunV1Svg className="size-7 overflow-visible" />
+          )}
         </motion.div>
       </AnimatePresence>
     </Button>

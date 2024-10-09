@@ -1,5 +1,6 @@
 export const ROUTES = {
   DEPOSIT: '/',
+  PORTFOLIO: '/portfolio',
   ANALYTICS: '/analytics',
   TOKENS: '/analytics/tokens',
   TOKEN: '/analytics/tokens/:symbol',
