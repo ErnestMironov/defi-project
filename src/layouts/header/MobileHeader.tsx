@@ -8,9 +8,9 @@ import { useDisclosure } from '@hooks/common/useDisclosure'
 import { useScrollLock } from '@hooks/common/useScrollLock'
 import { useTheme } from '@modules/theme/ThemeProvider'
 import { ThemeTogglerV1 } from '@modules/theme/ThemeTogglerV1'
+import { useAppKit } from '@reown/appkit/react'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
-import { useWeb3Modal } from '@web3modal/wagmi/react'
 import clsx from 'clsx'
 import { type ComponentProps, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
@@ -22,9 +22,8 @@ interface MobileHeaderProperties extends ComponentProps<'div'> {}
 export const MobileHeader = (props: MobileHeaderProperties) => {
   const { className, ...rest } = props
   const [opened, { toggle, close }] = useDisclosure()
-  const { open: openConnectModal } = useWeb3Modal()
+  const { open: openConnectModal } = useAppKit()
   const { lock, unlock } = useScrollLock()
-
   useEffect(() => {
     if (opened) {
       lock()

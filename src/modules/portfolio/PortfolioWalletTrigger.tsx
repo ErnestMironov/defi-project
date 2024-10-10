@@ -5,9 +5,9 @@ import Metamask from '@assets/icons/metamask.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Button } from '@components/ui/button'
 import { Drawer, DrawerContent } from '@components/ui/drawer'
+import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
-import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { type ComponentProps, useMemo, useState } from 'react'
 import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -21,7 +21,7 @@ interface PortfolioWalletTriggerProperties extends ComponentProps<'div'> {}
 
 export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) => {
   const { address } = useAccount()
-  const { open: openConnectModal } = useWeb3Modal()
+  const { open: openConnectModal } = useAppKit()
   const [open, setOpen] = useState(false)
 
   const { data: assetsData, isLoading: isLoadingAssets } = usePortfolioAssets(

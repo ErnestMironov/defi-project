@@ -1,9 +1,16 @@
-import { createWeb3Modal } from '@web3modal/wagmi/react'
-import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import type { Chain } from 'viem'
-import { arbitrum, base, bsc, mainnet, mantle, optimism, polygon } from 'viem/chains'
+import type { AppKitNetwork } from '@reown/appkit/networks'
+import {
+  arbitrum,
+  base,
+  bsc,
+  mainnet,
+  mantle,
+  optimism,
+  polygon,
+} from '@reown/appkit/networks'
+import { createAppKit } from '@reown/appkit/react'
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
-export const XFI_CHAIN_ID = 4157
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = '50045bde677b3817fbdad11aaa86c090'
 
@@ -15,7 +22,7 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
 
-const chains = [
+const networks: AppKitNetwork[] = [
   mainnet,
   {
     ...optimism,
@@ -30,21 +37,21 @@ const chains = [
   base,
   mantle,
   bsc,
-] as const
-console.log('🚀 ~ optimism:', optimism)
+]
 
-export const wagmiConfig = defaultWagmiConfig({
-  chains,
+export const wagmiAdapter = new WagmiAdapter({
+  networks,
   projectId,
-  metadata,
 })
 
-createWeb3Modal({
+createAppKit({
   themeMode: 'light',
-  wagmiConfig: wagmiConfig as any,
+  adapters: [wagmiAdapter],
+  networks: [mainnet, optimism, arbitrum, polygon, base, mantle, bsc],
+  metadata,
   projectId,
-  enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  enableOnramp: true, // Optional - false as default
+  features: {
+    analytics: true, // Optional - defaults to your Cloud configuration
+    onramp: true, // Optional - false as default
+  },
 })
-
-export const isAllowedChain = (chain?: Chain) => chain?.id === XFI_CHAIN_ID
