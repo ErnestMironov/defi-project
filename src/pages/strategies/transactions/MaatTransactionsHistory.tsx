@@ -31,7 +31,7 @@ export const MaatTransactionsHistory: React.FC<TransactionsHistoryProperties> = 
           value: [],
           placeholder: 'All Actions',
         },
-        status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
+        status: { items: SELECT_STATUSES, value: [], placeholder: 'All Status' },
         token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
         chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
       }}
