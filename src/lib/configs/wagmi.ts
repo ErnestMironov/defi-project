@@ -1,10 +1,12 @@
 import type { AppKitNetwork } from '@reown/appkit/networks'
 import {
   arbitrum,
+  avalanche,
   base,
   bsc,
   mainnet,
   mantle,
+  metis,
   optimism,
   polygon,
 } from '@reown/appkit/networks'
@@ -23,7 +25,7 @@ const metadata = {
 }
 
 const networks: AppKitNetwork[] = [
-  mainnet,
+  arbitrum,
   {
     ...optimism,
     rpcUrls: {
@@ -32,11 +34,13 @@ const networks: AppKitNetwork[] = [
       },
     },
   },
-  arbitrum,
   polygon,
   base,
   mantle,
+  metis,
   bsc,
+  avalanche,
+  mainnet,
 ]
 
 export const wagmiAdapter = new WagmiAdapter({
@@ -47,7 +51,26 @@ export const wagmiAdapter = new WagmiAdapter({
 createAppKit({
   themeMode: 'light',
   adapters: [wagmiAdapter],
-  networks: [mainnet, optimism, arbitrum, polygon, base, mantle, bsc],
+  networks: [
+    arbitrum,
+    {
+      ...optimism,
+      rpcUrls: {
+        default: {
+          http: [
+            'https://optimism-mainnet.infura.io/v3/ec25fc33eb624f13a9012f6174f20d68',
+          ],
+        },
+      },
+    },
+    polygon,
+    base,
+    mantle,
+    metis,
+    bsc,
+    avalanche,
+    mainnet,
+  ],
   metadata,
   projectId,
   features: {
