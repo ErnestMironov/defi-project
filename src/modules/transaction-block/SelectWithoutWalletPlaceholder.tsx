@@ -1,7 +1,7 @@
-import { useWeb3Modal } from '@web3modal/wagmi/react'
+import { useAppKit } from '@reown/appkit/react'
 
 export const SelectWithoutWalletPlaceholder = () => {
-  const { open: openConnectModal } = useWeb3Modal()
+  const { open: openConnectModal } = useAppKit()
 
   return (
     <button

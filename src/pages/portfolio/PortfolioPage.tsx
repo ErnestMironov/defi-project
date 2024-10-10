@@ -6,9 +6,9 @@ import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
 import { PortfolioValueTooltip } from '@modules/portfolio/PortfolioValueTooltip'
+import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
-import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { type ComponentProps, useEffect, useMemo } from 'react'
 import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -18,7 +18,7 @@ interface PortfolioPageProperties extends ComponentProps<'div'> {}
 export const PortfolioPage = (props: PortfolioPageProperties) => {
   const { className, ...rest } = props
   const { address } = useAccount()
-  const { open } = useWeb3Modal()
+  const { open } = useAppKit()
   useEffect(() => {
     if (!address) {
       open()

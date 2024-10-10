@@ -1,7 +1,7 @@
 import Metamask from '@assets/icons/metamask.svg'
 import { Button, type ButtonProperties } from '@components/ui/button'
+import { useAppKit } from '@reown/appkit/react'
 import { shortenAddress } from '@utils/transform'
-import { useWeb3Modal } from '@web3modal/wagmi/react'
 import clsx from 'clsx'
 import { useAccount } from 'wagmi'
 
@@ -10,7 +10,7 @@ interface IConnectWalletProperties {
 }
 
 export const ConnectWallet = ({ btnProps }: IConnectWalletProperties) => {
-  const { open: openConnectModal } = useWeb3Modal()
+  const { open: openConnectModal } = useAppKit()
 
   const { address } = useAccount()
 
