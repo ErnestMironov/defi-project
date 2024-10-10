@@ -7,7 +7,7 @@ import { Logo } from '@components/ui/logo'
 import { useDisclosure } from '@hooks/common/useDisclosure'
 import { useScrollLock } from '@hooks/common/useScrollLock'
 import { useTheme } from '@modules/theme/ThemeProvider'
-import { ThemeTogglerV1 } from '@modules/theme/ThemeTogglerV1'
+import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { useAppKit } from '@reown/appkit/react'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
@@ -66,7 +66,7 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
         )}
         <div className="space-y-16">
           <MobileSidebarMenu callback={close} />
-          <ThemeTogglerV1 className="mx-auto" />
+          <ThemeToggler className="mx-auto" />
         </div>
       </div>
     </header>

@@ -2,7 +2,7 @@ import { Logo } from '@components/ui/logo'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
 import { PortfolioWalletDrawer } from '@modules/portfolio/PortfolioWalletTrigger'
-import { ThemeTogglerV1 } from '@modules/theme/ThemeTogglerV1'
+import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import clsx from 'clsx'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
@@ -27,7 +27,7 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
       </Link>
       <HeaderMenu className="justify-self-center" />
       <div className="flex items-center gap-3 justify-self-end">
-        <ThemeTogglerV1 />
+        <ThemeToggler />
         <PortfolioWalletDrawer />
         <ConnectWallet btnProps={{ className: 'ml-1' }} />
       </div>

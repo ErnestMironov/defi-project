@@ -49,8 +49,8 @@ export const wagmiAdapter = new WagmiAdapter({
 })
 
 createAppKit({
-  themeMode: 'light',
   adapters: [wagmiAdapter],
+  defaultNetwork: arbitrum,
   networks: [
     arbitrum,
     {
@@ -76,5 +76,7 @@ createAppKit({
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration
     onramp: true, // Optional - false as default
+    socials: false,
+    email: false,
   },
 })
