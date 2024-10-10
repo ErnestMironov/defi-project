@@ -34,7 +34,8 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
       case 'DEPOSIT': {
         return <DepositIcon className="size-full" />
       }
-      case 'WITHDRAW': {
+      case 'WITHDRAW':
+      case 'WITHDRAW_REQUEST': {
         return <WithdrawIcon className="size-full" />
       }
       default: {
@@ -61,7 +62,7 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
         </div>
         <TokenIconComponent
           symbol={event.src_chain_id}
-          className="absolute bottom-0 right-0 size-3 rounded-full outline outline-[1.5px] outline-white"
+          className="absolute -right-0.5 bottom-0 size-3.5 rounded-full border border-cards"
         />
       </div>
       <div className="ml-3 space-y-1">

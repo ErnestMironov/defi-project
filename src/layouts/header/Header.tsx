@@ -28,8 +28,8 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
       <HeaderMenu className="justify-self-center" />
       <div className="flex items-center gap-3 justify-self-end">
         <ThemeTogglerV1 />
-        <PortfolioWalletDrawer className="mr-1" />
-        <ConnectWallet />
+        <PortfolioWalletDrawer />
+        <ConnectWallet btnProps={{ className: 'ml-1' }} />
       </div>
     </header>
   )

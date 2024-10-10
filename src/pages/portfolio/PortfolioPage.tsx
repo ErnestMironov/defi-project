@@ -1,14 +1,15 @@
 import { usePortfolioAssets } from '@api/queries/usePortfolioAssets'
 import { usePortfolioYield } from '@api/queries/usePortfolioYield'
 import Metamask from '@assets/icons/metamask.svg'
-import Tooltip from '@assets/icons/tooltip.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
+import { PortfolioValueTooltip } from '@modules/portfolio/PortfolioValueTooltip'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
-import { type ComponentProps, useMemo } from 'react'
+import { useWeb3Modal } from '@web3modal/wagmi/react'
+import { type ComponentProps, useEffect, useMemo } from 'react'
 import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -17,6 +18,12 @@ interface PortfolioPageProperties extends ComponentProps<'div'> {}
 export const PortfolioPage = (props: PortfolioPageProperties) => {
   const { className, ...rest } = props
   const { address } = useAccount()
+  const { open } = useWeb3Modal()
+  useEffect(() => {
+    if (!address) {
+      open()
+    }
+  }, [address, open])
   const { data: assetsData, isLoading: isLoadingAssets } = usePortfolioAssets(
     address as Address,
   )
@@ -41,7 +48,7 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
   return (
     <div className={cn('mt-8', className)} {...rest}>
       {/* wallet */}
-      <div className="flex items-center">
+      <div className={cn('flex items-center', !address && 'hidden')}>
         <Metamask className="size-5" />
         <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
         <CopyButton text={address as string} className="ml-2 size-5" />
@@ -49,9 +56,9 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
       {/* header */}
       <div className="mt-8 flex items-start max-lg:gap-8 lg:justify-between">
         <div>
-          <h6 className="flex items-center text-gray-100">
+          <h6 className="flex items-center gap-[0.38rem] text-gray-100">
             <span>Portfolio Value</span>
-            <Tooltip className="ml-[0.38rem]" />
+            <PortfolioValueTooltip />
           </h6>
           <SeparatedUsdValue
             loading={isLoadingAssets}

@@ -1,7 +1,8 @@
-import BgDark from '@assets/images/background-dark.png'
+import BgDark from '@assets/images/background-dark.jpg'
 import BgLight from '@assets/images/background-light.jpg'
 import { useTheme } from '@modules/theme/ThemeProvider'
 import { ROUTES } from '@routes/routes'
+import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 
@@ -26,7 +27,10 @@ export const BaseLayout = (_props: BaseLayoutProperties) => {
         <img
           src={theme === 'light' ? BgLight : BgDark}
           alt="background-light"
-          className="pointer-events-none fixed inset-0 z-[-1] h-screen w-screen bg-bg object-cover"
+          className={cn(
+            'pointer-events-none fixed inset-0 z-[-1] h-screen w-screen bg-bg object-cover',
+            theme !== 'light' && 'opacity-70',
+          )}
         />
       )}
     </>

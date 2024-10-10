@@ -7,6 +7,10 @@
   }
 }
 
+svg {
+  overflow: visible;
+}
+
 @layer base {
   html {
     font-size: 0.83vw;

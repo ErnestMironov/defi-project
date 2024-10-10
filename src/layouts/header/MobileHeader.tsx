@@ -1,7 +1,7 @@
 import Burger from '@assets/icons/burger.svg'
 import EmptyWallet from '@assets/icons/empty-wallet.svg'
 import Close from '@assets/icons/menu-close.svg'
-import BgDark from '@assets/images/background-dark.png'
+import BgDark from '@assets/images/background-dark.jpg'
 import BgLight from '@assets/images/background-light.jpg'
 import { Logo } from '@components/ui/logo'
 import { useDisclosure } from '@hooks/common/useDisclosure'
