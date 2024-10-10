@@ -44,9 +44,6 @@ export const AllAssets = (props: AllAssetsProperties) => {
               {tokens.map((token, i) => (
                 <AssetItem key={i} token={token} />
               ))}
-              {tokens.map((token, i) => (
-                <AssetItem key={i} token={token} />
-              ))}
             </div>
           </div>
         )

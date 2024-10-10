@@ -1,5 +1,5 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
-import type { ButtonProperties } from '@components/ui/button'
+import Metamask from '@assets/icons/metamask.svg'
+import { Button, type ButtonProperties } from '@components/ui/button'
 import { shortenAddress } from '@utils/transform'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import clsx from 'clsx'
@@ -15,27 +15,24 @@ export const ConnectWallet = ({ btnProps }: IConnectWalletProperties) => {
   const { address } = useAccount()
 
   return (
-    <button
+    <Button
+      variant="container"
       type="button"
       {...btnProps}
       className={clsx(
-        'flex items-center gap-2  text-[1.25rem] font-normal uppercase leading-[120%] tracking-[-0.0125rem] hover:text-gray-100',
+        'flex items-center gap-3 rounded-xl px-6 py-3  text-[1.25rem] font-normal uppercase leading-[120%] tracking-[-0.0125rem]',
         btnProps?.className,
       )}
       onClick={() => openConnectModal()}
     >
       {address ? (
         <>
-          <span className="normal-case">{shortenAddress(address)}</span>{' '}
-          <ArrowDown
-            className={clsx(
-              'size-4 transition-all duration-150 dark:[&_path]:stroke-white',
-            )}
-          />
+          <Metamask className="size-5" />
+          <span className="normal-case">{shortenAddress(address)}</span>
         </>
       ) : (
         <span>CONNECT WALLET</span>
       )}
-    </button>
+    </Button>
   )
 }

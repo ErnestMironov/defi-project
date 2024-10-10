@@ -2,24 +2,28 @@ import { usePortfolioAssets } from '@api/queries/usePortfolioAssets'
 import { usePortfolioYield } from '@api/queries/usePortfolioYield'
 import EmptyWallet from '@assets/icons/empty-wallet.svg'
 import Metamask from '@assets/icons/metamask.svg'
-import Tooltip from '@assets/icons/tooltip.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Button } from '@components/ui/button'
-import { Drawer, DrawerContent, DrawerTrigger } from '@components/ui/drawer'
+import { Drawer, DrawerContent } from '@components/ui/drawer'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
-import { type ComponentProps, useMemo } from 'react'
+import { useWeb3Modal } from '@web3modal/wagmi/react'
+import { type ComponentProps, useMemo, useState } from 'react'
 import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { ActionButtons } from './ActionButtons'
 import { SeparatedUsdValue } from './components/SeparatedUsdValue'
 import { UserActivityTabs } from './maat-activity/UserActivityTabs'
+import { PortfolioValueTooltip } from './PortfolioValueTooltip'
 
 interface PortfolioWalletTriggerProperties extends ComponentProps<'div'> {}
 
 export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) => {
   const { address } = useAccount()
+  const { open: openConnectModal } = useWeb3Modal()
+  const [open, setOpen] = useState(false)
+
   const { data: assetsData, isLoading: isLoadingAssets } = usePortfolioAssets(
     address as Address,
   )
@@ -35,19 +39,40 @@ export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) 
   }, [assetsData])
 
   const totalYield = useMemo(() => {
-    return Object.values(yieldData ?? {}).reduce(
+    const yieldSum = Object.values(yieldData ?? {}).reduce(
       (accumulator, value) => accumulator + value,
       0,
     )
+    if (yieldSum >= 0) {
+      return yieldSum
+    }
+    return 0
   }, [yieldData])
 
+  // TODO: Add pending transactions
+  const txCount = 4
+
   return (
-    <Drawer direction="right">
-      <DrawerTrigger asChild>
-        <Button size="icon" variant="container">
-          <EmptyWallet className="size-7 [&_path]:fill-orange-100" />
-        </Button>
-      </DrawerTrigger>
+    <Drawer direction="right" open={open} onOpenChange={setOpen}>
+      {/* <DrawerTrigger asChild> */}
+      <Button
+        size="icon"
+        variant="container"
+        className="relative"
+        onClick={() => {
+          if (address) {
+            setOpen(true)
+          } else {
+            openConnectModal()
+          }
+        }}
+      >
+        <EmptyWallet className="size-7 [&_path]:fill-orange-100" />
+        <div className="absolute right-[-0.3125rem] top-[-0.3125rem] size-4 rounded-full bg-orange-100 text-center align-middle text-[0.75rem]/[1rem] font-bold text-white ring-2 ring-white">
+          {txCount}
+        </div>
+      </Button>
+      {/* </DrawerTrigger> */}
       <DrawerContent
         position="right"
         withDraggable={false}
@@ -64,9 +89,9 @@ export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) 
           {/* header */}
           <div className="mt-[1.56rem] flex items-start justify-between">
             <div>
-              <h6 className="flex items-center text-lg text-gray-100">
+              <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">
                 <span>Portfolio Value</span>
-                <Tooltip className="ml-[0.38rem]" />
+                <PortfolioValueTooltip />
               </h6>
               <SeparatedUsdValue
                 loading={isLoadingAssets}

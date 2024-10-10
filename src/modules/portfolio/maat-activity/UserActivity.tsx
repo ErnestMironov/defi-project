@@ -6,6 +6,7 @@ import type { ComponentProps } from 'react'
 import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
+import { EmptyTransactionsState } from './EmptyTransactionsState'
 import { UserTransactionItem, UserTransactionItemSkeleton } from './UserTransactionItem'
 
 interface UserActivityProperties extends ComponentProps<'div'> {}
@@ -36,12 +37,16 @@ export const UserActivity = (props: UserActivityProperties) => {
       </div>
     )
 
+  if (data?.length === 0) {
+    return <EmptyTransactionsState />
+  }
+
   return (
     <div {...rest} className={cn('', className)}>
       {!!filteredByStatusData?.pending.length && (
         <>
           <h6 className="text-base text-gray-100">In Progress</h6>
-          <div className={cn('space-y-6 mt-5 max-h-[17rem] overflow-y-auto -mr-2 pr-2')}>
+          <div className={cn('space-y-6 mt-5 overflow-y-auto -mr-2 pr-2')}>
             {filteredByStatusData?.pending.map((event, i) => (
               <UserTransactionItem key={i} event={event} />
             ))}
@@ -50,8 +55,8 @@ export const UserActivity = (props: UserActivityProperties) => {
       )}
       {!!filteredByStatusData?.completed.length && (
         <>
-          <h6 className="text-base text-gray-100">Completed</h6>
-          <div className={cn('space-y-6 mt-5 max-h-[17rem] overflow-y-auto -mr-2 pr-2')}>
+          <h6 className="mt-6 text-base text-gray-100">Completed</h6>
+          <div className={cn('space-y-6 mt-5 overflow-y-auto -mr-2 pr-2')}>
             {filteredByStatusData?.completed.map((event, i) => (
               <UserTransactionItem key={i} event={event} />
             ))}
