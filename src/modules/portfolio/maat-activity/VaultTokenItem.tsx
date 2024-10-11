@@ -1,31 +1,33 @@
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import type { TokenShares } from '@hooks/useGetUserShares'
 import { cn } from '@utils/cn'
 import { formatAmount, formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
+import { formatUnits } from 'viem'
 
 interface VaultTokenItemProperties extends ComponentProps<'div'> {
-  symbol: string
-  value: number
+  value: TokenShares
   apy: number
 }
 
 export const VaultTokenItem = (props: VaultTokenItemProperties) => {
-  const { symbol, value, apy, className, ...rest } = props
+  const { value: share, apy, className, ...rest } = props
+  const { balance, decimals, stable } = share
   return (
     <div className={cn('flex items-center gap-3', className)} {...rest}>
-      <TokenIconComponent symbol={symbol} className="size-[2.125rem]" />
+      <TokenIconComponent symbol={stable} className="size-[2.125rem]" />
       <div className="flex flex-col">
         <p className="text-[1.25rem] font-medium">
-          {formatAmount(value, {
+          {formatAmount(formatUnits(balance, decimals), {
             notation: 'compact',
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}{' '}
-          {symbol}
+          {stable}
         </p>
         <p className="text-base text-gray-100">
-          {formatUsdValue(value, {
+          {formatUsdValue(formatUnits(balance, decimals), {
             notation: 'compact',
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
