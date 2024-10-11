@@ -128,3 +128,17 @@ export const CHAIN_IDS_BY_BACKEND_NAMES = {
 export const CHAIN_BACKEND_NAMES_BY_ID = Object.fromEntries(
   Object.entries(CHAIN_IDS_BY_BACKEND_NAMES).map(([key, value]) => [value, key]),
 ) as Record<ChainType, keyof typeof CHAIN_IDS_BY_BACKEND_NAMES>
+
+export const LIFI_CHAIN_IDS = {
+  1: 'ETH',
+  56: 'BSC',
+  42_161: 'ARB',
+  8453: 'BAS',
+  43_114: 'AVA',
+  137: 'POL',
+  534_352: 'SCL',
+  10: 'OPT',
+  1_313_161_554: 'AUR',
+  1329: 'SEI',
+  5000: 'MNT',
+} as const
