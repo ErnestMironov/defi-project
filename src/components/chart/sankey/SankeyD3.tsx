@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
 
-import type { Event, Strategy } from '@api/maat-finance/types'
 import { useLastRebalances } from '@api/queries/useLastRebalances'
 import Arrow from '@assets/icons/curve-arrow-down.svg?url'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg?url'
@@ -25,13 +24,15 @@ import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useDimensions } from '@hooks/common/useDimensions'
 import { cn } from '@utils/cn'
-import type { SankeyNodeMinimal } from 'd3-sankey'
+import type { SankeyLinkMinimal, SankeyNodeMinimal } from 'd3-sankey'
 import { sankey, sankeyCenter, sankeyLinkHorizontal } from 'd3-sankey'
 import type { ComponentProps } from 'react'
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 
+import type { SankeyTooltipContentType } from './D3Tooltip'
 import { D3TooltipComponent } from './D3Tooltip'
-import { createSankeyData } from './getSankeyData'
+import type { SankeyNodeType } from './getSankeyData'
+import { getSankeyData } from './getSankeyData'
 
 export type LinkType = {
   source: string
@@ -41,6 +42,16 @@ export type LinkType = {
 export type SankeyChartDataType = {
   nodes: SankeyNodeType[]
   links: LinkType[]
+}
+
+export type GeneratedSankeyLink = {
+  index: number
+  source: SankeyNodeType
+  target: SankeyNodeType
+  value: number
+  width: number
+  y0: number
+  y1: number
 }
 
 const ICON_URLS_MAP = {
@@ -75,7 +86,6 @@ const COLORS = [
 const MARGIN_Y = 20
 const MARGIN_X = 0
 
-export type SankeyNodeType = Event & { sankey_id: number; strategy: Strategy }
 type Data = {
   nodes: SankeyNodeType[]
   links: { source: number; target: number; value: number | null }[]
@@ -83,14 +93,13 @@ type Data = {
 
 type SankeyProperties = {
   data: Data
-  symbol: string
 }
 
-export const Sankey = ({ data, symbol }: SankeyProperties) => {
+export const Sankey = ({ data }: SankeyProperties) => {
   const containerReference = useRef<HTMLDivElement | null>(null)
   const tooltipReference = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [tooltip, setTooltip] = useState<any>(null)
+  const [tooltip, setTooltip] = useState<SankeyTooltipContentType | null>(null)
   useEffect(() => {
     if (tooltip) {
       const dimensions = tooltipReference.current?.getBoundingClientRect() as DOMRect
@@ -159,10 +168,10 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
   //
   // Draw the links
   //
-  const allLinks = links.map((link: any, i) => {
+  const allLinks = (links as GeneratedSankeyLink[]).map((link, i) => {
     const gradientId = `gradient-${i}`
     const linkGenerator = sankeyLinkHorizontal()
-    const path = linkGenerator(link)
+    const path = linkGenerator(link as SankeyLinkMinimal<{}, {}>)
     const color1 = COLORS[Number((link.source as any).index) % COLORS.length]
     const color2 = COLORS[Number((link.target as any).index) % COLORS.length]
     return (
@@ -191,13 +200,9 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
           onMouseEnter={(e) => {
             setIsOpen(true)
             setTooltip({
-              symbol,
-              value: link.value,
-              apy: link?.source?.strategy?.apy || link?.target?.strategy?.apy,
-              timestamp: link.source.creation_time,
-              hash: link.source.hash,
               x: e.clientX,
               y: e.clientY,
+              ...link,
             })
           }}
           onMouseLeave={() => setIsOpen(false)}
@@ -214,13 +219,15 @@ export const Sankey = ({ data, symbol }: SankeyProperties) => {
           {allNodes}
         </svg>
       </div>
-      <D3TooltipComponent
-        ref={tooltipReference}
-        isOpen={isOpen}
-        tooltipContent={tooltip}
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-      />
+      {tooltip && (
+        <D3TooltipComponent
+          ref={tooltipReference}
+          isOpen={isOpen}
+          tooltipContent={tooltip}
+          onMouseEnter={() => setIsOpen(true)}
+          onMouseLeave={() => setIsOpen(false)}
+        />
+      )}
     </>
   )
 }
@@ -233,7 +240,7 @@ export const RebalanceChart = (props: SankeyDiagramBasicDemoProperties) => {
   const { data, isLoading, error } = useLastRebalances()
 
   const sankeyData = useMemo(
-    () => createSankeyData(data, activeStableType),
+    () => getSankeyData({ data, activeStableType }),
     [data, activeStableType],
   )
 
@@ -251,7 +258,7 @@ export const RebalanceChart = (props: SankeyDiagramBasicDemoProperties) => {
         )
       }
       default: {
-        return <Sankey data={sankeyData} symbol={activeStableType} />
+        return <Sankey data={sankeyData} />
       }
     }
   }

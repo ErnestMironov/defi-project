@@ -23,7 +23,7 @@ export const TokenStatsContainerMobile = (props: TokenStatsContainerProperties) 
     return <SkeletonTokenStatsContainerMobile {...props} />
   }
   return (
-    <div className={cn('hide-scrollbar overflow-scroll w-screen px-4 pb-1', className)}>
+    <div className={cn('hide-scrollbar overflow-auto w-screen px-4 pb-1', className)}>
       <BaseContainer
         className={cn(
           'flex flex-col gap-[0.62rem] w-full max-sm:min-w-[30.75rem] rounded-[1rem] px-5 py-4',
@@ -81,7 +81,7 @@ const SkeletonTokenStatsContainerMobile = (
 ) => {
   const { className, tokenName, withLink = true } = _props
   return (
-    <div className={cn('hide-scrollbar overflow-scroll w-screen px-4 pb-1', className)}>
+    <div className={cn('hide-scrollbar overflow-auto w-screen px-4 pb-1', className)}>
       <BaseContainer
         className={cn(
           'flex flex-col gap-[0.62rem] sm:w-full w-fit rounded-[1rem] px-5 py-4',

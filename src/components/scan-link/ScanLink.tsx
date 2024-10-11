@@ -1,6 +1,5 @@
 import Scan from '@assets/icons/scan.svg'
 import { SCAN_LINK_BY_CHAIN_ID } from '@constants/chains'
-import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -87,7 +86,7 @@ const SCAN_TX_PATH_BY_CHAIN_ID = {
 }
 
 export const ScanLink = (props: ScanLinkProperties) => {
-  const { chainId, className, address, txHash, children, ...rest } = props
+  const { chainId, address, txHash, children, ...rest } = props
   const path = address
     ? SCAN_ADDRESS_PATH_BY_CHAIN_ID[
         chainId as keyof typeof SCAN_ADDRESS_PATH_BY_CHAIN_ID
@@ -105,7 +104,7 @@ export const ScanLink = (props: ScanLinkProperties) => {
       }}
       {...rest}
     >
-      {children || <ScanLogo className={cn('size-full overflow-visible', className)} />}
+      {children || <ScanLogo className="size-full" />}
     </Link>
   )
 }
