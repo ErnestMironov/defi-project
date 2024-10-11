@@ -1,4 +1,4 @@
-import { useGetSquidSwapRoute } from '@api/squid-router/useGetSquidSwapRoute'
+import { useGetSwapRoute } from '@api/lifi/hooks/useGetSwapRoute'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { Button } from '@components/ui/button'
 import { TX_TYPE } from '@constants/txTypes'
@@ -25,7 +25,7 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
 
   const { isBelowDesktop } = useDeviceWidth()
 
-  useGetSquidSwapRoute()
+  useGetSwapRoute()
   useSetDepositDetails()
 
   const { open: openConnectModal } = useAppKit()

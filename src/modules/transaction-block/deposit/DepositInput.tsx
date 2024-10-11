@@ -65,9 +65,8 @@ export const DepositInput = () => {
     inputValueInUSD,
     depositTotalInUSD,
     depositTotalAmount,
-    isTxZAP,
     vault,
-    squidRoute,
+    swapRoute,
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,
@@ -144,15 +143,15 @@ export const DepositInput = () => {
     let assetQuoteBN = BigNumber(asset?.quote ?? 1)
     const numericValue = BigNumber(value)
 
-    if (squidRoute) {
+    if (swapRoute) {
       assetBalanceBN = BigNumber(
         formatUnits(
-          BigInt(squidRoute?.estimate?.fromAmount || '0'),
-          squidRoute.estimate.fromToken.decimals,
+          BigInt(swapRoute?.action?.fromAmount || '0'),
+          swapRoute.action.fromToken.decimals,
         ),
       )
 
-      assetQuoteBN = BigNumber(squidRoute?.estimate?.fromAmountUSD || '0')
+      assetQuoteBN = BigNumber(swapRoute?.estimate?.fromAmountUSD || '0')
     }
 
     if (type === 'usd') {
@@ -257,7 +256,8 @@ export const DepositInput = () => {
         )}
       </div>
 
-      {inputValue && isTxZAP ? <ZapFee className="mt-4" /> : null}
+      {/* {inputValue && isTxZAP ? <ZapFee className="mt-4" /> : null} */}
+      <ZapFee className="mt-4" />
 
       {isConnected && (
         <Button

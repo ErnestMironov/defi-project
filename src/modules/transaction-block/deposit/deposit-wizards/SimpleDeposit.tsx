@@ -3,7 +3,6 @@ import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
@@ -26,6 +25,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     depositAsset: asset,
     inputValue: amount,
     vault,
+    vaultAddress,
     currentStep,
     setAnimationStatus,
     setCurrentStep,
@@ -48,8 +48,6 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
       }
     },
   })
-
-  const vaultAddress = vault === 'USDC' ? USDC_VAULT_ADDRESS : USDT_VAULT_ADDRESS
 
   const {
     approve,

@@ -1,8 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable @typescript-eslint/no-shadow */
-import type { Token } from '@0xsquid/squid-types'
-import { SupportedChainIds } from '@api/squid-router/postHook/constants'
-import useSquidSDK from '@api/squid-router/useSquidSdk'
+import { useGetTokens } from '@api/lifi/endpoints/get-tokens'
 import type { ITokenData } from '@api/tokens-balance/api'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import BigCloseBtn from '@assets/icons/big-close-btn.svg'
@@ -22,10 +20,11 @@ import {
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_IDS_BY_NAME, type ChainType } from '@constants/chains'
+import { SupportedChainIds } from '@constants/vaults'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
-import { formatTokenBalance } from '@utils/formatValue'
+import { formatAmount, formatTokenBalance } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -100,7 +99,9 @@ function TokensListItem({
       </div>
       <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
         <p className="text-base text-text">
-          {formatTokenBalance(token?.balance, token?.contract_decimals)}{' '}
+          {formatAmount(formatTokenBalance(token?.balance, token?.contract_decimals), {
+            maximumFractionDigits: token.contract_decimals > 6 ? 6 : 2,
+          })}{' '}
           {token.contract_ticker_symbol}
         </p>
         <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
@@ -203,14 +204,17 @@ export const SelectDepositAsset = () => {
 
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
-  console.log('🚀 ~ SelectDepositAsset ~ userTokens:', userTokens)
 
-  const { squid } = useSquidSDK()
+  const { data: lifiTokens } = useGetTokens()
+  console.log('🚀 ~ SelectDepositAsset ~ lifiTokens:', lifiTokens)
 
-  const supportedBySquidTokens = squid?.tokens as Token[]
-  const supportedTokensAddr = useMemo(() => {
-    return supportedBySquidTokens?.map((token) => token.address.toLowerCase())
-  }, [supportedBySquidTokens])
+  const supportedTokens = useMemo(
+    () =>
+      Object.values(lifiTokens?.data?.tokens ?? {})
+        .flat()
+        .map((token) => token.address.toLowerCase()),
+    [lifiTokens],
+  )
 
   const [chain, setNetwork] = useState<ChainType | null>(null)
 
@@ -245,29 +249,22 @@ export const SelectDepositAsset = () => {
   // -------------------- Memoized Values --------------------
 
   const filteredByChainTokens = useMemo(() => {
-    if (!userTokens || !supportedTokensAddr || supportedBySquidTokens?.length === 0)
-      return []
+    if (!userTokens || supportedTokens?.length === 0) return []
 
     if (chain) {
       const chainTokens = userTokens[chain] || []
       const filteredChainTokens = searchValue
         ? searchTokens(chainTokens, searchValue)
         : chainTokens
-      return sortTokensByQuote(filterTokens(filteredChainTokens, supportedTokensAddr))
+      return sortTokensByQuote(filterTokens(filteredChainTokens, supportedTokens))
     }
 
     const allTokens = Object.values(userTokens).flat()
     const filteredAllTokens = searchValue
       ? searchTokens(allTokens, searchValue)
       : allTokens
-    return sortTokensByQuote(filterTokens(filteredAllTokens, supportedTokensAddr))
-  }, [
-    userTokens,
-    supportedTokensAddr,
-    supportedBySquidTokens?.length,
-    chain,
-    searchValue,
-  ])
+    return sortTokensByQuote(filterTokens(filteredAllTokens, supportedTokens))
+  }, [userTokens, chain, searchValue, supportedTokens])
 
   // -------------------- Render --------------------
 

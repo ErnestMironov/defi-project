@@ -29,10 +29,11 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     depositAsset,
     vault,
     inputValue: amount,
-    squidRoute,
+    swapRoute,
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
+  console.log('🚀 ~ swapRoute:', swapRoute)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -56,7 +57,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
   } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: squidRoute?.transactionRequest?.target,
+    transactionRequestTarget: swapRoute?.estimate?.approvalAddress,
     chainId: depositAsset?.chain_id,
     onSuccessHandler: () => {
       if (currentStep === 2) {
@@ -64,6 +65,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
       }
     },
   })
+
+  console.log('🚀 ~ swapRoute?.estimate?.approvalAddress:', swapRoute?.estimate)
 
   const {
     swapTokens: swapAndDeposit,

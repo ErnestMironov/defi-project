@@ -1,8 +1,8 @@
-import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import type { ITokenData } from '@api/tokens-balance/api'
 import type { ChainType, DepositChainType } from '@constants/chains'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'
+import type { LiFiStep } from '@lifi/sdk'
 import { convertBigIntToString } from '@utils/formatValue'
 import type { Address } from 'viem'
 import { create } from 'zustand'
@@ -42,6 +42,8 @@ export interface SelectedAssetState {
   setVault: (by: Vault) => void
   vaultAddress: Address | undefined
   setVaultAddress: (by: Address | undefined) => void
+  vaultDepositTokenAddress: Address | undefined
+  setVaultDepositTokenAddress: (by: Address | undefined) => void
 
   // Withdraw Token information
   mtToken: UseGetMTokenInfoReturn | null
@@ -83,8 +85,8 @@ export interface SelectedAssetState {
   setArrivalGas: (value: string) => void
 
   // Squid route information
-  squidRoute: RouteResponse['route'] | undefined
-  setSquidRoute: (route: RouteResponse['route'] | undefined) => void
+  swapRoute: LiFiStep | undefined
+  setSwapRoute: (route: LiFiStep | undefined) => void
 
   // Timer and animation
   timerDuration: number
@@ -135,6 +137,9 @@ export const useTxStore = create<SelectedAssetState>()(
 
       vaultAddress: undefined,
       setVaultAddress: (by) => set({ vaultAddress: by }),
+
+      vaultDepositTokenAddress: undefined,
+      setVaultDepositTokenAddress: (by) => set({ vaultDepositTokenAddress: by }),
 
       depositTotalAmount: '',
       setDepositTotalAmount: (by) => set({ depositTotalAmount: by }),
@@ -198,8 +203,8 @@ export const useTxStore = create<SelectedAssetState>()(
       transactionHash: null,
       setTransactionHash: (hash) => set({ transactionHash: hash }),
 
-      squidRoute: undefined,
-      setSquidRoute: (route) => set({ squidRoute: route }),
+      swapRoute: undefined,
+      setSwapRoute: (route) => set({ swapRoute: route }),
 
       txDifficulty: 'on_chain',
       setTxDifficulty: (value) => set({ txDifficulty: value }),
@@ -236,7 +241,7 @@ export const useTxStore = create<SelectedAssetState>()(
           isTransactionFromStore: false,
           transactionHash: null,
           txDifficulty: 'on_chain',
-          squidRoute: undefined,
+          swapRoute: undefined,
           animationStatus: 'idle',
           isTxZAP: false,
           intermediateError: null,

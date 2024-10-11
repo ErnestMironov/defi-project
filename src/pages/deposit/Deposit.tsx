@@ -28,8 +28,6 @@ export const Deposit = () => {
     const USDCStrategies = strategies?.items.filter(
       (strategy) => strategy.token.symbol.toUpperCase() === 'USDC',
     )
-    console.log('🚀 ~ bestUSDCAPy ~ USDCStrategies:', USDCStrategies)
-    console.log(USDCStrategies?.map((strategy) => strategy.apy))
     return Math.max(
       ...(USDCStrategies?.map(
         (strategy) =>
@@ -39,13 +37,11 @@ export const Deposit = () => {
       ) ?? []),
     )
   }, [strategies?.items])
-  console.log('🚀 ~ bestUSDCAPy ~ bestUSDCAPy:', bestUSDCAPy)
 
   const bestUSDTAPy = useMemo(() => {
     const USDCStrategies = strategies?.items.filter(
       (strategy) => strategy.token.symbol.toUpperCase() === 'USDT',
     )
-    console.log('🚀 ~ bestUSDTAPy ~ USDCStrategies:', USDCStrategies)
     return Math.max(
       ...(USDCStrategies?.map(
         (strategy) =>
@@ -55,7 +51,6 @@ export const Deposit = () => {
       ) ?? [0]),
     )
   }, [strategies?.items])
-  console.log('🚀 ~ bestUSDTAPy ~ bestUSDTAPy:', bestUSDTAPy)
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)

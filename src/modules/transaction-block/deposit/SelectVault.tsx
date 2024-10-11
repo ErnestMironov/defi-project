@@ -1,4 +1,3 @@
-import { filterVaultsByChain } from '@api/squid-router/postHook/utils/filterChainsByVault'
 import Close from '@assets/icons/close.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { ShadowBox } from '@components/box/ShadowBox'
@@ -12,6 +11,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import type { Vault } from '../store/useTxStore'
 import { useTxStore } from '../store/useTxStore'
+import { filterVaultsByChain } from '../utils/filterChainsByVault'
 
 interface SelectAssetPopoverProperties {}
 

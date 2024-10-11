@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/extensions
 import { tokenVaultAbi } from '@constants/abi/token-vault'
 import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
-import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
@@ -20,6 +19,7 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
   const { writeContract, ...rest } = useWriteContract()
   const {
     depositAsset: asset,
+    vaultAddress,
     setCurrentModal,
     getFullState,
     setTransactionCanBeCollapsed,
@@ -27,18 +27,15 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
     setTransactionHash,
     setTxDifficulty,
     setTimerDuration,
-    vault,
   } = useTxStore()
   const { address: userAddress } = useAccount()
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const { addTransaction } = useTransactionStore()
 
   const deposit = useCallback(() => {
-    if (!address || !userAddress) return
+    if (!address || !userAddress || !vaultAddress) return
     setDepositAmount(amount ? formatUnits(amount, 6) : '0')
     setStatus('confirm_in_wallet')
-
-    const vaultAddress = vault === 'USDC' ? USDC_VAULT_ADDRESS : USDT_VAULT_ADDRESS
 
     return writeContract(
       {
@@ -75,9 +72,9 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
   }, [
     address,
     userAddress,
+    vaultAddress,
     setDepositAmount,
     amount,
-    vault,
     writeContract,
     asset?.chain_id,
     setTransactionHash,

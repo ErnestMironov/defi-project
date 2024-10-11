@@ -11,9 +11,9 @@ interface ZapFeeProperties extends HTMLAttributes<HTMLDivElement> {}
 const ZapFee: React.FC<ZapFeeProperties> = ({ className }) => {
   const [open, setOpen] = React.useState(false)
 
-  const { squidRoute } = useTxStore()
+  const { swapRoute } = useTxStore()
 
-  const summaryAndFees = getSummaryAndFees(squidRoute)
+  const summaryAndFees = getSummaryAndFees(swapRoute)
 
   return (
     <div className={className}>

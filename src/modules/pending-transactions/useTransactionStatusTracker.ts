@@ -1,7 +1,7 @@
+import { getStatus } from '@api/lifi/endpoints/get-status'
 import { getEvents } from '@api/queries/useEvents'
 import type { ChainType } from '@constants/chains'
-import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
-import { waitForSuccessStatus } from '@modules/transaction-block/deposit/hooks/useSwap'
+import { CONFIRMATIONS_NUMBER } from '@constants/chains'
 import type { IPendingTransactionData } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { type Config, waitForTransactionReceipt } from '@wagmi/core'
@@ -74,14 +74,20 @@ export const useTransactionStatusChecker = () => {
           timeout: TRANSACTION_TIMEOUT,
         })
 
-        waitForSuccessStatus(
-          tx.transactionHash,
-          tx.depositFromNetwork?.toString()!,
-          CHAIN_IDS_BY_NAME.Arbitrum.toString(),
-          (status) => updateTransaction(tx.transactionHash, status),
-          () => updateTransaction(tx.transactionHash, 'success'),
-          () => updateTransaction(tx.transactionHash, 'error'),
-        )
+        const status = await getStatus(tx.transactionHash as Address)
+        console.log('🚀 ~ status:', status)
+
+        switch (status.data.status) {
+          case 'DONE': {
+            updateTransaction(tx.transactionHash, 'success')
+            break
+          }
+          case 'FAILED': {
+            updateTransaction(tx.transactionHash, 'error')
+            break
+          }
+          default:
+        }
       } catch (error) {
         console.error('Error checking swap status:', error)
         updateTransaction(tx.transactionHash, 'error')
@@ -164,19 +170,32 @@ export const useTransactionStatusChecker = () => {
    */
   const handleOtherTransaction = useCallback(
     (tx: IPendingTransactionData) => {
-      const checkTransactionByType = {
-        withdraw: checkWithdrawStatus,
-        on_chain: checkTransactionStatus,
-        cross_chain: checkSwapStatus,
+      let checkFunction
+
+      switch (true) {
+        case tx.txType === 'withdraw': {
+          checkFunction = checkWithdrawStatus
+          break
+        }
+        case tx.txType === 'deposit' && tx.isTxZAP:
+        case tx.txDifficulty === 'cross_chain': {
+          checkFunction = checkSwapStatus
+          break
+        }
+        case tx.txDifficulty === 'on_chain': {
+          checkFunction = checkTransactionStatus
+          break
+        }
+        default: {
+          console.warn(
+            `Unknown transaction type - ${tx.txType} and difficulty ${tx.txDifficulty}`,
+            tx,
+          )
+          return
+        }
       }
 
-      const checkFunction =
-        checkTransactionByType[tx.txDifficulty as keyof typeof checkTransactionByType]
-      if (checkFunction) {
-        checkFunction(tx)
-      } else {
-        console.warn(`Unknown transaction type: ${tx.txType || tx.txDifficulty}`)
-      }
+      checkFunction(tx)
     },
     [checkWithdrawStatus, checkTransactionStatus, checkSwapStatus],
   )

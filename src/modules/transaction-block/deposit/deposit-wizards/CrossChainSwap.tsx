@@ -27,7 +27,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     inputValue: amount,
     currentStep,
     setCurrentStep,
-    squidRoute,
+    swapRoute,
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
@@ -58,7 +58,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
   } = useApproveERC20({
     approveValue: parseUnits(amount, depositAsset?.contract_decimals ?? 6).toString(),
     tokenAddress: depositAsset?.contract_address as Address,
-    transactionRequestTarget: squidRoute?.transactionRequest?.target,
+    transactionRequestTarget: swapRoute?.estimate?.approvalAddress,
     chainId: depositAssetChain?.chainId,
     onSuccessHandler: () => {
       if (currentStep === 2) {
