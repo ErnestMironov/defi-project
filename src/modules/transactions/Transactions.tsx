@@ -29,7 +29,7 @@ export const Transactions = (props: EventsProperties) => {
           value: [],
           placeholder: 'All Actions',
         },
-        status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
+        status: { items: SELECT_STATUSES, value: [], placeholder: 'All Status' },
         chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
       }}
       {...props}

@@ -1,9 +1,18 @@
-import { createWeb3Modal } from '@web3modal/wagmi/react'
-import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import type { Chain } from 'viem'
-import { arbitrum, base, bsc, mainnet, mantle, optimism, polygon } from 'viem/chains'
+import type { AppKitNetwork } from '@reown/appkit/networks'
+import {
+  arbitrum,
+  avalanche,
+  base,
+  bsc,
+  mainnet,
+  mantle,
+  metis,
+  optimism,
+  polygon,
+} from '@reown/appkit/networks'
+import { createAppKit } from '@reown/appkit/react'
+import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 
-export const XFI_CHAIN_ID = 4157
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = '50045bde677b3817fbdad11aaa86c090'
 
@@ -15,8 +24,8 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
 
-const chains = [
-  mainnet,
+const networks: AppKitNetwork[] = [
+  arbitrum,
   {
     ...optimism,
     rpcUrls: {
@@ -25,26 +34,49 @@ const chains = [
       },
     },
   },
-  arbitrum,
   polygon,
   base,
   mantle,
+  metis,
   bsc,
-] as const
-console.log('🚀 ~ optimism:', optimism)
+  avalanche,
+  mainnet,
+]
 
-export const wagmiConfig = defaultWagmiConfig({
-  chains,
+export const wagmiAdapter = new WagmiAdapter({
+  networks,
   projectId,
+})
+
+createAppKit({
+  adapters: [wagmiAdapter],
+  defaultNetwork: arbitrum,
+  networks: [
+    arbitrum,
+    {
+      ...optimism,
+      rpcUrls: {
+        default: {
+          http: [
+            'https://optimism-mainnet.infura.io/v3/ec25fc33eb624f13a9012f6174f20d68',
+          ],
+        },
+      },
+    },
+    polygon,
+    base,
+    mantle,
+    metis,
+    bsc,
+    avalanche,
+    mainnet,
+  ],
   metadata,
-})
-
-createWeb3Modal({
-  themeMode: 'light',
-  wagmiConfig: wagmiConfig as any,
   projectId,
-  enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  enableOnramp: true, // Optional - false as default
+  features: {
+    analytics: true, // Optional - defaults to your Cloud configuration
+    onramp: true, // Optional - false as default
+    socials: false,
+    email: false,
+  },
 })
-
-export const isAllowedChain = (chain?: Chain) => chain?.id === XFI_CHAIN_ID

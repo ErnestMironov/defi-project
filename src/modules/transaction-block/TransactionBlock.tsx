@@ -3,7 +3,7 @@ import { ShadowBox } from '@components/box/ShadowBox'
 import { Button } from '@components/ui/button'
 import { TX_TYPE } from '@constants/txTypes'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { useWeb3Modal } from '@web3modal/wagmi/react'
+import { useAppKit } from '@reown/appkit/react'
 import clsx from 'clsx'
 import { type ComponentProps } from 'react'
 import { useAccount } from 'wagmi'
@@ -28,7 +28,7 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
   useGetSwapRoute()
   useSetDepositDetails()
 
-  const { open: openConnectModal } = useWeb3Modal()
+  const { open: openConnectModal } = useAppKit()
 
   const { isConnected } = useAccount()
 

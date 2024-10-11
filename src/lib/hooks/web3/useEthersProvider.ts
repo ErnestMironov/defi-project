@@ -1,4 +1,4 @@
-import { wagmiConfig } from '@configs/wagmi'
+import { wagmiAdapter } from '@configs/wagmi'
 import { getClient } from '@wagmi/core'
 import { FallbackProvider, JsonRpcProvider } from 'ethers'
 import type { Chain, Client, Transport } from 'viem'
@@ -23,7 +23,7 @@ export function clientToProvider(client: Client<Transport, Chain>) {
 /** Action to convert a viem Client to an ethers.js Provider. */
 export function getEthersProvider({ chainId }: { chainId?: number } = {}) {
   // @ts-ignore
-  const client = getClient(wagmiConfig, { chainId })
+  const client = getClient(wagmiAdapter, { chainId })
   if (!client) return
   return clientToProvider(client)
 }

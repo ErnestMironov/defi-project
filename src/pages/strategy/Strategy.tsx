@@ -51,7 +51,7 @@ export const StrategyDesktop = (props: StrategyProperties) => {
             value: [],
             placeholder: 'All Actions',
           },
-          status: { items: SELECT_STATUSES, value: [], placeholder: 'All Statuses' },
+          status: { items: SELECT_STATUSES, value: [], placeholder: 'All Status' },
         }}
         incentivesFilters={{
           search: { value: '', placeholder: 'Tx Hash' },

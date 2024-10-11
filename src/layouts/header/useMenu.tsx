@@ -12,7 +12,7 @@ export interface IMenuItem {
   dropdown?: IMenuItem[]
 }
 
-export const useShortMenuArray = () => {
+export const useShortMenuArray = (includePortfolio: boolean = false) => {
   const menu = useMemo(() => {
     return {
       deposit: {
@@ -37,19 +37,28 @@ export const useShortMenuArray = () => {
           },
         ],
       },
-      docs: {
-        href: 'https://docs.maat.finance/',
-        label: 'Docs',
-        src: ({ className, ...rest }: ComponentProps<'svg'>) => (
-          <ArrowTopRight
-            {...rest}
-            className={cn(className, 'size-[1em] relative bottom-[0.06rem]')}
-          />
-        ),
-      },
     }
   }, [])
-  return Object.values(menu) as IMenuItem[]
+  const portfolio: IMenuItem = {
+    href: ROUTES.PORTFOLIO,
+    label: 'Portfolio',
+  }
+  const docs: IMenuItem = {
+    href: 'https://docs.maat.finance/',
+    label: 'Docs',
+    src: ({ className, ...rest }: ComponentProps<'svg'>) => (
+      <ArrowTopRight
+        {...rest}
+        className={cn(className, 'size-[1em] relative bottom-[0.06rem]')}
+      />
+    ),
+  }
+  const resultMenu = Object.values(menu) as IMenuItem[]
+  if (includePortfolio) {
+    resultMenu.push(portfolio as IMenuItem)
+  }
+  resultMenu.push(docs)
+  return resultMenu
 }
 
 export const useMenuArray = () => {
