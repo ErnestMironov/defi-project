@@ -1,7 +1,8 @@
 import { tokenVaultAbi } from '@constants/abi/token-vault'
+import { useDebounce } from '@hooks/useDebounce'
 import type { ContractCallsQuoteRequest } from '@lifi/sdk'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { encodeFunctionData, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -19,8 +20,20 @@ export function useGetSwapRoute() {
   } = useTxStore()
 
   const { address } = useAccount()
+  const [estimatedTokens, setEstimatedTokens] = useState<bigint>()
+  const [isFirstRequestPending, setIsFirstRequestPending] = useState(false)
+  const [debouncedInputValue, setDebouncedInputValue] = useState(inputValue)
 
-  const parameters: ContractCallsQuoteRequest | undefined = useMemo(() => {
+  const debouncedSetInputValue = useDebounce((value: string) => {
+    setDebouncedInputValue(value)
+  }, 500)
+
+  useEffect(() => {
+    debouncedSetInputValue(inputValue)
+  }, [inputValue, debouncedSetInputValue])
+
+  // First request parameters
+  const firstParameters: ContractCallsQuoteRequest | undefined = useMemo(() => {
     if (
       depositAsset?.contract_ticker_symbol.toLowerCase() === vaultAddress?.toLowerCase()
     )
@@ -36,33 +49,17 @@ export function useGetSwapRoute() {
     )
       return undefined
 
-    const depositTxData = encodeFunctionData({
-      abi: tokenVaultAbi,
-      functionName: 'deposit',
-      args: [parseUnits(inputValue, depositAsset.contract_decimals ?? 6), address],
-    })
-
-    console.log('🚀 ~ useGetSwapRoute ~ depositTxData:', depositTxData)
-
     return {
       fromAddress: address,
       fromChain: depositFromNetwork.toString(),
       fromToken: depositAsset.contract_address,
-      fromAmount: parseUnits(inputValue, depositAsset.contract_decimals ?? 6).toString(),
+      fromAmount: parseUnits(
+        debouncedInputValue,
+        depositAsset.contract_decimals ?? 6,
+      ).toString(),
       toChain: depositToNetwork.toString(),
       toToken: vaultDepositTokenAddress,
-      contractCalls: [
-        {
-          fromAmount: parseUnits(
-            inputValue,
-            depositAsset.contract_decimals ?? 6,
-          ).toString(),
-          fromTokenAddress: vaultDepositTokenAddress,
-          toContractAddress: vaultAddress,
-          toContractCallData: depositTxData,
-          toContractGasLimit: '200000',
-        },
-      ],
+      contractCalls: [],
     }
   }, [
     depositAsset?.contract_ticker_symbol,
@@ -72,23 +69,93 @@ export function useGetSwapRoute() {
     address,
     depositFromNetwork,
     depositToNetwork,
-    inputValue,
+    debouncedInputValue,
     vaultDepositTokenAddress,
   ])
 
-  const { data, isLoading, error } = useGetQuote(parameters)
+  const { data: firstData, isLoading: isFirstLoading } = useGetQuote(firstParameters)
 
   useEffect(() => {
-    console.log('🚀 ~ useGetSwapRoute ~ data:', data)
-    if (data?.data) {
-      return setSwapRoute(data.data)
+    setIsFirstRequestPending(true)
+    setEstimatedTokens(undefined)
+  }, [firstParameters])
+
+  useEffect(() => {
+    if (firstData?.data?.estimate?.toAmount) {
+      setEstimatedTokens(BigInt(firstData.data.estimate.toAmount))
+      setIsFirstRequestPending(false)
+      // Log the results of the first request
+      console.log('First request results:', {
+        fromAmount: firstData.data.estimate.fromAmount,
+        toAmount: firstData.data.estimate.toAmount,
+        estimatedGasCosts: firstData.data.estimate?.gasCosts,
+      })
     }
-    setSwapRoute(undefined)
-  }, [data, setSwapRoute])
+  }, [firstData])
+
+  const executeSecondRequest = useCallback(() => {
+    if (
+      firstParameters &&
+      estimatedTokens &&
+      !isFirstRequestPending &&
+      vaultDepositTokenAddress &&
+      vaultAddress
+    ) {
+      const depositTxData = encodeFunctionData({
+        abi: tokenVaultAbi,
+        functionName: 'deposit',
+        args: [estimatedTokens, address],
+      })
+
+      const secondParameters: ContractCallsQuoteRequest = {
+        ...firstParameters,
+        contractCalls: [
+          {
+            fromAmount: estimatedTokens.toString(),
+            fromTokenAddress: vaultDepositTokenAddress,
+            toContractAddress: vaultAddress,
+            toContractCallData: depositTxData,
+            toContractGasLimit: '200000',
+          },
+        ],
+      }
+
+      return secondParameters
+    }
+    return undefined
+  }, [
+    estimatedTokens,
+    isFirstRequestPending,
+    firstParameters,
+    address,
+    vaultDepositTokenAddress,
+    vaultAddress,
+  ])
+
+  const {
+    data: secondData,
+    isLoading: isSecondLoading,
+    error,
+  } = useGetQuote(executeSecondRequest())
+
+  useEffect(() => {
+    if (secondData?.data) {
+      setSwapRoute(secondData.data)
+      // Log the results of the second (main) request
+      console.log('Second (main) request results:', {
+        fromAmount: secondData.data.estimate.fromAmount,
+        toAmount: secondData.data.estimate.toAmount,
+        estimatedGasCosts: secondData.data.estimate?.gasCosts,
+        steps: secondData.data.includedSteps,
+      })
+    } else {
+      setSwapRoute(undefined)
+    }
+  }, [secondData, setSwapRoute])
 
   return {
-    route: data?.data?.route,
-    isPending: isLoading,
+    route: secondData?.data,
+    isPending: isFirstLoading || isSecondLoading || isFirstRequestPending,
     error,
   }
 }

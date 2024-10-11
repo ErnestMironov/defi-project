@@ -15,6 +15,7 @@ export const useSetDepositDetails = () => {
     inputValue,
     depositAsset,
     vaultDepositTokenAddress,
+    isTxZAP,
     setVaultAddress,
     setDepositTotalInUSD,
     setDepositTotalAmount,
@@ -25,7 +26,7 @@ export const useSetDepositDetails = () => {
 
   useEffect(() => {
     console.log('🚀 ~ useEffect ~ swapRoute:', swapRoute)
-    if (!swapRoute) {
+    if (!swapRoute || !isTxZAP) {
       setDepositTotalInUSD(inputValue)
       setDepositTotalAmount(inputValue ?? '0')
       return
@@ -43,7 +44,7 @@ export const useSetDepositDetails = () => {
         swapRoute?.includedSteps?.[0]?.action?.toToken?.decimals ?? 6,
       ) ?? '0',
     )
-  }, [swapRoute, setDepositTotalInUSD, inputValue, setDepositTotalAmount])
+  }, [swapRoute, setDepositTotalInUSD, inputValue, setDepositTotalAmount, isTxZAP])
 
   useEffect(() => {
     if (!vault) return
@@ -76,6 +77,7 @@ export const useSetDepositDetails = () => {
         vaultDepositTokenAddress?.toLowerCase()
     ) {
       setIsTxZAP(false)
+      setDepositTotalAmount(inputValue)
       setDepositTotalInUSD(inputValue)
       return
     }
@@ -86,6 +88,7 @@ export const useSetDepositDetails = () => {
     depositFromNetwork,
     depositToNetwork,
     inputValue,
+    setDepositTotalAmount,
     setDepositTotalInUSD,
     setIsTxZAP,
     vaultDepositTokenAddress,

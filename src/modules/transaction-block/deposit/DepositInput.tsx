@@ -65,7 +65,6 @@ export const DepositInput = () => {
     inputValueInUSD,
     depositTotalInUSD,
     depositTotalAmount,
-    isTxZAP,
     vault,
     swapRoute,
     setInputValue,
@@ -257,7 +256,8 @@ export const DepositInput = () => {
         )}
       </div>
 
-      {inputValue && isTxZAP ? <ZapFee className="mt-4" /> : null}
+      {/* {inputValue && isTxZAP ? <ZapFee className="mt-4" /> : null} */}
+      <ZapFee className="mt-4" />
 
       {isConnected && (
         <Button

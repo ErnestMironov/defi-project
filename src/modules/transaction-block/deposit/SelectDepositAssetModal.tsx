@@ -24,7 +24,6 @@ import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
-import BigNumber from 'bignumber.js'
 import { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
@@ -171,13 +170,13 @@ const sortTokensByQuote = (tokens: ITokenData[]) => {
  * @param tokens - Array of tokens to filter
  * @param supportedTokensAddr - Array of supported token addresses
  */
-const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
-  return tokens.filter(
-    (token) =>
-      supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
-      !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
-  )
-}
+// const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
+//   return tokens.filter(
+//     (token) =>
+//       supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
+//       !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
+//   )
+// }
 
 /**
  * Searches tokens based on name or symbol

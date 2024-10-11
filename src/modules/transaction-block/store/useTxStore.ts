@@ -246,7 +246,6 @@ export const useTxStore = create<SelectedAssetState>()(
           isTxZAP: false,
           intermediateError: null,
           transactionError: null,
-          vaultDepositTokenAddress: undefined,
         }),
     }),
     {

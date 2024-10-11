@@ -98,7 +98,7 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandl
             opacity: txDifficulty === 'cross_chain' ? 1 : 0.4,
           }}
         >
-          <NetworkSelector disabled={txDifficulty !== 'cross_chain'} />
+          <NetworkSelector disabled={false} />
           <Text className="mt-3">
             Representation tokens can be given only on supported chains. <br /> You can
             change network.

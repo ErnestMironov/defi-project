@@ -42,7 +42,29 @@ export const useApproveERC20 = ({
   }, [allowance, approveValue, onSuccessHandler])
 
   const approve = useCallback(() => {
-    if (!approveValue || !tokenAddress || !transactionRequestTarget) return
+    console.log('🚀 ~ approve ~ approveValue:', approveValue)
+
+    if (!approveValue || !tokenAddress || !transactionRequestTarget) {
+      switch (true) {
+        case !approveValue: {
+          console.error('approveValue is required')
+          break
+        }
+        case !tokenAddress: {
+          console.error('tokenAddress is required')
+          break
+        }
+        case !transactionRequestTarget: {
+          console.error('transactionRequestTarget is required')
+          break
+        }
+        default: {
+          console.error('Unknown error')
+          break
+        }
+      }
+      return
+    }
 
     if (allowance && BigInt(allowance) >= BigInt(approveValue)) {
       setStatus('success')
