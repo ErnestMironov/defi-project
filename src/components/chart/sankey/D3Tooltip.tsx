@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Arrow from '@assets/icons/arrow.svg'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { TokenIconComponent } from '@components/token-icon'
 import { formatAmount, formatPercentValue } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
@@ -6,9 +8,16 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { forwardRef } from 'react'
 
+import type { GeneratedSankeyLink } from './SankeyD3'
+
+export type SankeyTooltipContentType = GeneratedSankeyLink & {
+  x: number
+  y: number
+}
+
 type TooltipComponentProperties = {
   isOpen: boolean
-  tooltipContent: any
+  tooltipContent: SankeyTooltipContentType
   onMouseEnter: () => void
   onMouseLeave: () => void
 }
@@ -16,6 +25,17 @@ type TooltipComponentProperties = {
 export const D3TooltipComponent = forwardRef(
   (props: TooltipComponentProperties, reference: any) => {
     const { isOpen, tooltipContent, ...rest } = props
+    const { source, target } = tooltipContent
+    const apySource = source?.strategy?.apy
+    const apyTarget = target?.strategy?.apy
+    const timestamp = source?.creation_time
+    const symbol = source?.vault.token.symbol
+    const hash = source?.hash
+    const chainId = source?.vault.chain_id
+
+    const value = tooltipContent?.value
+    const isValidValue =
+      value === 0 || (typeof value === 'number' && !Number.isNaN(value))
 
     return (
       <div
@@ -27,12 +47,9 @@ export const D3TooltipComponent = forwardRef(
         )}
       >
         <div className="flex items-center gap-2">
-          <TokenIconComponent
-            symbol={tooltipContent?.symbol}
-            className="size-6 overflow-visible"
-          />
+          <TokenIconComponent symbol={symbol} className="size-6 overflow-visible" />
           <p className="text-[1.375rem]">
-            {formatAmount(tooltipContent?.value, {
+            {formatAmount(value, {
               notation: 'compact',
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
@@ -41,18 +58,26 @@ export const D3TooltipComponent = forwardRef(
         </div>
         <div className="text-base text-text-80">
           <div className="flex items-center">
-            <span>{formatPercentValue(tooltipContent?.apy)}</span>
+            {isValidValue && (
+              <>
+                <span>{formatPercentValue(apySource)}</span>
+                <span className="ml-1">APY</span>
+                <Arrow className="mx-2 size-4" />
+              </>
+            )}
+            <span>{formatPercentValue(apyTarget)}</span>
             <span className="ml-1">APY</span>
           </div>
           <div className="mt-2">
-            <span>{getFromNow(tooltipContent?.timestamp)}</span>
+            <span>{getFromNow(timestamp)}</span>
             <span className="ml-2">
-              ({dayjs(tooltipContent?.timestamp).format('DD.MM.YY')}{' '}
-              {dayjs(tooltipContent?.timestamp).format('HH:MM')})
+              ({dayjs(timestamp).format('DD.MM.YY')} {dayjs(timestamp).format('HH:MM')})
             </span>
           </div>
         </div>
-        {/* <div className="text-blue1">View in Explorer</div> */}
+        <ScanLink className="text-blue1" txHash={hash} chainId={chainId}>
+          View in Explorer
+        </ScanLink>
       </div>
     )
   },

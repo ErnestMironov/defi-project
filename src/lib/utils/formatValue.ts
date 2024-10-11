@@ -121,7 +121,7 @@ export const formatAmount = (
   value: string | number,
   options?: Intl.NumberFormatOptions,
 ) => {
-  if (!value && value !== 0) return ''
+  if (!value && value !== 0) return 'N/A'
 
   const parsedValue = Number.parseFloat(value.toString())
   return new Intl.NumberFormat('en-US', {
@@ -133,7 +133,7 @@ export const formatPercentValue = (
   value?: string | number,
   options?: Intl.NumberFormatOptions,
 ) => {
-  if (!value) return 'N/A'
+  if (!value && value !== 0) return 'N/A'
   const parsedValue = Number.parseFloat(value.toString())
   return new Intl.NumberFormat('en-US', {
     style: 'percent',
