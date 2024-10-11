@@ -6,8 +6,9 @@ import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
-import type { Address } from 'viem'
 import { useSendTransaction } from 'wagmi'
+
+import { transformTxRequestToSendTxParameters } from '../utils/transformTxRequestToSendTxParams'
 
 // ---------------------------------------
 // ------------ Constants ----------------
@@ -214,7 +215,7 @@ export const useSwap = () => {
     getFullState,
     setTransactionHash,
     setTimerDuration,
-    squidRoute: route,
+    swapRoute: route,
   } = useTxStore()
   const { addTransaction } = useTransactionStore()
 
@@ -227,7 +228,7 @@ export const useSwap = () => {
       onSuccess(data) {
         setTransactionHash(data)
         setTimerDuration(
-          (route?.estimate?.estimatedRouteDuration ?? 0) + ESTIMATED_TIME_OF_CONFIRMATION,
+          (route?.estimate?.executionDuration ?? 0) + ESTIMATED_TIME_OF_CONFIRMATION,
         )
         setStatus('pending')
         setDepositHash(data) // Set the deposit hash when the transaction is successful
@@ -249,13 +250,7 @@ export const useSwap = () => {
     try {
       setStatus('confirm_in_wallet')
 
-      sendTransaction({
-        to: route.transactionRequest.target as Address,
-        data: route.transactionRequest.data as Address,
-        value: BigInt(route.transactionRequest.value),
-        gasPrice: BigInt(route.transactionRequest.gasPrice ?? '1000000'),
-        gas: BigInt(route.transactionRequest.gasLimit ?? '21000'),
-      })
+      sendTransaction(transformTxRequestToSendTxParameters(route.transactionRequest))
     } catch (error_: unknown) {
       console.error(error_)
       if (error_ instanceof Error) {

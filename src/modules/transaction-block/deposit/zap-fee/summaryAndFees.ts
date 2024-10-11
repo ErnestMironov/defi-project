@@ -1,6 +1,6 @@
-import type { RouteResponse } from '@0xsquid/sdk/dist/types'
 import { FeeType } from '@0xsquid/sdk/dist/types'
 import { ESTIMATED_TIME_OF_CONFIRMATION } from '@constants/chains'
+import type { LiFiStep } from '@lifi/sdk'
 
 const overEstimateCoefficient = 1.3
 const valueCharNumber = 8
@@ -20,7 +20,7 @@ export interface SummaryAndFees {
   estimatedTime: string
 }
 
-export function getSummaryAndFees(route: RouteResponse['route'] | undefined) {
+export function getSummaryAndFees(route: LiFiStep | undefined) {
   const summaryAndFees: SummaryAndFees = createDefaultSummaryAndFees()
 
   if (!route) return summaryAndFees
@@ -68,45 +68,39 @@ function getEstimatedTime(estimatedTimeSeconds: number | undefined) {
   return `${Math.floor(estimatedTimeSeconds / 60)} min`
 }
 
-function configureEstimatedTime(
-  route: RouteResponse['route'],
-  summaryAndFees: SummaryAndFees,
-) {
+function configureEstimatedTime(route: LiFiStep, summaryAndFees: SummaryAndFees) {
   const estimatedTime = getEstimatedTime(
-    Number(route?.estimate.estimatedRouteDuration) + ESTIMATED_TIME_OF_CONFIRMATION,
+    Number(route?.estimate?.executionDuration) + ESTIMATED_TIME_OF_CONFIRMATION,
   )
 
   summaryAndFees.estimatedTime = estimatedTime
 }
 
-function configureSummary(route: RouteResponse['route'], summaryAndFees: SummaryAndFees) {
+function configureSummary(route: LiFiStep, summaryAndFees: SummaryAndFees) {
   const { convertFrom, minReceive } = summaryAndFees
 
   convertFrom.value = composeWithDecimalsAndSymbol(
-    route.estimate.fromAmount,
-    route.estimate.fromToken.decimals,
-    route.estimate.fromToken.symbol,
+    route.action.fromAmount,
+    route.action.fromToken.decimals,
+    route.action.fromToken.symbol,
   )
   convertFrom.usd = route.estimate.fromAmountUSD || '0'
 
   minReceive.value = composeWithDecimalsAndSymbol(
     route.estimate.toAmountMin,
-    route.estimate.toToken.decimals,
-    route.estimate.toToken.symbol,
+    route.action.toToken.decimals,
+    route.action.toToken.symbol,
   )
-  minReceive.usd = route.estimate.toAmountMinUSD || '0'
+  minReceive.usd = route.estimate.toAmountUSD || '0'
 
-  const tokenPrice = route.estimate.exchangeRate.slice(0, valueCharNumber)
+  const tokenPrice = 12
 
-  summaryAndFees.exchangeRate = `${1} ${
-    route.estimate.fromToken.symbol
-  } = ${tokenPrice} ${route.estimate.toToken.symbol}`
+  summaryAndFees.exchangeRate = `${1} ${route.action.fromToken.symbol} = ${tokenPrice} ${
+    route.action.toToken.symbol
+  }`
 }
 
-function configureFeeBreakdown(
-  route: RouteResponse['route'],
-  summaryAndFees: SummaryAndFees,
-) {
+function configureFeeBreakdown(route: LiFiStep, summaryAndFees: SummaryAndFees) {
   const { crossChainFee, boostFee, total, expectedGasRefund } = summaryAndFees
 
   const { sumFeeNative, sumFeeUsd, symbol } = configureFees(
@@ -129,7 +123,7 @@ function configureFeeBreakdown(
 }
 
 function configureFees(
-  route: RouteResponse['route'],
+  route: LiFiStep,
   crossChainFee: ValueAndUsd,
   boostFee: ValueAndUsd,
 ) {
@@ -137,9 +131,9 @@ function configureFees(
   let sumFeeUsd = 0
   let symbol: string | undefined
 
-  for (const fee of route.estimate.feeCosts) {
+  for (const fee of route?.estimate?.feeCosts || []) {
     sumFeeNative += +fee.amount / 10 ** fee.token.decimals
-    sumFeeUsd += +fee.amountUsd
+    sumFeeUsd += +fee.amountUSD
 
     if (fee.name === FeeType.GAS_RECEIVER_FEE) {
       crossChainFee.value = composeWithDecimalsAndSymbol(
@@ -148,7 +142,7 @@ function configureFees(
         fee.token.symbol,
       )
 
-      crossChainFee.usd = fee.amountUsd
+      crossChainFee.usd = fee.amountUSD
     } else if (fee.name === FeeType.BOOST_FEE) {
       boostFee.value = composeWithDecimalsAndSymbol(
         fee.amount,
@@ -156,7 +150,7 @@ function configureFees(
         fee.token.symbol,
       )
 
-      boostFee.usd = fee.amountUsd
+      boostFee.usd = fee.amountUSD
     }
 
     symbol = fee.token.symbol

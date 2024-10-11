@@ -1,8 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable @typescript-eslint/no-shadow */
-import type { Token } from '@0xsquid/squid-types'
-import { SupportedChainIds } from '@api/squid-router/postHook/constants'
-import useSquidSDK from '@api/squid-router/useSquidSdk'
 import type { ITokenData } from '@api/tokens-balance/api'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import BigCloseBtn from '@assets/icons/big-close-btn.svg'
@@ -22,6 +19,7 @@ import {
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_IDS_BY_NAME, type ChainType } from '@constants/chains'
+import { SupportedChainIds } from '@constants/vaults'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
@@ -203,14 +201,13 @@ export const SelectDepositAsset = () => {
 
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
-  console.log('🚀 ~ SelectDepositAsset ~ userTokens:', userTokens)
 
-  const { squid } = useSquidSDK()
+  // const { squid } = useSquidSDK()
 
-  const supportedBySquidTokens = squid?.tokens as Token[]
-  const supportedTokensAddr = useMemo(() => {
-    return supportedBySquidTokens?.map((token) => token.address.toLowerCase())
-  }, [supportedBySquidTokens])
+  // const supportedBySquidTokens = squid?.tokens as Token[]
+  // const supportedTokensAddr = useMemo(() => {
+  //   return supportedBySquidTokens?.map((token) => token.address.toLowerCase())
+  // }, [supportedBySquidTokens])
 
   const [chain, setNetwork] = useState<ChainType | null>(null)
 
@@ -245,29 +242,25 @@ export const SelectDepositAsset = () => {
   // -------------------- Memoized Values --------------------
 
   const filteredByChainTokens = useMemo(() => {
-    if (!userTokens || !supportedTokensAddr || supportedBySquidTokens?.length === 0)
-      return []
+    // if (!userTokens || !supportedTokensAddr || supportedBySquidTokens?.length === 0)
+    if (!userTokens) return []
 
     if (chain) {
       const chainTokens = userTokens[chain] || []
       const filteredChainTokens = searchValue
         ? searchTokens(chainTokens, searchValue)
         : chainTokens
-      return sortTokensByQuote(filterTokens(filteredChainTokens, supportedTokensAddr))
+      // return sortTokensByQuote(filterTokens(filteredChainTokens, supportedTokensAddr))
+      return sortTokensByQuote(filteredChainTokens)
     }
 
     const allTokens = Object.values(userTokens).flat()
     const filteredAllTokens = searchValue
       ? searchTokens(allTokens, searchValue)
       : allTokens
-    return sortTokensByQuote(filterTokens(filteredAllTokens, supportedTokensAddr))
-  }, [
-    userTokens,
-    supportedTokensAddr,
-    supportedBySquidTokens?.length,
-    chain,
-    searchValue,
-  ])
+    // return sortTokensByQuote(filterTokens(filteredAllTokens, supportedTokensAddr))
+    return sortTokensByQuote(filteredAllTokens)
+  }, [userTokens, chain, searchValue])
 
   // -------------------- Render --------------------
 
