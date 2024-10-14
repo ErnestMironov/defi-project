@@ -100,6 +100,12 @@ export interface SelectedAssetState {
   transactionError: string | null
   setTransactionError: (error: string | null) => void
 
+  // Easter egg
+  brakeBalance: boolean
+  setBrakeBalance: (value: boolean) => void
+  scalesClickCount: number
+  setScalesClickCount: (value: number) => void
+
   // Utility functions
   getFullState: () => Partial<SelectedAssetState>
   resetStore: () => void
@@ -247,6 +253,12 @@ export const useTxStore = create<SelectedAssetState>()(
           intermediateError: null,
           transactionError: null,
         }),
+
+      brakeBalance: false,
+      setBrakeBalance: (value) => set({ brakeBalance: value }),
+
+      scalesClickCount: 0,
+      setScalesClickCount: (value) => set({ scalesClickCount: value }),
     }),
     {
       name: 'TxStore',

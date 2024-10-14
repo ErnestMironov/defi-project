@@ -1,9 +1,13 @@
+import alarmSound from '@assets/audio/8-bit_Crash.mp3' // Убедись, что путь правильный
 import GuidanceArrow from '@assets/icons/guidance-arrow.svg'
 import Scales from '@assets/lottie/MAAT_Scales.json'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
 import { formatAmount, parseFloatLocale } from '@utils/formatValue'
 import Lottie from 'lottie-react'
+import { useEffect, useRef, useState } from 'react'
+
+import { useTxStore } from '../store/useTxStore'
 
 interface TxReviewInfoProperties {
   playAnimation: boolean
@@ -20,18 +24,68 @@ interface TxReviewInfoProperties {
 }
 
 export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) => {
+  const { brakeBalance, setBrakeBalance, scalesClickCount, setScalesClickCount } =
+    useTxStore()
   const type = items?.length === 1 ? 'single' : 'multiple'
+  const [isRed, setIsRed] = useState(false)
+  const [isFalling, setIsFalling] = useState(false)
+  const audioReference = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    if (scalesClickCount >= 20) {
+      setBrakeBalance(true)
+    }
+  }, [scalesClickCount, setBrakeBalance])
+
+  useEffect(() => {
+    audioReference.current = new Audio(alarmSound)
+    audioReference.current.loop = false
+  }, [])
+
+  useEffect(() => {
+    if (brakeBalance) {
+      if (audioReference.current) {
+        audioReference.current
+          .play()
+          .then(() => {
+            setIsRed(true)
+          })
+          .catch((error) => console.error('Failed to play audio:', error))
+      }
+      const fallTimeout = setTimeout(() => setIsFalling(true), 1000)
+      return () => clearTimeout(fallTimeout)
+    }
+    setIsRed(false)
+    setIsFalling(false)
+    if (audioReference.current) {
+      audioReference.current.pause()
+      audioReference.current.currentTime = 0
+    }
+  }, [brakeBalance])
+
+  const handleScalesClick = () => {
+    setScalesClickCount(scalesClickCount + 1)
+  }
+
+  const renderScales = () => (
+    <div onClick={handleScalesClick}>
+      <Lottie
+        animationData={Scales}
+        loop={playAnimation}
+        autoplay={playAnimation}
+        className="aspect-square h-[8.4375rem] self-center transition-all duration-1000 lg:h-28"
+        style={{
+          filter: isRed ? 'sepia(1) saturate(10000%) hue-rotate(0deg)' : 'none',
+          transform: isFalling ? 'translateY(60vh)' : 'none',
+        }}
+      />
+    </div>
+  )
 
   if (type === 'single') {
     return (
       <>
-        <Lottie
-          animationData={Scales}
-          loop={playAnimation}
-          autoplay={playAnimation}
-          className="aspect-square h-[8.4375rem] self-center lg:h-28"
-        />
-
+        {renderScales()}
         <div className="flex items-center gap-2 self-center text-[1.125rem] ">
           <TokenWithNetwork
             symbol={items[0].tokenData.symbol}
@@ -79,12 +133,7 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
         </p>
       </div>
 
-      <Lottie
-        animationData={Scales}
-        loop={playAnimation}
-        autoplay={playAnimation}
-        className="aspect-square h-28 self-center max-lg:col-start-1 max-lg:col-end-4 max-lg:row-start-1 max-lg:w-full max-lg:self-center"
-      />
+      {renderScales()}
 
       <GuidanceArrow className="justify-self-center lg:hidden" />
       <div className="flex flex-1 flex-col items-center text-[1.125rem]">
