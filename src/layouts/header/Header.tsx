@@ -14,6 +14,7 @@ interface HeaderProperties extends ComponentProps<'div'> {}
 
 export const Header = ({ className, ...rest }: HeaderProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
+
   if (isBelowDesktop) {
     return <MobileHeader className={className} {...rest} />
   }
