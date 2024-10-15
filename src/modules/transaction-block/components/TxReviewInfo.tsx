@@ -68,7 +68,7 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
   }
 
   const renderScales = () => (
-    <div className="flex w-full justify-center" onClick={handleScalesClick}>
+    <div className="flex justify-center" onClick={handleScalesClick}>
       <Lottie
         animationData={Scales}
         loop={playAnimation}
