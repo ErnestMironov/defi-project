@@ -1,4 +1,7 @@
 import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
+import AnalyticsLottie from '@assets/lottie/MAAT_Icon_Analytics.json'
+import DepositLottie from '@assets/lottie/MAAT_Icon_Deposit.json'
+import DocsLottie from '@assets/lottie/MAAT_Icon_Docs.json'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -10,6 +13,8 @@ export interface IMenuItem {
   src?: React.FC<React.SVGProps<SVGSVGElement>>
   callback?: () => void
   dropdown?: IMenuItem[]
+  animationData?: any
+  animationClassName?: string
 }
 
 export const useShortMenuArray = (includePortfolio: boolean = false) => {
@@ -18,10 +23,14 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
       deposit: {
         href: ROUTES.DEPOSIT,
         label: 'Deposit',
+        animationData: DepositLottie,
+        animationClassName: 'size-10',
       },
       analytics: {
         href: ROUTES.ANALYTICS,
         label: 'Analytics',
+        animationData: AnalyticsLottie,
+        animationClassName: 'size-12',
         dropdown: [
           {
             href: ROUTES.TOKENS,
@@ -52,6 +61,8 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
         className={cn(className, 'size-[1em] relative bottom-[0.06rem]')}
       />
     ),
+    animationData: DocsLottie,
+    animationClassName: 'mr-[0.38rem] size-8',
   }
   const resultMenu = Object.values(menu) as IMenuItem[]
   if (includePortfolio) {

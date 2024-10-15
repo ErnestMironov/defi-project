@@ -22,6 +22,7 @@ export const UserTokens = (props: UserTokensProperties) => {
       .filter((token) => token.balance > 999_999)
       .sort((a, b) => Number(b.balance) - Number(a.balance))
   }, [shares])
+  console.log('balances', balances)
 
   const {
     data: protocolMetrics,
@@ -41,6 +42,7 @@ export const UserTokens = (props: UserTokensProperties) => {
       }
     })
   }, [balances, usdcApy, usdtApy])
+  console.log('formattedVaultData', formattedVaultData)
 
   const renderTokens = () => {
     if (isUserSharesLoading || isProtocolMetricsLoading || protocolMetricsError)

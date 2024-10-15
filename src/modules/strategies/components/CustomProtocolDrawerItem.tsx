@@ -117,7 +117,7 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
             value={search}
             className="col-span-3"
             onValueChange={setSearch}
-            placeholder="Chains / Protocols / Tokens"
+            placeholder="Strategy ID"
           />
           <MultiSelect
             variant="outline"
