@@ -48,17 +48,16 @@ const Line: React.FC<
 interface DetailsProperties {
   open: boolean
   summaryAndFees: SummaryAndFees
-  closeHandler: () => void
+  onOpenChange: (open: boolean) => void
 }
 
-const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandler }) => {
+const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChange }) => {
   const { boostMode, txDifficulty, setBoostMode } = useTxStore()
-
   return (
-    <Dialog open={open} onOpenChange={() => closeHandler()}>
+    <Dialog open={open} onOpenChange={() => onOpenChange(false)}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-[38.75rem] gap-8 rounded-[2rem]"
+        className="max-w-[38.75rem] gap-8 overflow-y-auto rounded-[2rem]"
       >
         <DialogTitle className="flex justify-between text-center">
           <div className="h-full w-8" />
@@ -66,7 +65,7 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, closeHandl
           <button
             type="button"
             className="flex h-full w-8 items-center justify-end"
-            onClick={closeHandler}
+            onClick={() => onOpenChange(false)}
           >
             <ArrowDown className="size-6" />
           </button>

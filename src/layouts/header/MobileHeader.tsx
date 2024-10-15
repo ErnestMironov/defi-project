@@ -10,6 +10,7 @@ import { useTheme } from '@modules/theme/ThemeProvider'
 import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { useAppKit } from '@reown/appkit/react'
 import { ROUTES } from '@routes/routes'
+import { useHideHeaderStore } from '@store/useHideHeaderStore'
 import { cn } from '@utils/cn'
 import clsx from 'clsx'
 import { type ComponentProps, useEffect } from 'react'
@@ -21,6 +22,7 @@ interface MobileHeaderProperties extends ComponentProps<'div'> {}
 
 export const MobileHeader = (props: MobileHeaderProperties) => {
   const { className, ...rest } = props
+  const { hidden } = useHideHeaderStore()
   const [opened, { toggle, close }] = useDisclosure()
   const { open: openConnectModal } = useAppKit()
   const { lock, unlock } = useScrollLock()
@@ -37,7 +39,10 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
   const customBgPage = [ROUTES.PORTFOLIO, ROUTES.DEPOSIT].includes(pathname as never)
 
   return (
-    <header {...rest} className={clsx('flex items-center', className)}>
+    <header
+      {...rest}
+      className={clsx('flex items-center', hidden && 'invisible', className)}
+    >
       <Link onClick={close} to="/" className="flex items-center justify-center">
         <Logo className="relative z-[51] size-9 fill-text" />
       </Link>

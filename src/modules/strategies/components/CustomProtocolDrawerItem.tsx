@@ -16,6 +16,7 @@ import {
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { formatPercentValue } from '@utils/formatValue'
+import { isHashOrAddress } from '@utils/hash-or-address'
 import { type ComponentProps, useState } from 'react'
 
 import {
@@ -81,11 +82,15 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
   const [selectedChain, setSelectedChain] = useState<OptionType[]>([])
   const [selectedProtocol, setSelectedProtocol] = useState<OptionType[]>([])
   const [selectedToken, setSelectedToken] = useState<OptionType[]>([])
-  const { data, hasNextPage, isFetchingNextPage, ref, totalCount } =
+  const { data, hasNextPage, isFetchingNextPage, ref, totalCount, isPlaceholderData } =
     useInfiniteStrategies({
       sort: 'apy',
       order_by: 'desc',
       size: 30,
+      strategy_id: isHashOrAddress(search) ? search : undefined,
+      chain: selectedChain.map((chain) => chain.value),
+      protocol: selectedProtocol.map((protocol) => protocol.value),
+      token: selectedToken.map((token) => token.value),
     })
   return (
     <Drawer modal open={isOpen} onOpenChange={setIsOpen} direction="right">
@@ -112,7 +117,7 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
             value={search}
             className="col-span-3"
             onValueChange={setSearch}
-            placeholder="Chains / Protocols / Tokens"
+            placeholder="Strategy ID"
           />
           <MultiSelect
             variant="outline"
@@ -138,7 +143,12 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
             placeholder="All Tokens"
           />
         </div>
-        <div className="mt-8 flex size-full flex-col gap-2 overflow-y-auto">
+        <div
+          className={cn(
+            'mt-8 flex size-full flex-col gap-2 overflow-y-auto',
+            isPlaceholderData && 'animate-pulse',
+          )}
+        >
           {data.map((strategy) => (
             <div
               onClick={() => {

@@ -1,9 +1,10 @@
 import MenuArrow from '@assets/icons/menu-arrow.svg'
 import { cn } from '@utils/cn'
 import clsx from 'clsx'
-import { type ComponentProps } from 'react'
+import { type ComponentProps, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
+import { HeaderLottieIcon } from './HeaderLottieIcon'
 import { MenuItemDropdown } from './MenuItemDropdown'
 import type { IMenuItem } from './useMenu'
 import { useShortMenuArray } from './useMenu'
@@ -42,7 +43,12 @@ export const MobileFooterMenu = ({
         if (menuItem.href.startsWith('http')) {
           return (
             <li key={menuItem.href}>
-              <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
+              <LinkMenuItem
+                key={menuItem.href}
+                {...menuItem}
+                callback={callback}
+                withAnimationIcon={false}
+              />
             </li>
           )
         }
@@ -52,6 +58,7 @@ export const MobileFooterMenu = ({
               key={menuItem.href}
               {...{ ...menuItem, dropdown: undefined }}
               callback={callback}
+              withAnimationIcon={false}
             />
             {menuItem.dropdown && (
               <ul className="mt-6 flex flex-col items-start gap-3 [&_*]:text-sm">
@@ -89,12 +96,18 @@ export const FooterMenu = ({ className, callback, ...rest }: HeaderMenuPropertie
         <>
           <li className="">
             {menuItem.href.startsWith('http') ? (
-              <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
+              <LinkMenuItem
+                key={menuItem.href}
+                {...menuItem}
+                callback={callback}
+                withAnimationIcon={false}
+              />
             ) : (
               <NavLinkMenuItem
                 key={menuItem.href}
                 {...{ ...menuItem, dropdown: undefined }}
                 callback={callback}
+                withAnimationIcon={false}
               />
             )}
           </li>
@@ -134,7 +147,12 @@ export const MobileSidebarMenu = ({
         if (menuItem.href.startsWith('http')) {
           return (
             <li key={menuItem.href}>
-              <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
+              <LinkMenuItem
+                key={menuItem.href}
+                {...menuItem}
+                callback={callback}
+                withAnimationIcon={false}
+              />
             </li>
           )
         }
@@ -152,17 +170,36 @@ export const MobileSidebarMenu = ({
   )
 }
 
-export const LinkMenuItem = ({ href, label, src: Source, callback }: IMenuItem) => {
+export const LinkMenuItem = (props: IMenuItem & { withAnimationIcon?: boolean }) => {
+  const {
+    callback,
+    href,
+    label,
+    src: Source,
+    animationData,
+    animationClassName,
+    withAnimationIcon = true,
+  } = props
+  const [isHover, setIsHover] = useState(false)
   return (
     <Link
       onClick={callback}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
       to={href}
       target="_blank"
       key={label}
       className={clsx(
-        'relative inline-flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_path]:hover:stroke-main-100',
+        'relative inline-flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_svg:not(:first-child)_path]:hover:stroke-main-100',
       )}
     >
+      {withAnimationIcon && animationData && (
+        <HeaderLottieIcon
+          animationData={animationData}
+          isHover={isHover}
+          className={cn('size-8', animationClassName)}
+        />
+      )}
       <span>{label}</span>
 
       {Source && <Source className="size-4 [&_path]:stroke-text" />}
@@ -170,27 +207,41 @@ export const LinkMenuItem = ({ href, label, src: Source, callback }: IMenuItem) 
   )
 }
 
-export const NavLinkMenuItem = ({
-  href,
-  label,
-  src: Source,
-  callback,
-  dropdown,
-}: IMenuItem) => {
+export const NavLinkMenuItem = (props: IMenuItem & { withAnimationIcon?: boolean }) => {
+  const {
+    dropdown,
+    callback,
+    href,
+    label,
+    src: Source,
+    animationData,
+    animationClassName,
+    withAnimationIcon = true,
+  } = props
+  const [isHover, setIsHover] = useState(false)
   return (
     <NavLink
       onClick={callback}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
       to={href}
       key={label}
       className={({ isActive }) =>
         clsx(
-          'relative flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_path]:hover:stroke-main-100',
+          'relative flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100',
           {
             'text-main-100 underline decoration-[2px] underline-offset-4': isActive,
           },
         )
       }
     >
+      {withAnimationIcon && animationData && (
+        <HeaderLottieIcon
+          animationData={animationData}
+          isHover={isHover}
+          className={cn('size-8', animationClassName)}
+        />
+      )}
       {label}
       {dropdown && <MenuItemDropdown className="ml-2" menu={dropdown} />}
       {Source && <Source className="relative bottom-0.5 size-7 [&_path]:stroke-text" />}

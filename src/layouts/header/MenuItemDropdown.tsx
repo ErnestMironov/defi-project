@@ -20,7 +20,7 @@ export const MenuItemDropdown = (props: MenuItemDropdownProperties) => {
       <HoverCardTrigger
         className={cn('data-[state=open]:rotate-180 transition', className)}
       >
-        <ArrowDown className="size-4 [&_path]:!stroke-text" />
+        <ArrowDown className="size-4 [&_path]:stroke-text" />
       </HoverCardTrigger>
       <HoverCardContent sideOffset={12} className="flex w-[12.5rem] flex-col gap-5">
         {menu.map((item) => {
@@ -35,7 +35,7 @@ export const MenuItemDropdown = (props: MenuItemDropdownProperties) => {
               className={({ isActive }) =>
                 clsx(
                   'relative flex cursor-pointer items-center text-[1.125rem] font-normal normal-case leading-[120%] tracking-[0.0125rem] hover:text-violet-100 [&_path]:hover:stroke-violet-100',
-                  'before:transition-width before:pointer-events-none before:absolute before:left-[-0.81rem] before:top-[-0.56rem] before:h-[calc(100%+0.56rem*2)] before:w-[calc(100%+0.81rem*2)] before:rounded-xl before:duration-200 before:ease-in-out hover:before:bg-main-15 before:group-hover:w-full',
+                  'before:transition-width before:absolute before:left-[-0.81rem] before:top-[-0.56rem] before:h-[calc(100%+0.56rem*2)] before:w-[calc(100%+0.81rem*2)] before:rounded-xl before:duration-200 before:ease-in-out hover:before:bg-main-15 before:group-hover:w-full',
                   {
                     'text-violet-100 underline decoration-[2px] underline-offset-4':
                       isActive,

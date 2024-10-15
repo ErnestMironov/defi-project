@@ -68,12 +68,12 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
   }
 
   const renderScales = () => (
-    <div onClick={handleScalesClick}>
+    <div className="flex justify-center" onClick={handleScalesClick}>
       <Lottie
         animationData={Scales}
         loop={playAnimation}
         autoplay={playAnimation}
-        className="aspect-square h-[8.4375rem] self-center transition-all duration-1000 lg:h-28"
+        className="aspect-square size-[8.4375rem] self-center transition-all duration-1000 lg:h-28"
         style={{
           filter: isRed ? 'sepia(1) saturate(10000%) hue-rotate(0deg)' : 'none',
           transform: isFalling ? 'translateY(60vh)' : 'none',
