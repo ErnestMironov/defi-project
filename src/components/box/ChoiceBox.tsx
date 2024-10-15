@@ -34,7 +34,7 @@ export const ChoiceBox = ({
         (symbol && (
           <TokenIconComponent symbol={symbol} className="size-8 max-lg:size-5" />
         ))}
-      <div>{value}</div>
+      <div className="whitespace-nowrap">{value}</div>
       {!disabled && (
         <ArrowDown
           className={cn(

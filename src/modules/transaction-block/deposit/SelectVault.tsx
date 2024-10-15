@@ -1,12 +1,15 @@
+import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import Close from '@assets/icons/close.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
+import { Skeleton } from '@components/ui/skeleton'
 import type { ChainType } from '@constants/chains'
 import { VAULTS } from '@constants/vaults'
 import { PopoverClose } from '@radix-ui/react-popover'
 import { cn } from '@utils/cn'
+import { formatPercentValue } from '@utils/formatValue'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import type { Vault } from '../store/useTxStore'
@@ -31,6 +34,19 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
     () => filterVaultsByChain(depositToNetwork as ChainType, [...VAULTS]),
     [depositToNetwork],
   )
+
+  const { data: protocolMetrics, isLoading: isProtocolMetricsLoading } =
+    useProtocolMetrics({})
+
+  const usdcApy = protocolMetrics?.history?.USDC?.apy
+  const usdtApy = protocolMetrics?.history?.USDT?.apy
+
+  const getApy = (symbol: string) => {
+    if (symbol === 'USDC') {
+      return usdcApy
+    }
+    return usdtApy
+  }
 
   useEffect(() => {
     if (filteredVaults.length === 1) {
@@ -62,7 +78,7 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
         <ChoiceBox
           disabled={!depositToNetwork || filteredVaults.length <= 1}
           className="min-w-[10.5rem]"
-          value={vault}
+          value={`${vault} vault`}
           symbol={vault}
           opened={isOpened}
         />
@@ -84,9 +100,17 @@ export const SelectVault = (_props: SelectAssetPopoverProperties) => {
             >
               <div className="flex items-center gap-3">
                 <TokenIconComponent symbol={_vault} className="size-8" />
-                <span className="text-[1.25rem]/[1.75rem] uppercase">{_vault}</span>
+                <span className="text-[1.25rem]/[1.75rem]">
+                  <span className="uppercase">{_vault}</span> vault
+                </span>
               </div>
-              {/* <div className="text-base font-bold text-gray-100">APY {12}%</div> */}
+              {isProtocolMetricsLoading ? (
+                <Skeleton className="h-4 w-20" />
+              ) : (
+                <div className="text-base font-bold text-gray-100">
+                  Last week APY {formatPercentValue(getApy(_vault))}
+                </div>
+              )}
             </button>
           ))}
         </div>
