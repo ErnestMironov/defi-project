@@ -111,7 +111,7 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
   return (
     <div className="max-lg:grid-cols-auto flex items-center gap-x-6 gap-y-8 max-lg:grid lg:justify-between lg:gap-8">
       <div className="flex flex-1 flex-col items-center text-[1.125rem]">
-        <span className="text-[0.875rem]">Withdraw</span>
+        <span className="text-[0.875rem]">{items[0].label}</span>
         <div className="mt-3 flex items-center">
           <TokenWithNetwork
             symbol={items[0].tokenData.symbol}
@@ -137,7 +137,7 @@ export const TxReviewInfo = ({ items, playAnimation }: TxReviewInfoProperties) =
 
       <GuidanceArrow className="justify-self-center lg:hidden" />
       <div className="flex flex-1 flex-col items-center text-[1.125rem]">
-        <span className="text-[0.875rem]">Receive</span>
+        <span className="text-[0.875rem]">{items[1].label}</span>
         <div className="mt-3 flex items-center">
           <TokenWithNetwork
             symbol={items[1].tokenData.symbol}

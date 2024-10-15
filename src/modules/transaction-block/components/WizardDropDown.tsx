@@ -59,7 +59,7 @@ export const WizardDropDown = ({
       </div>
       <ChevronDownIcon
         className={cn(
-          'size-6 transition-transform stroke-[#6160FF] [stroke-opacity:0.5] mt-3 max-lg:hidden',
+          'size-6 transition-transform stroke-[#6160FF] [stroke-opacity:0.5] dark:[stroke-opacity:1] mt-3 max-lg:hidden',
           open ? 'rotate-180' : '',
         )}
       />
