@@ -1,7 +1,7 @@
 import { Socials } from '@components/socials/Socials'
 import { Logo } from '@components/ui/logo'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { HeaderMenu, MobileFooterMenu } from '@layouts/header/HeaderMenu'
+import { FooterMenu, MobileFooterMenu } from '@layouts/header/HeaderMenu'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
@@ -37,7 +37,7 @@ export const Footer = (props: MobileFooterProperties) => {
         <Link to="/" className="flex-[0.5] justify-self-start">
           <Logo className="h-[1.5625rem] w-[4.1875rem]" />
         </Link>
-        <HeaderMenu className="place-self-center" />
+        <FooterMenu className="place-self-center" />
       </div>
       <Socials
         classNames={{
