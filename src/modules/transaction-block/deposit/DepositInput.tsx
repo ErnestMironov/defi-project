@@ -124,7 +124,7 @@ export const DepositInput = () => {
       return
     }
 
-    if (inputValueInUSD && +inputValueInUSD !== 0 && +inputValueInUSD < 1) {
+    if (inputValueInUSD && +inputValueInUSD < 1) {
       setError('Deposit amount cannot be less than 1$')
       return
     }
