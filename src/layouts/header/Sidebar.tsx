@@ -62,34 +62,22 @@ export const Sidebar: FC = ({ ...rest }) => {
 
   const sidebarContentVariants = {
     menu: (
-      <>
-        <div className="mt-8">
-          <div className="mb-6 text-[1.125rem] leading-[120%] text-gray-100">
-            Products
-          </div>
-          <HeaderMenu
-            className="flex-col items-start"
-            openPortfolio={handlePortfolioOpen}
-            callback={handleClose}
-          />
-          <div className="mb-6 mt-10 text-[1.125rem] leading-[120%] text-gray-100">
-            Social
-          </div>
-          <SocialsSidebar
-            classNames={{
-              icon: 'size-8 [&_path]:fill-text-90',
-            }}
-          />
+      <div className="mt-8">
+        <div className="mb-6 text-[1.125rem] leading-[120%] text-gray-100">Products</div>
+        <HeaderMenu
+          className="flex-col items-start"
+          openPortfolio={handlePortfolioOpen}
+          callback={handleClose}
+        />
+        <div className="mb-6 mt-10 text-[1.125rem] leading-[120%] text-gray-100">
+          Social
         </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Metamask className="size-5" />
-            <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
-            <CopyButton text={address as string} className="ml-2 size-5" />
-          </div>
-          <ThemeToggler />
-        </div>
-      </>
+        <SocialsSidebar
+          classNames={{
+            icon: 'size-8 [&_path]:fill-text-90',
+          }}
+        />
+      </div>
     ),
     portfolio: (
       <div className="hide-scrollbar pointer-events-auto h-full overflow-auto rounded-[2rem] bg-cards">
@@ -109,7 +97,9 @@ export const Sidebar: FC = ({ ...rest }) => {
         {/* deposit/withdraw/buy */}
         <ActionButtons className="mt-6" />
         {/* tokens/activity */}
-        <UserActivityTabs className="mt-8" />
+        <div className="max-h-[35rem] overflow-y-auto overflow-x-hidden">
+          <UserActivityTabs className="mt-8" />
+        </div>
       </div>
     ),
   }
@@ -176,6 +166,14 @@ export const Sidebar: FC = ({ ...rest }) => {
         >
           {sidebarContentVariants[currentContent]}
         </motion.div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Metamask className="size-5" />
+            <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
+            <CopyButton text={address as string} className="ml-2 size-5" />
+          </div>
+          <ThemeToggler />
+        </div>
       </motion.div>
     </AnimatePresence>,
     document.body,
