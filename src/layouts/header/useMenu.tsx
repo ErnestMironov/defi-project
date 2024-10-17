@@ -30,13 +30,13 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
         href: ROUTES.DEPOSIT,
         label: 'Deposit',
         animationData: DepositLottie,
-        animationClassName: 'size-8',
+        animationClassName: 'size-8 [&_path]:stroke-current',
       },
       analytics: {
         href: ROUTES.ANALYTICS,
         label: 'Analytics',
         animationData: AnalyticsLottie,
-        animationClassName: 'size-8',
+        animationClassName: 'size-8 [&_path]:fill-current',
         dropdown: [
           {
             href: ROUTES.TOKENS,
@@ -58,7 +58,7 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
     label: 'Portfolio',
     type: 'button',
     animationData: PortfolioLottie,
-    animationClassName: 'size-8',
+    animationClassName: 'size-8 [&_path]:fill-current',
   }
   const documentation: IMenuItem = {
     href: 'https://docs.maat.finance/',
@@ -70,7 +70,7 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
       />
     ),
     animationData: DocsLottie,
-    animationClassName: 'size-8',
+    animationClassName: 'size-8 [&_path]:fill-current [&_path]:stroke-current',
   }
   const resultMenu = Object.values(menu) as IMenuItem[]
   if (includePortfolio) {

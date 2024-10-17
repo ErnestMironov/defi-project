@@ -15,13 +15,22 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
     return <MobileHeader className={className} {...rest} />
   }
   return (
-    <header {...rest} className={clsx('flex items-center justify-between', className)}>
-      <div className="h-16">
-        <Sidebar />
-      </div>
-      <div className="flex items-center gap-3 justify-self-end">
-        <ConnectWallet btnProps={{ className: 'ml-1' }} />
-      </div>
-    </header>
+    <>
+      <div className="h-16" />
+      <header
+        {...rest}
+        className={clsx(
+          'fixed left-0 top-0 z-50 flex w-full items-center justify-between px-[6.25rem]',
+          className,
+        )}
+      >
+        <div className="h-16">
+          <Sidebar />
+        </div>
+        <div className="flex items-center gap-3 justify-self-end">
+          <ConnectWallet btnProps={{ className: 'ml-1' }} />
+        </div>
+      </header>
+    </>
   )
 }

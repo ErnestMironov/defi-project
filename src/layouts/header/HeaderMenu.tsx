@@ -20,6 +20,7 @@ interface HeaderMenuProperties extends UnifiedMenuProperties {
 export const HeaderMenu = ({
   className,
   openPortfolio,
+  callback,
   ...rest
 }: HeaderMenuProperties) => {
   const menu = useShortMenuArray(true)
@@ -34,9 +35,18 @@ export const HeaderMenu = ({
         }
 
         if (menuItem.href.startsWith('http')) {
-          return <LinkMenuItem key={menuItem.href} {...menuItem} />
+          return <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
         }
-        return <NavLinkMenuItem key={menuItem.href} {...menuItem} />
+        return (
+          <NavLinkMenuItem
+            key={menuItem.href}
+            {...menuItem}
+            callback={callback}
+            classNames={{
+              active: 'no-underline',
+            }}
+          />
+        )
       })}
     </ul>
   )
@@ -169,7 +179,7 @@ export const LinkMenuItem = (props: IMenuItem & { withAnimationIcon?: boolean })
       target="_blank"
       key={label}
       className={clsx(
-        'relative inline-flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_svg:not(:first-child)_path]:hover:stroke-main-100',
+        'relative inline-flex cursor-pointer items-center gap-3 text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_svg:not(:first-child)_path]:hover:stroke-main-100',
       )}
     >
       {withAnimationIcon && animationData && (
@@ -208,7 +218,7 @@ export const ButtonMenuItem = (
       onMouseLeave={() => setIsHover(false)}
       key={label}
       className={clsx(
-        'relative inline-flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_svg:not(:first-child)_path]:hover:stroke-main-100',
+        'relative inline-flex cursor-pointer items-center gap-3 text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100 [&_svg:not(:first-child)_path]:hover:stroke-main-100',
       )}
     >
       {withAnimationIcon && animationData && (
@@ -225,7 +235,16 @@ export const ButtonMenuItem = (
   )
 }
 
-export const NavLinkMenuItem = (props: IMenuItem & { withAnimationIcon?: boolean }) => {
+export const NavLinkMenuItem = (
+  props: IMenuItem & {
+    withAnimationIcon?: boolean
+    classNames?: {
+      link?: string
+      active?: string
+      icon?: string
+    }
+  },
+) => {
   const {
     dropdown,
     callback,
@@ -234,6 +253,7 @@ export const NavLinkMenuItem = (props: IMenuItem & { withAnimationIcon?: boolean
     src: Source,
     animationData,
     animationClassName,
+    classNames,
     withAnimationIcon = true,
   } = props
   const [isHover, setIsHover] = useState(false)
@@ -246,10 +266,12 @@ export const NavLinkMenuItem = (props: IMenuItem & { withAnimationIcon?: boolean
       key={label}
       className={({ isActive }) =>
         clsx(
-          'relative flex cursor-pointer items-center text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100',
+          'relative flex cursor-pointer items-center gap-3 text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100',
+          classNames?.link,
           {
             'text-main-100 underline decoration-[2px] underline-offset-4': isActive,
           },
+          isActive && classNames?.active,
         )
       }
     >
@@ -261,7 +283,7 @@ export const NavLinkMenuItem = (props: IMenuItem & { withAnimationIcon?: boolean
         />
       )}
       {label}
-      {dropdown && <MenuItemDropdown className="ml-2" menu={dropdown} />}
+      {dropdown && <MenuItemDropdown menu={dropdown} />}
       {Source && <Source className="relative bottom-0.5 size-7 [&_path]:stroke-text" />}
     </NavLink>
   )

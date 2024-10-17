@@ -70,6 +70,7 @@ export const Sidebar: FC = ({ ...rest }) => {
           <HeaderMenu
             className="flex-col items-start"
             openPortfolio={handlePortfolioOpen}
+            callback={handleClose}
           />
           <div className="mb-6 mt-10 text-[1.125rem] leading-[120%] text-gray-100">
             Social
@@ -131,6 +132,7 @@ export const Sidebar: FC = ({ ...rest }) => {
   function handleClose() {
     setIsOpen(false)
     setCurrentBarButton('open')
+    setCurrentContent('menu')
   }
 
   const handleClickOutside = () => {
@@ -145,7 +147,7 @@ export const Sidebar: FC = ({ ...rest }) => {
     <AnimatePresence>
       <motion.div
         ref={sidebarReference}
-        className="absolute left-10 top-10 z-50 flex max-h-[90vh] flex-col bg-cards"
+        className="fixed left-10 top-10 z-50 flex max-h-[90vh] flex-col bg-cards"
         initial="closed"
         animate={isOpen ? 'open' : 'closed'}
         variants={sidebarVariants}
