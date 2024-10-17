@@ -122,7 +122,7 @@ export const Sankey = ({ data }: SankeyProperties) => {
   }, [tooltip])
   const dimensions = useDimensions(containerReference)
   const sankeyGenerator = sankey()
-    .nodeWidth(10)
+    .nodeWidth(0)
     .nodePadding(15)
     .extent([
       [MARGIN_X, MARGIN_Y],
