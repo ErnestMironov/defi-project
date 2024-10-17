@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-unused-collection */
+
 import type { Event, Strategy } from '@api/maat-finance/types'
 import type { LastRebalancesType } from '@api/queries/useLastRebalances'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
@@ -26,14 +27,20 @@ type CreateSankeyProperties = {
   activeStableType: StableType
 }
 
+const SLIPPAGE_THRESHOLD = 0.05
+
 export const getSankeyData = (props: CreateSankeyProperties) => {
-  return new SankeyDataBuilder(props)
-    .createSankeyData()
-    .getOnChainLinks()
-    .getMultiSourceLinks()
-    .getWithOnChainLinks()
-    .getWithBridgeLinks()
-    .build()
+  return (
+    new SankeyDataBuilder(props)
+      .createSankeyData()
+      .getOnChainLinks()
+      .getMultiSourceLinks()
+      .getWithOnChainLinks()
+      // no same chain bridge nodes
+      .allocateSameChainNodes()
+      .getWithBridgeLinks()
+      .build()
+  )
 }
 
 class SankeyDataBuilder {
@@ -54,11 +61,14 @@ class SankeyDataBuilder {
       .flat()
       .filter((item) => item.vault.token.symbol === activeStableType)
       .filter((item) => item.status === 'success')
-      .map((item, i) => ({
-        sankey_id: i,
-        ...item,
-        amount: (item.amount ?? 0) / 10 ** item.vault.token.decimals,
-      })) as SankeyNodeType[]
+      .map(
+        (item, i) =>
+          ({
+            sankey_id: i,
+            ...item,
+            amount: (item.amount ?? 0) / 10 ** item.vault.token.decimals,
+          }) as SankeyNodeType,
+      )
 
     const sourceNodes = nodes.filter(
       (item) => item.action_type === 'WITHDRAW_FROM_STRATEGY',
@@ -88,7 +98,8 @@ class SankeyDataBuilder {
       for (const targetNode of unAllocatedTargetNodes) {
         if (
           sourceNode.src_chain_id === targetNode.src_chain_id &&
-          Math.abs(sourceNode.amount - targetNode.amount) / sourceNode.amount <= 0.05
+          Math.abs(sourceNode.amount - targetNode.amount) / sourceNode.amount <=
+            SLIPPAGE_THRESHOLD
         ) {
           links.push({
             source: sourceNode.sankey_id,
@@ -183,12 +194,11 @@ class SankeyDataBuilder {
     targetNode: SankeyNodeType,
     sourceNodes: SankeyNodeType[],
   ): SankeyNodeType[] {
-    const threshold = 0.05 // 5% threshold for approximate equality
     const targetAmount = targetNode.amount
 
     // Helper function to check if the sum is approximately equal to the target
     const isApproximatelyEqual = (sum: number) =>
-      Math.abs(sum - targetAmount) / targetAmount <= threshold
+      Math.abs(sum - targetAmount) / targetAmount <= SLIPPAGE_THRESHOLD
 
     // Helper function to find all combinations
     const findCombinations = (
@@ -218,6 +228,79 @@ class SankeyDataBuilder {
 
     // Start the recursive search
     return findCombinations(0, 0, []) || []
+  }
+
+  allocateSameChainNodes(): SankeyDataBuilder {
+    const { unAllocatedSourceNodes, unAllocatedTargetNodes } = this.sankeyData
+    for (const sourceNode of unAllocatedSourceNodes) {
+      this.allocateSourceNodeHelper(sourceNode)
+    }
+    for (const targetNode of unAllocatedTargetNodes) {
+      this.allocateTargetNodeHelper(targetNode)
+    }
+
+    return this
+  }
+
+  // helper for allocateSameChainNodes
+  allocateSourceNodeHelper(node: SankeyNodeType): SankeyDataBuilder {
+    const { nodes, links, unAllocatedSourceNodes } = this.sankeyData
+
+    const chainId = node.src_chain_id
+    const highestAmountLinkedNodeWithSameChain = nodes.find(
+      (_node) =>
+        _node.src_chain_id === chainId &&
+        links.some((link) => link.source === _node.sankey_id),
+    )
+
+    const targetNodeId = links.find(
+      (link) => link?.source === highestAmountLinkedNodeWithSameChain?.sankey_id,
+    )?.target
+
+    if (!targetNodeId) {
+      return this
+    }
+    const newLink = {
+      source: node.sankey_id,
+      target: targetNodeId,
+      value: node.amount,
+    }
+    links.push(newLink)
+    this.sankeyData.unAllocatedSourceNodes = unAllocatedSourceNodes.filter(
+      (_node) => _node.sankey_id !== node.sankey_id,
+    )
+
+    return this
+  }
+
+  allocateTargetNodeHelper(node: SankeyNodeType): SankeyDataBuilder {
+    const { nodes, links, unAllocatedTargetNodes } = this.sankeyData
+
+    const chainId = node.src_chain_id
+    const highestAmountLinkedNodeWithSameChain = nodes.find(
+      (_node) =>
+        _node.src_chain_id === chainId &&
+        links.some((link) => link.target === _node.sankey_id),
+    )
+
+    const sourceNodeId = links.find(
+      (link) => link?.target === highestAmountLinkedNodeWithSameChain?.sankey_id,
+    )?.source
+
+    if (!sourceNodeId) {
+      return this
+    }
+    const newLink = {
+      source: sourceNodeId,
+      target: node.sankey_id,
+      value: node.amount,
+    }
+    links.push(newLink)
+    this.sankeyData.unAllocatedTargetNodes = unAllocatedTargetNodes.filter(
+      (_node) => _node.sankey_id !== node.sankey_id,
+    )
+
+    return this
   }
 
   getWithBridgeLinks(): SankeyDataBuilder {
