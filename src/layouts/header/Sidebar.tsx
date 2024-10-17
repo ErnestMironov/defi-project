@@ -20,7 +20,7 @@ import { useAccount } from 'wagmi'
 
 import { HeaderMenu } from './HeaderMenu'
 
-export const Sidebar: FC = ({ ...rest }) => {
+export const Sidebar: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { address } = useAccount()
   const [currentContent, setCurrentContent] = useState<'menu' | 'portfolio'>('menu')
