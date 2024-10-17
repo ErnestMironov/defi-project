@@ -32,7 +32,7 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     withDraggable?: boolean
-    position?: 'right' | 'bottom'
+    position?: 'right' | 'bottom' | 'left'
     overlay?: boolean
   }
 >(
@@ -56,6 +56,8 @@ const DrawerContent = React.forwardRef<
           position === 'right' &&
             'inset-y-0 right-0  flex h-full w-1/2 flex-col rounded-l-3xl bg-cards',
           position === 'bottom' && 'flex-col rounded-t-3xl bg-cards inset-x-0 bottom-0',
+          position === 'left' &&
+            'inset-y-0 left-0 flex h-full w-1/2 flex-col rounded-r-3xl bg-cards',
           'pt-6',
           className,
         )}

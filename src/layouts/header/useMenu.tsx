@@ -2,6 +2,7 @@ import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
 import AnalyticsLottie from '@assets/lottie/MAAT_Icon_Analytics.json'
 import DepositLottie from '@assets/lottie/MAAT_Icon_Deposit.json'
 import DocsLottie from '@assets/lottie/MAAT_Icon_Docs.json'
+import PortfolioLottie from '@assets/lottie/MAAT_Icon_Portfolio.json'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -13,8 +14,13 @@ export interface IMenuItem {
   src?: React.FC<React.SVGProps<SVGSVGElement>>
   callback?: () => void
   dropdown?: IMenuItem[]
+  type?: 'link' | 'dropdown' | 'button'
   animationData?: any
   animationClassName?: string
+}
+
+export interface IMenuItemWithoutLink extends Omit<IMenuItem, 'href' | 'callback'> {
+  callback?: () => void
 }
 
 export const useShortMenuArray = (includePortfolio: boolean = false) => {
@@ -24,13 +30,13 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
         href: ROUTES.DEPOSIT,
         label: 'Deposit',
         animationData: DepositLottie,
-        animationClassName: 'size-10',
+        animationClassName: 'size-8 [&_path]:stroke-current',
       },
       analytics: {
         href: ROUTES.ANALYTICS,
         label: 'Analytics',
         animationData: AnalyticsLottie,
-        animationClassName: 'size-12',
+        animationClassName: 'size-8 [&_path]:fill-current',
         dropdown: [
           {
             href: ROUTES.TOKENS,
@@ -48,11 +54,13 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
       },
     }
   }, [])
-  const portfolio: IMenuItem = {
-    href: ROUTES.PORTFOLIO,
+  const portfolio: IMenuItemWithoutLink = {
     label: 'Portfolio',
+    type: 'button',
+    animationData: PortfolioLottie,
+    animationClassName: 'size-8 [&_path]:fill-current',
   }
-  const docs: IMenuItem = {
+  const documentation: IMenuItem = {
     href: 'https://docs.maat.finance/',
     label: 'Docs',
     src: ({ className, ...rest }: ComponentProps<'svg'>) => (
@@ -62,13 +70,13 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
       />
     ),
     animationData: DocsLottie,
-    animationClassName: 'mr-[0.38rem] size-8',
+    animationClassName: 'size-8 [&_path]:fill-current [&_path]:stroke-current',
   }
   const resultMenu = Object.values(menu) as IMenuItem[]
   if (includePortfolio) {
     resultMenu.push(portfolio as IMenuItem)
   }
-  resultMenu.push(docs)
+  resultMenu.push(documentation)
   return resultMenu
 }
 
