@@ -1,7 +1,9 @@
+import { usePortfolioYield } from '@api/queries/usePortfolioYield'
 import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import { useUserShares } from '@hooks/useGetUserShares'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useMemo } from 'react'
+import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { AllAssets } from '../all-assets/AllAssets'
@@ -14,6 +16,7 @@ export const UserTokens = (props: UserTokensProperties) => {
   const { address } = useAccount()
 
   const { shares, isLoading: isUserSharesLoading } = useUserShares(address)
+  const { data: yieldData } = usePortfolioYield(address as Address)
 
   const balances = useMemo(() => {
     if (!shares) return []
@@ -38,35 +41,36 @@ export const UserTokens = (props: UserTokensProperties) => {
         symbol,
         value,
         apy: (symbol === 'USDC' ? usdcApy : usdtApy) as number,
+        yield: (yieldData?.[value.stable] as number) ?? 0,
       }
     })
-  }, [balances, usdcApy, usdtApy])
+  }, [balances, usdcApy, usdtApy, yieldData])
 
   const renderTokens = () => {
     if (isUserSharesLoading || isProtocolMetricsLoading || protocolMetricsError)
       return (
-        <>
+        <div className="user-assets flex flex-col gap-6">
           {Array.from({ length: 2 }).map((_, i) => (
             <VaultTokenItemSkeleton key={i} />
           ))}
-        </>
+        </div>
       )
 
     return (
-      <>
+      <div className="user-assets flex flex-col gap-6">
         {formattedVaultData
           .sort((a, b) => Number(b.value) - Number(a.value))
           .map((item, i) => (
             <VaultTokenItem key={i} {...item} />
           ))}
-      </>
+      </div>
     )
   }
 
   return (
     <div className={cn('space-y-6', className)} {...rest}>
       {renderTokens()}
-      <AllAssets className="mt-6" />
+      <AllAssets className="all-assets  mt-6" />
     </div>
   )
 }

@@ -13,7 +13,8 @@ export interface IMenuItem {
   label: string
   src?: React.FC<React.SVGProps<SVGSVGElement>>
   callback?: () => void
-  dropdown?: IMenuItem[]
+  sublist?: IMenuItem[]
+  sublistType?: 'dropdown' | 'list'
   type?: 'link' | 'dropdown' | 'button'
   animationData?: any
   animationClassName?: string
@@ -23,7 +24,11 @@ export interface IMenuItemWithoutLink extends Omit<IMenuItem, 'href' | 'callback
   callback?: () => void
 }
 
-export const useShortMenuArray = (includePortfolio: boolean = false) => {
+export const useShortMenuArray = (
+  includePortfolio: boolean = false,
+  portfolioType: 'link' | 'button' = 'link',
+  sublistType: 'dropdown' | 'list' = 'dropdown',
+) => {
   const menu = useMemo(() => {
     return {
       deposit: {
@@ -37,7 +42,8 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
         label: 'Analytics',
         animationData: AnalyticsLottie,
         animationClassName: 'size-8 [&_path]:fill-current',
-        dropdown: [
+        sublistType,
+        sublist: [
           {
             href: ROUTES.TOKENS,
             label: 'Tokens',
@@ -53,13 +59,24 @@ export const useShortMenuArray = (includePortfolio: boolean = false) => {
         ],
       },
     }
-  }, [])
-  const portfolio: IMenuItemWithoutLink = {
-    label: 'Portfolio',
-    type: 'button',
-    animationData: PortfolioLottie,
-    animationClassName: 'size-8 [&_path]:fill-current',
-  }
+  }, [sublistType])
+
+  const portfolio: IMenuItemWithoutLink | IMenuItem =
+    portfolioType === 'link'
+      ? {
+          href: ROUTES.PORTFOLIO,
+          label: 'Portfolio',
+          type: 'link',
+          animationData: PortfolioLottie,
+          animationClassName: 'size-8 [&_path]:fill-current',
+        }
+      : {
+          label: 'Portfolio',
+          type: 'button',
+          animationData: PortfolioLottie,
+          animationClassName: 'size-8 [&_path]:fill-current',
+        }
+
   const documentation: IMenuItem = {
     href: 'https://docs.maat.finance/',
     label: 'Docs',

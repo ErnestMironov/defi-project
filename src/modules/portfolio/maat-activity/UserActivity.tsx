@@ -42,7 +42,7 @@ export const UserActivity = (props: UserActivityProperties) => {
   }
 
   return (
-    <div {...rest} className={cn('', className)}>
+    <div {...rest} className={cn('user-activity', className)}>
       {!!filteredByStatusData?.pending.length && (
         <>
           <h6 className="text-base text-gray-100">In Progress</h6>

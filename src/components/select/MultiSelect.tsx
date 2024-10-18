@@ -42,6 +42,10 @@ const multiSelectVariants = cva('', {
   variants: {
     variant: {
       default: 'bg-cards',
+      /**
+       * @description color2 is cards-widget
+       */
+      color2: 'bg-cards dark:bg-cards-widget',
       outline: 'border border-stroke-100',
     },
     size: {
