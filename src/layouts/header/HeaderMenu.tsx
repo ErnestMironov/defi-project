@@ -133,7 +133,7 @@ export const MobileSidebarMenu = ({
       {...rest}
     >
       {menu.map((menuItem) => {
-        if (menuItem.href.startsWith('http')) {
+        if (menuItem?.href?.startsWith('http')) {
           return (
             <li key={menuItem.href}>
               <LinkMenuItem
