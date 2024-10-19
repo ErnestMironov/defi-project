@@ -37,7 +37,7 @@ export const AmountInput = forwardRef(
             )}
             onChange={(event) => {
               let inputValue = event.target.value
-              if (inputValue.startsWith('.')) {
+              if (inputValue?.startsWith('.')) {
                 inputValue = `0${inputValue}`
               }
               let filteredValue = inputValue.replaceAll(/[^\d.]|(?<=\..*)\./g, '')

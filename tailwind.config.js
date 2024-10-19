@@ -110,6 +110,7 @@ module.exports = {
         },
         'dark-bg': 'var(--dark-bg)',
         'cards': 'var(--cards)',
+        'cards-widget': 'var(--cards-widget)',
         'dark-cards': {
           100: 'var(--dark-cards-100)',
           70: 'var(--dark-cards-70)',

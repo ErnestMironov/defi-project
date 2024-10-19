@@ -1,3 +1,5 @@
+import { usePortfolioAssets } from '@api/queries/usePortfolioAssets'
+import { usePortfolioYield } from '@api/queries/usePortfolioYield'
 import BackMenuIcon from '@assets/icons/menu-bar-back.svg'
 import CloseMenuIcon from '@assets/icons/menu-bar-close.svg'
 import OpenMenuIcon from '@assets/icons/menu-bar-open.svg'
@@ -10,15 +12,18 @@ import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
 import { PortfolioValueTooltip } from '@modules/portfolio/PortfolioValueTooltip'
+import { useTheme } from '@modules/theme/ThemeProvider'
 import { ThemeToggler } from '@modules/theme/ThemeToggler'
+import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
 import { AnimatePresence, motion } from 'framer-motion'
-import { type FC, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
+import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
-import { HeaderMenu } from './HeaderMenu'
+import { DesktopSidebarMenu } from './HeaderMenu'
 
 export const Sidebar: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -28,6 +33,33 @@ export const Sidebar: FC = () => {
     'open',
   )
 
+  const theme = useTheme()
+
+  const { data: assetsData, isLoading: isLoadingAssets } = usePortfolioAssets(
+    address as Address,
+  )
+  const { data: yieldData, isLoading: isLoadingYield } = usePortfolioYield(
+    address as Address,
+  )
+
+  const portfolioValue = useMemo(() => {
+    return Object.values(assetsData ?? {}).reduce(
+      (accumulator, value) => accumulator + value,
+      0,
+    )
+  }, [assetsData])
+
+  const totalYield = useMemo(() => {
+    const yieldSum = Object.values(yieldData ?? {}).reduce(
+      (accumulator, value) => accumulator + value,
+      0,
+    )
+    if (yieldSum >= 0) {
+      return yieldSum
+    }
+    return 0
+  }, [yieldData])
+
   const sidebarVariants = {
     closed: {
       width: '10rem',
@@ -36,6 +68,8 @@ export const Sidebar: FC = () => {
       padding: '.5rem 1.25rem ',
       left: '6.25rem',
       overflow: 'hidden',
+      backgroundColor:
+        theme.theme === 'dark' ? 'rgba(48, 46, 69, 0.40)' : 'rgba(255, 255, 255, 0.50)',
     },
     open: {
       width: '24.1875rem',
@@ -44,12 +78,23 @@ export const Sidebar: FC = () => {
       padding: '1.5rem 2rem',
       left: '2.5rem',
       overflow: 'auto',
+      backgroundColor: 'var(--cards)',
+    },
+    openPortfolio: {
+      width: '28.1875rem',
+      height: '62.25rem',
+      borderRadius: '2rem',
+      padding: '1.5rem 2rem',
+      left: '2.5rem',
+      overflow: 'auto',
+      backgroundColor: 'var(--cards)',
     },
   }
 
   const contentVariants = {
-    closed: { opacity: 0, y: 20 },
-    open: { opacity: 1, y: 0 },
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
   }
 
   const barButtonVariants = {
@@ -64,7 +109,7 @@ export const Sidebar: FC = () => {
     menu: (
       <div className="mt-8">
         <div className="mb-6 text-[1.125rem] leading-[120%] text-gray-100">Products</div>
-        <HeaderMenu
+        <DesktopSidebarMenu
           className="flex-col items-start"
           openPortfolio={handlePortfolioOpen}
           callback={handleClose}
@@ -87,19 +132,25 @@ export const Sidebar: FC = () => {
               <span>Portfolio Value</span>
               <PortfolioValueTooltip />
             </h6>
-            <SeparatedUsdValue loading={false} value={0} className="mt-2" />
+            <SeparatedUsdValue
+              loading={isLoadingAssets}
+              value={portfolioValue}
+              className="mt-2"
+            />
           </div>
           <div>
             <h6 className="truncate text-lg text-gray-100">Total yield generated</h6>
-            <SeparatedUsdValue loading={false} value={0} className="mt-2" />
+            <SeparatedUsdValue
+              loading={isLoadingYield}
+              value={totalYield}
+              className={cn('mt-2', totalYield > 0 ? 'text-green-100' : 'text-text')}
+            />
           </div>
         </div>
         {/* deposit/withdraw/buy */}
         <ActionButtons className="mt-6" />
         {/* tokens/activity */}
-        <div className="max-h-[35rem] overflow-y-auto overflow-x-hidden">
-          <UserActivityTabs className="mt-8" />
-        </div>
+        <UserActivityTabs className="mt-8 [&_.all-assets]:max-h-80 [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[30rem] [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden" />
       </div>
     ),
   }
@@ -137,9 +188,11 @@ export const Sidebar: FC = () => {
     <AnimatePresence>
       <motion.div
         ref={sidebarReference}
-        className="fixed left-10 top-10 z-50 flex max-h-[90vh] flex-col bg-cards"
+        className="absolute left-10 top-10 z-50 flex max-h-[90vh] flex-col"
         initial="closed"
-        animate={isOpen ? 'open' : 'closed'}
+        animate={
+          isOpen ? (currentContent === 'portfolio' ? 'openPortfolio' : 'open') : 'closed'
+        }
         variants={sidebarVariants}
         transition={{
           duration: 0.5,
@@ -159,13 +212,20 @@ export const Sidebar: FC = () => {
           </motion.div>
         </div>
 
-        <motion.div
-          className="flex flex-1 flex-col justify-between"
-          variants={contentVariants}
-          transition={{ delay: 0.2, duration: 0.3 }}
-        >
-          {sidebarContentVariants[currentContent]}
-        </motion.div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentContent}
+            className="flex flex-1 flex-col justify-between"
+            variants={contentVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            {sidebarContentVariants[currentContent]}
+          </motion.div>
+        </AnimatePresence>
+
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Metamask className="size-5" />

@@ -67,6 +67,7 @@ export const AllAssets = (props: AllAssetsProperties) => {
           value={chains}
           onChange={(value) => setChains(value)}
           placeholder="All Chains"
+          variant="color2"
         />
         <MobileFiltersDrawer
           className="lg:hidden"

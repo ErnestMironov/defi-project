@@ -5,7 +5,7 @@ import { type ComponentProps, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
 import { HeaderLottieIcon } from './HeaderLottieIcon'
-import { MenuItemDropdown } from './MenuItemDropdown'
+import { DesktopSidebarMenuItemDropdown, MenuItemDropdown } from './MenuItemDropdown'
 import type { IMenuItem, IMenuItemWithoutLink } from './useMenu'
 import { useShortMenuArray } from './useMenu'
 
@@ -17,13 +17,13 @@ interface HeaderMenuProperties extends UnifiedMenuProperties {
   openPortfolio: () => void
 }
 
-export const HeaderMenu = ({
+export const DesktopSidebarMenu = ({
   className,
   openPortfolio,
   callback,
   ...rest
 }: HeaderMenuProperties) => {
-  const menu = useShortMenuArray(true)
+  const menu = useShortMenuArray(true, 'button')
 
   return (
     <ul className={cn('flex items-center gap-10', className)} {...rest}>
@@ -34,11 +34,11 @@ export const HeaderMenu = ({
           )
         }
 
-        if (menuItem.href.startsWith('http')) {
+        if (menuItem.href?.startsWith('http')) {
           return <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
         }
         return (
-          <NavLinkMenuItem
+          <DesktopSidebarNavLinkMenuItem
             key={menuItem.href}
             {...menuItem}
             callback={callback}
@@ -64,7 +64,7 @@ export const MobileFooterMenu = ({
       {...rest}
     >
       {menu.map((menuItem) => {
-        if (menuItem.href.startsWith('http')) {
+        if (menuItem.href?.startsWith('http')) {
           return (
             <li key={menuItem.href}>
               <LinkMenuItem
@@ -84,9 +84,9 @@ export const MobileFooterMenu = ({
               callback={callback}
               withAnimationIcon={false}
             />
-            {menuItem.dropdown && (
+            {menuItem.sublist && (
               <ul className="mt-6 flex flex-col items-start gap-3 [&_*]:text-sm">
-                {menuItem.dropdown?.map((item) => {
+                {menuItem.sublist?.map((item) => {
                   return (
                     <li key={item.href}>
                       <SubNavLinkMenuItem
@@ -111,7 +111,7 @@ export const FooterMenu = ({ className, callback, ...rest }: UnifiedMenuProperti
   return (
     <ul className={cn('flex items-center gap-[3.69rem]', className)} {...rest}>
       {menu.map((menuItem) => {
-        if (menuItem.href.startsWith('http')) {
+        if (menuItem.href?.startsWith('http')) {
           return <LinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
         }
         return <NavLinkMenuItem key={menuItem.href} {...menuItem} callback={callback} />
@@ -133,7 +133,7 @@ export const MobileSidebarMenu = ({
       {...rest}
     >
       {menu.map((menuItem) => {
-        if (menuItem?.href?.startsWith('http')) {
+        if (menuItem.href?.startsWith('http')) {
           return (
             <li key={menuItem.href}>
               <LinkMenuItem
@@ -246,7 +246,7 @@ export const NavLinkMenuItem = (
   },
 ) => {
   const {
-    dropdown,
+    sublist,
     callback,
     href,
     label,
@@ -283,11 +283,76 @@ export const NavLinkMenuItem = (
         />
       )}
       {label}
-      {dropdown && <MenuItemDropdown menu={dropdown} />}
+      {sublist && <MenuItemDropdown menu={sublist} />}
       {Source && <Source className="relative bottom-0.5 size-7 [&_path]:stroke-text" />}
     </NavLink>
   )
 }
+
+export const DesktopSidebarNavLinkMenuItem = (
+  props: IMenuItem & {
+    withAnimationIcon?: boolean
+    classNames?: {
+      link?: string
+      active?: string
+      icon?: string
+    }
+  },
+) => {
+  const {
+    sublist,
+    callback,
+    href,
+    label,
+    src: Source,
+    animationData,
+    animationClassName,
+    classNames,
+    withAnimationIcon = true,
+  } = props
+  const [isHover, setIsHover] = useState(false)
+
+  const link = (
+    <NavLink
+      onClick={callback}
+      to={href}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+      key={label}
+      className={({ isActive }) =>
+        clsx(
+          'relative flex cursor-pointer items-center gap-3 text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100',
+          classNames?.link,
+          {
+            'text-main-100 underline decoration-[2px] underline-offset-4': isActive,
+          },
+          isActive && classNames?.active,
+        )
+      }
+    >
+      {withAnimationIcon && animationData && (
+        <HeaderLottieIcon
+          animationData={animationData}
+          isHover={isHover}
+          className={cn('size-8', animationClassName)}
+        />
+      )}
+      {label}
+      {Source && <Source className="relative bottom-0.5 size-7 [&_path]:stroke-text" />}
+    </NavLink>
+  )
+
+  if (sublist) {
+    return (
+      <DesktopSidebarMenuItemDropdown itemCallback={callback} menu={sublist}>
+        {link}
+      </DesktopSidebarMenuItemDropdown>
+    )
+  }
+
+  return link
+}
+
 export const SubNavLinkMenuItem = ({
   href,
   label,
@@ -320,7 +385,7 @@ export const NavMobileLinkMenuItem = ({
   label,
   src: Source,
   callback,
-  dropdown,
+  sublist,
 }: IMenuItem) => {
   return (
     <NavLink
@@ -339,9 +404,9 @@ export const NavMobileLinkMenuItem = ({
     >
       <span>{label}</span>
 
-      {dropdown && (
+      {sublist && (
         <ul className="ml-2 mt-10 flex flex-col gap-8">
-          {dropdown?.map((item) => {
+          {sublist?.map((item) => {
             return (
               <li key={item.href}>
                 <SubNavLinkMenuItem {...item} />
