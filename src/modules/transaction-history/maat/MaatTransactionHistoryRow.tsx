@@ -38,16 +38,16 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
       </Table.Cell>
       <Table.Cell>
         <div className="flex items-center gap-3">
-          {event.amount && event.vault && (
-            <span className="block min-w-12">
-              {formatAmount(
-                formatUnits(BigInt(event.amount), event.vault.token.decimals),
-                {
-                  notation: 'compact',
-                },
-              )}
-            </span>
-          )}
+          <span className="block min-w-12">
+            {event.amount && event.vault
+              ? formatAmount(
+                  formatUnits(BigInt(event.amount), event.vault.token.decimals),
+                  {
+                    notation: 'compact',
+                  },
+                )
+              : 'N/A'}
+          </span>
           {event.vault && (
             <IconWithLabelComponent
               symbol={event.vault.token.symbol}
