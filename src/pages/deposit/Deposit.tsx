@@ -92,7 +92,7 @@ export const Deposit = () => {
             <>
               <ShadowBoxWithValue
                 label="Up to"
-                value={`${Math.trunc(bestUSDCAPy ?? 0)}% APY`}
+                value={`${Math.trunc(bestUSDCAPy ?? 0)}%`}
               >
                 <img
                   src={usdc}
@@ -102,7 +102,7 @@ export const Deposit = () => {
               </ShadowBoxWithValue>
               <ShadowBoxWithValue
                 label="Up to"
-                value={`${Math.trunc(bestUSDTAPy ?? 0)}% APY`}
+                value={`${Math.trunc(bestUSDTAPy ?? 0)}%`}
               >
                 <img
                   src={usdt}
