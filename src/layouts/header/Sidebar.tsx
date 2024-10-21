@@ -212,28 +212,32 @@ export const Sidebar: FC = () => {
           </motion.div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentContent}
-            className="flex flex-1 flex-col justify-between"
-            variants={contentVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            {sidebarContentVariants[currentContent]}
-          </motion.div>
-        </AnimatePresence>
+        {isOpen && (
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentContent}
+              className="flex flex-1 flex-col justify-between"
+              variants={contentVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.3 }}
+            >
+              {sidebarContentVariants[currentContent]}
+            </motion.div>
+          </AnimatePresence>
+        )}
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Metamask className="size-5" />
-            <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
-            <CopyButton text={address as string} className="ml-2 size-5" />
+        {isOpen && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Metamask className="size-5" />
+              <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
+              <CopyButton text={address as string} className="ml-2 size-5" />
+            </div>
+            <ThemeToggler />
           </div>
-          <ThemeToggler />
-        </div>
+        )}
       </motion.div>
     </AnimatePresence>,
     document.body,
