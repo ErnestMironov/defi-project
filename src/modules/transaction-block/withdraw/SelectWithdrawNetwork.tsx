@@ -14,6 +14,7 @@ const RenderNetworkItem = (
   onChange: (chain: ChainType) => void,
   token: UseGetMTokenInfoReturn | null,
 ) => {
+  console.log('🚀 ~ chain:', chain)
   return (
     <button
       type="button"
@@ -35,8 +36,6 @@ export const SelectWithdrawNetworkModal = () => {
   const { withdrawToNetwork, setWithdrawToNetwork, mtToken, vault } = useTxStore()
 
   const { data, isLoading } = useGetWithdrawChains()
-
-  console.log('🚀 ~ SelectWithdrawNetworkModal ~ data:', data)
 
   const chains = useMemo(() => {
     if (!vault || isLoading) return []

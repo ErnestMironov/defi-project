@@ -1,5 +1,5 @@
 export const CHAIN_NAMES_BY_ID = {
-  // 1: 'Ethereum',
+  1: 'Ethereum',
   10: 'Optimism',
   42_161: 'Arbitrum',
   137: 'Polygon',
