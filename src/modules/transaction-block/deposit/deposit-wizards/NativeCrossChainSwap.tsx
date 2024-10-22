@@ -63,7 +63,8 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
             type="button"
             className="rounded-2xl max-lg:py-6"
             onClick={switchToAssetChain}
-            disabled={switchToAssetChainStatus === 'pending'}
+            loading={switchToAssetChainStatus === 'pending'}
+            disabled={switchToAssetChainStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(
               switchToAssetChainStatus,
@@ -79,7 +80,8 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
             type="button"
             className="rounded-2xl max-lg:py-6"
             onClick={swapAndDeposit}
-            disabled={swapAndDepositStatus === 'pending'}
+            loading={swapAndDepositStatus === 'pending'}
+            disabled={swapAndDepositStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(swapAndDepositStatus, 'Deposit')}
           </Button>

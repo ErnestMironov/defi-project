@@ -59,7 +59,8 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
             size="lg"
             type="button"
             onClick={switchChain}
-            disabled={switchStatus === 'pending'}
+            loading={switchStatus === 'pending'}
+            disabled={switchStatus === 'confirm_in_wallet'}
             className="rounded-2xl max-lg:py-6"
           >
             {getButtonContent(switchStatus, 'Switch to Arbitrum')}
@@ -74,7 +75,8 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
             type="button"
             className="rounded-2xl max-lg:py-6"
             onClick={swapAndDeposit}
-            disabled={swapAndDepositStatus === 'pending'}
+            loading={swapAndDepositStatus === 'pending'}
+            disabled={swapAndDepositStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(swapAndDepositStatus, 'Deposit')}
           </Button>

@@ -66,8 +66,6 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     },
   })
 
-  console.log('🚀 ~ swapRoute?.estimate?.approvalAddress:', swapRoute?.estimate)
-
   const {
     swapTokens: swapAndDeposit,
     status: _swapAndDepositStatus,
@@ -86,7 +84,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
             type="button"
             onClick={switchChain}
             className="rounded-2xl max-lg:py-6"
-            disabled={switchStatus === 'pending'}
+            loading={switchStatus === 'pending'}
+            disabled={switchStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(switchStatus, 'Switch to Arbitrum')}
           </Button>
@@ -100,7 +99,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
             type="button"
             className="rounded-2xl max-lg:py-6"
             onClick={approveBeforeSwap}
-            disabled={approveStatusBeforeSwap === 'pending'}
+            loading={approveStatusBeforeSwap === 'pending'}
+            disabled={approveStatusBeforeSwap === 'confirm_in_wallet'}
           >
             {getButtonContent(
               approveStatusBeforeSwap,
@@ -117,7 +117,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
             type="button"
             onClick={swapAndDeposit}
             className="rounded-2xl max-lg:py-6"
-            disabled={swapAndDepositStatus === 'pending'}
+            loading={swapAndDepositStatus === 'pending'}
+            disabled={swapAndDepositStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(swapAndDepositStatus, 'Deposit')}
           </Button>

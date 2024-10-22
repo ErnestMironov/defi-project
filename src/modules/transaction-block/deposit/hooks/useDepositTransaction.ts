@@ -34,8 +34,8 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
 
   const deposit = useCallback(() => {
     if (!address || !userAddress || !vaultAddress) return
-    setDepositAmount(amount ? formatUnits(amount, 6) : '0')
     setStatus('confirm_in_wallet')
+    setDepositAmount(amount ? formatUnits(amount, 6) : '0')
 
     return writeContract(
       {
@@ -65,6 +65,7 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
         },
         onError: (err) => {
           console.error('Error depositing', err)
+          console.log(JSON.stringify(err, null, 2))
           setCurrentModal('error')
         },
       },

@@ -82,6 +82,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
         console.info('🚀 ~ SimpleDeposit ~ currentStep:', 'switch to Arbitrum')
         return (
           <Button
+            loading={switchStatus === 'pending'}
             disabled={switchStatus === 'confirm_in_wallet'}
             size="lg"
             type="button"

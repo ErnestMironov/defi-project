@@ -86,7 +86,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
             onClick={() => {
               switchToAssetChain()
             }}
-            disabled={switchToAssetChainStatus === 'pending'}
+            loading={switchToAssetChainStatus === 'pending'}
+            disabled={switchToAssetChainStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(
               switchToAssetChainStatus,
@@ -102,7 +103,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
             type="button"
             className="rounded-2xl max-lg:py-6"
             onClick={approve}
-            disabled={approveStatus === 'pending'}
+            loading={approveStatus === 'pending'}
+            disabled={approveStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(
               approveStatus,
@@ -117,7 +119,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
             size="lg"
             type="button"
             onClick={swapAndDeposit}
-            disabled={swapAndDepositStatus === 'pending'}
+            loading={swapAndDepositStatus === 'pending'}
+            disabled={swapAndDepositStatus === 'confirm_in_wallet'}
           >
             {getButtonContent(swapAndDepositStatus, `Deposit ${vault}`)}
           </Button>
