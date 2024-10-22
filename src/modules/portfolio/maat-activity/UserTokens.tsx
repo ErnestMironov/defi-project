@@ -70,7 +70,7 @@ export const UserTokens = (props: UserTokensProperties) => {
   return (
     <div className={cn('space-y-6', className)} {...rest}>
       {renderTokens()}
-      <AllAssets className="all-assets  mt-6" />
+      <AllAssets className="mt-6" />
     </div>
   )
 }
