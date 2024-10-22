@@ -40,7 +40,11 @@ export const AllAssets = (props: AllAssetsProperties) => {
         return (
           <div className="mt-6">
             <DustTooltip usdValue={potentialUsdProfit} />
-            <div className={cn('-mr-2 mt-6 flex flex-col gap-6 overflow-auto pr-2')}>
+            <div
+              className={cn(
+                '-mr-2 mt-6 flex flex-col gap-6 overflow-auto pr-2 all-assets',
+              )}
+            >
               {tokens.map((token, i) => (
                 <AssetItem key={i} token={token} />
               ))}

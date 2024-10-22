@@ -1,5 +1,3 @@
-import { usePortfolioAssets } from '@api/queries/usePortfolioAssets'
-import { usePortfolioYield } from '@api/queries/usePortfolioYield'
 import BackMenuIcon from '@assets/icons/menu-bar-back.svg'
 import CloseMenuIcon from '@assets/icons/menu-bar-close.svg'
 import OpenMenuIcon from '@assets/icons/menu-bar-open.svg'
@@ -8,22 +6,29 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { SocialsSidebar } from '@components/socials/Socials'
 import { Logo } from '@components/ui/logo'
 import { useClickOutside } from '@hooks/useClickOutside'
+import { usePortfolioData } from '@hooks/usePortfolioStore'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
 import { PortfolioValueTooltip } from '@modules/portfolio/PortfolioValueTooltip'
 import { useTheme } from '@modules/theme/ThemeProvider'
 import { ThemeToggler } from '@modules/theme/ThemeToggler'
+import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
 import { AnimatePresence, motion } from 'framer-motion'
 import { type FC, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
-import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { DesktopSidebarMenu } from './HeaderMenu'
+
+const contentVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+}
 
 export const Sidebar: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -35,23 +40,25 @@ export const Sidebar: FC = () => {
 
   const theme = useTheme()
 
-  const { data: assetsData, isLoading: isLoadingAssets } = usePortfolioAssets(
-    address as Address,
-  )
-  const { data: yieldData, isLoading: isLoadingYield } = usePortfolioYield(
-    address as Address,
-  )
+  const { open: openConnectModal } = useAppKit()
+
+  const {
+    assets: assetsData,
+    yield: yieldData,
+    isLoadingAssets,
+    isLoadingYield,
+  } = usePortfolioData()
 
   const portfolioValue = useMemo(() => {
-    return Object.values(assetsData ?? {}).reduce(
-      (accumulator, value) => accumulator + value,
+    return Object.values(assetsData ?? {}).reduce<number>(
+      (accumulator, value) => accumulator + (typeof value === 'number' ? value : 0),
       0,
     )
   }, [assetsData])
 
   const totalYield = useMemo(() => {
-    const yieldSum = Object.values(yieldData ?? {}).reduce(
-      (accumulator, value) => accumulator + value,
+    const yieldSum = Object.values(yieldData ?? {}).reduce<number>(
+      (accumulator, value) => accumulator + (typeof value === 'number' ? value : 0),
       0,
     )
     if (yieldSum >= 0) {
@@ -91,12 +98,6 @@ export const Sidebar: FC = () => {
     },
   }
 
-  const contentVariants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  }
-
   const barButtonVariants = {
     open: <OpenMenuIcon onClick={handleOpen} className="size-12 cursor-pointer" />,
     close: <CloseMenuIcon onClick={handleClose} className="size-12 cursor-pointer" />,
@@ -125,8 +126,8 @@ export const Sidebar: FC = () => {
       </div>
     ),
     portfolio: (
-      <div className="hide-scrollbar pointer-events-auto h-full overflow-auto rounded-[2rem] bg-cards">
-        <div className="mt-[1.56rem] flex items-start justify-between">
+      <div className="hide-scrollbar pointer-events-auto h-full overflow-auto bg-cards">
+        <div className="flex items-start justify-between">
           <div>
             <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">
               <span>Portfolio Value</span>
@@ -188,7 +189,7 @@ export const Sidebar: FC = () => {
     <AnimatePresence>
       <motion.div
         ref={sidebarReference}
-        className="absolute left-10 top-10 z-50 flex max-h-[90vh] flex-col"
+        className="absolute left-10 top-10 z-50 flex max-h-[90vh] flex-col gap-6"
         initial="closed"
         animate={
           isOpen ? (currentContent === 'portfolio' ? 'openPortfolio' : 'open') : 'closed'
@@ -231,8 +232,14 @@ export const Sidebar: FC = () => {
         {isOpen && (
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Metamask className="size-5" />
-              <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
+              <button
+                type="button"
+                className="flex items-center"
+                onClick={() => openConnectModal()}
+              >
+                <Metamask className="size-5" />
+                <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
+              </button>
               <CopyButton text={address as string} className="ml-2 size-5" />
             </div>
             <ThemeToggler />
