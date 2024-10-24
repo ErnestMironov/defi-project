@@ -1,4 +1,4 @@
-import type { ITokenData } from '@api/tokens-balance/api'
+import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Skeleton } from '@components/ui/skeleton'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
@@ -36,7 +36,7 @@ export const AssetItem = ({ token }: AssetItemProperties) => {
           {formatTokenBalance(token?.balance, token?.contract_decimals)}{' '}
           {token.contract_ticker_symbol}
         </p>
-        <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
+        <p className="text-semi-base text-gray-80">{token.balance_usd}$</p>
       </div>
     </div>
   )

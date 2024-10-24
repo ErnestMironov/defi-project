@@ -45,7 +45,7 @@ export const DepositReviewContent = ({
     }
 
     const assetContractAddress = asset.contract_address?.toLowerCase()
-    const isNativeToken = asset.native_token
+    const isNativeToken = asset.is_native
     const isSupportedChain = SupportedChainsByVault[
       Tokens[vault as keyof typeof Tokens] as keyof typeof SupportedChainsByVault
     ]?.includes(asset.chain_id)

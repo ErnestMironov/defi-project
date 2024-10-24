@@ -72,6 +72,7 @@ createAppKit({
     mainnet,
   ],
   metadata,
+
   projectId,
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration

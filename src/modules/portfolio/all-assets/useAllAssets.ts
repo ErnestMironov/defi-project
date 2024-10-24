@@ -1,5 +1,5 @@
 import type { Token } from '@0xsquid/squid-types'
-import type { ITokenData } from '@api/tokens-balance/api'
+import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import type { OptionType } from '@components/select/Select'
 import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
@@ -15,20 +15,7 @@ import { useSquidSDKState } from './useSquidSdkState'
  * @param tokens - Array of tokens to sort
  */
 const sortTokensByQuote = (tokens: ITokenData[]) => {
-  return tokens.sort((a, b) => b.quote - a.quote)
-}
-
-/**
- * Filters tokens based on supported addresses and non-zero balance
- * @param tokens - Array of tokens to filter
- * @param supportedTokensAddr - Array of supported token addresses
- */
-const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
-  return tokens.filter(
-    (token) =>
-      supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
-      !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
-  )
+  return tokens.sort((a, b) => Number(b.balance_usd) - Number(a.balance_usd))
 }
 
 export const useAllAssets = (chains: OptionType[]) => {
@@ -55,23 +42,19 @@ export const useAllAssets = (chains: OptionType[]) => {
       )
       const _filteredByChainTokens = Object.values(userTokens)
         .flat()
-        .filter((token) => chainIds.has(token.chain_id as never))
+        .filter((token) => chainIds.has(token?.chain_id as never))
 
-      const filteredChainTokens = filterTokens(
-        _filteredByChainTokens,
-        supportedTokensAddr,
-      )
-      return sortTokensByQuote(filteredChainTokens)
+      return sortTokensByQuote(_filteredByChainTokens as ITokenData[])
     }
 
     const allTokens = Object.values(userTokens).flat()
-    return sortTokensByQuote(filterTokens(allTokens, supportedTokensAddr))
+    return sortTokensByQuote(allTokens as ITokenData[])
   })()
 
   const { bestOverallAPY } = useBestApy()
   const potentialUsdProfit = useMemo(() => {
     const usdSum = filteredByChainTokens.reduce((accumulator, token) => {
-      return accumulator.plus(token.quote)
+      return accumulator.plus(token.balance_usd)
     }, new BigNumber(0))
     return usdSum.times(bestOverallAPY).div(100).toString()
   }, [filteredByChainTokens, bestOverallAPY])

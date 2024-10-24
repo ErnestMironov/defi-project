@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/default-param-last */
+import { LIfiProvider } from '@configs/LIfiProvider'
 import { queryClient } from '@configs/r-query'
 import { Web3ModalProvider } from '@configs/Web3ModalProvider'
 import { PendingTransactions } from '@modules/pending-transactions/PendingTransactions'
@@ -15,9 +16,11 @@ function App() {
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <Web3ModalProvider>
           <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-            <PendingTransactions />
-            <TxReviewModal />
+            <LIfiProvider>
+              <RouterProvider router={router} />
+              <PendingTransactions />
+              <TxReviewModal />
+            </LIfiProvider>
           </QueryClientProvider>
         </Web3ModalProvider>
       </ThemeProvider>

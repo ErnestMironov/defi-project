@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable @typescript-eslint/no-shadow */
-import { useGetTokens } from '@api/lifi/endpoints/get-tokens'
-import type { ITokenData } from '@api/tokens-balance/api'
+
+import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import BigCloseBtn from '@assets/icons/big-close-btn.svg'
 import BigCloseBtnDark from '@assets/icons/big-close-btn_dark.svg'
@@ -25,7 +25,6 @@ import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import { formatAmount, formatTokenBalance } from '@utils/formatValue'
-import BigNumber from 'bignumber.js'
 import { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
@@ -104,7 +103,7 @@ function TokensListItem({
           })}{' '}
           {token.contract_ticker_symbol}
         </p>
-        <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
+        <p className="text-semi-base text-gray-80">{token?.balance_usd}$</p>
       </div>
     </button>
   )
@@ -165,21 +164,8 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
  * Sorts tokens by quote in descending order
  * @param tokens - Array of tokens to sort
  */
-const sortTokensByQuote = (tokens: ITokenData[]) => {
-  return tokens.sort((a, b) => b.quote - a.quote)
-}
-
-/**
- * Filters tokens based on supported addresses and non-zero balance
- * @param tokens - Array of tokens to filter
- * @param supportedTokensAddr - Array of supported token addresses
- */
-const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
-  return tokens.filter(
-    (token) =>
-      supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
-      !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
-  )
+const sortTokensByUSDBalance = (tokens: ITokenData[]) => {
+  return tokens.sort((a, b) => Number(b.balance_usd) - Number(a.balance_usd))
 }
 
 /**
@@ -204,17 +190,6 @@ export const SelectDepositAsset = () => {
 
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
-
-  const { data: lifiTokens } = useGetTokens()
-  console.log('🚀 ~ SelectDepositAsset ~ lifiTokens:', lifiTokens)
-
-  const supportedTokens = useMemo(
-    () =>
-      Object.values(lifiTokens?.data?.tokens ?? {})
-        .flat()
-        .map((token) => token.address.toLowerCase()),
-    [lifiTokens],
-  )
 
   const [chain, setNetwork] = useState<ChainType | null>(null)
 
@@ -249,25 +224,25 @@ export const SelectDepositAsset = () => {
   // -------------------- Memoized Values --------------------
 
   const filteredByChainTokens = useMemo(() => {
-    if (!userTokens || supportedTokens?.length === 0) return []
+    if (!userTokens) return []
 
     if (chain) {
       const chainTokens = userTokens[chain] || []
       const filteredChainTokens = searchValue
         ? searchTokens(chainTokens, searchValue)
         : chainTokens
-      return sortTokensByQuote(filterTokens(filteredChainTokens, supportedTokens))
+      return sortTokensByUSDBalance(filteredChainTokens)
     }
 
     const allTokens = Object.values(userTokens).flat()
+
     const filteredAllTokens = searchValue
-      ? searchTokens(allTokens, searchValue)
+      ? searchTokens(allTokens as ITokenData[], searchValue)
       : allTokens
-    return sortTokensByQuote(filterTokens(filteredAllTokens, supportedTokens))
-  }, [userTokens, chain, searchValue, supportedTokens])
+    return sortTokensByUSDBalance(filteredAllTokens as ITokenData[])
+  }, [userTokens, chain, searchValue])
 
   // -------------------- Render --------------------
-
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
