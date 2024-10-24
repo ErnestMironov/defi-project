@@ -18,19 +18,6 @@ const sortTokensByQuote = (tokens: ITokenData[]) => {
   return tokens.sort((a, b) => b.quote - a.quote)
 }
 
-/**
- * Filters tokens based on supported addresses and non-zero balance
- * @param tokens - Array of tokens to filter
- * @param supportedTokensAddr - Array of supported token addresses
- */
-const filterTokens = (tokens: ITokenData[], supportedTokensAddr: string[]) => {
-  return tokens.filter(
-    (token) =>
-      supportedTokensAddr.includes(token.contract_address.toLowerCase()) &&
-      !BigNumber(token?.balance ? token?.balance?.toString() : 0).isZero(),
-  )
-}
-
 export const useAllAssets = (chains: OptionType[]) => {
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
@@ -57,15 +44,11 @@ export const useAllAssets = (chains: OptionType[]) => {
         .flat()
         .filter((token) => chainIds.has(token.chain_id as never))
 
-      const filteredChainTokens = filterTokens(
-        _filteredByChainTokens,
-        supportedTokensAddr,
-      )
-      return sortTokensByQuote(filteredChainTokens)
+      return sortTokensByQuote(_filteredByChainTokens)
     }
 
     const allTokens = Object.values(userTokens).flat()
-    return sortTokensByQuote(filterTokens(allTokens, supportedTokensAddr))
+    return sortTokensByQuote(allTokens)
   })()
 
   const { bestOverallAPY } = useBestApy()

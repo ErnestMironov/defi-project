@@ -12,6 +12,8 @@ import {
 } from '@reown/appkit/networks'
 import { createAppKit } from '@reown/appkit/react'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
+import { createConfig, EVM } from '@lifi/sdk'
+import { getWalletClient, switchChain } from '@wagmi/core'
 
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = '50045bde677b3817fbdad11aaa86c090'
@@ -48,6 +50,7 @@ export const wagmiAdapter = new WagmiAdapter({
   projectId,
 })
 
+
 createAppKit({
   adapters: [wagmiAdapter],
   defaultNetwork: arbitrum,
@@ -72,6 +75,7 @@ createAppKit({
     mainnet,
   ],
   metadata,
+  
   projectId,
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration

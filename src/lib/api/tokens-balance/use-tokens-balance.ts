@@ -1,77 +1,90 @@
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
-import { Chains } from '@covalenthq/client-sdk'
+import type { Chains } from '@covalenthq/client-sdk'
+import { getTokenBalances, getTokens } from '@lifi/sdk'
 import { useQuery } from '@tanstack/react-query'
-import type { Address } from 'viem'
 
-import type { ITokenData } from './api'
-import { getTokenBalances } from './api'
-
-const DEFAULT_CHAINS = [
-  Chains.ARBITRUM_MAINNET,
-  Chains.OPTIMISM_MAINNET,
-  Chains.MATIC_MAINNET,
-  Chains.BASE_MAINNET,
-  Chains.ETH_MAINNET,
-  Chains.MANTLE_MAINNET,
-  Chains.BSC_MAINNET,
-  Chains.METIS_MAINNET,
-  Chains.AVALANCHE_MAINNET,
+const chains = [
+  CHAIN_IDS_BY_NAME.Arbitrum,
+  CHAIN_IDS_BY_NAME.Optimism,
+  CHAIN_IDS_BY_NAME.Polygon,
+  CHAIN_IDS_BY_NAME.BNB,
+  CHAIN_IDS_BY_NAME.Base,
+  CHAIN_IDS_BY_NAME.Ethereum,
+  CHAIN_IDS_BY_NAME.Avalanche,
 ]
-
-export const COVALENT_CHAINS_MAPPER = {
-  [Chains.ARBITRUM_MAINNET]: CHAIN_IDS_BY_NAME.Arbitrum,
-  [Chains.OPTIMISM_MAINNET]: CHAIN_IDS_BY_NAME.Optimism,
-  [Chains.MATIC_MAINNET]: CHAIN_IDS_BY_NAME.Polygon,
-  [Chains.BASE_MAINNET]: CHAIN_IDS_BY_NAME.Base,
-  [Chains.ETH_MAINNET]: CHAIN_IDS_BY_NAME.Ethereum,
-  [Chains.MANTLE_MAINNET]: CHAIN_IDS_BY_NAME.Mantle,
-  [Chains.BSC_MAINNET]: CHAIN_IDS_BY_NAME.BNB,
-  [Chains.METIS_MAINNET]: CHAIN_IDS_BY_NAME.Metis,
-  [Chains.AVALANCHE_MAINNET]: CHAIN_IDS_BY_NAME.Avalanche,
-} as const
 
 interface UsePortfolioProperties {
   address?: string
   chains?: Chains[]
 }
 
-type MappedTokenData = Omit<ITokenData, 'chain_id'> & {
-  chain_id: (typeof COVALENT_CHAINS_MAPPER)[keyof typeof COVALENT_CHAINS_MAPPER]
+export interface ITokenData {
+  chain_id: number
+  contract_address: string
+  contract_name: string
+  balance: string
+  rate: string
+  contract_decimals: number
+  contract_ticker_symbol: string
+  logo_url: string
 }
 
-type ChainPortfolio = Record<
-  (typeof COVALENT_CHAINS_MAPPER)[keyof typeof COVALENT_CHAINS_MAPPER],
-  MappedTokenData[]
->
+type ChainPortfolio = Record<number, ITokenData[]>
 
-export const useTokensBalance = ({
-  address,
-  chains: _chains,
-}: UsePortfolioProperties) => {
-  const chains = _chains || DEFAULT_CHAINS
+export const useTokensBalance = ({ address }: UsePortfolioProperties) => {
   return useQuery<Partial<ChainPortfolio>>({
     queryKey: ['portfolio', address, chains],
     queryFn: async () => {
       const portfolio: Partial<ChainPortfolio> = {}
-      await Promise.allSettled(
-        chains.map(async (chainId: (typeof DEFAULT_CHAINS)[number]) => {
-          try {
-            const tokens = await getTokenBalances(chainId, address as Address)
-            const mappedTokens = tokens.map((token) => ({
-              ...token,
-              chain_id:
-                COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER],
-            }))
+      const tokensResponse = await getTokens()
 
-            portfolio[
-              COVALENT_CHAINS_MAPPER[chainId as keyof typeof COVALENT_CHAINS_MAPPER]
-            ] = mappedTokens
-          } catch (error) {
-            // Log the error, but don't throw it
-            console.error(`Error fetching tokens for chain ${chainId}:`, error)
-          }
-        }),
-      )
+      const processChain = async (chainId: number) => {
+        if (!chainId) {
+          console.warn(`Unsupported chain: ${chainId}`)
+          return
+        }
+
+        const chainTokens = tokensResponse.tokens[chainId]
+        if (!chainTokens?.length) {
+          console.warn(`No tokens found for chain: ${chainId}`)
+          return
+        }
+
+        const tokenBalances = await getTokenBalances(
+          address as string,
+          chainTokens,
+        ).catch((error) => {
+          console.error(`Error fetching token balances for chain ${chainId}:`, error)
+          return null
+        })
+
+        console.log('🚀 ~ processChain ~ tokenBalances:', tokenBalances)
+
+        if (!tokenBalances?.length) {
+          console.warn(`No token balances found for chain: ${chainId}`)
+          return
+        }
+
+        const mappedTokens = tokenBalances
+          .filter((token) => BigInt(token.amount ?? 0) > BigInt(0))
+          .map((token) => ({
+            contract_address: token.address,
+            balance: token.amount?.toString() ?? '0',
+            rate: token.priceUSD,
+            chain_id: chainId,
+            contract_decimals: token.decimals,
+            contract_ticker_symbol: token.symbol,
+            contract_name: token.name,
+            logo_url: token.logoURI ?? '',
+          }))
+
+        if (mappedTokens.length > 0) {
+          portfolio[chainId] = mappedTokens
+        }
+      }
+
+      await Promise.allSettled(chains.map(processChain))
+      console.log('🚀 ~ queryFn: ~ portfolio:', portfolio)
       return portfolio
     },
   })

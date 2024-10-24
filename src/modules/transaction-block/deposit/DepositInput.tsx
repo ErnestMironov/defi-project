@@ -22,11 +22,7 @@ import ZapFee from './zap-fee/ZapFee'
 
 type InputType = 'usd' | 'token'
 
-const calculateTokenValue = (
-  usdValue: BigNumber,
-  assetQuote: BigNumber,
-  _assetBalance: BigNumber,
-): number => {
+const calculateTokenValue = (usdValue: BigNumber, assetQuote: BigNumber): number => {
   if (
     assetQuote.isZero() ||
     assetQuote.isNaN() ||
@@ -36,14 +32,10 @@ const calculateTokenValue = (
     return 0
   }
 
-  return +usdValue.multipliedBy(_assetBalance.div(assetQuote)).toFixed(4)
+  return +usdValue.div(assetQuote).toFixed(4)
 }
 
-const calculateUSDValue = (
-  tokenValue: BigNumber,
-  assetQuote: BigNumber,
-  _assetBalance: BigNumber,
-): string => {
+const calculateUSDValue = (tokenValue: BigNumber, assetQuote: BigNumber): string => {
   if (
     assetQuote.isZero() ||
     assetQuote.isNaN() ||
@@ -53,7 +45,7 @@ const calculateUSDValue = (
     return '0.00'
   }
 
-  return tokenValue.multipliedBy(assetQuote.div(_assetBalance)).toFixed(2)
+  return tokenValue.multipliedBy(assetQuote).toFixed(2)
 }
 
 export const DepositInput = () => {
@@ -96,9 +88,10 @@ export const DepositInput = () => {
     return totalInUSD.div(100).multipliedBy(BigNumber(usdtApy))
   }, [depositTotalInUSD, isProtocolMetricsLoading, usdcApy, usdtApy, vault])
 
-  const assetBalance = BigNumber(asset?.balance?.toString() || '0')
-    .div(10 ** (asset?.contract_decimals || 6))
-    .toString()
+  const assetBalance = formatUnits(
+    BigInt(asset?.balance?.toString() || '0'),
+    asset?.contract_decimals || 6,
+  )
 
   const prettyAssetBalance = formatValueWithPrecision(assetBalance, 5)
 
@@ -139,28 +132,20 @@ export const DepositInput = () => {
       return
     }
 
-    let assetBalanceBN = BigNumber(assetBalance)
     let assetQuoteBN = BigNumber(asset?.quote ?? 1)
     const numericValue = BigNumber(value)
 
     if (swapRoute) {
-      assetBalanceBN = BigNumber(
-        formatUnits(
-          BigInt(swapRoute?.action?.fromAmount || '0'),
-          swapRoute.action.fromToken.decimals,
-        ),
-      )
-
-      assetQuoteBN = BigNumber(swapRoute?.estimate?.fromAmountUSD || '0')
+      assetQuoteBN = BigNumber(swapRoute?.action?.fromToken?.priceUSD || 1)
     }
 
     if (type === 'usd') {
       setInputValueInUSD(value) // Set the input value for USD type
-      const tokenValue = calculateTokenValue(numericValue, assetQuoteBN, assetBalanceBN) // Calculate token value based on the exchange rate
+      const tokenValue = calculateTokenValue(numericValue, assetQuoteBN) // Calculate token value based on the exchange rate
       setInputValue(tokenValue.toString()) // Set the input value in USD
     } else if (type === 'token') {
       setInputValue(value) // Set the input value for token type
-      const usdValue = calculateUSDValue(numericValue, assetQuoteBN, assetBalanceBN) // Calculate USD value based on the exchange rate
+      const usdValue = calculateUSDValue(numericValue, assetQuoteBN) // Calculate USD value based on the exchange rate
       setInputValueInUSD(usdValue.toString()) // Set the input value in USD
     }
   }

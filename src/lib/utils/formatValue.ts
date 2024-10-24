@@ -64,10 +64,13 @@ export const formatTokenBalance = (
   }
 
   const balanceString = typeof balance === 'bigint' ? balance.toString() : balance
+  console.log('🚀 ~ balanceString:', balanceString)
   const bigBalance = new BigNumber(balanceString).shiftedBy(-decimals)
+  console.log('🚀 ~ bigBalance:', bigBalance)
   let formattedBalance = bigBalance.toFixed(5, BigNumber.ROUND_DOWN)
 
   formattedBalance = formattedBalance.replace(/\.?0+$/, '')
+  console.log('🚀 ~ formattedBalance:', formattedBalance)
 
   return formattedBalance
 }
