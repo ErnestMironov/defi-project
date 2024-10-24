@@ -99,14 +99,9 @@ export const DepositInput = () => {
 
   useEffect(() => {
     const inputValueBN = BigNumber(+inputValue)
-    const assetQuoteBN = BigNumber(asset?.quote ?? 1)
     const assetBalanceBN = BigNumber(assetBalance)
 
-    if (
-      (asset && assetBalanceBN.isZero()) ||
-      inputValueBN.isNaN() ||
-      assetQuoteBN.isNaN()
-    ) {
+    if ((asset && assetBalanceBN.isZero()) || inputValueBN.isNaN()) {
       setInputValueInUSD('0.00')
       setError('Invalid input or balance')
       return
@@ -123,7 +118,7 @@ export const DepositInput = () => {
     }
 
     setError('')
-  }, [asset, asset?.quote, assetBalance, inputValue, inputValueInUSD, setInputValueInUSD])
+  }, [asset, assetBalance, inputValue, inputValueInUSD, setInputValueInUSD])
 
   const handleAction = (type: InputType, value: string) => {
     if (!value) {
@@ -132,7 +127,7 @@ export const DepositInput = () => {
       return
     }
 
-    let assetQuoteBN = BigNumber(asset?.quote ?? 1)
+    let assetQuoteBN = BigNumber(asset?.rate ?? 1)
     const numericValue = BigNumber(value)
 
     if (swapRoute) {

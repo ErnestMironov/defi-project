@@ -1,4 +1,4 @@
-import type { ITokenData } from '@api/tokens-balance/api'
+import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import type { ChainType, DepositChainType } from '@constants/chains'
 import type { TxType } from '@constants/txTypes'
 import { TX_TYPE } from '@constants/txTypes'

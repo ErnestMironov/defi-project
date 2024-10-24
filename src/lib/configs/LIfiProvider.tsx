@@ -27,7 +27,9 @@ export const LIfiProvider: FC<{ children: React.ReactNode }> = ({ children }) =>
     integrator: 'Your dApp/company name',
     providers: [
       EVM({
+        // @ts-ignore
         getWalletClient: () => getWalletClient(wagmiAdapter.wagmiConfig),
+        // @ts-ignore
         switchChain: async (chainId) => {
           const chain = await switchChain(wagmiAdapter.wagmiConfig, { chainId })
           return getWalletClient(wagmiAdapter.wagmiConfig, { chainId: chain.id })

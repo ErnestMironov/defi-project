@@ -3,7 +3,7 @@ import type { Chains } from '@covalenthq/client-sdk'
 import { getTokenBalances, getTokens } from '@lifi/sdk'
 import { useQuery } from '@tanstack/react-query'
 import BigNumber from 'bignumber.js'
-import { formatUnits } from 'viem'
+import { formatUnits, zeroAddress } from 'viem'
 
 const chains = [
   CHAIN_IDS_BY_NAME.Arbitrum,
@@ -29,6 +29,7 @@ export interface ITokenData {
   rate: string
   contract_decimals: number
   contract_ticker_symbol: string
+  is_native: boolean
   logo_url: string
 }
 
@@ -66,7 +67,7 @@ export const useTokensBalance = ({ address }: UsePortfolioProperties) => {
           return
         }
 
-        BigNumber.config({ DECIMAL_PLACES: 2 })
+        console.log('🚀 ~ processChain ~ tokenBalances:', tokenBalances)
 
         const mappedTokens = tokenBalances
           .filter((token) => BigInt(token.amount ?? 0) > BigInt(0))
@@ -81,6 +82,7 @@ export const useTokensBalance = ({ address }: UsePortfolioProperties) => {
             contract_decimals: token.decimals,
             contract_ticker_symbol: token.symbol,
             contract_name: token.name,
+            is_native: token.address === zeroAddress,
             logo_url: token.logoURI ?? '',
           }))
           .filter((token) => Number(token.balance_usd) >= 1)
