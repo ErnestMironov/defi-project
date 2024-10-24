@@ -60,6 +60,7 @@ export const AllAssets = (props: AllAssetsProperties) => {
       <div className="flex items-center justify-between">
         <h6 className="whitespace-nowrap text-lg text-text">All assets</h6>
         <MultiSelect
+          id="all-assets-chains"
           align="end"
           className="w-fit max-lg:hidden"
           classNames={{
