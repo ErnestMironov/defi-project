@@ -2,6 +2,8 @@ import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import type { Chains } from '@covalenthq/client-sdk'
 import { getTokenBalances, getTokens } from '@lifi/sdk'
 import { useQuery } from '@tanstack/react-query'
+import BigNumber from 'bignumber.js'
+import { formatUnits } from 'viem'
 
 const chains = [
   CHAIN_IDS_BY_NAME.Arbitrum,
@@ -23,6 +25,7 @@ export interface ITokenData {
   contract_address: string
   contract_name: string
   balance: string
+  balance_usd: string
   rate: string
   contract_decimals: number
   contract_ticker_symbol: string
@@ -58,18 +61,21 @@ export const useTokensBalance = ({ address }: UsePortfolioProperties) => {
           return null
         })
 
-        console.log('🚀 ~ processChain ~ tokenBalances:', tokenBalances)
-
         if (!tokenBalances?.length) {
           console.warn(`No token balances found for chain: ${chainId}`)
           return
         }
+
+        BigNumber.config({ DECIMAL_PLACES: 2 })
 
         const mappedTokens = tokenBalances
           .filter((token) => BigInt(token.amount ?? 0) > BigInt(0))
           .map((token) => ({
             contract_address: token.address,
             balance: token.amount?.toString() ?? '0',
+            balance_usd: BigNumber(formatUnits(token.amount ?? BigInt(0), token.decimals))
+              .multipliedBy(new BigNumber(token.priceUSD))
+              .toFixed(2),
             rate: token.priceUSD,
             chain_id: chainId,
             contract_decimals: token.decimals,
@@ -77,6 +83,7 @@ export const useTokensBalance = ({ address }: UsePortfolioProperties) => {
             contract_name: token.name,
             logo_url: token.logoURI ?? '',
           }))
+          .filter((token) => Number(token.balance_usd) >= 1)
 
         if (mappedTokens.length > 0) {
           portfolio[chainId] = mappedTokens

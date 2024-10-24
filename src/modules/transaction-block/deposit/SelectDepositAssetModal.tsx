@@ -103,7 +103,7 @@ function TokensListItem({
           })}{' '}
           {token.contract_ticker_symbol}
         </p>
-        <p className="text-semi-base text-gray-80">{token.pretty_quote}</p>
+        <p className="text-semi-base text-gray-80">{token?.balance_usd}$</p>
       </div>
     </button>
   )
@@ -164,8 +164,8 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
  * Sorts tokens by quote in descending order
  * @param tokens - Array of tokens to sort
  */
-const sortTokensByQuote = (tokens: ITokenData[]) => {
-  return tokens.sort((a, b) => b.quote - a.quote)
+const sortTokensByUSDBalance = (tokens: ITokenData[]) => {
+  return tokens.sort((a, b) => Number(b.balance_usd) - Number(a.balance_usd))
 }
 
 /**
@@ -231,22 +231,18 @@ export const SelectDepositAsset = () => {
       const filteredChainTokens = searchValue
         ? searchTokens(chainTokens, searchValue)
         : chainTokens
-      return sortTokensByQuote(filteredChainTokens)
+      return sortTokensByUSDBalance(filteredChainTokens)
     }
 
     const allTokens = Object.values(userTokens).flat()
+
     const filteredAllTokens = searchValue
-      ? searchTokens(allTokens, searchValue)
+      ? searchTokens(allTokens as ITokenData[], searchValue)
       : allTokens
-    return sortTokensByQuote(filteredAllTokens)
+    return sortTokensByUSDBalance(filteredAllTokens as ITokenData[])
   }, [userTokens, chain, searchValue])
 
   // -------------------- Render --------------------
-
-  console.log(
-    '🚀 ~ filteredByChainTokens ~ filteredByChainTokens:',
-    filteredByChainTokens,
-  )
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
