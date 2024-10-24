@@ -1,12 +1,22 @@
 import { useEffect, useRef } from 'react'
 
 // This hook allows us to detect clicks outside of a specified element
-export const useClickOutside = (handler: () => void) => {
+export const useClickOutside = (
+  handler: () => void,
+  exceptionSelectors: string[] = [],
+) => {
   const reference = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (reference.current && !reference.current.contains(event.target as Node)) {
+      const target = event.target as Node
+
+      const isException = exceptionSelectors.some((selector) => {
+        const exceptionElement = document.querySelector(selector)
+        return exceptionElement && exceptionElement.contains(target)
+      })
+
+      if (reference.current && !reference.current.contains(target) && !isException) {
         handler()
       }
     }
@@ -15,7 +25,7 @@ export const useClickOutside = (handler: () => void) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [handler])
+  }, [handler, exceptionSelectors])
 
   return reference
 }

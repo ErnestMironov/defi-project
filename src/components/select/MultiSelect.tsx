@@ -125,6 +125,7 @@ export const MultiSelect = ({
   label,
   className,
   classNames,
+  id,
   variant,
   align = 'start',
 }: MultiSelectProperties) => {
@@ -150,6 +151,7 @@ export const MultiSelect = ({
         }}
         sideOffset={10}
         align={align}
+        id={id}
         className={cn(
           'w-fit rounded-xl p-6 max-h-96 overflow-y-scroll pointer-events-auto',
           multiSelectVariants({ variant }),

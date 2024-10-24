@@ -183,7 +183,7 @@ export const Sidebar: FC = () => {
     }
   }
 
-  const sidebarReference = useClickOutside(handleClickOutside)
+  const sidebarReference = useClickOutside(handleClickOutside, ['#all-assets-chains'])
 
   return createPortal(
     <AnimatePresence>
