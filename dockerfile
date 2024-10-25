@@ -12,10 +12,12 @@ RUN apt-get update && \
     apt-get install -y git build-essential python3 && \
     npm install -g node-gyp && \
     yarn install && \
-    yarn build
+    # Increase Node.js memory limit to prevent "heap out of memory" error
+    node --max-old-space-size=4096 node_modules/.bin/yarn build
 
-
+# Use a lightweight Nginx image for serving the app
 FROM nginx:1.19-alpine AS server
-COPY ./etc/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder ./app/dist /usr/share/nginx/html
 
+# Copy Nginx config and build files
+COPY ./etc/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist /usr/share/nginx/html
