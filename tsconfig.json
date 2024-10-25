@@ -1,42 +1,44 @@
 {
-  "compilerOptions": {
-    "target": "ES2021",
-    "useDefineForClassFields": true,
-    "lib": ["ES2021", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+	"compilerOptions": {
+		"sourceMap": false,
+		"inlineSources": false,
+		"target": "ES2021",
+		"useDefineForClassFields": true,
+		"lib": ["ES2021", "DOM", "DOM.Iterable"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+		/* Linting */
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
 
-    "baseUrl": "./",
-    "paths": {
-      "@assets/*": ["./src/assets/*"],
-      "@modules/*": ["./src/modules/*"],
-      "@components/*": ["./src/components/*"],
-      "@layouts/*": ["./src/layouts/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@routes/*": ["./src/routes/*"],
-      "@api/*": ["./src/lib/api/*"],
-      "@constants/*": ["./src/lib/constants/*"],
-      "@enums/*": ["./src/lib/enums/*"],
-      "@configs/*": ["./src/lib/configs/*"],
-      "@hooks/*": ["./src/lib/hooks/*"],
-      "@store/*": ["./src/lib/store/*"],
-      "@utils/*": ["./src/lib/utils/*"],
-      "@abi/*": ["./src/abi/*"]
-    }
-  },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+		"baseUrl": "./",
+		"paths": {
+			"@assets/*": ["./src/assets/*"],
+			"@modules/*": ["./src/modules/*"],
+			"@components/*": ["./src/components/*"],
+			"@layouts/*": ["./src/layouts/*"],
+			"@pages/*": ["./src/pages/*"],
+			"@routes/*": ["./src/routes/*"],
+			"@api/*": ["./src/lib/api/*"],
+			"@constants/*": ["./src/lib/constants/*"],
+			"@enums/*": ["./src/lib/enums/*"],
+			"@configs/*": ["./src/lib/configs/*"],
+			"@hooks/*": ["./src/lib/hooks/*"],
+			"@store/*": ["./src/lib/store/*"],
+			"@utils/*": ["./src/lib/utils/*"],
+			"@abi/*": ["./src/abi/*"]
+		}
+	},
+	"include": ["src"],
+	"references": [{ "path": "./tsconfig.node.json" }]
 }

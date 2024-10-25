@@ -4,16 +4,21 @@ FROM node:18.18.0 AS builder
 # Set the working directory
 WORKDIR /app
 
-# Copy all files
+# Copy package.json and yarn.lock first for caching layers
+COPY package.json yarn.lock ./
+
+# Install dependencies with caching
+RUN yarn install --prefer-offline
+
+# Copy remaining files
 COPY . .
 
 # Install necessary tools and libraries
 RUN apt-get update && \
     apt-get install -y git build-essential python3 && \
     npm install -g node-gyp && \
-    yarn install && \
-    # Increase Node.js memory limit to prevent "heap out of memory" error
-    node --max-old-space-size=4096 node_modules/.bin/yarn build
+    # Set memory limit for yarn build
+    node --max-old-space-size=6144 node_modules/.bin/yarn build
 
 # Use a lightweight Nginx image for serving the app
 FROM nginx:1.19-alpine AS server
