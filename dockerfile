@@ -4,9 +4,6 @@ FROM node:18.18.0 AS builder
 # Set the working directory
 WORKDIR /app
 
-# Install Yarn globally
-RUN npm install -g yarn
-
 # Copy package.json and yarn.lock first for caching layers
 COPY package.json yarn.lock ./
 
