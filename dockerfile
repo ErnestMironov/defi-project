@@ -4,19 +4,14 @@ FROM node:18.18.0 AS builder
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and yarn.lock first for caching layers
-COPY package.json yarn.lock ./
-
-# Install dependencies with caching
-RUN yarn install --prefer-offline
-
-# Copy remaining files
+# Copy all files
 COPY . .
 
-# Install necessary tools and libraries, then build
+# Install necessary tools and libraries, install dependencies, then build
 RUN apt-get update && \
     apt-get install -y git build-essential python3 && \
     npm install -g node-gyp && \
+    yarn install --prefer-offline && \
     node --max-old-space-size=6144 node_modules/.bin/yarn build
 
 # Use a lightweight Nginx image for serving the app
