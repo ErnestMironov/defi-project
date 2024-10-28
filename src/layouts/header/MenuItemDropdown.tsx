@@ -1,4 +1,10 @@
 import ArrowDown from '@assets/icons/arrow-down.svg'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@components/ui/accordion'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@components/ui/hover-card'
 import { useDisclosure } from '@hooks/common/useDisclosure'
 import { cn } from '@utils/cn'
@@ -59,54 +65,41 @@ export const DesktopSidebarMenuItemDropdown = (
   },
 ) => {
   const { menu, className, children, itemCallback } = props
-  const [opened, { toggle, close }] = useDisclosure()
   return (
-    <div className={className}>
-      <div className="flex items-center gap-3">
-        {children}
-        <button
-          type="button"
-          onClick={toggle}
-          className="flex items-center gap-3 text-[1.25rem] font-normal uppercase leading-[120%] tracking-[0.0125rem] hover:text-main-100"
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger
+          className={cn(
+            '[&>svg:last-child]:ml-2 [&>svg:last-child_path]:stroke-white',
+            className,
+          )}
         >
-          <ArrowDown
-            className="size-4 transition-transform duration-300 ease-in-out [&_path]:stroke-text"
-            style={{
-              transform: opened ? 'rotate(-180deg)' : 'rotate(0deg)',
-            }}
-          />
-        </button>
-      </div>
-      <div
-        style={{
-          maxHeight: opened ? '700px' : '0',
-          paddingTop: opened ? '1.75rem' : '0',
-        }}
-        className="transition-max-height flex flex-col gap-5 overflow-hidden pl-11  duration-300 ease-in-out"
-      >
-        {menu.map((item) => {
-          return (
-            <NavLink
-              onClick={() => {
-                itemCallback?.()
-                close()
-              }}
-              to={item.href}
-              key={item.label}
-              className={({ isActive }) =>
-                clsx(
-                  'text-text-100  text-[1rem] uppercase not-italic leading-[120%] tracking-[0.01rem] hover:text-main-100',
-                  {
-                    'text-main-100': isActive,
-                  },
-                )
-              }
-            >
-              {item.label}
-            </NavLink>
-          )
-        })}
-      </div>
-    </div>
+          {children}
+        </AccordionTrigger>
+        <AccordionContent className="flex flex-col gap-5 overflow-hidden pl-11 pt-7 duration-300  ease-in-out data-[state=open]:max-h-[700px]">
+          {menu.map((item) => {
+            return (
+              <NavLink
+                onClick={() => {
+                  itemCallback?.()
+                }}
+                to={item.href}
+                key={item.label}
+                className={({ isActive }) =>
+                  clsx(
+                    'text-text-100  text-[1rem] uppercase not-italic leading-[120%] tracking-[0.01rem] hover:text-main-100',
+                    {
+                      'text-main-100': isActive,
+                    },
+                  )
+                }
+              >
+                {item.label}
+              </NavLink>
+            )
+          })}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   )
 }
