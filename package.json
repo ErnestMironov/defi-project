@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build:tsc": "cross-env NODE_OPTIONS=\"--max-old-space-size=6144\" tsc",
+    "build:vite": "cross-env NODE_OPTIONS=\"--max-old-space-size=6144\" vite build",
+    "build": "yarn build:tsc && yarn build:vite",
     "start": "vite preview"
   },
   "dependencies": {
