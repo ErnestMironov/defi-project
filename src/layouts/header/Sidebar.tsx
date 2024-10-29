@@ -17,12 +17,13 @@ import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
 import { AnimatePresence, motion } from 'framer-motion'
-import { type FC, useMemo, useState } from 'react'
+import { type FC, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import { DesktopSidebarMenu } from './HeaderMenu'
+import { useSidebarState } from './hooks/useSidebarState'
 
 const contentVariants = {
   initial: { opacity: 0 },
@@ -31,12 +32,16 @@ const contentVariants = {
 }
 
 export const Sidebar: FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const {
+    isOpen,
+    currentContent,
+    currentBarButton,
+    handlePortfolioOpen,
+    handlePortfolioClose,
+    handleOpen,
+    handleClose,
+  } = useSidebarState()
   const { address } = useAccount()
-  const [currentContent, setCurrentContent] = useState<'menu' | 'portfolio'>('menu')
-  const [currentBarButton, setCurrentBarButton] = useState<'open' | 'close' | 'back'>(
-    'open',
-  )
 
   const theme = useTheme()
 
@@ -89,7 +94,6 @@ export const Sidebar: FC = () => {
     },
     openPortfolio: {
       width: '28.1875rem',
-      height: '90vh',
       maxHeight: '90vh',
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
@@ -152,30 +156,9 @@ export const Sidebar: FC = () => {
         {/* deposit/withdraw/buy */}
         <ActionButtons className="mt-6" />
         {/* tokens/activity */}
-        <UserActivityTabs className="mt-8 [&_.all-assets]:max-h-80 [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[30rem] [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden" />
+        <UserActivityTabs className="mt-8 [&_.all-assets]:max-h-[20vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[30rem] [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden" />
       </div>
     ),
-  }
-
-  function handlePortfolioOpen() {
-    setCurrentContent('portfolio')
-    setCurrentBarButton('back')
-  }
-
-  function handlePortfolioClose() {
-    setCurrentContent('menu')
-    setCurrentBarButton('close')
-  }
-
-  function handleOpen() {
-    setIsOpen(true)
-    setCurrentBarButton('close')
-  }
-
-  function handleClose() {
-    setIsOpen(false)
-    setCurrentBarButton('open')
-    setCurrentContent('menu')
   }
 
   const handleClickOutside = () => {

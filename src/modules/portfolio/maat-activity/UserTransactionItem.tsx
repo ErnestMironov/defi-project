@@ -49,7 +49,7 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
       <div
         className={cn(
           'relative flex size-9 items-center justify-center rounded-full bg-gray-20',
-          event.status === 'failed' && 'outline outline-red-50 bg-input-error',
+          event.status === 'failed' && 'border-[0.0938rem] border-red-50 bg-input-error',
         )}
       >
         <div
