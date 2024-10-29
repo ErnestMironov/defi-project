@@ -1,13 +1,10 @@
 import { ChainType, config, createConfig, EVM, getChains } from '@lifi/sdk'
 import { useSyncWagmiConfig } from '@lifi/wallet-management'
 import { useQuery } from '@tanstack/react-query'
-import { getWalletClient, injected, switchChain } from '@wagmi/core'
+import { getWalletClient, switchChain } from '@wagmi/core'
 import type { FC } from 'react'
-import type { CreateConnectorFn } from 'wagmi'
 
 import { wagmiAdapter } from './wagmi'
-
-const connectors: CreateConnectorFn[] = [injected()]
 
 export const LIfiProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data: chains } = useQuery({
@@ -42,8 +39,12 @@ export const LIfiProvider: FC<{ children: React.ReactNode }> = ({ children }) =>
 
   // List of Wagmi connectors
   // Synchronize fetched chains with Wagmi config and update connectors
-  // @ts-ignore
-  useSyncWagmiConfig(wagmiAdapter.wagmiConfig, connectors, chains)
+  useSyncWagmiConfig(
+    // @ts-ignore
+    wagmiAdapter.wagmiConfig,
+    wagmiAdapter.wagmiConfig.connectors,
+    chains,
+  )
 
   return children
 }

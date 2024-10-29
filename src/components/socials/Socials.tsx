@@ -1,7 +1,6 @@
 import Discord from '@assets/icons/discord.svg'
 import GitHub from '@assets/icons/github.svg'
 import Medium from '@assets/icons/medium.svg'
-import Telegram from '@assets/icons/telegram.svg'
 import Twitter from '@assets/icons/twitter.svg'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -26,10 +25,6 @@ const SOCIALS = [
   {
     name: 'Twitter',
     icon: Twitter,
-  },
-  {
-    name: 'Telegram',
-    icon: Telegram,
   },
   {
     name: 'Medium',

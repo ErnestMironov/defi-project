@@ -70,7 +70,7 @@ export const Sidebar: FC = () => {
   const sidebarVariants = {
     closed: {
       width: '10rem',
-      height: '4rem',
+      maxHeight: '4rem',
       borderRadius: '2rem',
       padding: '.5rem 1.25rem ',
       left: '6.25rem',
@@ -80,7 +80,7 @@ export const Sidebar: FC = () => {
     },
     open: {
       width: '24.1875rem',
-      height: '62.25rem',
+      maxHeight: '62.25rem',
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
       left: '2.5rem',
@@ -89,7 +89,8 @@ export const Sidebar: FC = () => {
     },
     openPortfolio: {
       width: '28.1875rem',
-      height: '62.25rem',
+      height: '90vh',
+      maxHeight: '90vh',
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
       left: '2.5rem',

@@ -1,9 +1,7 @@
-import { usePortfolioYield } from '@api/queries/usePortfolioYield'
 import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
 import { useUserShares } from '@hooks/useGetUserShares'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useMemo } from 'react'
-import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { AllAssets } from '../all-assets/AllAssets'
@@ -16,7 +14,6 @@ export const UserTokens = (props: UserTokensProperties) => {
   const { address } = useAccount()
 
   const { shares, isLoading: isUserSharesLoading } = useUserShares(address)
-  const { data: yieldData } = usePortfolioYield(address as Address)
 
   const balances = useMemo(() => {
     if (!shares) return []
@@ -41,10 +38,9 @@ export const UserTokens = (props: UserTokensProperties) => {
         symbol,
         value,
         apy: (symbol === 'USDC' ? usdcApy : usdtApy) as number,
-        yield: (yieldData?.[value.stable] as number) ?? 0,
       }
     })
-  }, [balances, usdcApy, usdtApy, yieldData])
+  }, [balances, usdcApy, usdtApy])
 
   const renderTokens = () => {
     if (isUserSharesLoading || isProtocolMetricsLoading || protocolMetricsError)

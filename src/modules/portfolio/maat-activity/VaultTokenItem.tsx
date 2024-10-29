@@ -9,11 +9,10 @@ import { formatUnits } from 'viem'
 interface VaultTokenItemProperties extends ComponentProps<'div'> {
   value: TokenShares
   apy: number
-  yield: number
 }
 
 export const VaultTokenItem = (props: VaultTokenItemProperties) => {
-  const { value: share, apy, yield: yieldValue, className, ...rest } = props
+  const { value: share, apy, className, ...rest } = props
   const { balance, decimals, stable } = share
   return (
     <div className={cn('flex items-center gap-3', className)} {...rest}>
@@ -33,14 +32,6 @@ export const VaultTokenItem = (props: VaultTokenItemProperties) => {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}
-          <span className="font-bold leading-[120%] text-green-100">
-            +{' '}
-            {formatAmount(yieldValue, {
-              notation: 'compact',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
-          </span>
         </p>
       </div>
       <div className="ml-auto text-lg font-medium text-text-80">
