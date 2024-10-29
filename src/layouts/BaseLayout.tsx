@@ -19,7 +19,7 @@ export const BaseLayout = (_props: BaseLayoutProperties) => {
     <>
       <div className="flex min-h-screen flex-col px-[6.25rem] max-lg:px-4">
         <Header className="mt-4 lg:mt-[2.06rem]" />
-        <main className="flex-1 pb-10 lg:mt-0 lg:pb-[9.44rem]">
+        <main className="flex-1 lg:mt-0">
           <Outlet />
         </main>
       </div>

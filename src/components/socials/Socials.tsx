@@ -16,7 +16,7 @@ interface SocialsProperties extends ComponentProps<'div'> {
 const SOCIALS = [
   {
     name: 'GitHub',
-    link: 'https://github.com/maat-finance',
+    link: '#',
     icon: GitHub,
   },
   {
