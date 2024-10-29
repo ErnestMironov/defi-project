@@ -29,10 +29,10 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
         <button
           type="button"
           className="flex items-center gap-2
-rounded-[12.5rem] bg-[rgba(153,_152,_184,_0.10)] px-6 py-4 text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80"
+rounded-[12.5rem] bg-white px-6 py-4 text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]"
         >
           Your balance:
-          <span className="text-white">354</span>
+          <span className="text-main-100 dark:text-white">354</span>
           <PointIcon className="relative -top-0.5 size-6" />
         </button>
       ) : (
