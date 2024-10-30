@@ -92,6 +92,7 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
               if (active && payload && payload.length > 0 && coordinate) {
                 return (
                   <StrategyTooltipComponent
+                    dataKey={dataKey}
                     timestamp={payload[0].payload.timestamp}
                     data={payload.map((item) => {
                       const value = item.payload.values.find(

@@ -47,6 +47,11 @@ export const TransactionsHistoryDesktop = (
     ...parameters,
   })
 
+  const handleFiltersChange = (newFilters: TableFiltersType) => {
+    setFilters(newFilters)
+    onPageChange(1)
+  }
+
   const renderBody = () => {
     switch (true) {
       case isLoading:
@@ -57,13 +62,7 @@ export const TransactionsHistoryDesktop = (
         ))
       }
       case data?.items?.length === 0: {
-        return (
-          <Table.Row className="pointer-events-none h-40">
-            <Table.Cell colSpan={7} className="text-center text-gray-500">
-              No transactions found
-            </Table.Cell>
-          </Table.Row>
-        )
+        return <Table.EmptyState>No transactions found</Table.EmptyState>
       }
       default: {
         return (
@@ -79,7 +78,7 @@ export const TransactionsHistoryDesktop = (
   return (
     <div {...props} className={cn('', className)}>
       <SectionTitle>Events</SectionTitle>
-      <TableFilters filters={filters} setFilters={setFilters} />
+      <TableFilters filters={filters} setFilters={handleFiltersChange} />
       <Table>
         <Table.Head>
           <Table.Row>

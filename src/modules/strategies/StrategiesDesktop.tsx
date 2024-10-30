@@ -13,6 +13,7 @@ import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { isAddress, isHash } from 'viem'
 
 import { StrategyTable } from './StrategyTable'
 
@@ -26,7 +27,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
   const { filters: initialFilters, className, withLink = false, params } = props
   const [filters, setFilters] = useState(initialFilters)
   const navigate = useNavigate()
-  const { search: _search, ...selectFilters } = filters
+  const { search, ...selectFilters } = filters
   const { onPageChange, page, size, onPageSizeChange } = usePages()
 
   const { sort, orderBy, onSortChange } = useSort(['apy', 'tvl'], {
@@ -38,9 +39,17 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
     size,
     sort,
     order_by: orderBy,
+    strategy_ids: search?.value && isHash(search?.value) ? [search?.value] : undefined,
+    strategy_addresses:
+      search?.value && isAddress(search?.value) ? [search?.value] : undefined,
     ...getMultiSelectParameters(selectFilters),
     ...params,
   })
+
+  const handleFiltersChange = (newFilters: TableFiltersType) => {
+    setFilters(newFilters)
+    onPageChange(1)
+  }
 
   return (
     <section {...props} className={cn('', className)}>
@@ -50,7 +59,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
           <Button onClick={() => navigate(ROUTES.STRATEGIES)}>Go to strategies</Button>
         )}
       </div>
-      <TableFilters filters={filters} setFilters={setFilters} />
+      <TableFilters filters={filters} setFilters={handleFiltersChange} />
       <StrategyTable
         strategies={data?.items}
         loading={isLoading || isPlaceholderData}

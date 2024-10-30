@@ -44,6 +44,12 @@ export const AdminTable = (props: AdminTableProperties) => {
     hash: isHash(search?.value) ? search?.value : undefined,
     ...getMultiSelectParameters(selectFilters),
   })
+
+  const handleFiltersChange = (newFilters: TableFiltersType) => {
+    setFilters(newFilters)
+    onPageChange(1)
+  }
+
   const renderBody = () => {
     if (isLoading || !!error) {
       return (
@@ -55,13 +61,7 @@ export const AdminTable = (props: AdminTableProperties) => {
       )
     }
     if (data?.total_items === 0) {
-      return (
-        <Table.Row className="text-center text-gray-500">
-          <Table.Cell colSpan={6} className="py-32 text-center">
-            No data was found
-          </Table.Cell>
-        </Table.Row>
-      )
+      return <Table.EmptyState>No data was found</Table.EmptyState>
     }
     return (
       <>
@@ -72,7 +72,7 @@ export const AdminTable = (props: AdminTableProperties) => {
 
   return (
     <div className={cn('', className)} {...rest}>
-      <TableFilters filters={filters} setFilters={setFilters} />
+      <TableFilters filters={filters} setFilters={handleFiltersChange} />
       <Table className={cn('', isPlaceholderData && 'animate-pulse')}>
         <Table.Head>
           <Table.Row>
