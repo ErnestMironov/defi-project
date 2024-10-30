@@ -7,12 +7,12 @@ import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
 
 interface VaultTokenItemProperties extends ComponentProps<'div'> {
-  value: TokenShares
+  token: TokenShares
   apy: number
 }
 
 export const VaultTokenItem = (props: VaultTokenItemProperties) => {
-  const { value: share, apy, className, ...rest } = props
+  const { token: share, apy, className, ...rest } = props
   const { balance, decimals, stable } = share
   return (
     <div className={cn('flex items-center gap-3', className)} {...rest}>

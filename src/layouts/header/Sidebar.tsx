@@ -89,7 +89,7 @@ export const Sidebar: FC = () => {
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
       left: '2.5rem',
-      overflow: 'auto',
+      overflow: 'hidden auto',
       backgroundColor: 'var(--cards)',
     },
     openPortfolio: {
@@ -98,7 +98,7 @@ export const Sidebar: FC = () => {
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
       left: '2.5rem',
-      overflow: 'auto',
+      overflow: 'hidden auto',
       backgroundColor: 'var(--cards)',
     },
   }
@@ -131,7 +131,7 @@ export const Sidebar: FC = () => {
       </div>
     ),
     portfolio: (
-      <div className="hide-scrollbar pointer-events-auto h-full overflow-auto bg-cards">
+      <div className="hide-scrollbar pointer-events-auto h-full overflow-y-auto overflow-x-hidden bg-cards">
         <div className="flex items-start justify-between">
           <div>
             <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">

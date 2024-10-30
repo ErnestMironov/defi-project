@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unsafe-optional-chaining */
 
-import { useLastRebalances } from '@api/queries/useLastRebalances'
+import { useLastRebalances } from '@api/maat-finance/useLastRebalances'
 import Arrow from '@assets/icons/curve-arrow-down.svg?url'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg?url'
 import Avalanche from '@assets/icons/networks/avalanche.svg?url'

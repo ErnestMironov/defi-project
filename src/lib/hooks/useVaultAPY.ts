@@ -2,8 +2,14 @@ import { useStrategies } from '@api/maat-finance/useStrategies'
 import { formatAmount } from '@utils/formatValue'
 import { useMemo } from 'react'
 
-export const useBestApy = () => {
-  const { data: strategies, ...rest } = useStrategies({
+interface UseVaultAPYReturn {
+  bestUSDCAPy: number
+  bestUSDTAPy: number
+  isLoading: boolean
+}
+
+export const useVaultAPY = (): UseVaultAPYReturn => {
+  const { isLoading, data: strategies } = useStrategies({
     size: 100,
   })
 
@@ -17,16 +23,16 @@ export const useBestApy = () => {
           +formatAmount(strategy.apy, {
             maximumFractionDigits: 2,
           }),
-      ) ?? []),
+      ) ?? [0]),
     )
   }, [strategies?.items])
 
   const bestUSDTAPy = useMemo(() => {
-    const USDCStrategies = strategies?.items.filter(
+    const USDTStrategies = strategies?.items.filter(
       (strategy) => strategy.token.symbol.toUpperCase() === 'USDT',
     )
     return Math.max(
-      ...(USDCStrategies?.map(
+      ...(USDTStrategies?.map(
         (strategy) =>
           +formatAmount(strategy.apy, {
             maximumFractionDigits: 2,
@@ -35,14 +41,9 @@ export const useBestApy = () => {
     )
   }, [strategies?.items])
 
-  const bestOverallAPY = useMemo(() => {
-    return Math.max(bestUSDCAPy, bestUSDTAPy)
-  }, [bestUSDCAPy, bestUSDTAPy])
-
   return {
     bestUSDCAPy,
     bestUSDTAPy,
-    bestOverallAPY,
-    ...rest,
+    isLoading,
   }
 }

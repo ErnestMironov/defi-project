@@ -1,6 +1,6 @@
 import type { ChainParameters, TokenParameters } from '@api/maat-finance/types'
-import type { IncentiveParameters } from '@api/queries/useIncentives'
-import { useInfiniteIncentives } from '@api/queries/useIncentives'
+import type { IncentiveParameters } from '@api/maat-finance/useIncentives'
+import { useInfiniteIncentives } from '@api/maat-finance/useIncentives'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'

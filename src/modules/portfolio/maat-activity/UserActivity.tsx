@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import type { Event } from '@api/maat-finance/types'
-import { usePortfolioTransactions } from '@api/queries/usePortfolioTransactions'
+import { usePortfolioTransactions } from '@api/maat-finance/usePortfolioTransactions'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import type { Address } from 'viem'

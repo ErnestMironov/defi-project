@@ -1,4 +1,4 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'

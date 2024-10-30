@@ -1,5 +1,5 @@
 import type { VaultType } from '@api/maat-finance/types'
-import { useVaults } from '@api/queries/useVaults'
+import { useVaults } from '@api/maat-finance/useVaults'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { Skeleton } from '@components/ui/skeleton'

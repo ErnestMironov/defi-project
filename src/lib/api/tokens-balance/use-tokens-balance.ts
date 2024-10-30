@@ -67,8 +67,6 @@ export const useTokensBalance = ({ address }: UsePortfolioProperties) => {
           return
         }
 
-        console.log('🚀 ~ processChain ~ tokenBalances:', tokenBalances)
-
         const mappedTokens = tokenBalances
           .filter((token) => BigInt(token.amount ?? 0) > BigInt(0))
           .map((token) => ({
@@ -93,7 +91,6 @@ export const useTokensBalance = ({ address }: UsePortfolioProperties) => {
       }
 
       await Promise.allSettled(chains.map(processChain))
-      console.log('🚀 ~ queryFn: ~ portfolio:', portfolio)
       return portfolio
     },
   })

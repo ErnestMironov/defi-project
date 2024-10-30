@@ -1,4 +1,4 @@
-import { useStrategy } from '@api/queries/useStrategy'
+import { useStrategy } from '@api/maat-finance/useStrategy'
 import Planet from '@assets/icons/planet.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Skeleton } from '@components/ui/skeleton'

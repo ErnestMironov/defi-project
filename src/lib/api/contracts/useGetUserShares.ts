@@ -1,6 +1,7 @@
 import { TOKEN_VAULT } from '@abi/token-vault'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
-import { useCallback, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useCallback } from 'react'
 import type { Address } from 'viem'
 import { createPublicClient, http } from 'viem'
 import {
@@ -52,16 +53,8 @@ type Errors = Array<{
 
 // Hook to get user shares from multiple networks
 export const useUserShares = (userAddress?: Address) => {
-  const [shares, setShares] = useState<TokenShares[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [errors, setErrors] = useState<Errors>([])
-
   const fetchShares = useCallback(async () => {
-    if (!userAddress) return
-
-    setIsLoading(true)
-    setErrors([])
-    setShares([])
+    if (!userAddress) return { shares: [], errors: [] }
 
     const sharesMap: Record<string, TokenShares> = {}
     const newErrors: Errors = []
@@ -116,14 +109,20 @@ export const useUserShares = (userAddress?: Address) => {
       }),
     )
 
-    setShares(Object.values(sharesMap))
-    setErrors((previousErrors) => [...previousErrors, ...newErrors])
-    setIsLoading(false)
+    return {
+      shares: Object.values(sharesMap),
+      errors: newErrors,
+    }
   }, [userAddress])
 
-  useEffect(() => {
-    fetchShares()
-  }, [fetchShares])
-
-  return { shares, isLoading, errors, refetch: fetchShares }
+  return useQuery({
+    queryKey: ['userShares', userAddress],
+    queryFn: fetchShares,
+    enabled: !!userAddress,
+    select: (data) => ({
+      shares: data?.shares ?? [],
+      errors: data?.errors ?? [],
+      refetch: fetchShares,
+    }),
+  })
 }

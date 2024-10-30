@@ -1,4 +1,4 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import Close from '@assets/icons/close.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { ShadowBox } from '@components/box/ShadowBox'

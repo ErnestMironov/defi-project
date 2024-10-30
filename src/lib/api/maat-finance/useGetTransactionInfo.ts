@@ -8,7 +8,7 @@ export const useGetTransactionInfo = (tx_hash: Address) => {
   return useQuery<TxInfoResponse>({
     queryKey: ['transactionInfo', tx_hash],
     queryFn: async () => {
-      const response = await apiClient.get<TxInfoResponse>('/actions/related', {
+      const response = await apiClient.get<TxInfoResponse>('analytics/actions/related', {
         params: { tx_hash },
       })
 

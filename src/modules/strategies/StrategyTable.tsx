@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import type { Strategy } from '@api/maat-finance/types'
-import type { StrategiesParameters } from '@api/queries/useStrategies'
+import type { StrategiesParameters } from '@api/maat-finance/useStrategies'
 import Sort from '@assets/icons/sort.svg'
 import { Table } from '@components/table'
 import { cn } from '@utils/cn'

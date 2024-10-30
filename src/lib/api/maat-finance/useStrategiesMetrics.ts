@@ -37,7 +37,7 @@ type DataStructure = {
 }
 
 const getStrategiesMetrics = (parameters: StrategiesMetricsParameters) => {
-  return apiClient.get<DataStructure>('/stats/strategies/metrics', {
+  return apiClient.get<DataStructure>('analytics/stats/strategies/metrics', {
     params: parameters,
     paramsSerializer: (parameters_) => {
       return qs.stringify(parameters_, { arrayFormat: 'repeat' })

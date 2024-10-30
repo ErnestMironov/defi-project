@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import { useReports } from '@api/queries/useReports'
+import { useReports } from '@api/maat-finance/useReports'
 import Sort from '@assets/icons/sort.svg'
 import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'

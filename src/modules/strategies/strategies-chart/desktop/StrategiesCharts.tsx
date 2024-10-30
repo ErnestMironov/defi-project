@@ -1,4 +1,4 @@
-import type { StrategyData } from '@api/queries/useStrategiesMetrics'
+import type { StrategyData } from '@api/maat-finance/useStrategiesMetrics'
 import type { OptionType } from '@components/select/Select'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'

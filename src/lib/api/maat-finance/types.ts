@@ -241,3 +241,5 @@ export type ChainParameters =
   | 'sei'
 
 export type TokenParameters = 'USDT' | 'USDC'
+
+export type UserPointsResponse = any

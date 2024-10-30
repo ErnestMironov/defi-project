@@ -1,7 +1,7 @@
-import { getEvents } from '@api/queries/useEvents'
-import { getProtocolMetrics } from '@api/queries/useProtocolMetrics'
-import { getRebalanceVolume } from '@api/queries/useRebalanceVolume'
-import { getStrategies } from '@api/queries/useStrategies'
+import { getEvents } from '@api/maat-finance/useEvents'
+import { getProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
+import { getRebalanceVolume } from '@api/maat-finance/useRebalanceVolume'
+import { getStrategies } from '@api/maat-finance/useStrategies'
 import type { UseQueryOptions } from '@tanstack/react-query'
 import { useQueries } from '@tanstack/react-query'
 

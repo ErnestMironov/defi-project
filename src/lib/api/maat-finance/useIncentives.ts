@@ -1,55 +1,60 @@
 import { apiClient } from '@api/maat-finance/api-client'
 import type {
   ChainParameters,
+  IncentiveEvent,
   PaginationResponse,
-  ReportType,
   SortDirection,
   StatusType,
+  TokenParameters,
 } from '@api/maat-finance/types'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import qs from 'qs'
 
-export type ReportParameters = {
-  hash?: string
+export type IncentiveParameters = {
   limit?: number
-  sort?: 'creation_time' | 'amount'
-  order_by?: SortDirection
-  status?: StatusType
-  actions_type?: string[]
-  chain?: ChainParameters[]
-  token?: string[]
   page?: number
   size?: number
   start_timestamp?: string
   end_timestamp?: string
+  search?: string
+  actions_type?: string[]
+  token?: TokenParameters[]
+  status?: StatusType[]
+  chain?: ChainParameters[]
+  sort?: 'creation_time' | 'amount'
+  order_by?: SortDirection
+  hash?: string
 }
 
-const getReports = (parameters: ReportParameters) => {
-  return apiClient.get<PaginationResponse<ReportType>>('/actions/oracle', {
-    params: parameters,
-    paramsSerializer: (parameters_) => {
-      return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+const getIncentives = (parameters: IncentiveParameters) => {
+  return apiClient.get<PaginationResponse<IncentiveEvent>>(
+    'analytics/actions/incentives',
+    {
+      params: parameters,
+      paramsSerializer: (parameters_) => {
+        return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+      },
     },
-  })
+  )
 }
 
-export const useReports = (parameters: ReportParameters) => {
+export const useIncentives = (parameters: IncentiveParameters) => {
   return useQuery({
-    queryKey: ['reports', parameters],
+    queryKey: ['incentives', parameters],
     queryFn: async () => {
-      const { data } = await getReports(parameters)
+      const { data } = await getIncentives(parameters)
       return data
     },
   })
 }
 
-export const useInfiniteReports = (parameters: ReportParameters) => {
+export const useInfiniteIncentives = (parameters: IncentiveParameters) => {
   const { size, ...rest } = parameters
   const { fetchNextPage, hasNextPage, isFetchingNextPage, data, refetch, ...result } =
     useInfiniteQuery({
-      queryKey: ['reports', rest],
+      queryKey: ['incentives', rest],
       queryFn: async ({ pageParam }) => {
-        const response = await getReports({
+        const response = await getIncentives({
           size,
           page: pageParam,
           ...rest,

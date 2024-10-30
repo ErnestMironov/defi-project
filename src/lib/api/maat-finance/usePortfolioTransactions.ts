@@ -13,12 +13,15 @@ const getPortfolioTransactions = (
   address: string,
   parameters: PortfolioTransactionsParameters,
 ) => {
-  return apiClient.get<PortfolioTransactions>(`/portfolio/transactions/${address}`, {
-    params: parameters,
-    paramsSerializer: (parameters_) => {
-      return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+  return apiClient.get<PortfolioTransactions>(
+    `analytics/portfolio/transactions/${address}`,
+    {
+      params: parameters,
+      paramsSerializer: (parameters_) => {
+        return qs.stringify(parameters_, { arrayFormat: 'repeat' })
+      },
     },
-  })
+  )
 }
 
 export const usePortfolioTransactions = (

@@ -1,4 +1,4 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import type { RechartDataType } from '@components/chart/line-chart/AreaChart'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { FramesSelect } from '@components/frames-select/FramesSelect'

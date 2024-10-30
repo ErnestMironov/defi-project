@@ -1,81 +1,43 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
-import { useStrategies } from '@api/queries/useStrategies'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { useVaultAPY } from '@hooks/useVaultAPY'
 import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
-import { formatAmount } from '@utils/formatValue'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
-    useProtocolMetrics({})
-
-  const { isLoading: isStrategiesLoading, data: strategies } = useStrategies({
-    size: 100,
-  })
-
+  const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
   const { isBelowDesktop } = useDeviceWidth()
-
-  const usdcApy = protocolMetrics?.history?.USDC?.apy
-  const usdtApy = protocolMetrics?.history?.USDT?.apy
-
-  const bestUSDCAPy = useMemo(() => {
-    const USDCStrategies = strategies?.items.filter(
-      (strategy) => strategy.token.symbol.toUpperCase() === 'USDC',
-    )
-    return Math.max(
-      ...(USDCStrategies?.map(
-        (strategy) =>
-          +formatAmount(strategy.apy, {
-            maximumFractionDigits: 2,
-          }),
-      ) ?? []),
-    )
-  }, [strategies?.items])
-
-  const bestUSDTAPy = useMemo(() => {
-    const USDCStrategies = strategies?.items.filter(
-      (strategy) => strategy.token.symbol.toUpperCase() === 'USDT',
-    )
-    return Math.max(
-      ...(USDCStrategies?.map(
-        (strategy) =>
-          +formatAmount(strategy.apy, {
-            maximumFractionDigits: 2,
-          }),
-      ) ?? [0]),
-    )
-  }, [strategies?.items])
 
   const { setVault } = useTxStore()
   const vaultSet = useRef(false)
+
   useEffect(() => {
-    if (!vaultSet.current && !isProtocolMetricsLoading) {
-      if (usdcApy !== undefined && usdtApy !== undefined) {
-        if (Number(usdcApy) > Number(usdtApy)) {
+    if (!vaultSet.current && !isStrategiesLoading) {
+      if (bestUSDCAPy !== undefined && bestUSDTAPy !== undefined) {
+        if (Number(bestUSDCAPy) > Number(bestUSDTAPy)) {
           setVault('USDC')
-        } else if (Number(usdtApy) > Number(usdcApy)) {
+        } else if (Number(bestUSDTAPy) > Number(bestUSDCAPy)) {
           setVault('USDT')
         }
-      } else if (usdcApy === undefined) {
+      } else if (bestUSDCAPy === undefined) {
         setVault('USDT')
-      } else if (usdtApy === undefined) {
+      } else if (bestUSDTAPy === undefined) {
         setVault('USDC')
       } else {
         setVault('USDT')
       }
       vaultSet.current = true
     }
-  }, [usdcApy, usdtApy, setVault, isProtocolMetricsLoading])
+  }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-between pb-10">
-      <div className="pointer-events-auto mt-10 flex w-[38.75rem] flex-col gap-6 max-lg:mt-8 max-lg:gap-4">
+      <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
         {isBelowDesktop && <TVLDisplay />}
 
         <div className="grid grid-cols-2 gap-3">
@@ -90,20 +52,14 @@ export const Deposit = () => {
             </>
           ) : (
             <>
-              <ShadowBoxWithValue
-                label="Up to"
-                value={`${Math.trunc(bestUSDCAPy ?? 0)}%`}
-              >
+              <ShadowBoxWithValue label="Up to" value={`${Math.trunc(bestUSDCAPy)}%`}>
                 <img
                   src={usdc}
                   alt="usdc"
                   className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
                 />
               </ShadowBoxWithValue>
-              <ShadowBoxWithValue
-                label="Up to"
-                value={`${Math.trunc(bestUSDTAPy ?? 0)}%`}
-              >
+              <ShadowBoxWithValue label="Up to" value={`${Math.trunc(bestUSDTAPy)}%`}>
                 <img
                   src={usdt}
                   alt="usdt"
@@ -115,7 +71,7 @@ export const Deposit = () => {
         </div>
         <TransactionBlock />
       </div>
-      <p className="max-w-[56.25rem] text-center text-xs leading-[120%] text-[#c4c4c4] dark:text-text-50">
+      <p className="max-w-full text-center text-xs leading-[120%] text-[#c4c4c4] dark:text-text-50 max-lg:mt-20 lg:max-w-[56.25rem]">
         Cryptocurrencies and decentralized finance (DeFi) carry significant risk,
         including market volatility, smart contract vulnerabilities, and potential loss of
         funds. MAAT does not provide financial, legal, or tax advice. Users are solely

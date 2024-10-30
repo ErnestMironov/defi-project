@@ -1,4 +1,4 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import Dot from '@assets/icons/dot.svg'
 import Filter from '@assets/icons/filter.svg'
 import type { RechartDataType } from '@components/chart/line-chart/LineChart'
