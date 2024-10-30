@@ -39,6 +39,11 @@ export const ReportsTable = (props: ReportsTableProperties) => {
     ...getMultiSelectParameters(selectFilters),
   })
 
+  const handleFiltersChange = (newFilters: TableFiltersType) => {
+    setFilters(newFilters)
+    onPageChange(1)
+  }
+
   const renderBody = () => {
     if (isLoading || error) {
       return (
@@ -49,13 +54,16 @@ export const ReportsTable = (props: ReportsTableProperties) => {
         </>
       )
     }
+    if (data?.total_items === 0) {
+      return <Table.EmptyState>No data was found</Table.EmptyState>
+    }
     return (
       <>{data?.items?.map((report, i) => <ReportsTableRow report={report} key={i} />)}</>
     )
   }
   return (
     <div className={cn('', className)} {...rest}>
-      <TableFilters filters={filters} setFilters={setFilters} />
+      <TableFilters filters={filters} setFilters={handleFiltersChange} />
       <Table className={cn(isPlaceholderData && 'animate-pulse')}>
         <Table.Head>
           <Table.Row>

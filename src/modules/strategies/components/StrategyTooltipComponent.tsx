@@ -14,10 +14,11 @@ export type StrategyDataType = {
 interface StrategyTooltipComponentProperties extends ComponentProps<'div'> {
   timestamp: number
   data: StrategyDataType[]
+  dataKey: string
 }
 
 export const StrategyTooltipComponent = (props: StrategyTooltipComponentProperties) => {
-  const { className, data, timestamp, ...rest } = props
+  const { className, data, timestamp, dataKey, ...rest } = props
   return (
     <div
       className={cn(
@@ -28,7 +29,7 @@ export const StrategyTooltipComponent = (props: StrategyTooltipComponentProperti
     >
       <div className="flex items-center justify-between">
         <p className="text-gray-100">{dayjs(timestamp).format('DD MMM YYYY')}</p>
-        <p>APY</p>
+        <p className="uppercase">{dataKey}</p>
       </div>
       <div className="mt-6 space-y-4 text-semi-base">
         {data.map((item, i) => {

@@ -45,6 +45,11 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
     ...getMultiSelectParameters(selectFilters),
   })
 
+  const handleFiltersChange = (newFilters: TableFiltersType) => {
+    setFilters(newFilters)
+    onPageChange(1)
+  }
+
   const renderBody = () => {
     switch (true) {
       case isLoading:
@@ -53,6 +58,9 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
         return Array.from({ length: size }).map((_, index) => (
           <TransactionsHistoryDesktopSkeleton key={index} count={size} {...props} />
         ))
+      }
+      case data?.items?.length === 0: {
+        return <Table.EmptyState>No transactions were found</Table.EmptyState>
       }
       default: {
         return (
@@ -67,7 +75,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
   }
   return (
     <div {...props} className={cn('', className)}>
-      <TableFilters filters={filters} setFilters={setFilters} />
+      <TableFilters filters={filters} setFilters={handleFiltersChange} />
       <Table>
         <Table.Head>
           <Table.Row>

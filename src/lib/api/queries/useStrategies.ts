@@ -7,7 +7,8 @@ import { useInView } from 'react-intersection-observer'
 export type StrategiesParameters = {
   page?: number
   size?: number
-  strategy_id?: string
+  strategy_ids?: string[]
+  strategy_addresses?: string[]
   start_timestamp?: string
   end_timestamp?: string
   sort?: 'apy' | 'tvl'

@@ -26,6 +26,9 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
           <StrategyRowSkeleton key={index} className="h-[6.25rem]" />
         ))
       }
+      case strategies?.length === 0: {
+        return <Table.EmptyState>No strategies were found</Table.EmptyState>
+      }
       default: {
         return (
           <>

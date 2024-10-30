@@ -26,6 +26,7 @@ import { StrategyMobileList } from '@modules/strategies/StrategyMobileList'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
+import { isAddress, isHash } from 'viem'
 
 type StrategyFilters = 'tokens' | 'protocols' | 'chains'
 
@@ -80,6 +81,8 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
     chain: selectedChains.map((chain) => chain.value),
     protocol: selectedProtocols.map((protocol) => protocol.value),
     token: selectedTokens.map((token) => token.value),
+    strategy_ids: search && isHash(search) ? [search] : undefined,
+    strategy_addresses: search && isAddress(search) ? [search] : undefined,
     ...currentSort,
     ...params,
   })

@@ -16,8 +16,9 @@ import {
 } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { formatPercentValue } from '@utils/formatValue'
-import { isHashOrAddress } from '@utils/hash-or-address'
+import { isHash } from '@utils/hash-or-address'
 import { type ComponentProps, useState } from 'react'
+import { isAddress } from 'viem'
 
 import {
   type StrategyWithColor,
@@ -87,7 +88,8 @@ const StrategyEditDrawer = (props: StrategyEditDrawerProperties) => {
       sort: 'apy',
       order_by: 'desc',
       size: 30,
-      strategy_id: isHashOrAddress(search) ? search : undefined,
+      strategy_ids: search && isHash(search) ? [search] : undefined,
+      strategy_addresses: search && isAddress(search) ? [search] : undefined,
       chain: selectedChain.map((chain) => chain.value),
       protocol: selectedProtocol.map((protocol) => protocol.value),
       token: selectedToken.map((token) => token.value),

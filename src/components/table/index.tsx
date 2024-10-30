@@ -98,7 +98,20 @@ interface TableComponent
   Row: typeof TableRow
   Cell: typeof TableCell
   HeadCell: typeof TableHeadCell
+  EmptyState: typeof EmptyState
 }
+
+const EmptyState = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
+  ({ children, ...rest }, reference) => {
+    return (
+      <Table.Row ref={reference} {...rest}>
+        <Table.Cell colSpan={100} className="h-40 text-center text-gray-500">
+          {children}
+        </Table.Cell>
+      </Table.Row>
+    )
+  },
+)
 
 // Определяем компонент Table
 export const Table = forwardRef<
@@ -123,3 +136,4 @@ Table.Body = TableBody
 Table.Row = TableRow
 Table.Cell = TableCell
 Table.HeadCell = TableHeadCell
+Table.EmptyState = EmptyState
