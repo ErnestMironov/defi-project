@@ -7,6 +7,7 @@ import { SocialsSidebar } from '@components/socials/Socials'
 import { Logo } from '@components/ui/logo'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { usePortfolioData } from '@hooks/usePortfolioStore'
+import { useWindowSize } from '@hooks/useWindowSize'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
@@ -46,6 +47,8 @@ export const Sidebar: FC = () => {
   const theme = useTheme()
 
   const { open: openConnectModal } = useAppKit()
+
+  const { height } = useWindowSize()
 
   const {
     assets: assetsData,
@@ -156,7 +159,14 @@ export const Sidebar: FC = () => {
         {/* deposit/withdraw/buy */}
         <ActionButtons className="mt-6" />
         {/* tokens/activity */}
-        <UserActivityTabs className="mt-8 [&_.all-assets]:max-h-[20vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[30rem] [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden" />
+        <UserActivityTabs
+          className={cn(
+            'mt-8 [&_.all-assets]:max-h-[20vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden',
+            {
+              '[&_.user-activity]:max-h-[25vh]': height > 768,
+            },
+          )}
+        />
       </div>
     ),
   }
