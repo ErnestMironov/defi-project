@@ -98,7 +98,7 @@ export const Otp = () => {
         <p>Please sign the message to continue</p>
         <Button
           loading={isLoadingMessageToSign}
-          className="w-full"
+          className="lg:w-full"
           onClick={() => signMessageByWallet()}
         >
           Sign Message
@@ -114,7 +114,7 @@ export const Otp = () => {
           gm ser, enter your invite code to get a taste of omnichain yields.
         </p>
         <form onSubmit={onSubmit} className="flex w-full flex-col items-center">
-          <div className="relative">
+          <div className="relative max-lg:w-full">
             <InputOTP
               ref={inputOTPReference}
               containerClassName="my-10 max-lg:mt-6 max-lg:mb-12"

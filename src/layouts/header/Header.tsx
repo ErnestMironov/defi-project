@@ -76,7 +76,7 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
         <Sidebar />
       </div>
       {account.address ? (
-        <div className="relative">
+        <div className="relative min-w-64">
           <motion.div
             className="absolute inset-x-0 top-0 flex flex-col items-stretch overflow-hidden rounded-[2rem] bg-[rgba(239,242,253,0.50)] dark:bg-[#9998B80D]"
             initial="closed"
@@ -97,12 +97,14 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
               ))}
             </div>
           </motion.div>
-          <div className="relative z-10 flex items-center gap-2 rounded-[12.5rem] bg-white pl-6  text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]">
-            Your balance:
-            <span className="text-main-100 dark:text-white">
-              {userPoints?.totalRewards}
-            </span>
-            <PointIcon className="relative -top-0.5 size-6" />
+          <div className="relative z-10 flex items-center justify-between gap-2 rounded-[12.5rem] bg-white pl-6  text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]">
+            <div className="flex items-center gap-2 ">
+              Your balance:
+              <span className="text-main-100 dark:text-white">
+                {userPoints?.totalRewards}
+              </span>
+              <PointIcon className="relative -top-0.5 size-6" />
+            </div>
             <button
               type="button"
               className="flex items-center gap-2 py-6 pr-6"

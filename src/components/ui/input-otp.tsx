@@ -26,7 +26,7 @@ const InputOTPGroup = React.forwardRef<
   <div
     ref={reference}
     className={cn(
-      'flex items-center gap-6',
+      'flex items-center lg:gap-6 justify-between max-lg:w-full',
       className,
       isError && '*:border-red-100 *:text-red-100',
     )}
@@ -46,7 +46,7 @@ const InputOTPSlot = React.forwardRef<
     <div
       ref={reference}
       className={cn(
-        'relative flex items-center justify-center border-y border-r border-slate-200 text-4xl max-lg:text-[2.125rem] transition-all size-[5.125rem] rounded-xl border max-lg:size-[4.0625rem]',
+        'relative flex items-center justify-center border-y border-r border-slate-200 text-4xl max-lg:text-[2.125rem] transition-all size-[5.125rem] rounded-xl border max-lg:size-[2.8rem]',
         isActive && 'z-10 ring-2 ring-main-100 ring-offset-2',
         className,
       )}
