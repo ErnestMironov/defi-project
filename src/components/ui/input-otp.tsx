@@ -26,7 +26,7 @@ const InputOTPGroup = React.forwardRef<
   <div
     ref={reference}
     className={cn(
-      'flex items-center lg:gap-6 justify-between max-lg:w-full',
+      'flex items-center gap-4 lg:gap-6 justify-center max-lg:w-full',
       className,
       isError && '*:border-red-100 *:text-red-100',
     )}

@@ -117,7 +117,7 @@ export const Otp = () => {
           <div className="relative max-lg:w-full">
             <InputOTP
               ref={inputOTPReference}
-              containerClassName="my-10 max-lg:mt-6 max-lg:mb-12"
+              containerClassName="my-10 max-lg:mt-6 max-lg:mb-8"
               maxLength={6}
               onChange={onChange}
               value={otp}

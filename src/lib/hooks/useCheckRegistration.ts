@@ -23,6 +23,11 @@ export const useCheckRegistration = () => {
   useEffect(() => {
     if (isLoading) return
 
+    if (!isRegistered && location.pathname !== ROUTES.OTP) {
+      navigate(ROUTES.OTP)
+      return
+    }
+
     if (signature && address && isRegistered === undefined) {
       refetch()
       return
