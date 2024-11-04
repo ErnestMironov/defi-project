@@ -24,11 +24,7 @@ export const routes = createRoutesFromElements(
     <Route
       Component={OtpLayout}
       loader={() => {
-        // const otp = window.localStorage.getItem('otp')
-        // if (otp === VALID_OTP_HASH) {
-        return redirect(ROUTES.DEPOSIT)
-        // }
-        // return { Component: OtpLayout }
+        return { Component: OtpLayout }
       }}
     >
       <Route
@@ -44,10 +40,6 @@ export const routes = createRoutesFromElements(
     <Route
       Component={Root}
       loader={() => {
-        // const otp = window.localStorage.getItem('otp')
-        // if (otp !== VALID_OTP_HASH) {
-        // return redirect(ROUTES.OTP)
-        // }
         return { Component: Root }
       }}
     >

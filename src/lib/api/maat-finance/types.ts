@@ -242,4 +242,10 @@ export type ChainParameters =
 
 export type TokenParameters = 'USDT' | 'USDC'
 
-export type UserPointsResponse = any
+export type UserPointsResponse = {
+  address: string
+  totalRewards: number
+  currentRewardMultiplier: number
+  rewardsPerStaking: number
+  rewardsPerActivity: number
+}

@@ -3,6 +3,7 @@ import usdt from '@assets/images/usdt-3d.png'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { useCheckRegistration } from '@hooks/useCheckRegistration'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -10,6 +11,8 @@ import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
+  const { isRegistered } = useCheckRegistration()
+
   const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
   const { isBelowDesktop } = useDeviceWidth()
 

@@ -161,9 +161,10 @@ export const Sidebar: FC = () => {
         {/* tokens/activity */}
         <UserActivityTabs
           className={cn(
-            'mt-8 [&_.all-assets]:max-h-[20vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden',
+            'mt-8 [&_.all-assets]:max-h-[12vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden ',
             {
               '[&_.user-activity]:max-h-[25vh]': height > 768,
+              '[&_.all-assets]:max-h-[20vh]': height > 768,
             },
           )}
         />

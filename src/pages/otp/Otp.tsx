@@ -1,9 +1,18 @@
+import { useGetMessageToSign } from '@api/maat-finance/refferal-system/useGetMessageToSign'
+import { useRegister } from '@api/maat-finance/refferal-system/useRegister'
 import { Button } from '@components/ui/button'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@components/ui/input-otp'
+import { wagmiAdapter } from '@configs/wagmi'
+import { useCheckRegistration } from '@hooks/useCheckRegistration'
+import { useLocalReferralCodes } from '@hooks/useLocalReferralCodes'
+import { useLocalSignature } from '@hooks/useLocalSignature'
 import { useTheme } from '@modules/theme/ThemeProvider'
+import { useAppKit } from '@reown/appkit/react'
 import { ROUTES } from '@routes/routes'
-import React, { useRef, useState } from 'react'
+import { signMessage } from '@wagmi/core'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import OtpVideoDark from './assets/otp-preview-dark.mp4'
 import OtpVideoLight from './assets/otp-preview-light.mp4'
@@ -14,6 +23,18 @@ export const VALID_OTP_HASH =
 export const Otp = () => {
   const theme = useTheme()
   const navigate = useNavigate()
+  const { isConnected, address } = useAccount()
+  useCheckRegistration()
+  const { saveSignature, signature } = useLocalSignature()
+
+  const { setReferralCodes } = useLocalReferralCodes()
+
+  const { messageToSign, isLoading: isLoadingMessageToSign } = useGetMessageToSign()
+
+  const { open: openConnectModal } = useAppKit()
+
+  const { mutate: register, isPending: isLoadingRegister } = useRegister()
+
   const inputOTPReference = useRef<HTMLInputElement>(null)
   const [otp, setOtp] = useState('')
   const [error, setError] = useState('')
@@ -21,43 +42,74 @@ export const Otp = () => {
     setError('')
     setOtp(value)
   }
-  const onSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault()
-    if (error) {
-      onReset()
-      return
-    }
-    const encoder = new TextEncoder()
-    const data = encoder.encode(otp)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+  const onSubmit = useCallback(
+    async (e: React.SyntheticEvent) => {
+      if (!address || !signature) {
+        throw new Error('Address or signature is required')
+      }
 
-    if (hashHex === VALID_OTP_HASH) {
-      window.localStorage.setItem('otp', hashHex)
-      navigate(ROUTES.DEPOSIT)
-    } else {
-      setError('Invalid code')
-    }
-  }
+      e.preventDefault()
+      register(
+        {
+          address,
+          parent_referral_code: otp,
+          signature,
+        },
+        {
+          onSuccess: (data) => {
+            setReferralCodes(data?.data?.referral_codes)
+            navigate(ROUTES.DEPOSIT)
+          },
+        },
+      )
+    },
+    [address, navigate, otp, register, signature, addReferralCode],
+  )
+
   const onReset = () => {
     setError('')
     setOtp('')
     inputOTPReference.current?.focus()
   }
-  return (
-    <div className="pointer-events-none fixed inset-0 flex h-screen w-screen items-center justify-center max-lg:px-4">
-      <video
-        src={theme.theme === 'dark' ? OtpVideoDark : OtpVideoLight}
-        autoPlay
-        loop
-        muted
-        className="absolute inset-0 size-full object-cover blur-[5px]"
-      />
-      <div className="pointer-events-auto relative z-[2] flex w-max flex-col items-center rounded-[2rem] bg-cards px-6 py-8 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] max-lg:w-full max-lg:px-4 max-lg:py-6">
-        <h1 className="text-2.5xl font-bold capitalize max-lg:text-2xl/[1.8rem]">
-          Early Access
-        </h1>
+
+  const connectWalletRender = useMemo(
+    () => (
+      <div className="mt-8 flex w-[25rem] flex-col items-center justify-center gap-8 text-lg">
+        <p>Please connect your wallet to continue</p>
+        <Button onClick={() => openConnectModal()}>Connect Wallet</Button>
+      </div>
+    ),
+    [openConnectModal],
+  )
+
+  const messageToSignRender = useMemo(() => {
+    const signMessageByWallet = async () => {
+      if (!messageToSign) return
+
+      const newSignature = await signMessage(wagmiAdapter.wagmiConfig, {
+        message: messageToSign,
+      })
+
+      saveSignature(newSignature)
+    }
+
+    return (
+      <div className="mt-8 flex w-[25rem] flex-col items-center justify-center gap-8 text-lg">
+        <p>Please sign the message to continue</p>
+        <Button
+          loading={isLoadingMessageToSign}
+          className="w-full"
+          onClick={() => signMessageByWallet()}
+        >
+          Sign Message
+        </Button>
+      </div>
+    )
+  }, [messageToSign, isLoadingMessageToSign, saveSignature])
+
+  const otpCodeRender = useMemo(
+    () => (
+      <>
         <p className="mt-6 w-[18.125rem] text-center text-lg text-text-50 max-lg:mt-4 max-lg:w-[16.0625rem] max-lg:text-base">
           gm ser, enter your invite code to get a taste of omnichain yields.
         </p>
@@ -69,8 +121,11 @@ export const Otp = () => {
               maxLength={6}
               onChange={onChange}
               value={otp}
+              inputMode="text"
+              type="text"
+              pattern="[0-9,A-Z,a-z]*"
             >
-              <InputOTPGroup isError={!!error}>
+              <InputOTPGroup className="capitalize" isError={!!error}>
                 <InputOTPSlot index={0} />
                 <InputOTPSlot index={1} />
                 <InputOTPSlot index={2} />
@@ -91,10 +146,36 @@ export const Otp = () => {
             type="submit"
             className="w-full"
             disabled={otp.length !== 6}
+            loading={isLoadingRegister}
           >
             {error ? 'try again' : otp.length === 6 ? 'Submit' : 'Enter the code'}
           </Button>
         </form>
+      </>
+    ),
+    [error, onSubmit, otp, isLoadingRegister],
+  )
+
+  const render = useMemo(() => {
+    if (!isConnected) return connectWalletRender
+    if (!signature) return messageToSignRender
+    return otpCodeRender
+  }, [connectWalletRender, isConnected, signature, messageToSignRender, otpCodeRender])
+
+  return (
+    <div className="pointer-events-none fixed inset-0 flex h-screen w-screen items-center justify-center max-lg:px-4">
+      <video
+        src={theme.theme === 'dark' ? OtpVideoDark : OtpVideoLight}
+        autoPlay
+        loop
+        muted
+        className="absolute inset-0 size-full object-cover blur-[5px]"
+      />
+      <div className="pointer-events-auto relative z-[2] flex w-max flex-col items-center rounded-[2rem] bg-cards px-6 py-8 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] max-lg:w-full max-lg:px-4 max-lg:py-6">
+        <h1 className="text-2.5xl font-bold capitalize max-lg:text-2xl/[1.8rem]">
+          Early Access
+        </h1>
+        {render}
       </div>
     </div>
   )
