@@ -14,6 +14,7 @@ export const TokenIconComponent = ({
   ...rest
 }: TokenIconProperties) => {
   const asset = useTokenAsset(symbol)
+
   if (!asset && !tokenLogoFallback)
     return (
       <div
@@ -32,7 +33,7 @@ export const TokenIconComponent = ({
     )
 
   const { TokenIcon } = asset
-  return <TokenIcon {...rest} className={cn('overflow-visible', className)} />
+  return <TokenIcon {...rest} className={cn('', className)} />
 }
 
 export const IconWithLabelComponent = ({
@@ -46,7 +47,7 @@ export const IconWithLabelComponent = ({
   const { TokenIcon, name } = asset
   return (
     <div className={cn('flex items-center gap-2 min-w-max', className)}>
-      <TokenIcon {...rest} className={cn(className, 'overflow-visible')} />
+      <TokenIcon {...rest} className={cn(className, '')} />
       <div className="leading-normal">{label || name}</div>
     </div>
   )

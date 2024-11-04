@@ -9,7 +9,7 @@ const chains = [
   CHAIN_IDS_BY_NAME.Arbitrum,
   CHAIN_IDS_BY_NAME.Optimism,
   CHAIN_IDS_BY_NAME.Polygon,
-  CHAIN_IDS_BY_NAME.BNB,
+  CHAIN_IDS_BY_NAME.Bsc,
   CHAIN_IDS_BY_NAME.Base,
   CHAIN_IDS_BY_NAME.Ethereum,
   CHAIN_IDS_BY_NAME.Avalanche,

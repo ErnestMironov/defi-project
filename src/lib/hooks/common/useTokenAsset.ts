@@ -30,6 +30,7 @@ import Mantle from '@assets/icons/protocols/mantle.svg'
 import Metis from '@assets/icons/protocols/metis.svg'
 import Sonne from '@assets/icons/protocols/sonne.svg'
 import Stargate from '@assets/icons/protocols/stargate.svg'
+import Superform from '@assets/icons/protocols/superform.svg'
 import Yearn from '@assets/icons/protocols/yearn.svg'
 // token icons
 import Dai from '@assets/icons/tokens/dai.svg'
@@ -76,7 +77,7 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Binance,
-    symbol: 'BNB',
+    symbol: 'Bsc',
     name: 'Binance',
   },
   {
@@ -282,6 +283,11 @@ const TOKENS: ITokenAsset[] = [
     TokenIcon: Stargate,
     symbol: 'Stargate',
     name: 'Stargate',
+  },
+  {
+    TokenIcon: Superform,
+    symbol: 'Superform',
+    name: 'Superform',
   },
 ]
 

@@ -6,7 +6,7 @@ export const CHAIN_NAMES_BY_ID = {
   43_114: 'Avalanche',
   8453: 'Base',
   5000: 'Mantle',
-  56: 'BNB',
+  56: 'Bsc',
   1088: 'Metis',
 
   2222: 'Kava',
@@ -29,7 +29,7 @@ export const CHAIN_IDS_BY_NAME = {
   Avalanche: 43_114,
   Base: 8453,
   Mantle: 5000,
-  BNB: 56,
+  Bsc: 56,
   Metis: 1088,
 
   Kava: 2222,
@@ -71,7 +71,7 @@ export const CHAINS = [
   CHAIN_IDS_BY_NAME.Arbitrum,
   CHAIN_IDS_BY_NAME.Optimism,
   CHAIN_IDS_BY_NAME.Polygon,
-  CHAIN_IDS_BY_NAME.BNB,
+  CHAIN_IDS_BY_NAME.Bsc,
   CHAIN_IDS_BY_NAME.Base,
   CHAIN_IDS_BY_NAME.Mantle,
   CHAIN_IDS_BY_NAME.Metis,
@@ -83,7 +83,7 @@ export const DEPOSIT_CHAIN_IDS = [
   CHAIN_IDS_BY_NAME.Arbitrum,
   CHAIN_IDS_BY_NAME.Optimism,
   CHAIN_IDS_BY_NAME.Polygon,
-  CHAIN_IDS_BY_NAME.BNB,
+  CHAIN_IDS_BY_NAME.Bsc,
   CHAIN_IDS_BY_NAME.Base,
   CHAIN_IDS_BY_NAME.Mantle,
   CHAIN_IDS_BY_NAME.Metis,
@@ -104,7 +104,7 @@ export const CONFIRMATIONS_NUMBER = {
   [CHAIN_IDS_BY_NAME.Arbitrum]: 24,
   [CHAIN_IDS_BY_NAME.Optimism]: 3,
   [CHAIN_IDS_BY_NAME.Base]: 3,
-  [CHAIN_IDS_BY_NAME.BNB]: 3,
+  [CHAIN_IDS_BY_NAME.Bsc]: 3,
 }
 
 export const ESTIMATED_TIME_OF_CONFIRMATION = 8
@@ -119,7 +119,7 @@ export const CHAIN_IDS_BY_BACKEND_NAMES = {
   optimism: CHAIN_IDS_BY_NAME.Optimism,
   base: CHAIN_IDS_BY_NAME.Base,
   avalanche: CHAIN_IDS_BY_NAME.Avalanche,
-  bsc: CHAIN_IDS_BY_NAME.BNB,
+  bsc: CHAIN_IDS_BY_NAME.Bsc,
   mantle: CHAIN_IDS_BY_NAME.Mantle,
   metis: CHAIN_IDS_BY_NAME.Metis,
   sei: CHAIN_IDS_BY_NAME.Sei,

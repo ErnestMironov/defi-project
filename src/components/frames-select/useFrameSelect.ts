@@ -1,12 +1,17 @@
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const FRAMES = ['1D', '1W', '1M', '3M', 'MAX']
 export type FrameType = (typeof FRAMES)[number]
 
-export const useFrameSelect = () => {
+export const useFrameSelect = (initialFrame: FrameType = '1M') => {
   const [currentTimestamp, setCurrentTimestamp] = useState<number>(1)
-  const [currentFrame, setCurrentFrame] = useState<FrameType>('MAX')
+  const [currentFrame, setCurrentFrame] = useState<FrameType>(initialFrame)
+
+  useEffect(() => {
+    onFrameChange(initialFrame)
+  }, [initialFrame])
+
   const onFrameChange = (frame: FrameType) => {
     setCurrentFrame(frame)
     switch (frame) {

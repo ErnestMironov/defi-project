@@ -13,7 +13,7 @@ interface StrategiesChartProperties extends ComponentProps<'div'> {}
 
 export const StrategiesApyChart = (props: StrategiesChartProperties) => {
   const { className, ...rest } = props
-  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect()
+  const { currentFrame, currentTimestamp, frames, onFrameChange } = useFrameSelect('1W')
 
   const {
     isLoading: isStrategiesLoading,

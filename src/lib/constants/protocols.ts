@@ -9,4 +9,5 @@ export const PROTOCOL_IDS_BY_BACKEND_NAMES = {
   stargate: 'Stargate',
   yearn: 'Yearn',
   harvest: 'Harvest',
+  superform: 'Superform',
 } as const

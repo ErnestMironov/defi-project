@@ -10,7 +10,7 @@ export function getTokens(): Promise<AxiosResponse<TokensResponse, any>> {
     params: {
       chains: Object.values([
         LIFI_CHAIN_IDS[CHAIN_IDS_BY_NAME.Ethereum],
-        LIFI_CHAIN_IDS[CHAIN_IDS_BY_NAME.BNB],
+        LIFI_CHAIN_IDS[CHAIN_IDS_BY_NAME.Bsc],
         LIFI_CHAIN_IDS[CHAIN_IDS_BY_NAME.Arbitrum],
         LIFI_CHAIN_IDS[CHAIN_IDS_BY_NAME.Base],
         LIFI_CHAIN_IDS[CHAIN_IDS_BY_NAME.Avalanche],
