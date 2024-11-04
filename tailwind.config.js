@@ -110,6 +110,7 @@ module.exports = {
         },
         'dark-bg': 'var(--dark-bg)',
         'cards': 'var(--cards)',
+        'cards-hover': 'var(--cards-hover)',
         'cards-widget': 'var(--cards-widget)',
         'dark-cards': {
           100: 'var(--dark-cards-100)',
@@ -158,32 +159,37 @@ module.exports = {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateX(0)' },
         },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+        },
         shimmer: {
           '0%': { transform: 'translateX(-200%)', width: '50%' },
           '100%': { transform: 'translateX(calc(100% + 100/50*100%))', width: '50%' },
         },
+        animation: {
+          "accordion-down": "accordion-down 0.2s ease-out",
+          "accordion-up": "accordion-up 0.2s ease-out",
+          moonArc: 'moonArc 0.3s ease-in-out forwards',
+          sunArc: 'sunArc 0.3s ease-in-out forwards',
+          translateIn: 'translateIn 0.15s ease-in-out forwards',
+          "caret-blink": "caret-blink 1.25s ease-out infinite",
+          shimmer: 'shimmer 3s infinite linear',
+        },
+        fillOpacity: {
+          '0': '0',
+          '25': '0.25',
+          '50': '0.5',
+          '75': '0.75',
+          '100': '1',
+        },
       },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        moonArc: 'moonArc 0.3s ease-in-out forwards',
-        sunArc: 'sunArc 0.3s ease-in-out forwards',
-        translateIn: 'translateIn 0.15s ease-in-out forwards',
-        shimmer: 'shimmer 3s infinite linear',
-      },
-      fillOpacity: {
-        '0': '0',
-        '25': '0.25',
-        '50': '0.5',
-        '75': '0.75',
-        '100': '1',
-      }
-    },
     variants: {
       extend: {
         fillOpacity: ['responsive', 'hover', 'focus', 'active', 'group-hover'],
       },
-    }
+    },
   },
   plugins: [require("tailwindcss-animate")],
 }

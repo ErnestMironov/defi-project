@@ -1,6 +1,6 @@
 import type { AdminActionType } from '@api/maat-finance/types'
-import type { AdminActionsParameters } from '@api/queries/useAdminActions'
-import { useInfiniteAdminActions } from '@api/queries/useAdminActions'
+import type { AdminActionsParameters } from '@api/maat-finance/useAdminActions'
+import { useInfiniteAdminActions } from '@api/maat-finance/useAdminActions'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'

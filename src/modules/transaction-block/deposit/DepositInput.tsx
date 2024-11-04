@@ -1,4 +1,4 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics.ts'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics.ts'
 import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'

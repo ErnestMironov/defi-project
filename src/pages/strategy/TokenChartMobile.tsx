@@ -1,4 +1,4 @@
-import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
+import { useStrategiesMetrics } from '@api/maat-finance/useStrategiesMetrics'
 import Dot from '@assets/icons/dot.svg'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'

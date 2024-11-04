@@ -1,4 +1,4 @@
-import type { EventsParameters } from '@api/queries/useEvents'
+import type { EventsParameters } from '@api/maat-finance/useEvents'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { TransactionsMobileWithFilters } from '@modules/transactions/TransactionsMobileWithFilters'

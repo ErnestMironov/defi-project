@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 export type LastRebalancesType = Record<string, Event[]>
 
 export const getLastRebalances = () => {
-  return apiClient.get<LastRebalancesType>('/actions/last/rebalances')
+  return apiClient.get<LastRebalancesType>('analytics/actions/last/rebalances')
 }
 
 export const useLastRebalances = () => {

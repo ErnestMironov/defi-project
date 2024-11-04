@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-unused-collection */
 
 import type { Event, Strategy } from '@api/maat-finance/types'
-import type { LastRebalancesType } from '@api/queries/useLastRebalances'
+import type { LastRebalancesType } from '@api/maat-finance/useLastRebalances'
 import type { StableType } from '@components/stable-switcher/StableSwitcher'
 
 export type SankeyNodeType = Event & {

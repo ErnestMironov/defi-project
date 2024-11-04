@@ -24,7 +24,7 @@ export type AdminActionsParameters = {
 }
 
 const getAdminActions = (parameters: AdminActionsParameters) => {
-  return apiClient.get<PaginationResponse<AdminEvent>>('/actions/admin', {
+  return apiClient.get<PaginationResponse<AdminEvent>>('analytics/actions/admin', {
     params: parameters,
     paramsSerializer: (parameters_) => {
       return qs.stringify(parameters_, { arrayFormat: 'repeat' })

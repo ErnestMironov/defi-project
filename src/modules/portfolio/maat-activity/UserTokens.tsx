@@ -1,5 +1,5 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
-import { useUserShares } from '@hooks/useGetUserShares'
+import { useUserShares } from '@api/contracts/useGetUserShares'
+import { useVaultAPY } from '@hooks/useVaultAPY'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useMemo } from 'react'
 import { useAccount } from 'wagmi'
@@ -13,7 +13,8 @@ export const UserTokens = (props: UserTokensProperties) => {
   const { className, ...rest } = props
   const { address } = useAccount()
 
-  const { shares, isLoading: isUserSharesLoading } = useUserShares(address)
+  const { data, isLoading: isUserSharesLoading } = useUserShares(address)
+  const shares = data?.shares
 
   const balances = useMemo(() => {
     if (!shares) return []
@@ -24,26 +25,23 @@ export const UserTokens = (props: UserTokensProperties) => {
   }, [shares])
 
   const {
-    data: protocolMetrics,
-    isLoading: isProtocolMetricsLoading,
-    error: protocolMetricsError,
-  } = useProtocolMetrics({})
-
-  const usdcApy = protocolMetrics?.history?.USDC?.apy
-  const usdtApy = protocolMetrics?.history?.USDT?.apy
+    bestUSDCAPy: usdcApy,
+    bestUSDTAPy: usdtApy,
+    isLoading: isStrategiesLoading,
+  } = useVaultAPY()
 
   const formattedVaultData = useMemo(() => {
-    return Object.entries(balances).map(([symbol, value]) => {
+    return balances.map((token) => {
       return {
-        symbol,
-        value,
-        apy: (symbol === 'USDC' ? usdcApy : usdtApy) as number,
+        symbol: token.stable,
+        token,
+        apy: (token.stable === 'USDC' ? usdcApy : usdtApy) as number,
       }
     })
   }, [balances, usdcApy, usdtApy])
 
   const renderTokens = () => {
-    if (isUserSharesLoading || isProtocolMetricsLoading || protocolMetricsError)
+    if (isUserSharesLoading || isStrategiesLoading)
       return (
         <div className="user-assets flex flex-col gap-6">
           {Array.from({ length: 2 }).map((_, i) => (
@@ -55,7 +53,7 @@ export const UserTokens = (props: UserTokensProperties) => {
     return (
       <div className="user-assets flex flex-col gap-6">
         {formattedVaultData
-          .sort((a, b) => Number(b.value) - Number(a.value))
+          .sort((a, b) => Number(b.token.balance) - Number(a.token.balance))
           .map((item, i) => (
             <VaultTokenItem key={i} {...item} />
           ))}

@@ -1,4 +1,4 @@
-import { useStrategies } from '@api/queries/useStrategies'
+import { useStrategies } from '@api/maat-finance/useStrategies'
 import { COLORS } from '@modules/strategies/components/MultiColoredLineChart'
 import { useEffect } from 'react'
 

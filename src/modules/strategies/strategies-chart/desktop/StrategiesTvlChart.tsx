@@ -1,4 +1,4 @@
-import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
+import { useStrategiesMetrics } from '@api/maat-finance/useStrategiesMetrics'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import { cn } from '@utils/cn'

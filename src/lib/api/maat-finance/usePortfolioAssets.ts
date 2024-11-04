@@ -8,7 +8,7 @@ type PortfolioAssets = {
 }
 
 const getPortfolioAssets = (address: Address) => {
-  return apiClient.get<PortfolioAssets>(`/portfolio/assets/${address}`)
+  return apiClient.get<PortfolioAssets>(`analytics/portfolio/assets/${address}`)
 }
 
 export const usePortfolioAssets = (address: Address, options?: UseQueryOptions) => {

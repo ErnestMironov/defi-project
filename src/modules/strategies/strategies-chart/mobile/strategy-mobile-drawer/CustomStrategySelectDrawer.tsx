@@ -1,5 +1,5 @@
 import type { Strategy } from '@api/maat-finance/types'
-import { useInfiniteStrategies } from '@api/queries/useStrategies'
+import { useInfiniteStrategies } from '@api/maat-finance/useStrategies'
 import Arrow from '@assets/icons/arrow-left.svg'
 import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
 import type { OptionType } from '@components/select/Select'

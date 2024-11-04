@@ -1,4 +1,4 @@
-import type { EventsParameters } from '@api/queries/useEvents'
+import type { EventsParameters } from '@api/maat-finance/useEvents'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { IncentiveMobileWithFilters } from '@modules/transactions/incentive/IncentiveMobileWithFilters'

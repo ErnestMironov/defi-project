@@ -1,5 +1,5 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
-import { useRebalanceVolume } from '@api/queries/useRebalanceVolume'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
+import { useRebalanceVolume } from '@api/maat-finance/useRebalanceVolume'
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
 import { cn } from '@utils/cn'

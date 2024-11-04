@@ -1,4 +1,4 @@
-import type { StrategiesParameters } from '@api/queries/useStrategies'
+import type { StrategiesParameters } from '@api/maat-finance/useStrategies'
 import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { StrategiesDesktop } from '@modules/strategies/StrategiesDesktop'

@@ -33,7 +33,7 @@ type ProtocolMetrics = {
 }
 
 export const getProtocolMetrics = (parameters: ProtocolMetricsParameters) => {
-  return apiClient.get<ProtocolMetrics>('/stats/protocol/metrics', {
+  return apiClient.get<ProtocolMetrics>('analytics/stats/protocol/metrics', {
     params: parameters,
     paramsSerializer: (parameters_) => {
       return qs.stringify(parameters_, { arrayFormat: 'repeat' })

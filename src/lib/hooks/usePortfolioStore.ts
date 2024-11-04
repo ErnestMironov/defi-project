@@ -1,5 +1,5 @@
-import { usePortfolioAssets } from '@api/queries/usePortfolioAssets'
-import { usePortfolioYield } from '@api/queries/usePortfolioYield'
+import { usePortfolioAssets } from '@api/maat-finance/usePortfolioAssets'
+import { usePortfolioYield } from '@api/maat-finance/usePortfolioYield'
 import { useEffect } from 'react'
 import type { Address } from 'viem'
 import { useAccount } from 'wagmi'

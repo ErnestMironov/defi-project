@@ -8,7 +8,7 @@ export const useGetWithdrawChains = () => {
     queryKey: ['withdrawChains'],
     queryFn: async () => {
       const response = await apiClient.get<WithdrawChainsResponse>(
-        '/user/chain-ids-to-withdraw',
+        'analytics/user/chain-ids-to-withdraw',
       )
 
       return { data: response.data, status: response.status }

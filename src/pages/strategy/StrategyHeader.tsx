@@ -1,4 +1,4 @@
-import { useStrategy } from '@api/queries/useStrategy'
+import { useStrategy } from '@api/maat-finance/useStrategy'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { TokenIconComponent } from '@components/token-icon'

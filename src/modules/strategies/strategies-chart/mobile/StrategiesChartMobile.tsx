@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-small-switch */
-import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
+import { useStrategiesMetrics } from '@api/maat-finance/useStrategiesMetrics'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Close from '@assets/icons/close.svg'
 import Filter from '@assets/icons/filter.svg'
