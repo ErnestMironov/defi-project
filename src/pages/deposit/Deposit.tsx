@@ -11,7 +11,7 @@ import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  const { isRegistered } = useCheckRegistration()
+  useCheckRegistration()
 
   const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
   const { isBelowDesktop } = useDeviceWidth()

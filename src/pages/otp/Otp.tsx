@@ -63,14 +63,14 @@ export const Otp = () => {
         },
       )
     },
-    [address, navigate, otp, register, signature, addReferralCode],
+    [address, navigate, otp, register, signature, setReferralCodes],
   )
 
-  const onReset = () => {
-    setError('')
-    setOtp('')
-    inputOTPReference.current?.focus()
-  }
+  // const onReset = () => {
+  //   setError('')
+  //   setOtp('')
+  //   inputOTPReference.current?.focus()
+  // }
 
   const connectWalletRender = useMemo(
     () => (

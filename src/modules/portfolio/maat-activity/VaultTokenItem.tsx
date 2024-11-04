@@ -1,6 +1,6 @@
+import type { TokenShares } from '@api/contracts/useGetUserShares'
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import type { TokenShares } from '@hooks/useGetUserShares'
 import { cn } from '@utils/cn'
 import { formatAmount, formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
