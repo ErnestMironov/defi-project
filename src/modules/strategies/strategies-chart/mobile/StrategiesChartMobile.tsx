@@ -3,10 +3,10 @@ import { useStrategiesMetrics } from '@api/maat-finance/useStrategiesMetrics'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import Close from '@assets/icons/close.svg'
 import Filter from '@assets/icons/filter.svg'
+import Custom from '@assets/icons/setting.svg'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import type { OptionType } from '@components/select/Select'
-import { AnimatedTabs } from '@components/tab/AnimatedTabs'
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/ui/drawer'
 import { Skeleton } from '@components/ui/skeleton'
 import { MultiColoredLineChart } from '@modules/strategies/components/MultiColoredLineChart'
@@ -26,7 +26,7 @@ export const SELECT_STRATEGIES: OptionType[] = [
   {
     label: 'Custom',
     value: 'Custom',
-    Icon: () => <></>,
+    Icon: Custom,
     callback: () => {},
   },
 ]
@@ -40,8 +40,8 @@ interface StrategiesChartMobileProperties extends ComponentProps<'div'> {}
 
 export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) => {
   const { className, ...rest } = props
-  const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
-  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
+  const [activeTab, _setActiveTab] = useState<'apy' | 'tvl'>('apy')
+  const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect('1W')
   const {
     topStrategiesWithColors,
     customStrategiesWithColors,
@@ -174,7 +174,7 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
 
   return (
     <section className={cn('mt-[2.5rem]', className, '')} {...rest}>
-      <AnimatedTabs
+      {/* <AnimatedTabs
         className="mt-4"
         classNames={{
           tab: 'w-[6.25rem] text-base py-[0.72rem]',
@@ -187,8 +187,9 @@ export const StrategiesChartMobile = (props: StrategiesChartMobileProperties) =>
         ]}
         layoutId="tokens"
         onTabChange={(tab) => setActiveTab(tab as 'apy' | 'tvl')}
-      />
+      /> */}
       <div className="mt-6 flex items-center">
+        <h3 className="text-2xl font-medium">APY</h3>
         <FramesSelect
           className="ml-auto h-10 rounded-lg"
           frame={currentFrame}

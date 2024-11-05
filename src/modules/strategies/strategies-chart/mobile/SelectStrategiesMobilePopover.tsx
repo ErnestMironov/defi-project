@@ -1,4 +1,5 @@
 import ChevronDown from '@assets/icons/arrow-down.svg'
+import Check from '@assets/icons/check.svg'
 import Filter from '@assets/icons/filter.svg'
 import type { OptionType } from '@components/select/Select'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
@@ -52,9 +53,12 @@ export const SelectStrategiesMobilePopover = ({
                 setOpen(false)
               }}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex w-full items-center justify-between gap-2">
                 <div>{option.label}</div>
-                {option.Icon && <option.Icon className="size-4" />}
+                {option.value === value.value && <Check className="ml-auto size-5" />}
+                {option.Icon && option.value !== value.value && (
+                  <option.Icon className="ml-auto size-4" />
+                )}
               </div>
             </div>
           ))}

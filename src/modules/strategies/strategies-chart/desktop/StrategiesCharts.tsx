@@ -6,7 +6,6 @@ import { SelectStrategiesPopover } from '@modules/strategies/components/SelectSt
 import { StrategyRow } from '@modules/strategies/components/StrategyRow'
 
 import { StrategiesApyChart } from './StrategiesApyChart'
-import { StrategiesTvlChart } from './StrategiesTvlChart'
 import { useDesktopStrategies } from './useDesktopStrategies'
 import { useSelectorMove } from './useSelectorMove'
 
@@ -37,11 +36,11 @@ export const StrategiesCharts = () => {
   } = useDesktopStrategies()
 
   const {
-    shouldMoveSelect,
-    chartDistance,
+    // shouldMoveSelect,
+    // chartDistance,
     containerReference,
     firstChartReference,
-    secondChartReference,
+    // secondChartReference,
     selectReference,
   } = useSelectorMove()
 
@@ -69,17 +68,17 @@ export const StrategiesCharts = () => {
         <div ref={firstChartReference}>
           <StrategiesApyChart />
         </div>
-        <div ref={secondChartReference}>
+        {/* <div ref={secondChartReference}>
           <StrategiesTvlChart />
-        </div>
+        </div> */}
       </div>
       <div
         ref={selectReference}
-        style={{
-          transform: shouldMoveSelect
-            ? `translateY(${chartDistance}px)`
-            : 'translateY(0)',
-        }}
+        // style={{
+        //   transform: shouldMoveSelect
+        //     ? `translateY(${chartDistance}px)`
+        //     : 'translateY(0)',
+        // }}
         className="h-fit w-[27.0625rem] rounded-3xl bg-cards px-5 py-6 transition-all duration-300"
       >
         <SelectStrategiesPopover
