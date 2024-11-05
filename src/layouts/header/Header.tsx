@@ -77,27 +77,29 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
       </div>
       {account.address ? (
         <div className="relative min-w-64">
-          <motion.div
-            className="absolute inset-x-0 top-0 flex flex-col items-stretch overflow-hidden rounded-[2rem] bg-[rgba(239,242,253,0.50)] dark:bg-[#9998B80D]"
-            initial="closed"
-            animate={open ? 'open' : 'closed'}
-            variants={dropdownVariants}
-          >
-            <div
-              className="flex items-center justify-between gap-2 p-5 pt-20 text-[1.25rem] font-normal leading-[120%] text-gray-100"
-              style={{
-                justifyContent: validCodes.length > 1 ? 'space-between' : 'center',
-              }}
+          {validCodes.length > 0 && (
+            <motion.div
+              className="absolute inset-x-0 top-0 flex flex-col items-stretch overflow-hidden rounded-[2rem] bg-[rgba(239,242,253,0.50)] dark:bg-[#9998B80D]"
+              initial="closed"
+              animate={open ? 'open' : 'closed'}
+              variants={dropdownVariants}
             >
-              {validCodes.map((referralCode) => (
-                <div key={referralCode.code} className="flex items-center gap-2">
-                  {referralCode.code}
-                  <CopyButton text={referralCode.code} />
-                </div>
-              ))}
-            </div>
-          </motion.div>
-          <div className="relative z-10 flex items-center justify-between gap-2 rounded-[12.5rem] bg-white pl-6  text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]">
+              <div
+                className="flex items-center justify-between gap-2 p-5 pt-20 text-[1.25rem] font-normal leading-[120%] text-gray-100"
+                style={{
+                  justifyContent: validCodes.length > 1 ? 'space-between' : 'center',
+                }}
+              >
+                {validCodes.map((referralCode) => (
+                  <div key={referralCode.code} className="flex items-center gap-2">
+                    {referralCode.code}
+                    <CopyButton text={referralCode.code} />
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+          <div className="relative z-10 flex items-center justify-center gap-2 rounded-[12.5rem] bg-white pl-6  text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]">
             <div className="flex items-center gap-2 ">
               Your balance:
               <span className="text-main-100 dark:text-white">
@@ -110,12 +112,14 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
               className="flex items-center gap-2 py-6 pr-6"
               onClick={() => setOpen(!open)}
             >
-              <ChevronDownIcon
-                className={cn(
-                  'size-4 transition-transform stroke-gray-100',
-                  open ? 'rotate-180' : '',
-                )}
-              />
+              {validCodes.length > 0 && (
+                <ChevronDownIcon
+                  className={cn(
+                    'size-4 transition-transform stroke-gray-100',
+                    open ? 'rotate-180' : '',
+                  )}
+                />
+              )}
             </button>
           </div>
         </div>
