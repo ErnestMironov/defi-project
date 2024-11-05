@@ -39,7 +39,7 @@ export const Deposit = () => {
   }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-between pb-10">
+    <div className="flex h-screen w-full flex-col items-center justify-between gap-10 pb-10">
       <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
         {isBelowDesktop && <TVLDisplay />}
 
