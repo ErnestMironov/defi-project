@@ -53,6 +53,15 @@ export const routes = createRoutesFromElements(
         }}
       />
       <Route
+        path={ROUTES.POINTS}
+        lazy={async () => {
+          const { Points } = await import('@pages/points/Points')
+          return {
+            Component: Points,
+          }
+        }}
+      />
+      <Route
         path={ROUTES.ANALYTICS}
         lazy={async () => {
           const { Analytics } = await import('@pages/analytics/Analytics')

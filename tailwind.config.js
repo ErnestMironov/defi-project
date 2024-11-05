@@ -50,6 +50,7 @@ module.exports = {
         'stroke': {
           100: 'var(--stroke-100)',
           60: 'var(--stroke-60)',
+          element: 'var(--stroke-element)',
         },
         'text': 'var(--text)',
         'text-dark': 'var(--text-dark)',
