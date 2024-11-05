@@ -9,6 +9,7 @@ export const ROUTES = {
   TRANSACTION: '/analytics/transactions/:tx_hash',
   STRATEGY: '/analytics/strategies/:id',
   OTP: '/otp',
+  POINTS: '/points',
 } as const
 
 export type RoutesType = keyof typeof ROUTES
