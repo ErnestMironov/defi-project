@@ -14,11 +14,15 @@ export const useCheckRegistration = () => {
   const { messageToSign } = useGetMessageToSign()
   const { signature, clearSignature } = useLocalSignature()
 
-  const { isRegistered, isLoading, refetch } = useIsRegistered({
+  const { isRegistered, isLoading, refetch, error } = useIsRegistered({
     address: address as Address,
     signature: signature || '',
     enabled: !!address && !!signature,
   })
+
+  if (error?.response?.data?.detail === 'Invalid signature') {
+    clearSignature()
+  }
 
   useEffect(() => {
     if (isLoading) return
