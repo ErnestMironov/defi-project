@@ -1,7 +1,7 @@
+import type { TokenShares } from '@api/contracts/useGetUserShares'
 import Usdc from '@assets/icons/tokens/usdc.svg'
 import Usdt from '@assets/icons/tokens/usdt.svg'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
-import type { TokenShares } from '@hooks/useGetUserShares'
 import { useMemo } from 'react'
 
 export interface IMToken {

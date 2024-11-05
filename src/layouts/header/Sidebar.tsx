@@ -7,6 +7,7 @@ import { SocialsSidebar } from '@components/socials/Socials'
 import { Logo } from '@components/ui/logo'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { usePortfolioData } from '@hooks/usePortfolioStore'
+import { useWindowSize } from '@hooks/useWindowSize'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
@@ -46,6 +47,8 @@ export const Sidebar: FC = () => {
   const theme = useTheme()
 
   const { open: openConnectModal } = useAppKit()
+
+  const { height } = useWindowSize()
 
   const {
     assets: assetsData,
@@ -89,7 +92,7 @@ export const Sidebar: FC = () => {
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
       left: '2.5rem',
-      overflow: 'auto',
+      overflow: 'hidden auto',
       backgroundColor: 'var(--cards)',
     },
     openPortfolio: {
@@ -98,7 +101,7 @@ export const Sidebar: FC = () => {
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
       left: '2.5rem',
-      overflow: 'auto',
+      overflow: 'hidden auto',
       backgroundColor: 'var(--cards)',
     },
   }
@@ -131,7 +134,7 @@ export const Sidebar: FC = () => {
       </div>
     ),
     portfolio: (
-      <div className="hide-scrollbar pointer-events-auto h-full overflow-auto bg-cards">
+      <div className="hide-scrollbar pointer-events-auto h-full overflow-y-auto overflow-x-hidden bg-cards">
         <div className="flex items-start justify-between">
           <div>
             <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">
@@ -156,7 +159,15 @@ export const Sidebar: FC = () => {
         {/* deposit/withdraw/buy */}
         <ActionButtons className="mt-6" />
         {/* tokens/activity */}
-        <UserActivityTabs className="mt-8 [&_.all-assets]:max-h-[20vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[30rem] [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden" />
+        <UserActivityTabs
+          className={cn(
+            'mt-8 [&_.all-assets]:max-h-[12vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden ',
+            {
+              '[&_.user-activity]:max-h-[25vh]': height > 768,
+              '[&_.all-assets]:max-h-[20vh]': height > 768,
+            },
+          )}
+        />
       </div>
     ),
   }

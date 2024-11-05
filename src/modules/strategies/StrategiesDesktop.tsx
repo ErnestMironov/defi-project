@@ -1,5 +1,5 @@
-import type { StrategiesParameters } from '@api/queries/useStrategies'
-import { useStrategies } from '@api/queries/useStrategies'
+import type { StrategiesParameters } from '@api/maat-finance/useStrategies'
+import { useStrategies } from '@api/maat-finance/useStrategies'
 import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'

@@ -1,5 +1,5 @@
 import { getStatus } from '@api/lifi/endpoints/get-status'
-import { getEvents } from '@api/queries/useEvents'
+import { getEvents } from '@api/maat-finance/useEvents'
 import type { ChainType } from '@constants/chains'
 import { CONFIRMATIONS_NUMBER } from '@constants/chains'
 import type { IPendingTransactionData } from '@modules/transaction-block/store/usePendingTransactionsStore'

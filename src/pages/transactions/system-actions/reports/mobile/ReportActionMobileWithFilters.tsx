@@ -1,6 +1,6 @@
 import type { ChainParameters, TokenParameters } from '@api/maat-finance/types'
-import type { ReportParameters } from '@api/queries/useReports'
-import { useInfiniteReports } from '@api/queries/useReports'
+import type { ReportParameters } from '@api/maat-finance/useReports'
+import { useInfiniteReports } from '@api/maat-finance/useReports'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'

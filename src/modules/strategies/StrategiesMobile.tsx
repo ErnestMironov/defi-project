@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/no-useless-undefined */
-import type { StrategiesParameters } from '@api/queries/useStrategies'
-import { useInfiniteStrategies } from '@api/queries/useStrategies'
+import type { StrategiesParameters } from '@api/maat-finance/useStrategies'
+import { useInfiniteStrategies } from '@api/maat-finance/useStrategies'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { ArrowLink } from '@components/link/ArrowLink'

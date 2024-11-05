@@ -1,4 +1,4 @@
-import type { EventsParameters } from '@api/queries/useEvents'
+import type { EventsParameters } from '@api/maat-finance/useEvents'
 import {
   SELECT_CHAINS,
   SELECT_LAST_EVENT_ACTIONS,

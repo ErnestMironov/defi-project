@@ -1,5 +1,5 @@
-import { usePortfolioAssets } from '@api/queries/usePortfolioAssets'
-import { usePortfolioYield } from '@api/queries/usePortfolioYield'
+import { usePortfolioAssets } from '@api/maat-finance/usePortfolioAssets'
+import { usePortfolioYield } from '@api/maat-finance/usePortfolioYield'
 import Metamask from '@assets/icons/metamask.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 
+import type { TokenShares } from '@api/contracts/useGetUserShares'
+import { useUserShares } from '@api/contracts/useGetUserShares'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
-import type { TokenShares } from '@hooks/useGetUserShares'
-import { useUserShares } from '@hooks/useGetUserShares'
 import { formatAmount, formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
@@ -65,7 +65,8 @@ export const SelectWithdrawAssetModal = () => {
   const { switchChain: _switchChain } = useSwitchChain()
   const { address } = useAccount()
 
-  const { shares, isLoading: isUserSharesLoading } = useUserShares(address)
+  const { data, isLoading: isUserSharesLoading } = useUserShares(address)
+  const shares = data?.shares
 
   const balances = useMemo(() => {
     if (!shares) return []

@@ -7,9 +7,12 @@ import type { ApiResponse, WithdrawStatusResponse } from './types'
 export const fetchWithdrawStatus = async (
   txHash: Address,
 ): Promise<ApiResponse<WithdrawStatusResponse>> => {
-  const response = await apiClient.get<WithdrawStatusResponse>('/actions/status', {
-    params: { txHash },
-  })
+  const response = await apiClient.get<WithdrawStatusResponse>(
+    'analytics/actions/status',
+    {
+      params: { txHash },
+    },
+  )
   return { data: response.data, status: response.status }
 }
 

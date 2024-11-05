@@ -1,5 +1,5 @@
-import { useProtocolMetrics } from '@api/queries/useProtocolMetrics'
-import { useRebalanceVolume } from '@api/queries/useRebalanceVolume'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
+import { useRebalanceVolume } from '@api/maat-finance/useRebalanceVolume'
 
 export const useTokenMetrics = (symbol: 'USDT' | 'USDC') => {
   const {

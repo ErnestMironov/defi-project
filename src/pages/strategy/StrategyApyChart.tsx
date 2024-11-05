@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-small-switch */
-import { useStrategiesMetrics } from '@api/queries/useStrategiesMetrics'
+import { useStrategiesMetrics } from '@api/maat-finance/useStrategiesMetrics'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'

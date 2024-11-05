@@ -19,7 +19,7 @@ export type StrategiesParameters = {
 }
 
 export const getStrategies = (parameters: StrategiesParameters) => {
-  return apiClient.get<PaginationResponse<Strategy>>('/overview/strategies', {
+  return apiClient.get<PaginationResponse<Strategy>>('analytics/overview/strategies', {
     params: parameters,
     paramsSerializer: (parameters_) => {
       return qs.stringify(parameters_, { arrayFormat: 'repeat' })

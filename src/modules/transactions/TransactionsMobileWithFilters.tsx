@@ -1,6 +1,6 @@
 import type { StatusType } from '@api/maat-finance/types'
-import type { EventsParameters } from '@api/queries/useEvents'
-import { useInfiniteEvents } from '@api/queries/useEvents'
+import type { EventsParameters } from '@api/maat-finance/useEvents'
+import { useInfiniteEvents } from '@api/maat-finance/useEvents'
 import Filter from '@assets/icons/filter.svg'
 import Sort from '@assets/icons/mobile-sort.svg'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'

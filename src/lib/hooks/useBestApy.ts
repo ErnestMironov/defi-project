@@ -1,4 +1,4 @@
-import { useStrategies } from '@api/queries/useStrategies'
+import { useStrategies } from '@api/maat-finance/useStrategies'
 import { formatAmount } from '@utils/formatValue'
 import { useMemo } from 'react'
 

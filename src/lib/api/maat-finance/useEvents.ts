@@ -29,7 +29,7 @@ export type EventsParameters = {
 }
 
 export const getEvents = (parameters: EventsParameters) => {
-  return apiClient.get<PaginationResponse<Event>>('/actions/last', {
+  return apiClient.get<PaginationResponse<Event>>('analytics/actions/last', {
     params: parameters,
     paramsSerializer: (parameters_) => {
       return qs.stringify(parameters_, { arrayFormat: 'repeat' })

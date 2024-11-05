@@ -1,4 +1,4 @@
-import { useInfiniteStrategies } from '@api/queries/useStrategies'
+import { useInfiniteStrategies } from '@api/maat-finance/useStrategies'
 import Arrow from '@assets/icons/arrow-left.svg'
 import Eye from '@assets/icons/eye.svg'
 import EyeNo from '@assets/icons/eye-no.svg'

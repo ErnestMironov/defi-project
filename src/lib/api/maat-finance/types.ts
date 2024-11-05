@@ -241,3 +241,11 @@ export type ChainParameters =
   | 'sei'
 
 export type TokenParameters = 'USDT' | 'USDC'
+
+export type UserPointsResponse = {
+  address: string
+  totalRewards: number
+  currentRewardMultiplier: number
+  rewardsPerStaking: number
+  rewardsPerActivity: number
+}

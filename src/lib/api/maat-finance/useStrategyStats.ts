@@ -8,9 +8,12 @@ type StrategyStatsParameters = {
 }
 
 const getStrategyStats = (parameters: StrategyStatsParameters) => {
-  return apiClient.post<PaginationResponse<Strategy>>('/overview/strategies/metrics', {
-    params: parameters,
-  })
+  return apiClient.post<PaginationResponse<Strategy>>(
+    'analytics/overview/strategies/metrics',
+    {
+      params: parameters,
+    },
+  )
 }
 
 export const useStrategyStats = (parameters: StrategyStatsParameters) => {

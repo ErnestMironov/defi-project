@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import type { EventsParameters } from '@api/queries/useEvents'
-import { useEvents } from '@api/queries/useEvents'
+import type { EventsParameters } from '@api/maat-finance/useEvents'
+import { useEvents } from '@api/maat-finance/useEvents'
 import Sort from '@assets/icons/sort.svg'
 import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
