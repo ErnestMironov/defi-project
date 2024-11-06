@@ -80,7 +80,7 @@ export const TransactionsMobileWithFilters = (
   const eventsParameters = useMemo(() => {
     const baseParameters: EventsParameters = {
       size: 10,
-      hash_or_address: isHashOrAddress(search) ? search : undefined,
+      hash_or_address: isHashOrAddress(search) ? [search as string] : undefined,
       ...parameters,
       ...currentSort,
     }

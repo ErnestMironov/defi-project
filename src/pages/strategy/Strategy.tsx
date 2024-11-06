@@ -43,7 +43,7 @@ export const StrategyDesktop = (props: StrategyProperties) => {
       </div>
       <TransactionHistory
         className="mt-[6.25rem]"
-        eventParameters={{ strategy_id: id }}
+        eventParameters={{ strategy_ids: [id as string] }}
         maatFilters={{
           search: { value: '', placeholder: 'Tx Hash' },
           actions_type: {
@@ -75,7 +75,7 @@ const StrategyMobile = (props: StrategyProperties) => {
       <StrategyHeader />
       <StrategyInfoMobile />
       <TokenChartMobile />
-      <StrategyTransactions params={{ strategy_id: id }} />
+      <StrategyTransactions params={{ strategy_ids: [id as string] }} />
       <Footer className="mt-[5.5rem]" />
     </div>
   )

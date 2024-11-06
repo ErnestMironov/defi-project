@@ -40,7 +40,9 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
     transaction_type: 'maat',
     limit: 100,
     sort,
-    hash_or_address: isHashOrAddress(search?.value) ? search?.value : undefined,
+    hash_or_address: isHashOrAddress(search?.value)
+      ? [search?.value as string]
+      : undefined,
     order_by: orderBy,
     ...getMultiSelectParameters(selectFilters),
   })

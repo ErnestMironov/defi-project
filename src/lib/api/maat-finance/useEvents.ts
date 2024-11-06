@@ -24,8 +24,8 @@ export type EventsParameters = {
   start?: string
   end?: string
   token?: TokenParameters[]
-  hash_or_address?: string
-  strategy_id?: string
+  hash_or_address?: string[]
+  strategy_ids?: string[]
 }
 
 export const getEvents = (parameters: EventsParameters) => {
