@@ -105,7 +105,7 @@ export const useTransactionStatusChecker = () => {
     async (tx: IPendingTransactionData) => {
       try {
         const { data } = await getEvents({
-          hash_or_address: tx.transactionHash as `0x${string}`,
+          hash_or_address: [tx.transactionHash as string],
           limit: 1,
         })
 

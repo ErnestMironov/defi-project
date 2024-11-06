@@ -42,7 +42,9 @@ export const TransactionsHistoryDesktop = (
     page,
     sort,
     order_by: orderBy,
-    hash_or_address: isHashOrAddress(search?.value) ? search?.value : undefined,
+    hash_or_address: isHashOrAddress(search?.value)
+      ? [search?.value as string]
+      : undefined,
     ...getMultiSelectParameters(selectFilters),
     ...parameters,
   })
