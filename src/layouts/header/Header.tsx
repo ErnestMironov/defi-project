@@ -1,11 +1,11 @@
 import { useGetAddressInfo } from '@api/maat-finance/refferal-system/useGetAddressInfo'
 import { useGetUserPoints } from '@api/maat-finance/useGetUserPoints'
-import PointIcon from '@assets/icons/point-icon.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useLocalReferralCodes } from '@hooks/useLocalReferralCodes'
 import { useLocalSignature } from '@hooks/useLocalSignature'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
+import { PointsBalance } from '@modules/points-balance/PointsBalance'
 import { ROUTES } from '@routes/routes'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
@@ -99,15 +99,8 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
               </div>
             </motion.div>
           )}
-          <Link
-            to={ROUTES.POINTS}
-            className="relative z-10 flex items-center justify-center rounded-[12.5rem] bg-cards-widget px-6 py-4 text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]"
-          >
-            Your balance:
-            <span className="ml-1 mr-[.38rem] text-main-100 dark:text-white">
-              {userPoints?.totalRewards}
-            </span>
-            <PointIcon className="relative -top-0.5 size-6" />
+          <Link to={ROUTES.POINTS}>
+            <PointsBalance />
           </Link>
         </div>
       ) : (

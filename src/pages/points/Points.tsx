@@ -7,6 +7,7 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { useCheckRegistration } from '@hooks/useCheckRegistration'
 import { useLocalReferralCodes } from '@hooks/useLocalReferralCodes'
 import { useLocalSignature } from '@hooks/useLocalSignature'
+import { PointsBalance } from '@modules/points-balance/PointsBalance'
 import { formatAmount } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
 import { motion } from 'framer-motion'
@@ -64,6 +65,7 @@ export const Points = (_props: PointsProperties) => {
 
   return (
     <div className="py-8 lg:py-[7.81rem]">
+      <PointsBalance className="p-4 text-[1.125rem] lg:hidden" />
       <div className="flex grid-cols-[17.9rem_43.75rem_17.9rem] flex-col items-start justify-center gap-4 lg:grid">
         <div />
         <div>
