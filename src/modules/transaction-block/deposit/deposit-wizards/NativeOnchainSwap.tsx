@@ -1,8 +1,8 @@
 import ReceiveSquare from '@assets/icons/receive-square.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
-import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -30,6 +30,8 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
   const [isOpen, setIsOpen] = useState(false)
 
   const { isBelowDesktop } = useDeviceWidth()
+
+  const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
   const {
     status: switchStatus,
@@ -125,8 +127,8 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
       <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
-            icon={<TokenIconComponent width="2rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />}
-            title="Switch to Arbitrum"
+            icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
+            title={`Switch to ${depositAssetChain?.name}`}
             status={allStepsCompleted ? 'success' : switchStatus}
           />
           <WizardStep

@@ -4,6 +4,7 @@ import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -32,6 +33,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     setIntermediateError,
   } = useTxStore()
 
+  const assetChain = useTokenAsset(asset?.chain_id)
   const [isOpen, setIsOpen] = useState(false)
 
   const { isBelowDesktop } = useDeviceWidth()
@@ -181,10 +183,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={<TokenIconComponent width="2.625rem" symbol={asset?.chain_id} />}
-            title={`Switch to ${
-              CHAIN_NAMES_BY_ID[asset?.chain_id as keyof typeof CHAIN_NAMES_BY_ID] ??
-              'Unknown Chain'
-            }`}
+            title={`Switch to ${assetChain?.name}`}
             status={allStepsCompleted ? 'success' : switchStatus}
             stepNumber={1}
             maxStepNumber={3}
