@@ -39,7 +39,7 @@ export const Deposit = () => {
   }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-between gap-10 pb-10">
+    <div className="flex w-full flex-col items-center justify-between gap-10 pb-8">
       <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
         {isBelowDesktop && <TVLDisplay />}
 
@@ -74,13 +74,6 @@ export const Deposit = () => {
         </div>
         <TransactionBlock />
       </div>
-      <p className="max-w-full text-center text-xs leading-[120%] text-[#c4c4c4] dark:text-text-50 max-lg:mt-20 lg:max-w-[56.25rem]">
-        Cryptocurrencies and decentralized finance (DeFi) carry significant risk,
-        including market volatility, smart contract vulnerabilities, and potential loss of
-        funds. MAAT does not provide financial, legal, or tax advice. Users are solely
-        responsible for conducting their own research and understanding the risks before
-        interacting with the platform.
-      </p>
     </div>
   )
 }
