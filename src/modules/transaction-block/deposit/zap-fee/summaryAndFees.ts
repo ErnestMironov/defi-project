@@ -15,7 +15,6 @@ export interface SummaryAndFees {
   exchangeRate: string
   crossChainFee: ValueAndUsd
   expectedGasRefund: ValueAndUsd
-  boostFee: ValueAndUsd
   total: ValueAndUsd
   estimatedTime: string
 }
@@ -38,7 +37,6 @@ function createDefaultSummaryAndFees() {
   }
   const crossChainFee = { ...defaultValue }
   const expectedGasRefund = { ...defaultValue }
-  const boostFee = { ...defaultValue }
   const total = { ...defaultValue }
   const convertFrom = { ...defaultValue }
   const minReceive = { ...defaultValue }
@@ -50,7 +48,6 @@ function createDefaultSummaryAndFees() {
     crossChainFee,
     expectedGasRefund,
     exchangeRate,
-    boostFee,
     total,
     convertFrom,
     minReceive,
@@ -101,13 +98,9 @@ function configureSummary(route: LiFiStep, summaryAndFees: SummaryAndFees) {
 }
 
 function configureFeeBreakdown(route: LiFiStep, summaryAndFees: SummaryAndFees) {
-  const { crossChainFee, boostFee, total, expectedGasRefund } = summaryAndFees
+  const { crossChainFee, total, expectedGasRefund } = summaryAndFees
 
-  const { sumFeeNative, sumFeeUsd, symbol } = configureFees(
-    route,
-    crossChainFee,
-    boostFee,
-  )
+  const { sumFeeNative, sumFeeUsd, symbol } = configureFees(route, crossChainFee)
 
   const totalValue = sumFeeNative / overEstimateCoefficient
 
@@ -122,11 +115,7 @@ function configureFeeBreakdown(route: LiFiStep, summaryAndFees: SummaryAndFees) 
   expectedGasRefund.usd = `${(sumFeeUsd - +total.usd).toFixed(2)}`
 }
 
-function configureFees(
-  route: LiFiStep,
-  crossChainFee: ValueAndUsd,
-  boostFee: ValueAndUsd,
-) {
+function configureFees(route: LiFiStep, crossChainFee: ValueAndUsd) {
   let sumFeeNative = 0
   let sumFeeUsd = 0
   let symbol: string | undefined
@@ -143,14 +132,6 @@ function configureFees(
       )
 
       crossChainFee.usd = fee.amountUSD
-    } else if (fee.name === FeeType.BOOST_FEE) {
-      boostFee.value = composeWithDecimalsAndSymbol(
-        fee.amount,
-        fee.token.decimals,
-        fee.token.symbol,
-      )
-
-      boostFee.usd = fee.amountUSD
     }
 
     symbol = fee.token.symbol
