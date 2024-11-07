@@ -39,10 +39,12 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
   }, [assetsData])
 
   const totalYield = useMemo(() => {
-    return Object.values(yieldData ?? {}).reduce(
+    const total = Object.values(yieldData ?? {}).reduce(
       (accumulator, value) => accumulator + value,
       0,
     )
+
+    return total > 0 ? total : 0
   }, [yieldData])
 
   return (

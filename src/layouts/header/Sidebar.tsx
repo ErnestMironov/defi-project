@@ -69,10 +69,8 @@ export const Sidebar: FC = () => {
       (accumulator, value) => accumulator + (typeof value === 'number' ? value : 0),
       0,
     )
-    if (yieldSum >= 0) {
-      return yieldSum
-    }
-    return 0
+
+    return yieldSum > 0 ? yieldSum : 0
   }, [yieldData])
 
   const sidebarVariants = {
