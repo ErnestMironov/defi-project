@@ -7,10 +7,8 @@ import { useLocalReferralCodes } from '@hooks/useLocalReferralCodes'
 import { useLocalSignature } from '@hooks/useLocalSignature'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
 import { ROUTES } from '@routes/routes'
-import { cn } from '@utils/cn'
 import clsx from 'clsx'
 import { motion } from 'framer-motion'
-import { ChevronDownIcon } from 'lucide-react'
 import { type ComponentProps, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Address } from 'viem'
@@ -101,31 +99,16 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
               </div>
             </motion.div>
           )}
-          <div className="relative z-10 flex items-center justify-center gap-2 rounded-[12.5rem] bg-white pl-6  text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]">
-            <div className="flex items-center gap-2 py-5">
-              Your balance:
-              <Link to={ROUTES.POINTS} className="flex items-center gap-2">
-                <span className="text-main-100 dark:text-white">
-                  {userPoints?.totalRewards}
-                </span>
-                <PointIcon className="relative -top-0.5 size-6" />
-              </Link>
-            </div>
-            <button
-              type="button"
-              className="flex items-center gap-2 py-6 pr-6"
-              onClick={() => setOpen(!open)}
-            >
-              {validCodes.length > 0 && (
-                <ChevronDownIcon
-                  className={cn(
-                    'size-4 transition-transform stroke-gray-100',
-                    open ? 'rotate-180' : '',
-                  )}
-                />
-              )}
-            </button>
-          </div>
+          <Link
+            to={ROUTES.POINTS}
+            className="relative z-10 flex items-center justify-center rounded-[12.5rem] bg-cards-widget px-6 py-4 text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]"
+          >
+            Your balance:
+            <span className="ml-1 mr-[.38rem] text-main-100 dark:text-white">
+              {userPoints?.totalRewards}
+            </span>
+            <PointIcon className="relative -top-0.5 size-6" />
+          </Link>
         </div>
       ) : (
         <ConnectWallet className="rounded-[12.5rem] bg-cards-widget px-6 py-4 text-[1.25rem] text-gray-100 dark:bg-[rgba(153,_152,_184,_0.10)] dark:text-white" />
