@@ -11,7 +11,7 @@ import { useAppKit } from '@reown/appkit/react'
 import { ROUTES } from '@routes/routes'
 import { signMessage } from '@wagmi/core'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
 import OtpVideoDark from './assets/otp-preview-dark.mp4'
@@ -36,7 +36,11 @@ export const Otp = () => {
   const { mutate: register, isPending: isLoadingRegister } = useRegister()
 
   const inputOTPReference = useRef<HTMLInputElement>(null)
-  const [otp, setOtp] = useState('')
+  const [searchParameters] = useSearchParams()
+  const [otp, setOtp] = useState(() => {
+    const refcode = searchParameters.get('refcode')
+    return refcode || ''
+  })
   const [error, setError] = useState('')
   const onChange = (value: string) => {
     setError('')
