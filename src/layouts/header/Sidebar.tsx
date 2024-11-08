@@ -1,3 +1,4 @@
+import { useUserShares } from '@api/contracts/useGetUserShares'
 import BackMenuIcon from '@assets/icons/menu-bar-back.svg'
 import CloseMenuIcon from '@assets/icons/menu-bar-close.svg'
 import OpenMenuIcon from '@assets/icons/menu-bar-open.svg'
@@ -21,6 +22,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { type FC, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
+import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { DesktopSidebarMenu } from './HeaderMenu'
@@ -50,29 +52,27 @@ export const Sidebar: FC = () => {
 
   const { height } = useWindowSize()
 
-  const {
-    assets: assetsData,
-    yield: yieldData,
-    isLoadingAssets,
-    isLoadingYield,
-  } = usePortfolioData()
+  const { yield: yieldData, isLoadingYield } = usePortfolioData()
+
+  const { data: userShares, isLoading: isUserSharesLoading } = useUserShares(address)
 
   const portfolioValue = useMemo(() => {
-    return Object.values(assetsData ?? {}).reduce<number>(
-      (accumulator, value) => accumulator + (typeof value === 'number' ? value : 0),
+    if (!userShares?.shares) return 0
+
+    return userShares?.shares?.reduce<number>(
+      (accumulator, value) =>
+        accumulator + Number(formatUnits(value.balance, value.decimals)),
       0,
     )
-  }, [assetsData])
+  }, [userShares?.shares])
 
   const totalYield = useMemo(() => {
     const yieldSum = Object.values(yieldData ?? {}).reduce<number>(
       (accumulator, value) => accumulator + (typeof value === 'number' ? value : 0),
       0,
     )
-    if (yieldSum >= 0) {
-      return yieldSum
-    }
-    return 0
+
+    return yieldSum > 0 ? yieldSum : 0
   }, [yieldData])
 
   const sidebarVariants = {
@@ -142,7 +142,7 @@ export const Sidebar: FC = () => {
               <PortfolioValueTooltip />
             </h6>
             <SeparatedUsdValue
-              loading={isLoadingAssets}
+              loading={isUserSharesLoading}
               value={portfolioValue}
               className="mt-2"
             />

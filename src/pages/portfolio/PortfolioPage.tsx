@@ -1,4 +1,4 @@
-import { usePortfolioAssets } from '@api/maat-finance/usePortfolioAssets'
+import { useUserShares } from '@api/contracts/useGetUserShares'
 import { usePortfolioYield } from '@api/maat-finance/usePortfolioYield'
 import Metamask from '@assets/icons/metamask.svg'
 import { CopyButton } from '@components/copy/CopyButton'
@@ -10,7 +10,7 @@ import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
 import { type ComponentProps, useEffect, useMemo } from 'react'
-import type { Address } from 'viem'
+import { type Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 interface PortfolioPageProperties extends ComponentProps<'div'> {}
@@ -24,25 +24,30 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
       open()
     }
   }, [address, open])
-  const { data: assetsData, isLoading: isLoadingAssets } = usePortfolioAssets(
-    address as Address,
-  )
+
   const { data: yieldData, isLoading: isLoadingYield } = usePortfolioYield(
     address as Address,
   )
 
+  const { data: userShares, isLoading: isUserSharesLoading } = useUserShares(address)
+
   const portfolioValue = useMemo(() => {
-    return Object.values(assetsData ?? {}).reduce(
-      (accumulator, value) => accumulator + value,
+    if (!userShares?.shares) return 0
+
+    return userShares?.shares?.reduce<number>(
+      (accumulator, value) =>
+        accumulator + Number(formatUnits(value.balance, value.decimals)),
       0,
     )
-  }, [assetsData])
+  }, [userShares?.shares])
 
   const totalYield = useMemo(() => {
-    return Object.values(yieldData ?? {}).reduce(
+    const total = Object.values(yieldData ?? {}).reduce(
       (accumulator, value) => accumulator + value,
       0,
     )
+
+    return total > 0 ? total : 0
   }, [yieldData])
 
   return (
@@ -61,7 +66,7 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
             <PortfolioValueTooltip />
           </h6>
           <SeparatedUsdValue
-            loading={isLoadingAssets}
+            loading={isUserSharesLoading}
             value={portfolioValue}
             className="mt-2"
           />

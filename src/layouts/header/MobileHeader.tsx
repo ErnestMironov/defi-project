@@ -1,6 +1,7 @@
 import Burger from '@assets/icons/burger.svg'
 import EmptyWallet from '@assets/icons/empty-wallet.svg'
 import Close from '@assets/icons/menu-close.svg'
+import PointIcon from '@assets/icons/point-icon.svg'
 import BgDark from '@assets/images/background-dark.jpg'
 import BgLight from '@assets/images/background-light.jpg'
 import { Logo } from '@components/ui/logo'
@@ -24,6 +25,7 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
   const { className, ...rest } = props
   const { hidden } = useHideHeaderStore()
   const [opened, { toggle, close }] = useDisclosure()
+  console.log('🚀 ~ MobileHeader ~ opened:', opened)
   const { open: openConnectModal } = useAppKit()
   const { lock, unlock } = useScrollLock()
   useEffect(() => {
@@ -46,15 +48,22 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
       <Link onClick={close} to="/" className="flex items-center justify-center">
         <Logo className="relative z-[51] size-9 fill-text" />
       </Link>
-      <EmptyWallet
-        className="relative z-[51] ml-auto size-6 overflow-visible [&_path]:fill-text"
-        onClick={() => openConnectModal()}
-      />
-      <div
-        onClick={toggle}
-        className="relative z-[51] ml-4 size-6 overflow-visible [&>svg]:size-full [&_path]:fill-text"
-      >
-        {opened ? <Close /> : <Burger />}
+      <div className="relative z-[51] ml-auto flex items-center gap-4">
+        {opened && (
+          <Link to={ROUTES.POINTS} onClick={close}>
+            <PointIcon className="size-6" />
+          </Link>
+        )}
+        <EmptyWallet
+          className="size-6 overflow-visible [&_path]:fill-text"
+          onClick={() => openConnectModal()}
+        />
+        <div
+          onClick={toggle}
+          className="relative z-[51] size-6 overflow-visible [&>svg]:size-full [&_path]:fill-text"
+        >
+          {opened ? <Close /> : <Burger />}
+        </div>
       </div>
       <div
         className={cn(

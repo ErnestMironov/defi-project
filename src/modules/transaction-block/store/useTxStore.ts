@@ -79,8 +79,6 @@ export interface SelectedAssetState {
   setTransactionHash: (hash: string | null) => void
 
   // Additional features
-  boostMode: boolean
-  setBoostMode: (by: boolean) => void
   arrivalGas: string
   setArrivalGas: (value: string) => void
 
@@ -175,10 +173,6 @@ export const useTxStore = create<SelectedAssetState>()(
       withdrawAmount: '',
       setWithdrawAmount: (by) => set({ withdrawAmount: by }),
 
-      // boost mode
-      boostMode: false,
-      setBoostMode: (by) => set({ boostMode: by }),
-
       // arrival gas
       arrivalGas: '',
       setArrivalGas: (by) => set({ arrivalGas: by }),
@@ -240,7 +234,6 @@ export const useTxStore = create<SelectedAssetState>()(
           depositAmount: '',
           withdrawAmount: '',
           depositToNetwork: null,
-          boostMode: false,
           arrivalGas: '',
           currentStep: 1,
           isTransactionCanBeCollapsed: false,

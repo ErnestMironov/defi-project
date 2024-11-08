@@ -12,6 +12,7 @@ import { Dialog, DialogContent } from '@components/ui/dialog'
 import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { TX_TYPE } from '@constants/txTypes'
 import { formatAmount } from '@utils/formatValue'
+import { getRandomOkAnalog } from '@utils/phrases'
 import { useMemo } from 'react'
 // @ts-ignore
 import GifPlayer from 'react-gif-player'
@@ -145,6 +146,8 @@ export const DoneModal = () => {
     withdrawAmount,
   ])
 
+  const okAnalog = useMemo(() => getRandomOkAnalog(), [])
+
   return (
     <Dialog open={currentModal === 'done'} onOpenChange={onClose}>
       <DialogContent
@@ -177,6 +180,9 @@ export const DoneModal = () => {
               view transaction
             </Button>
           </a>
+          <Button onClick={onClose} variant="default" className="mt-4 w-full font-normal">
+            {okAnalog}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

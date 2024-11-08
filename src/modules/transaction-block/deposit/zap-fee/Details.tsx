@@ -1,8 +1,5 @@
 import ArrowDown from '@assets/icons/arrow-down.svg'
-import Lightning from '@assets/icons/lightning.svg'
 import { Dialog, DialogContent, DialogTitle } from '@components/ui/dialog'
-import { Switch } from '@components/ui/switch'
-import Grey3DBox from '@modules/transaction-block/components/Grey3DBox'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'
 import type { HTMLAttributes } from 'react'
@@ -52,7 +49,7 @@ interface DetailsProperties {
 }
 
 const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChange }) => {
-  const { boostMode, txDifficulty, setBoostMode } = useTxStore()
+  const { txDifficulty } = useTxStore()
   return (
     <Dialog open={open} onOpenChange={() => onOpenChange(false)}>
       <DialogContent
@@ -70,28 +67,7 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChan
             <ArrowDown className="size-6" />
           </button>
         </DialogTitle>
-        <div
-          style={{
-            opacity: txDifficulty === 'cross_chain' ? 1 : 0.4,
-          }}
-        >
-          <Grey3DBox>
-            <div className="flex items-center gap-2 text-[1.1875rem] font-bold leading-[120%] text-text-80">
-              <Lightning className="size-6" />
-              Boost
-            </div>
-            <Switch
-              disabled={txDifficulty !== 'cross_chain'}
-              checked={boostMode}
-              onCheckedChange={setBoostMode}
-            />
-          </Grey3DBox>
-          <Text className="mt-3">
-            Boost is a special feature of Axelar and Squid that reduces transaction time
-            across chains to 5-30 seconds. It is currently available for swaps below a
-            value of $20,000 USD.
-          </Text>
-        </div>
+
         <div
           style={{
             opacity: txDifficulty === 'cross_chain' ? 1 : 0.4,
@@ -132,11 +108,6 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChan
               title="Expected gas refund"
               value={`- ${summaryAndFees.expectedGasRefund.value}`}
               usd={summaryAndFees.expectedGasRefund.usd}
-            />
-            <Line
-              title="Boost fee"
-              value={`+ ${summaryAndFees.boostFee.value}`}
-              usd={summaryAndFees.boostFee.usd}
             />
             <Line
               title="Total"

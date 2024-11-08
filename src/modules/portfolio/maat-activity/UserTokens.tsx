@@ -1,7 +1,6 @@
-import { useUserShares } from '@api/contracts/useGetUserShares'
-import { useVaultAPY } from '@hooks/useVaultAPY'
+import { useFormattedVaultData } from '@hooks/useFormattedVaultData'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useMemo } from 'react'
+import { type ComponentProps } from 'react'
 import { useAccount } from 'wagmi'
 
 import { AllAssets } from '../all-assets/AllAssets'
@@ -12,36 +11,10 @@ interface UserTokensProperties extends ComponentProps<'div'> {}
 export const UserTokens = (props: UserTokensProperties) => {
   const { className, ...rest } = props
   const { address } = useAccount()
-
-  const { data, isLoading: isUserSharesLoading } = useUserShares(address)
-  const shares = data?.shares
-
-  const balances = useMemo(() => {
-    if (!shares) return []
-
-    return [...shares]
-      .filter((token) => token.balance > 999_999)
-      .sort((a, b) => Number(b.balance) - Number(a.balance))
-  }, [shares])
-
-  const {
-    bestUSDCAPy: usdcApy,
-    bestUSDTAPy: usdtApy,
-    isLoading: isStrategiesLoading,
-  } = useVaultAPY()
-
-  const formattedVaultData = useMemo(() => {
-    return balances.map((token) => {
-      return {
-        symbol: token.stable,
-        token,
-        apy: (token.stable === 'USDC' ? usdcApy : usdtApy) as number,
-      }
-    })
-  }, [balances, usdcApy, usdtApy])
+  const { formattedData, isLoading } = useFormattedVaultData(address)
 
   const renderTokens = () => {
-    if (isUserSharesLoading || isStrategiesLoading)
+    if (isLoading) {
       return (
         <div className="user-assets flex flex-col gap-6">
           {Array.from({ length: 2 }).map((_, i) => (
@@ -49,14 +22,13 @@ export const UserTokens = (props: UserTokensProperties) => {
           ))}
         </div>
       )
+    }
 
     return (
       <div className="user-assets flex flex-col gap-6">
-        {formattedVaultData
-          .sort((a, b) => Number(b.token.balance) - Number(a.token.balance))
-          .map((item, i) => (
-            <VaultTokenItem key={i} {...item} />
-          ))}
+        {formattedData.map((item, i) => (
+          <VaultTokenItem key={i} {...item} />
+        ))}
       </div>
     )
   }

@@ -2,8 +2,8 @@ import DepositIcon from '@assets/icons/deposit.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
-import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
 import { WizardStep } from '@modules/transaction-block/components/WizardStep'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -33,7 +33,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
-  console.log('🚀 ~ swapRoute:', swapRoute)
+
+  const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -176,16 +177,16 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
         <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
           <WizardStep
             icon={
-              <TokenIconComponent width="2.625rem" symbol={CHAIN_IDS_BY_NAME.Arbitrum} />
+              <TokenIconComponent width="2.625rem" symbol={depositAssetChain?.symbol} />
             }
-            title="Switch to Arbitrum"
+            title={`Switch to ${depositAssetChain?.name}`}
             status={allStepsCompleted ? 'success' : switchStatus}
           />
           <WizardStep
             icon={
               <TokenWithNetwork
                 symbol={depositAsset?.contract_ticker_symbol}
-                network="Arbitrum"
+                network={depositAsset?.chain_id}
                 width="2rem"
               />
             }
