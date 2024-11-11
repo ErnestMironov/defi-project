@@ -20,7 +20,7 @@ export const useCheckRegistration = () => {
     enabled: !!address && !!signature,
   })
 
-  if (error?.response?.data?.detail === 'Invalid signature') {
+  if (error?.response?.data?.detail === 'Invalid signature' && signature) {
     clearSignature()
   }
 

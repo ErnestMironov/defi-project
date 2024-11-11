@@ -2,6 +2,7 @@ import { useGetMessageToSign } from '@api/maat-finance/refferal-system/useGetMes
 import { useRegister } from '@api/maat-finance/refferal-system/useRegister'
 import { Button } from '@components/ui/button'
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@components/ui/input-otp'
+import { Loader } from '@components/ui/loader'
 import { wagmiAdapter } from '@configs/wagmi'
 import { useCheckRegistration } from '@hooks/useCheckRegistration'
 import { useLocalReferralCodes } from '@hooks/useLocalReferralCodes'
@@ -10,6 +11,7 @@ import { useTheme } from '@modules/theme/ThemeProvider'
 import { useAppKit } from '@reown/appkit/react'
 import { ROUTES } from '@routes/routes'
 import { signMessage } from '@wagmi/core'
+import { AxiosError } from 'axios'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAccount } from 'wagmi'
@@ -24,7 +26,7 @@ export const Otp = () => {
   const theme = useTheme()
   const navigate = useNavigate()
   const { isConnected, address } = useAccount()
-  useCheckRegistration()
+  const { isLoading: isLoadingCheckRegistration } = useCheckRegistration()
   const { saveSignature, signature } = useLocalSignature()
 
   const { setReferralCodes } = useLocalReferralCodes()
@@ -64,6 +66,13 @@ export const Otp = () => {
             setReferralCodes(data?.data?.referral_codes)
             navigate(ROUTES.DEPOSIT)
           },
+          onError: (err: Error) => {
+            if (err instanceof AxiosError) {
+              return setError(err.response?.data?.detail || 'Invalid OTP')
+            }
+
+            setError('Something went wrong')
+          },
         },
       )
     },
@@ -101,7 +110,7 @@ export const Otp = () => {
       <div className="mt-8 flex w-[25rem] flex-col items-center justify-center gap-8 text-lg">
         <p>Please sign the message to continue</p>
         <Button
-          loading={isLoadingMessageToSign}
+          loading={isLoadingMessageToSign || isLoadingRegister}
           className="lg:w-full"
           onClick={() => signMessageByWallet()}
         >
@@ -109,7 +118,7 @@ export const Otp = () => {
         </Button>
       </div>
     )
-  }, [messageToSign, isLoadingMessageToSign, saveSignature])
+  }, [messageToSign, isLoadingMessageToSign, saveSignature, isLoadingRegister])
 
   const otpCodeRender = useMemo(
     () => (
@@ -179,7 +188,13 @@ export const Otp = () => {
         <h1 className="text-2.5xl font-bold capitalize max-lg:text-2xl/[1.8rem]">
           Early Access
         </h1>
-        {render}
+        {isLoadingCheckRegistration ? (
+          <div className="w-[30rem] px-20 py-10">
+            <Loader className="inset-0 w-80" />
+          </div>
+        ) : (
+          render
+        )}
       </div>
     </div>
   )
