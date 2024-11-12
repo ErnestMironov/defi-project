@@ -182,7 +182,8 @@ export const Otp = () => {
         autoPlay
         loop
         muted
-        className="absolute inset-0 size-full object-cover blur-[5px]"
+        playsInline
+        className="absolute inset-0 size-full object-cover blur-[5px] "
       />
       <div className="pointer-events-auto relative z-[2] flex w-max flex-col items-center rounded-[2rem] bg-cards px-6 py-8 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] max-lg:w-full max-lg:px-4 max-lg:py-6">
         <h1 className="text-2.5xl font-bold capitalize max-lg:text-2xl/[1.8rem]">
