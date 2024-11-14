@@ -31,7 +31,7 @@ export const WizardDropDown = ({
     >
       <div className="relative flex flex-col">
         <div
-          className="absolute top-2 -z-10 h-[calc(100%-2rem)] overflow-hidden"
+          className="absolute top-2 -z-10 h-[calc(100%-2.4rem)] overflow-hidden"
           style={{
             transition: 'max-height 0.3s ease-in-out',
             maxHeight: open ? '20rem' : '0',
