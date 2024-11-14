@@ -100,6 +100,11 @@ const TOKENS: ITokenAsset[] = [
     symbol: 'OP',
     name: 'Optimism',
   },
+  {
+    TokenIcon: Binance,
+    symbol: 'BNB',
+    name: 'BNB',
+  },
   // network icons
   {
     TokenIcon: Ethereum,
