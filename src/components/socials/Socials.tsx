@@ -1,6 +1,5 @@
 import Discord from '@assets/icons/discord.svg'
 import GitHub from '@assets/icons/github.svg'
-import Medium from '@assets/icons/medium.svg'
 import Twitter from '@assets/icons/twitter.svg'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -16,7 +15,7 @@ interface SocialsProperties extends ComponentProps<'div'> {
 const SOCIALS = [
   {
     name: 'GitHub',
-    link: '#',
+    link: 'https://github.com/maat-protocol',
     icon: GitHub,
   },
   {
@@ -28,11 +27,6 @@ const SOCIALS = [
     name: 'Twitter',
     icon: Twitter,
     link: 'https://x.com/maatprotocol',
-  },
-  {
-    name: 'Medium',
-    icon: Medium,
-    link: 'https://medium.com/@maat_finance',
   },
 ]
 
