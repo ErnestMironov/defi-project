@@ -93,7 +93,12 @@ export const Deposit = () => {
             Terms
           </a>
           |
-          <a href="" target="_blank" rel="noreferrer" className="hover:text-main-100">
+          <a
+            href="https://docs.maat.finance/legal/privacy-policy"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-main-100"
+          >
             Policy
           </a>
         </div>
