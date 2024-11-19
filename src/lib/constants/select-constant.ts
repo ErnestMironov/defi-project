@@ -3,12 +3,15 @@ import {
   SelectChainWithIcon,
   SelectItemWithIcon,
 } from '@components/select/SelectItemWithIcon'
-import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
+import {
+  CHAIN_IDS_BY_BACKEND_NAMES,
+  CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO,
+} from '@constants/chains'
 
 import {
   ADMIN_ACTION_TYPE,
-  INCENTIVE_ACTION_TYPE,
   ANALYTICS_PAGE_EVENT_ACTION_TYPE,
+  INCENTIVE_ACTION_TYPE,
   STATUSES,
 } from './action-type'
 import { PROTOCOL_IDS_BY_BACKEND_NAMES } from './protocols'
@@ -50,6 +53,13 @@ export const SELECT_CHAINS: OptionType[] = Object.entries(CHAIN_IDS_BY_BACKEND_N
     value: key as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES,
   }),
 )
+
+export const SELECT_CHAINS_FOR_PORTFOLIO: OptionType[] = Object.entries(
+  CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO,
+).map(([key, value]) => ({
+  label: SelectChainWithIcon({ chainId: Number(value) }),
+  value: key as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO,
+}))
 
 export const SELECT_PROTOCOLS: OptionType[] = Object.entries(
   PROTOCOL_IDS_BY_BACKEND_NAMES,

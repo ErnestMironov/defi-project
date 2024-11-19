@@ -8,7 +8,6 @@ export const CHAIN_NAMES_BY_ID = {
   5000: 'Mantle',
   56: 'Bsc',
   1088: 'Metis',
-
   2222: 'Kava',
   8217: 'Klaytn',
   8822: 'IOTA',
@@ -124,6 +123,11 @@ export const CHAIN_IDS_BY_BACKEND_NAMES = {
   metis: CHAIN_IDS_BY_NAME.Metis,
   sei: CHAIN_IDS_BY_NAME.Sei,
 } as const
+
+export const CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO = {
+  ethereum: CHAIN_IDS_BY_NAME.Ethereum,
+  ...CHAIN_IDS_BY_BACKEND_NAMES,
+}
 
 export const CHAIN_BACKEND_NAMES_BY_ID = Object.fromEntries(
   Object.entries(CHAIN_IDS_BY_BACKEND_NAMES).map(([key, value]) => [value, key]),
