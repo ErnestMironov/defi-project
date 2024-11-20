@@ -21,7 +21,7 @@ const SOCIALS = [
   {
     name: 'Discord',
     icon: Discord,
-    link: 'https://discord.gg/NeRXUgvZ',
+    link: 'https://discord.gg/5srBUPbW',
   },
   {
     name: 'Twitter',
