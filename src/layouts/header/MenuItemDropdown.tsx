@@ -70,7 +70,7 @@ export const DesktopSidebarMenuItemDropdown = (
       <AccordionItem value="item-1">
         <AccordionTrigger
           className={cn(
-            '[&>svg:last-child]:ml-2 [&>svg:last-child_path]:stroke-white',
+            '[&>svg:last-child]:ml-2 [&>svg:last-child_path]:stroke-text',
             className,
           )}
         >

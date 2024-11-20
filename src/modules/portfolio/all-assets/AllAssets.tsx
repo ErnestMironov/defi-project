@@ -7,7 +7,7 @@ import {
 import { MultiSelect } from '@components/select/MultiSelect'
 import type { OptionType } from '@components/select/Select'
 import { DustTooltip } from '@components/tooltip/DustTooltip'
-import { SELECT_CHAINS } from '@constants/select-constant'
+import { SELECT_CHAINS_FOR_PORTFOLIO } from '@constants/select-constant'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
@@ -68,7 +68,7 @@ export const AllAssets = (props: AllAssetsProperties) => {
             trigger:
               'h-[2.125rem] w-fit text-sm [box-shadow:0px_2px_1px_0px_rgba(135,_99,_243,_0.12)] rounded-xl',
           }}
-          options={SELECT_CHAINS}
+          options={SELECT_CHAINS_FOR_PORTFOLIO}
           value={chains}
           onChange={(value) => setChains(value)}
           placeholder="All Chains"
@@ -85,7 +85,7 @@ export const AllAssets = (props: AllAssetsProperties) => {
           <MobileCheckboxSelect
             label="Chains"
             value={chains}
-            options={SELECT_CHAINS}
+            options={SELECT_CHAINS_FOR_PORTFOLIO}
             onChange={setChains}
           />
         </MobileFiltersDrawer>
