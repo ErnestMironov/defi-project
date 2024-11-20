@@ -127,7 +127,7 @@ export const CHAIN_IDS_BY_BACKEND_NAMES = {
 export const CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO = {
   ethereum: CHAIN_IDS_BY_NAME.Ethereum,
   ...CHAIN_IDS_BY_BACKEND_NAMES,
-}
+} as const
 
 export const CHAIN_BACKEND_NAMES_BY_ID = Object.fromEntries(
   Object.entries(CHAIN_IDS_BY_BACKEND_NAMES).map(([key, value]) => [value, key]),
