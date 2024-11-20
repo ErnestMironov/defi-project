@@ -74,7 +74,7 @@ export const Deposit = () => {
         </div>
         <TransactionBlock />
       </div>
-      <div className="grid w-full justify-between gap-4 pb-10 max-lg:mt-20 lg:grid-cols-[1fr,2fr,1fr]">
+      <div className="grid w-full translate-y-full justify-between gap-4 pb-10 max-lg:mt-20 lg:grid-cols-[1fr,2fr,1fr]">
         <div className="" />
         <p className="max-w-full text-center text-xs leading-[120%] text-[#c4c4c4] dark:text-text-50 lg:max-w-[56.25rem]">
           Cryptocurrencies and decentralized finance (DeFi) carry significant risk,
