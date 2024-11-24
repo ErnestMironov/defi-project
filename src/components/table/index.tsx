@@ -11,9 +11,13 @@ import { forwardRef } from 'react'
 const TableHead = forwardRef<
   HTMLTableSectionElement,
   HTMLAttributes<HTMLTableSectionElement>
->(({ children, ...rest }, reference) => {
+>(({ children, className, ...rest }, reference) => {
   return (
-    <thead className="text-gray-700" {...rest} ref={reference}>
+    <thead
+      className={cn('text-text-2100 *:border-b', className)}
+      {...rest}
+      ref={reference}
+    >
       {children}
     </thead>
   )
@@ -22,10 +26,14 @@ const TableHead = forwardRef<
 const TableBody = forwardRef<
   HTMLTableSectionElement,
   HTMLAttributes<HTMLTableSectionElement>
->(({ children, ...rest }, reference) => {
+>(({ children, className, ...rest }, reference) => {
   return (
     <tbody
-      className="bg-transparent text-gray-700 hover:[&>tr]:[box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]"
+      className={cn(
+        '[&>tr::after:hover]:rounded-l-[0.5rem] [&>tr::after:hover]:rounded-r-[0.5rem]',
+        '[&>tr]:relative [&>tr::after]:pointer-events-none [&>tr::after:hover]:bg-[#8585A914] [&>tr]:after:h-[calc(100%-0.5rem)] [&>tr]:after:top-1 [&>tr]:after:w-[calc(100%-0.5rem)] [&>tr:after]:absolute [&>tr:after]:left-1',
+        className,
+      )}
       {...rest}
       ref={reference}
     >
@@ -35,13 +43,13 @@ const TableBody = forwardRef<
 })
 
 const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
-  ({ children, ...rest }, reference) => {
+  ({ children, className, ...rest }, reference) => {
     return (
       <tr
         {...rest}
         className={cn(
-          'bg-cards text-text rounded-l-[1.5rem] rounded-r-[1.5rem]',
-          rest.className,
+          'text-text-1100 rounded-l-[0.75rem] rounded-r-[0.75rem]',
+          className,
         )}
         ref={reference}
       >
@@ -58,10 +66,7 @@ const TableCell = forwardRef<
   return (
     <td
       {...rest}
-      className={cn(
-        'bg-transparent px-9 py-8 text-left text-lg leading-[140%] first:rounded-l-[1.5rem] last:rounded-r-[1.5rem] transition-all',
-        rest.className,
-      )}
+      className={cn('bg-transparent px-5 py-8 text-left transition-all', rest.className)}
       ref={reference}
     >
       {children}
@@ -76,10 +81,7 @@ const TableHeadCell = forwardRef<
   return (
     <th
       {...rest}
-      className={cn(
-        'px-9 py-8 text-left text-lg font-normal leading-[140%] first:rounded-l-3xl last:rounded-r-3xl',
-        rest.className,
-      )}
+      className={cn('px-4 py-2 text-left font-normal', rest.className)}
       ref={reference}
     >
       {children}
@@ -120,10 +122,7 @@ export const Table = forwardRef<
 >(({ className, children, ...rest }, reference) => (
   <table
     ref={reference}
-    className={cn(
-      'w-full border-separate border-spacing-y-2 text-xl font-normal leading-6',
-      className,
-    )}
+    className={cn('w-full overflow-hidden text-sm/[1.5rem] font-normal', className)}
     {...rest}
   >
     {children}

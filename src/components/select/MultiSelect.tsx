@@ -1,12 +1,6 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import Arrow from '@assets/icons/arrow-down.svg'
 import { TokenIconComponent } from '@components/token-icon'
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from '@components/ui/command'
+import { Command, CommandGroup, CommandItem, CommandList } from '@components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { cn } from '@utils/cn'
 import type { VariantProps } from 'class-variance-authority'
@@ -27,6 +21,7 @@ interface MultiSelectProperties
     content?: string
     trigger?: string
   }
+  icon?: React.ReactNode
   align?: 'start' | 'center' | 'end'
 }
 
@@ -36,12 +31,13 @@ interface MultiSelectTriggerProperties
   value: OptionType[]
   placeholder?: string
   label?: string
+  icon?: React.ReactNode
 }
 
 const multiSelectVariants = cva('', {
   variants: {
     variant: {
-      default: 'bg-cards',
+      default: 'rounded-xl border border-stroke-100 bg-cards',
       /**
        * @description color2 is cards-widget
        */
@@ -49,8 +45,7 @@ const multiSelectVariants = cva('', {
       outline: 'border border-stroke-100',
     },
     size: {
-      default:
-        'h-auto rounded-2xl px-12 py-5 text-[1.25rem] font-bold uppercase leading-[120%]',
+      default: 'h-12 rounded-xl px-4 py-3 text-sm/[1rem] font-medium',
       sm: 'h-9 rounded-md px-3',
       lg: 'rounded-xl px-9 py-6 text-lg max-lg:py-[0.91rem] max-lg:text-base',
       icon: 'size-10',
@@ -58,13 +53,14 @@ const multiSelectVariants = cva('', {
   },
   defaultVariants: {
     variant: 'default',
+    size: 'default',
   },
 })
 
 const SELECT_ICONS_PLACEHOLDERS = new Set(['All Protocols', 'All Chains', 'All Tokens'])
 
 const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
-  const { value, placeholder, className, variant } = props
+  const { value, placeholder, className, variant, icon } = props
 
   const renderValue = () => {
     switch (true) {
@@ -100,19 +96,16 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
     <button
       type="button"
       className={cn(
-        'flex size-full flex-col items-start justify-between text-base',
-        className,
+        'flex size-full items-center justify-between [&>svg]:size-4',
+        'shadow-test',
+        multiSelectVariants({ variant }),
       )}
     >
-      <div
-        className={cn(
-          'flex size-full items-center justify-between rounded-xl px-4',
-          multiSelectVariants({ variant }),
-        )}
-      >
+      <div className="flex items-center gap-2 [&_svg]:size-4">
+        {icon}
         {renderValue()}
-        <ArrowDown className="ml-1 size-4 transition group-data-[state=open]:rotate-180" />
       </div>
+      <Arrow className="ml-1 rotate-180 transition group-data-[state=open]:rotate-0" />
     </button>
   )
 }
@@ -125,6 +118,7 @@ export const MultiSelect = ({
   label,
   className,
   classNames,
+  icon,
   id,
   variant,
   align = 'start',
@@ -139,22 +133,24 @@ export const MultiSelect = ({
           value={value}
           placeholder={placeholder}
           label={label}
+          icon={icon}
           className={cn(className, classNames?.trigger)}
           variant={variant}
         />
       </PopoverTrigger>
       <PopoverContent
-        style={{
-          width: classNames?.content?.includes('w-')
-            ? undefined
-            : `${reference.current?.offsetWidth}px`,
-        }}
+        // style={{
+        //   width: classNames?.content?.includes('w-')
+        //     ? undefined
+        //     : `${reference.current?.offsetWidth}px`,
+        // }}
         sideOffset={10}
         align={align}
         id={id}
         className={cn(
-          'w-fit rounded-xl p-6 max-h-96 overflow-y-scroll pointer-events-auto',
-          multiSelectVariants({ variant }),
+          'w-[16.25rem] rounded-xl p-1 max-h-96 overflow-y-auto pointer-events-auto',
+          '[&_svg]:size-4 [&_*]:text-sm/[1rem] [&_*]:font-medium shadow-test-2',
+          multiSelectVariants({ variant, size: null }),
           classNames?.content,
         )}
       >
@@ -162,11 +158,11 @@ export const MultiSelect = ({
           <CommandList>
             <CommandGroup>
               <CommandItem data-select={value.length === 0} onSelect={() => onChange([])}>
-                {placeholder}
+                <div className="inline-flex items-center gap-[0.38rem]">
+                  {icon}
+                  {placeholder}
+                </div>
               </CommandItem>
-            </CommandGroup>
-            <CommandSeparator className="my-5" />
-            <CommandGroup>
               {options.map((option) => (
                 <CommandItem
                   data-select={value.some((v) => v.value === option.value)}

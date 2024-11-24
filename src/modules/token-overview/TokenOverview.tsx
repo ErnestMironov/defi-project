@@ -1,7 +1,5 @@
 import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import { useRebalanceVolume } from '@api/maat-finance/useRebalanceVolume'
-import usdc from '@assets/images/usdc-3d.png'
-import usdt from '@assets/images/usdt-3d.png'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
 
@@ -29,7 +27,7 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
     <section
       className={cn(
         className,
-        'flex gap-8 max-lg:gap-2 max-lg:flex-col w-full max-lg:-mx-4',
+        'flex gap-4 max-lg:flex-col w-full divide-x divide-stroke-100',
       )}
       {...rest}
     >
@@ -41,8 +39,6 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
         tvl={usdcTvl}
         rebalancingVolume={usdcVolume}
         tokenName="USDC"
-        img={usdc}
-        imageClassName="rotate-[5.207deg]"
       />
       <TokenStatsContainer
         loading={isProtocolMetricsLoading || !!protocolMetricsError}
@@ -52,8 +48,6 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
         tvl={usdtTvl}
         rebalancingVolume={usdtVolume}
         tokenName="USDT"
-        img={usdt}
-        imageClassName="rotate-[-5.207deg] right-[-7.5rem]"
       />
     </section>
   )

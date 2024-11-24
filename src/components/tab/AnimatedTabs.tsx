@@ -1,6 +1,6 @@
 import { cn } from '@utils/cn'
 import { motion } from 'framer-motion'
-import { type ComponentProps } from 'react'
+import { type ComponentProps, useId } from 'react'
 
 interface SpringTabsProperties extends ComponentProps<'div'> {
   tabs: { id: string; label: string }[]
@@ -10,17 +10,16 @@ interface SpringTabsProperties extends ComponentProps<'div'> {
     tab?: string
     activeTab?: string
   }
-  layoutId: string
   onTabChange: (tab: string) => void
 }
 
 export const AnimatedTabs = (props: SpringTabsProperties) => {
-  const { tabs, activeTab, onTabChange, className, classNames, layoutId } = props
-
+  const { tabs, activeTab, onTabChange, className, classNames } = props
+  const uniqueId = useId()
   return (
     <div
       className={cn(
-        'flex w-fit space-x-1 rounded-full border border-gray-50 p-[0.38rem]',
+        'flex w-fit space-x-1 rounded-[0.75rem] border border-stroke-100 text-sm shadow-test p-[0.38rem]',
         className,
         classNames?.container,
       )}
@@ -31,16 +30,16 @@ export const AnimatedTabs = (props: SpringTabsProperties) => {
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            'relative rounded-full py-4 text-md font-medium transition',
+            'relative rounded-[0.5rem] py-[0.63rem] px-4 font-medium transition',
             classNames?.tab,
           )}
         >
           {activeTab === tab.id && (
             <motion.span
               // layoutId="bubble"
-              layoutId={layoutId}
+              layoutId={uniqueId}
               className={cn(
-                'absolute inset-0 bg-main-100 rounded-full',
+                'absolute inset-0 bg-main-100 rounded-[0.5rem]',
                 classNames?.activeTab,
               )}
               transition={{

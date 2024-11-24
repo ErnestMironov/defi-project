@@ -36,6 +36,8 @@
     "@reown/appkit": "^1.1.0",
     "@reown/appkit-adapter-wagmi": "^1.1.0",
     "@tanstack/react-query": "^5.36.2",
+    "@tanstack/react-table": "^8.20.5",
+    "@tanstack/react-virtual": "^3.10.9",
     "@types/qs": "^6.9.15",
     "@types/three": "^0.166.0",
     "@uniswap/sdk-core": "^5.3.1",

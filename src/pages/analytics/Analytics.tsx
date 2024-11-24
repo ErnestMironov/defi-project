@@ -1,21 +1,35 @@
-import { Footer } from '@layouts/footer/Footer'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { Strategies } from '@modules/strategies/Strategies'
+import { StrategiesCharts } from '@modules/strategies/strategies-chart/desktop/StrategiesCharts'
 import { TokenOverview } from '@modules/token-overview/TokenOverview'
 import { TokenCharts } from '@modules/tokens/Tokens'
 import { Transactions } from '@modules/transactions/Transactions'
 
 export const Analytics = () => {
   return (
-    <>
-      <TokenCharts className="mt-[5.31rem] max-lg:mt-6" />
-      <TokenOverview className="mt-12 max-lg:mt-8" />
-      <Strategies withLink className="mt-[6.25rem]" />
-      {/* <RebalanceChart className="mt-[6.25rem]" /> */}
-      <Transactions
-        className="mt-28 max-lg:mt-14"
-        parameters={{ transaction_type: 'trigger' }}
-      />
-      <Footer className="mt-[7.5rem] max-lg:mt-[5.25rem]" />
-    </>
+    <Tabs className="mt-16" defaultValue="tokens">
+      <TabsList>
+        <TabsTrigger variant="unstyled" value="tokens">
+          Tokens
+        </TabsTrigger>
+        <TabsTrigger variant="unstyled" value="strategies">
+          Strategies
+        </TabsTrigger>
+        <TabsTrigger variant="unstyled" value="events">
+          Events
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="tokens">
+        <TokenCharts />
+        <TokenOverview className="mt-4" />
+      </TabsContent>
+      <TabsContent value="strategies">
+        <StrategiesCharts />
+        <Strategies className="mt-4" />
+      </TabsContent>
+      <TabsContent value="events">
+        <Transactions parameters={{ transaction_type: 'trigger' }} />
+      </TabsContent>
+    </Tabs>
   )
 }

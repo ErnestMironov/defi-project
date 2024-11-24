@@ -1,12 +1,20 @@
-import Arrow from '@assets/icons/curve-arrow-down.svg'
+import Chevron from '@assets/icons/arrow-down.svg'
+import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import { TokenVaultsPopover } from '@modules/token-vaults-popover/TokenVaultsPopover'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
-import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
-import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
-import { Link } from 'react-router-dom'
+import { formatAmount } from '@utils/formatValue'
 
 import type { TokenStatsContainerProperties } from './TokenStatsContainer'
+
+const Info = () => {
+  return (
+    <div className="w-fit rounded border border-stroke-100 px-[0.44rem] py-[0.12rem] text-center text-[0.6875rem]/[1rem] text-text-1100">
+      <span>?</span>
+    </div>
+  )
+}
 
 export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties) => {
   const {
@@ -14,10 +22,7 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
     apy,
     tvl,
     rebalancingVolume,
-    img,
-    imageClassName,
     tokenName,
-    withLink = true,
     loading,
     loadingVolume,
     ...rest
@@ -27,113 +32,125 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
     return <SkeletonTokenStatsContainer {...props} />
   }
   return (
-    <div
-      className={cn(
-        className,
-        'grid w-full grid-cols-[repeat(2,1fr)_1.8fr] gap-2 *:h-[11.875rem] *:space-y-2 [&>div:first-child]:rounded-l-3xl [&>div:last-child]:rounded-r-3xl',
-      )}
-      {...rest}
-    >
-      <BaseContainer>
-        <h6>{tokenName} Apy</h6>
-        <p className="text-3xl">
-          {formatPercentValue(apy, {
-            maximumFractionDigits: 2,
-          })}
-        </p>
-      </BaseContainer>
-      <BaseContainer>
-        <h6>{tokenName} tvl</h6>
-        <p className="text-3xl">
-          {tvl && formatUsdValue(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
-        </p>
-      </BaseContainer>
-      <BaseContainer>
-        <h6>Rebalancing volume</h6>
-        {loadingVolume ? (
-          <Skeleton className="h-8 w-[9.1rem]" />
-        ) : (
-          <p className="text-3xl">
-            {rebalancingVolume &&
-              formatUsdValue(rebalancingVolume, {
-                notation: 'compact',
-                minimumFractionDigits: 2,
+    <BaseContainer className={cn('divide-y divide-stroke-100', className)} {...rest}>
+      <div className="flex items-center justify-between px-8 py-3 text-[0.875rem]/[1.5rem] font-medium">
+        <div className="flex items-center gap-[0.38rem]">
+          <TokenIconComponent symbol={tokenName} className="size-4" />
+          {tokenName}
+        </div>
+        <TokenVaultsPopover symbol={tokenName} />
+      </div>
+      <div
+        className={cn(
+          className,
+          'grid grid-cols-4 w-full *:p-8 [&_p]:text-2.5xl [&_h6]:text-sm [&_h6]:text-text-2100 *:space-y-[0.38rem]',
+        )}
+        {...rest}
+      >
+        <div>
+          <p>{formatAmount(12_567)}</p>
+          <div className="flex items-center gap-[0.38rem]">
+            <h6>Unique Users</h6>
+            <Info />
+          </div>
+        </div>
+        <div>
+          <p>
+            {apy &&
+              formatAmount(apy.toString(), {
+                maximumFractionDigits: 2,
               })}
+            <span className="text-text-270">%</span>
           </p>
-        )}
-        {withLink && (
-          <Link
-            to={`${ROUTES.TOKENS}/${tokenName}`}
-            className="group absolute bottom-[1.34rem] flex items-center gap-0.5 text-semi-base font-bold uppercase text-main-100"
-          >
-            <span>Go to {tokenName}</span>
-            <Arrow className="h-fit w-5 -rotate-90 transition group-hover:translate-x-1 [&_*]:stroke-main-100" />
-          </Link>
-        )}
-        <img
-          src={img}
-          alt={tokenName}
-          className={cn(
-            'absolute bottom-[-5.4rem] right-[-8.5rem] size-[20.8125rem] opacity-20',
-            imageClassName,
+          <div className="flex items-center gap-[0.38rem]">
+            <h6 className="uppercase">Apy</h6>
+            <Info />
+          </div>
+        </div>
+        <div>
+          <p>
+            <span className="text-text-270">$</span>
+            {tvl && formatAmount(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
+          </p>
+          <div className="flex items-center gap-[0.38rem]">
+            <h6 className="uppercase">tvl</h6>
+            <Info />
+          </div>
+        </div>
+        <div>
+          {loadingVolume ? (
+            <Skeleton className="h-8 w-[9.1rem]" />
+          ) : (
+            <p>
+              <span className="text-text-270">$</span>
+              {rebalancingVolume &&
+                formatAmount(rebalancingVolume, {
+                  notation: 'compact',
+                  minimumFractionDigits: 2,
+                })}
+            </p>
           )}
-        />
-      </BaseContainer>
-    </div>
+          <div className="flex items-center gap-[0.38rem]">
+            <h6 className="whitespace-nowrap">Rebalancing volume</h6>
+            <Info />
+          </div>
+        </div>
+      </div>
+    </BaseContainer>
   )
 }
 
 const SkeletonTokenStatsContainer = (
   _props: Omit<TokenStatsContainerProperties, 'color'>,
 ) => {
-  const {
-    className,
-    tokenName,
-    img,
-    imageClassName,
-    withLink = true,
-    loadingVolume,
-    loading,
-    ...rest
-  } = _props
+  const { className, tokenName, loadingVolume, ...rest } = _props
   return (
-    <div
-      className={cn(
-        className,
-        'grid w-full grid-cols-[repeat(2,1fr)_1.8fr] gap-2 *:h-[11.875rem] *:space-y-2 [&>div:first-child]:rounded-l-3xl [&>div:last-child]:rounded-r-3xl',
-      )}
-      {...rest}
-    >
-      <BaseContainer>
-        <h6>{tokenName} Apy</h6>
-
-        <Skeleton className="h-8 w-[9.1rem]" />
-      </BaseContainer>
-      <BaseContainer>
-        <h6>{tokenName} tvl</h6>
-        <Skeleton className="h-8 w-[9.1rem]" />
-      </BaseContainer>
-      <BaseContainer>
-        <h6>Rebalancing volume</h6>
-        <Skeleton className="h-8 w-[9.1rem]" />
-        {withLink && (
-          <Link
-            to={`${ROUTES.TOKENS}/${tokenName}`}
-            className="group absolute bottom-[1.34rem] flex items-center gap-0.5 text-semi-base font-bold uppercase text-main-100"
-          >
-            <span>Go to {tokenName}</span>
-            <Arrow className="h-fit w-5 -rotate-90 transition group-hover:translate-x-1 [&_*]:stroke-main-100" />
-          </Link>
+    <BaseContainer className={cn('divide-y divide-stroke-100', className)} {...rest}>
+      <div className="flex items-center justify-between px-8 py-3 text-[0.875rem]/[1.5rem] font-medium">
+        <div className="flex items-center gap-[0.38rem]">
+          <TokenIconComponent symbol={tokenName} className="size-4" />
+          {tokenName}
+        </div>
+        <p className="flex items-center gap-1 px-[0.38rem] py-1 text-text-2100">
+          Contracts <Chevron className="size-4" />
+        </p>
+      </div>
+      <div
+        className={cn(
+          className,
+          'grid grid-cols-4 w-full *:p-8 [&_p]:text-2.5xl [&_h6]:text-sm [&_h6]:text-text-2100 *:space-y-[0.38rem]',
         )}
-        <img
-          src={img}
-          alt={tokenName}
-          className={cn(
-            'absolute bottom-[-5.4rem] right-[-8.5rem] size-[20.8125rem] opacity-20',
-            imageClassName,
-          )}
-        />
-      </BaseContainer>
-    </div>
+        {...rest}
+      >
+        <div>
+          <Skeleton className="h-8 w-[9.1rem]" />
+          <div className="flex items-center gap-[0.38rem]">
+            <h6>Unique Users</h6>
+            <Info />
+          </div>
+        </div>
+        <div>
+          <Skeleton className="h-8 w-[9.1rem]" />
+          <div className="flex items-center gap-[0.38rem]">
+            <h6 className="uppercase">Apy</h6>
+            <Info />
+          </div>
+        </div>
+        <div>
+          <Skeleton className="h-8 w-[9.1rem]" />
+          <div className="flex items-center gap-[0.38rem]">
+            <h6 className="uppercase">tvl</h6>
+            <Info />
+          </div>
+        </div>
+        <div>
+          <Skeleton className="h-8 w-[9.1rem]" />
+          <div className="flex items-center gap-[0.38rem]">
+            <h6 className="whitespace-nowrap">Rebalancing volume</h6>
+            <Info />
+          </div>
+        </div>
+      </div>
+    </BaseContainer>
   )
 }
