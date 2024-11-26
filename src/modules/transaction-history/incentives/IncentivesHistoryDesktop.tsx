@@ -113,7 +113,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
               </Table.HeadCell>
             </Table.Row>
           </Table.Head>
-          <Table.Body className="[&_tr:last-child:after]:rounded-b-[1.25rem]">
+          <Table.Body className="[&_tr:last-child:after]:h-[calc(100%-6px)] [&_tr:last-child:after]:rounded-b-[1.25rem]">
             {renderBody()}
           </Table.Body>
         </Table>

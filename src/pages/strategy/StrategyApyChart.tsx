@@ -14,9 +14,11 @@ export type RechartDataType = {
   value: number | null
 }
 
-interface AreaChartComponentProperties {}
+interface AreaChartComponentProperties {
+  className?: string
+}
 
-export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
+export const StrategyApyChart = ({ className }: AreaChartComponentProperties) => {
   const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
   const { id } = useParams()
   const {
@@ -63,7 +65,7 @@ export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
       default: {
         return (
           <AreaChart
-            className={cn(isPlaceholderData && 'animate-pulse')}
+            className={cn(isPlaceholderData && 'animate-pulse', className)}
             data={formattedData.apy}
             color="#6160FF"
             yAxisType="percent"
@@ -74,9 +76,8 @@ export const StrategyApyChart = (_props: AreaChartComponentProperties) => {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-between">
-        <h3 className="text-[2rem]/[2.4rem]">APY</h3>
+    <div className={cn('flex flex-col gap-8')}>
+      <div className="flex items-center justify-between border-b border-stroke-100 px-8 py-5">
         <FramesSelect
           frame={currentFrame}
           frames={frames}

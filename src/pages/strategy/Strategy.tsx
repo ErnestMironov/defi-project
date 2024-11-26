@@ -1,3 +1,7 @@
+import ActionIcon from '@assets/icons/action.svg'
+import ArrowLeft from '@assets/icons/arrow-left.svg'
+import StatusIcon from '@assets/icons/status.svg'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import {
   SELECT_INCENTIVES_ACTIONS,
   SELECT_LAST_EVENT_ACTIONS,
@@ -6,13 +10,14 @@ import {
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
 import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
+import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { Breadcrumbs } from './Breadcrumbs'
 import { StrategyApyChart } from './StrategyApyChart'
 import { StrategyHeader } from './StrategyHeader'
+import { StrategyInfo } from './StrategyInfo'
 import { StrategyInfoDesktop } from './StrategyInfoDesktop'
 import { StrategyInfoMobile } from './StrategyInfoMobile'
 import { StrategyTransactions } from './StrategyTransactions'
@@ -31,39 +36,75 @@ export const Strategy = (props: StrategyProperties) => {
 
 export const StrategyDesktop = (props: StrategyProperties) => {
   const { className, ...rest } = props
+  const navigate = useNavigate()
   const { id } = useParams()
   return (
-    <div className={cn('mt-[4.5rem]', className)} {...rest}>
-      <Breadcrumbs />
-      <StrategyHeader />
-      <StrategyInfoDesktop />
-      <div className="mt-[4.62rem] grid grid-cols-2 gap-10 *:h-[18.25rem]">
-        <StrategyApyChart />
-        <StrategyTvlChart />
+    <>
+      <button
+        type="button"
+        className="mt-16 flex items-center gap-1 text-[1.25rem]/[2rem] font-medium text-text-2100"
+        onClick={() => navigate(-1)}
+      >
+        <div className="flex size-6 items-center justify-center">
+          <ArrowLeft className="size-4" />
+        </div>
+        <span>Back to Strategies</span>
+      </button>
+      <div className="mt-4 flex gap-6">
+        <div className="flex w-full gap-4">
+          <BaseContainer className={cn('w-3/4', className)} {...rest}>
+            <StrategyHeader className="border-b border-stroke-100 px-9 py-7" />
+            <StrategyInfo />
+            <Tabs defaultValue="apy">
+              <TabsList className="w-full justify-start rounded-none border-b border-stroke-100 px-8 text-sm/[1.5rem] font-medium *:py-3">
+                <TabsTrigger variant="underline" value="apy">
+                  APY
+                </TabsTrigger>
+                <TabsTrigger variant="underline" value="tvl">
+                  TVL
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="apy" className="mt-0">
+                <StrategyApyChart className="h-60 px-8 pb-5" />
+              </TabsContent>
+              <TabsContent value="tvl" className="mt-0">
+                <StrategyTvlChart className="h-60 px-8 pb-5" />
+              </TabsContent>
+            </Tabs>
+          </BaseContainer>
+          <StrategyInfoDesktop className="w-1/4" />
+        </div>
       </div>
-      <TransactionHistory
-        className="mt-[6.25rem]"
-        eventParameters={{ strategy_ids: [id as string] }}
-        maatFilters={{
-          search: { value: '', placeholder: 'Tx Hash' },
-          actions_type: {
-            items: SELECT_LAST_EVENT_ACTIONS,
-            value: [],
-            placeholder: 'All Actions',
-          },
-          status: { items: SELECT_STATUSES, value: [], placeholder: 'All Status' },
-        }}
-        incentivesFilters={{
-          search: { value: '', placeholder: 'Tx Hash' },
-          actions_type: {
-            items: SELECT_INCENTIVES_ACTIONS,
-            value: [],
-            placeholder: 'All Actions',
-          },
-        }}
-      />
-      <Footer className="mt-[7.5rem]" />
-    </div>
+      <BaseContainer className="mb-48 mt-4 w-full">
+        <TransactionHistory
+          eventParameters={{ strategy_ids: [id as string] }}
+          maatFilters={{
+            search: { value: '', placeholder: 'Tx Hash' },
+            actions_type: {
+              items: SELECT_LAST_EVENT_ACTIONS,
+              value: [],
+              placeholder: 'All Actions',
+              icon: <ActionIcon />,
+            },
+            status: {
+              items: SELECT_STATUSES,
+              value: [],
+              placeholder: 'All Status',
+              icon: <StatusIcon />,
+            },
+          }}
+          incentivesFilters={{
+            search: { value: '', placeholder: 'Tx Hash' },
+            actions_type: {
+              items: SELECT_INCENTIVES_ACTIONS,
+              value: [],
+              placeholder: 'All Actions',
+              icon: <ActionIcon />,
+            },
+          }}
+        />
+      </BaseContainer>
+    </>
   )
 }
 

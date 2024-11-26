@@ -36,7 +36,6 @@ export const AnimatedTabs = (props: SpringTabsProperties) => {
         >
           {activeTab === tab.id && (
             <motion.span
-              // layoutId="bubble"
               layoutId={uniqueId}
               className={cn(
                 'absolute inset-0 bg-main-100 rounded-[0.5rem]',

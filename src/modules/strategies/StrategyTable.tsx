@@ -83,7 +83,9 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
           <Table.HeadCell className="min-w-[12.1rem]">Address</Table.HeadCell>
         </Table.Row>
       </Table.Head>
-      <Table.Body>{renderBody()}</Table.Body>
+      <Table.Body className="[&_tr:last-child:after]:h-[calc(100%-6px)] [&_tr:last-child:after]:rounded-b-[1.25rem]">
+        {renderBody()}
+      </Table.Body>
     </Table>
   )
 }

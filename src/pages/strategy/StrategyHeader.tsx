@@ -1,9 +1,7 @@
 import { useStrategy } from '@api/maat-finance/useStrategy'
-import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
@@ -16,42 +14,20 @@ export const StrategyHeader = (props: StrategyHeaderProperties) => {
   const { id } = useParams()
   const { data: strategy, isLoading, error } = useStrategy(id)
 
-  const symbol = strategy?.token?.symbol
-  const chain_id = strategy?.token?.chain_id
   const protocol = strategy?.info?.protocol?.name
 
   if (isLoading || error) {
     return <StrategyHeaderSkeleton />
   }
   return (
-    <div
-      className={cn(
-        'mt-10 flex items-center max-lg:items-start gap-8 max-lg:gap-2',
-        className,
-      )}
-      {...rest}
-    >
-      <div className="flex items-center -space-x-3 *:size-7 max-lg:-space-x-1.5 lg:*:size-16">
-        <TokenIconComponent symbol={symbol} />
-        <TokenIconComponent symbol={chain_id} />
-        <TokenIconComponent symbol={protocol} />
-      </div>
-      <div className="justify-center space-y-3">
-        <h1 className="text-[2rem]/[2.4rem] max-lg:text-2xl">
-          {symbol} / {CHAIN_NAMES_BY_ID[chain_id as keyof typeof CHAIN_NAMES_BY_ID]} /{' '}
-          {protocol}
-        </h1>
-        <div className="flex items-center gap-2">
-          <p className="text-lg text-gray-100 max-lg:text-base">
-            Address {shortenAddress(strategy?.address ?? '')}
-          </p>
-          <ScanLink
-            className="size-5"
-            address={strategy?.address ?? ''}
-            chainId={strategy?.chain_id ?? 0}
-          />
-          <CopyButton text={strategy?.address ?? ''} />
+    <div className={cn('flex items-center gap-4', className)} {...rest}>
+      <TokenIconComponent symbol={protocol} className="size-8 shrink-0" />
+      <div>
+        <div className="flex items-center gap-[0.38rem] text-base/[1.5rem]">
+          <p>{shortenAddress(strategy?.address ?? '')}</p>
+          <ScanLink address={strategy?.address ?? ''} chainId={strategy?.chain_id ?? 0} />
         </div>
+        <h1 className="text-sm/[1rem] text-text-2100">{protocol}</h1>
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 import type { Event } from '@api/maat-finance/types'
 import { CopyButton } from '@components/copy/CopyButton'
+import { ScanLink } from '@components/scan-link/ScanLink'
 import { ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
@@ -63,14 +64,22 @@ export const ActionType = (props: ActionTypeProperties) => {
     <div className={cn('flex items-center gap-4', className)} {...rest}>
       <Icon className="size-8 shrink-0" />
       <div>
-        <p className="text-base/[1.5rem] text-text-2100 first:text-text-1100">
-          {firstWord}
-          {restWords.map((word) => (
-            <span className="ml-1 text-text-260" key={word}>
-              {word}
-            </span>
-          ))}
-        </p>
+        <div className="flex items-center gap-[0.38rem]">
+          <p className="text-base/[1.5rem] text-text-2100 first:text-text-1100">
+            {firstWord}
+            {restWords.map((word) => (
+              <span className="ml-1 text-text-260" key={word}>
+                {word}
+              </span>
+            ))}
+          </p>
+          <ScanLink
+            chainId={tx.src_chain_id}
+            txHash={tx.hash}
+            className="size-4 shrink-0"
+          />
+        </div>
+
         <p className="flex items-center gap-[0.38rem] text-sm text-text-260">
           <span>{shortenAddress(tx.hash)}</span>
           <CopyButton className="size-3.5" text={tx.hash} />

@@ -11,8 +11,8 @@ interface CopyButtonProperties extends ComponentProps<'div'> {
 
 export const CopyButton = (props: CopyButtonProperties) => {
   const { copyWithToast } = useClipboard()
-  const { className, text } = props
-  const [isCopied, setIsCopied] = useState(false)
+  const { className, text, children } = props
+  const [_, setIsCopied] = useState(false)
 
   const handleCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
@@ -30,11 +30,7 @@ export const CopyButton = (props: CopyButtonProperties) => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.9 }}
     >
-      {/* {isCopied ? (
-        <CheckCopy type="button" className="size-full overflow-visible" />
-      ) : ( */}
-      <Copy type="button" className="size-full overflow-visible" />
-      {/* )} */}
+      {children ?? <Copy type="button" className="size-full overflow-visible" />}
     </motion.div>
   )
 }
