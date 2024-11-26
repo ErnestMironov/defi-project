@@ -44,16 +44,15 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
   return (
     <Table>
       <Table.Head>
-        <Table.Row>
-          <Table.HeadCell>Strategy ID</Table.HeadCell>
-          <Table.HeadCell>Token</Table.HeadCell>
-          <Table.HeadCell>Chain</Table.HeadCell>
-          <Table.HeadCell>Protocol</Table.HeadCell>
+        <Table.Row className="text-text-2100 *:py-4 *:first:pl-7 *:last:pr-7">
+          <Table.HeadCell>Strategy</Table.HeadCell>
+          <Table.HeadCell className="min-w-[12.1rem]">Token</Table.HeadCell>
+          <Table.HeadCell className="min-w-[12.1rem]">Chain</Table.HeadCell>
           <Table.HeadCell
-            className="w-[10.1rem] cursor-pointer"
+            className="min-w-[12.1rem] cursor-pointer"
             onClick={() => onSortChange?.('apy')}
           >
-            <div className="inline-flex items-center gap-[0.79rem]">
+            <div className="inline-flex items-center gap-[0.38rem]">
               <span>APY</span>
               {currentSort?.sort === 'apy' && (
                 <Sort
@@ -66,10 +65,10 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
             </div>
           </Table.HeadCell>
           <Table.HeadCell
-            className="w-[10.1rem] cursor-pointer"
+            className="min-w-[12.1rem] cursor-pointer"
             onClick={() => onSortChange?.('tvl')}
           >
-            <div className="inline-flex items-center gap-[0.79rem]">
+            <div className="inline-flex items-center gap-[0.38rem]">
               <span>TVL</span>
               {currentSort?.sort === 'tvl' && (
                 <Sort
@@ -81,7 +80,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
               )}
             </div>
           </Table.HeadCell>
-          <Table.HeadCell>Address</Table.HeadCell>
+          <Table.HeadCell className="min-w-[12.1rem]">Address</Table.HeadCell>
         </Table.Row>
       </Table.Head>
       <Table.Body>{renderBody()}</Table.Body>

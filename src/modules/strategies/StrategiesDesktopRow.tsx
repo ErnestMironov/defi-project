@@ -1,15 +1,18 @@
 import type { Strategy } from '@api/maat-finance/types'
+import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
-import { IconWithLabelComponent } from '@components/token-icon'
+import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
-import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
+import { formatAmount } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { StrategyRowOptions } from './components/StrategyRowOptions'
 
 interface StrategyRowProperties {
   strategy: Strategy
@@ -17,46 +20,59 @@ interface StrategyRowProperties {
 
 export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
   const navigate = useNavigate()
-
   return (
     <Table.Row
-      className="cursor-pointer"
+      className="group cursor-pointer *:px-7 *:py-4"
       onClick={() => navigate(`${ROUTES.STRATEGIES}/${strategy.id}`)}
     >
-      <Table.Cell className="px-10 py-6">
-        <div className="flex items-center gap-2">
-          <p className="min-w-[8.5rem]">{shortenAddress(strategy.id)}</p>
-          <CopyButton text={strategy.id} />
+      <Table.Cell>
+        <div className="flex items-center gap-4">
+          <TokenIconComponent symbol={strategy.protocol} className="size-8" />
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="text-base/[1.5rem]">{shortenAddress(strategy.id)}</p>
+              <div className="flex size-5 shrink-0 items-center justify-center rounded border border-stroke-100">
+                <ArrowTopRight className="size-2.5" />
+              </div>
+            </div>
+            <p className="text-sm/[1rem] text-text-2100">{strategy.protocol}</p>
+          </div>
         </div>
       </Table.Cell>
       <Table.Cell>
-        <IconWithLabelComponent
-          symbol={strategy?.token.symbol}
-          className="size-9 gap-4"
-        />
+        <IconWithLabelComponent symbol={strategy?.token.symbol} />
       </Table.Cell>
       <Table.Cell>
-        <IconWithLabelComponent symbol={strategy?.chain_id} className="size-9 gap-4" />
+        <IconWithLabelComponent symbol={strategy?.chain_id} />
       </Table.Cell>
       <Table.Cell>
-        <IconWithLabelComponent symbol={strategy.protocol} className="size-9 gap-4" />
+        {formatAmount(strategy.apy, {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2,
+        })}
+        <span className="text-text-260">%</span>
       </Table.Cell>
-      <Table.Cell className="font-bold">{formatPercentValue(strategy.apy)}</Table.Cell>
       <Table.Cell>
-        {formatUsdValue(strategy.tvl, {
+        <span className="text-text-260">$</span>
+        {formatAmount(strategy.tvl, {
           notation: 'compact',
           maximumFractionDigits: 2,
         })}
       </Table.Cell>
-      <Table.Cell className="max-w-[12.1rem]">
+      <Table.Cell className="">
         <div className="flex w-full items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(strategy.address)}</p>
-          <CopyButton text={strategy.address} className="ml-4 size-6 shrink-0" />
+          <p className="min-w-24">{shortenAddress(strategy.address)}</p>
+          <CopyButton text={strategy.address} className="size-4 shrink-0" />
           <ScanLink
             chainId={strategy.chain_id}
             address={strategy.address}
-            className="ml-3 size-5 shrink-0"
+            className="ml-3 size-4 shrink-0"
           />
+        </div>
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex justify-end">
+          <StrategyRowOptions strategy={strategy} />
         </div>
       </Table.Cell>
     </Table.Row>

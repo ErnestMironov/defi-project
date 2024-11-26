@@ -26,8 +26,8 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
   return (
     <section
       className={cn(
+        'flex gap-4 max-lg:flex-col w-full divide-x divide-stroke-100 *:flex-1',
         className,
-        'flex gap-4 max-lg:flex-col w-full divide-x divide-stroke-100',
       )}
       {...rest}
     >

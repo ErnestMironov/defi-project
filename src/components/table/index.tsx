@@ -14,7 +14,10 @@ const TableHead = forwardRef<
 >(({ children, className, ...rest }, reference) => {
   return (
     <thead
-      className={cn('text-text-2100 *:border-b', className)}
+      className={cn(
+        '[&_tr>th]:text-text-2100 *:border-b [&>tr>th]:py-4 [&>tr>th]:first:pl-7 [&>tr>th]:last:pr-7',
+        className,
+      )}
       {...rest}
       ref={reference}
     >
@@ -31,7 +34,7 @@ const TableBody = forwardRef<
     <tbody
       className={cn(
         '[&>tr::after:hover]:rounded-l-[0.5rem] [&>tr::after:hover]:rounded-r-[0.5rem]',
-        '[&>tr]:relative [&>tr::after]:pointer-events-none [&>tr::after:hover]:bg-[#8585A914] [&>tr]:after:h-[calc(100%-0.5rem)] [&>tr]:after:top-1 [&>tr]:after:w-[calc(100%-0.5rem)] [&>tr:after]:absolute [&>tr:after]:left-1',
+        '[&>tr]:relative [&>tr::after]:pointer-events-none [&>tr::after:hover]:bg-[#8585A914] [&>tr]:after:h-[calc(100%-4px/2)] [&>tr:first-child]:after:h-[calc(100%-4px)] [&>tr:not(:first-child)]:after:top-[calc(8px/4)] [&>tr:first-child]:after:top-[4px] [&>tr]:after:w-[calc(100%-0.5rem)] [&>tr:after]:absolute [&>tr:after]:left-1',
         className,
       )}
       {...rest}
@@ -66,7 +69,7 @@ const TableCell = forwardRef<
   return (
     <td
       {...rest}
-      className={cn('bg-transparent px-5 py-8 text-left transition-all', rest.className)}
+      className={cn('bg-transparent px-7 py-4 text-left transition-all', rest.className)}
       ref={reference}
     >
       {children}

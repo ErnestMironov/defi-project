@@ -96,7 +96,7 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
           </BaseContainer>
         </div>
         <Table>
-          <Table.Head>
+          <Table.Head className="[&>tr>th]:py-2 [&>tr>th]:first:pl-5 [&>tr>th]:last:pr-5">
             <Table.Row>
               <Table.HeadCell>Token</Table.HeadCell>
               <Table.HeadCell>Chain</Table.HeadCell>
@@ -104,9 +104,9 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
               <Table.HeadCell>Protocol</Table.HeadCell>
             </Table.Row>
           </Table.Head>
-          <Table.Body>
+          <Table.Body className="[&_tr:after:last-child]:rounded-br-[1.25rem]">
             {topStrategiesWithColors.map((strategy, i) => (
-              <Table.Row key={i}>
+              <Table.Row key={i} className="*:px-5 *:py-8">
                 <Table.Cell>
                   <div className="flex items-center gap-[0.38rem]">
                     <TokenIconComponent

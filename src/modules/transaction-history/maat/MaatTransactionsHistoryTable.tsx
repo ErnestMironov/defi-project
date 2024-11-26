@@ -87,7 +87,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
               className={cn('cursor-pointer')}
               onClick={() => onSortChange('amount')}
             >
-              <div className="flex items-center gap-[0.79rem]">
+              <div className="flex items-center gap-[0.38rem]">
                 <span>Amount</span>
                 {sort === 'amount' && (
                   <Sort
@@ -102,7 +102,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
               className={cn('cursor-pointer')}
               onClick={() => onSortChange('creation_time')}
             >
-              <div className="flex items-center gap-[0.79rem]">
+              <div className="flex items-center gap-[0.38rem]">
                 <span>Created</span>
                 {sort === 'creation_time' && (
                   <Sort

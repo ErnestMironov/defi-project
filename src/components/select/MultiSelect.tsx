@@ -60,7 +60,7 @@ const multiSelectVariants = cva('', {
 const SELECT_ICONS_PLACEHOLDERS = new Set(['All Protocols', 'All Chains', 'All Tokens'])
 
 const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
-  const { value, placeholder, className, variant, icon } = props
+  const { value, placeholder, variant, icon } = props
 
   const renderValue = () => {
     switch (true) {
@@ -80,7 +80,7 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
             {value.map((option) => (
               <TokenIconComponent
                 key={option.value}
-                className="size-5"
+                className="size-4"
                 symbol={option.value}
               />
             ))}
@@ -102,7 +102,7 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
       )}
     >
       <div className="flex items-center gap-2 [&_svg]:size-4">
-        {icon}
+        {(value.length === 0 || value.length > 1) && icon}
         {renderValue()}
       </div>
       <Arrow className="ml-1 rotate-180 transition group-data-[state=open]:rotate-0" />

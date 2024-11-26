@@ -70,48 +70,57 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
     }
   }
   return (
-    <div {...props} className={cn('', className)}>
-      <TableFilters filters={filters} setFilters={handleFiltersChange} />
-      <Table>
-        <Table.Head>
-          <Table.Row>
-            <Table.HeadCell>Action</Table.HeadCell>
-            <Table.HeadCell>From</Table.HeadCell>
-            <Table.HeadCell
-              className={cn('cursor-pointer')}
-              onClick={() => onSortChange('amount')}
-            >
-              <div className="flex items-center gap-[0.79rem]">
-                <span>Amount</span>
-                {sort === 'amount' && (
-                  <Sort
-                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
-                  />
-                )}
-              </div>
-            </Table.HeadCell>
-            <Table.HeadCell>Chain</Table.HeadCell>
-            <Table.HeadCell>Tx Hash</Table.HeadCell>
-            <Table.HeadCell
-              className={cn('cursor-pointer')}
-              onClick={() => onSortChange('creation_time')}
-            >
-              <div className="flex items-center gap-[0.79rem]">
-                <span>Created</span>
-                {sort === 'creation_time' && (
-                  <Sort
-                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
-                  />
-                )}
-              </div>
-            </Table.HeadCell>
-          </Table.Row>
-        </Table.Head>
-        <Table.Body>{renderBody()}</Table.Body>
-      </Table>
+    <>
+      <div {...props} className={cn('', className)}>
+        <TableFilters filters={filters} setFilters={handleFiltersChange} />
+        <Table>
+          <Table.Head>
+            <Table.Row>
+              <Table.HeadCell>Action</Table.HeadCell>
+              <Table.HeadCell
+                className={cn('cursor-pointer min-w-[12.1rem]')}
+                onClick={() => onSortChange('amount')}
+              >
+                <div className="flex items-center gap-[0.38rem]">
+                  <span>Amount</span>
+                  {sort === 'amount' && (
+                    <Sort
+                      className={cn(
+                        'size-5 shrink-0',
+                        orderBy === 'desc' && 'rotate-180',
+                      )}
+                    />
+                  )}
+                </div>
+              </Table.HeadCell>
+              <Table.HeadCell className="min-w-[12.1rem]">From</Table.HeadCell>
+              <Table.HeadCell className="min-w-[12.1rem]">Chain</Table.HeadCell>
+              <Table.HeadCell
+                className={cn('cursor-pointer')}
+                onClick={() => onSortChange('creation_time')}
+              >
+                <div className="flex items-center gap-[0.38rem]">
+                  <span>Created</span>
+                  {sort === 'creation_time' && (
+                    <Sort
+                      className={cn(
+                        'size-5 shrink-0',
+                        orderBy === 'desc' && 'rotate-180',
+                      )}
+                    />
+                  )}
+                </div>
+              </Table.HeadCell>
+            </Table.Row>
+          </Table.Head>
+          <Table.Body className="[&_tr:last-child:after]:rounded-b-[1.25rem]">
+            {renderBody()}
+          </Table.Body>
+        </Table>
+      </div>
       {data && (
         <Pagination
-          className="mt-6"
+          className="absolute -bottom-16"
           currentPage={page}
           totalCount={data.total_items}
           onPageChange={onPageChange}
@@ -119,7 +128,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
           onPageSizeChange={onPageSizeChange}
         />
       )}
-    </div>
+    </>
   )
 }
 

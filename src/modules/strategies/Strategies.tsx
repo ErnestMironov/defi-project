@@ -1,3 +1,6 @@
+import Asset from '@assets/icons/asset.svg'
+import Chain from '@assets/icons/chain.svg'
+import Protocol from '@assets/icons/protocol.svg'
 import {
   SELECT_CHAINS,
   SELECT_PROTOCOLS,
@@ -24,10 +27,25 @@ export const Strategies: React.FC<StrategiesProperties> = (props) => {
     <StrategiesDesktop
       {...props}
       filters={{
-        search: { value: '', placeholder: 'Address / ID' },
-        token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
-        chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
-        protocol: { items: SELECT_PROTOCOLS, value: [], placeholder: 'All Protocols' },
+        search: { value: '', placeholder: 'Name, address or ID' },
+        chain: {
+          items: SELECT_CHAINS,
+          value: [],
+          placeholder: 'All Chains',
+          icon: <Chain />,
+        },
+        token: {
+          items: SELECT_TOKENS,
+          value: [],
+          placeholder: 'All Tokens',
+          icon: <Asset />,
+        },
+        protocol: {
+          items: SELECT_PROTOCOLS,
+          value: [],
+          placeholder: 'All Protocols',
+          icon: <Protocol />,
+        },
       }}
     />
   )

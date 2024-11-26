@@ -15,20 +15,25 @@ export const SystemActions = (props: SystemActionsProperties) => {
   const { className, ...rest } = props
   return (
     <section className={cn('', className)} {...rest}>
-      <SectionTitle>System Actions</SectionTitle>
-      <Tabs defaultValue="admin" className="mt-12">
-        <TabsList className="*:w-[12.5rem]">
-          <TabsTrigger value="admin">Admin</TabsTrigger>
-          <TabsTrigger value="incentives">Incentives</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
+      <Tabs defaultValue="admin">
+        <TabsList className="w-full justify-start gap-5 rounded-none border-b border-stroke-100 px-8 *:mb-[-0.05rem] *:py-3 *:text-sm">
+          <TabsTrigger value="admin" variant="underline">
+            Admin
+          </TabsTrigger>
+          <TabsTrigger value="incentives" variant="underline">
+            Incentives
+          </TabsTrigger>
+          <TabsTrigger value="reports" variant="underline">
+            Reports
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="admin">
+        <TabsContent value="admin" className="mt-0">
           <AdminTable />
         </TabsContent>
-        <TabsContent value="incentives">
+        <TabsContent value="incentives" className="mt-0">
           <IncentivesHistory />
         </TabsContent>
-        <TabsContent value="reports">
+        <TabsContent value="reports" className="mt-0">
           <ReportsTable />
         </TabsContent>
       </Tabs>

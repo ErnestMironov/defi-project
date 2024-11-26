@@ -49,7 +49,7 @@ export const StrategiesCharts = (props: StrategiesProperties) => {
           <TabsTrigger variant="underline" value="apy">
             APY
           </TabsTrigger>
-          <TabsTrigger variant="underline" value="tvl">
+          <TabsTrigger disabled variant="underline" value="tvl">
             TVL
           </TabsTrigger>
         </TabsList>

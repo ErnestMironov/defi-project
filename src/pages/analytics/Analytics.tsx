@@ -4,20 +4,34 @@ import { StrategiesCharts } from '@modules/strategies/strategies-chart/desktop/S
 import { TokenOverview } from '@modules/token-overview/TokenOverview'
 import { TokenCharts } from '@modules/tokens/Tokens'
 import { Transactions } from '@modules/transactions/Transactions'
+import { SystemActions } from '@pages/transactions/system-actions/SystemActions'
+import { useSearchParams } from 'react-router-dom'
+
+import { BaseContainer } from './components/BaseContainer'
+
+const TABS = ['tokens', 'strategies', 'events']
 
 export const Analytics = () => {
+  const [searchParameters, setSearchParameters] = useSearchParams()
+
+  const tab = searchParameters.get('tab')
+  const onValueChange = (value: string) => {
+    setSearchParameters({ tab: value })
+  }
+
   return (
-    <Tabs className="mt-16" defaultValue="tokens">
+    <Tabs
+      className="mb-40 mt-16"
+      defaultValue="tokens"
+      value={tab ?? 'tokens'}
+      onValueChange={onValueChange}
+    >
       <TabsList>
-        <TabsTrigger variant="unstyled" value="tokens">
-          Tokens
-        </TabsTrigger>
-        <TabsTrigger variant="unstyled" value="strategies">
-          Strategies
-        </TabsTrigger>
-        <TabsTrigger variant="unstyled" value="events">
-          Events
-        </TabsTrigger>
+        {TABS.map((_tab) => (
+          <TabsTrigger variant="unstyled" className="capitalize" value={_tab}>
+            {_tab}
+          </TabsTrigger>
+        ))}
       </TabsList>
       <TabsContent value="tokens">
         <TokenCharts />
@@ -28,7 +42,28 @@ export const Analytics = () => {
         <Strategies className="mt-4" />
       </TabsContent>
       <TabsContent value="events">
-        <Transactions parameters={{ transaction_type: 'trigger' }} />
+        <BaseContainer className="pb-1">
+          {/* EVENT TABS */}
+          <Tabs className="mt-3 divide-y divide-stroke-100" defaultValue="events">
+            <TabsList className="gap-5 px-8 *:mb-[-0.05rem] *:pb-3 *:text-sm">
+              <TabsTrigger variant="underline" value="events">
+                Events
+              </TabsTrigger>
+              <TabsTrigger variant="underline" value="actions">
+                System Actions
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="events" className="mt-0">
+              <Transactions
+                className="[&_tr:last-child:after]:rounded-b-[1.25rem]"
+                parameters={{ transaction_type: 'trigger' }}
+              />
+            </TabsContent>
+            <TabsContent value="actions" className="mt-0">
+              <SystemActions />
+            </TabsContent>
+          </Tabs>
+        </BaseContainer>
       </TabsContent>
     </Tabs>
   )
