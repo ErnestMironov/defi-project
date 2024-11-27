@@ -1,5 +1,7 @@
+import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
 import Scan from '@assets/icons/scan.svg'
 import { SCAN_LINK_BY_CHAIN_ID } from '@constants/chains'
+import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -17,6 +19,7 @@ type ScanLinkProperties = ComponentProps<'a'> & {
   chainId: number
   address?: string
   txHash?: string
+  arrow?: boolean
 }
 
 const SCAN_LOGO_BY_CHAIN_ID = {
@@ -86,7 +89,7 @@ const SCAN_TX_PATH_BY_CHAIN_ID = {
 }
 
 export const ScanLink = (props: ScanLinkProperties) => {
-  const { chainId, address, txHash, children, ...rest } = props
+  const { chainId, address, txHash, children, arrow = true, className, ...rest } = props
   const path = address
     ? SCAN_ADDRESS_PATH_BY_CHAIN_ID[
         chainId as keyof typeof SCAN_ADDRESS_PATH_BY_CHAIN_ID
@@ -104,7 +107,18 @@ export const ScanLink = (props: ScanLinkProperties) => {
       }}
       {...rest}
     >
-      {children || <ScanLogo className="size-full" />}
+      {arrow ? (
+        <div
+          className={cn(
+            'flex size-5 items-center justify-center rounded border border-stroke-100',
+            className,
+          )}
+        >
+          <ArrowTopRight className="size-2.5" />
+        </div>
+      ) : (
+        children || <ScanLogo className="size-full" />
+      )}
     </Link>
   )
 }

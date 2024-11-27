@@ -144,7 +144,6 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
           { id: 'apy', label: 'APY' },
           { id: 'tvl', label: 'TVL' },
         ]}
-        layoutId="tokens"
         onTabChange={(tab) => setActiveTab(tab as 'apy' | 'tvl')}
       />
       <div className="mt-6 flex items-center">
@@ -156,7 +155,7 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
                 'max-lg:size-2 overflow-visible',
               )}
             />
-            <span className="text-[0.75rem]/[0.9rem] font-bold text-text">
+            <span className="text-text text-[0.75rem]/[0.9rem] font-bold">
               {activeTab === 'apy' ? formatPercentValue(apy) : formatUsdValue(tvl)}
             </span>
           </div>

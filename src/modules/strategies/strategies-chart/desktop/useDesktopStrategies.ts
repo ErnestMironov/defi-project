@@ -4,9 +4,11 @@ import { useEffect } from 'react'
 
 import { useMobileCustomStrategiesChartStore } from '../mobile/useMobileStrategiesChartStore'
 
+const TOP_STRATEGIES_SIZE = 3
+
 export const useDesktopStrategies = () => {
   const { data, ...rest } = useStrategies({
-    size: 5,
+    size: TOP_STRATEGIES_SIZE,
     sort: 'apy',
     order_by: 'desc',
   })
@@ -28,11 +30,13 @@ export const useDesktopStrategies = () => {
 
   useEffect(() => {
     if (data) {
-      const topColoredStrategies = COLORS.map((color, i) => ({
-        color,
-        strategy: data.items[i],
-        visible: true,
-      }))
+      const topColoredStrategies = COLORS.slice(0, TOP_STRATEGIES_SIZE).map(
+        (color, i) => ({
+          color,
+          strategy: data.items[i],
+          visible: true,
+        }),
+      )
       setTopStrategiesWithColors(topColoredStrategies)
       if (customStrategiesWithColors.length === 0) {
         setCustomStrategiesWithColors(topColoredStrategies)

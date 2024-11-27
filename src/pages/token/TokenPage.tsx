@@ -1,7 +1,5 @@
 import type { VaultType } from '@api/maat-finance/types'
 import { useVaults } from '@api/maat-finance/useVaults'
-import usdc from '@assets/images/usdc-3d.png'
-import usdt from '@assets/images/usdt-3d.png'
 import { Skeleton } from '@components/ui/skeleton'
 import { TOKEN_INFO } from '@constants/token-info'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
@@ -66,27 +64,18 @@ export const TokenDesktopPage = (props: TokensProperties) => {
         <TokenStatsContainer
           loading={isLoading}
           loadingVolume={volumeLoading}
-          withLink={false}
           color="#3883EB"
           apy={apy}
           tvl={tvl}
           rebalancingVolume={volume}
           tokenName={symbol ?? ''}
-          img={symbol === 'USDC' ? usdc : usdt}
-          imageClassName={
-            symbol === 'USDC' ? 'rotate-[3.207deg]' : 'rotate-[-5.207deg] right-[-8.1rem]'
-          }
         />
-        <div className="flex flex-col justify-between rounded-[1.75rem] bg-cards p-10 text-[1.25rem]/[1.5rem] normal-case text-text [box-shadow:0px_3px_1px_0px_rgba(56,_118,_203,_0.20)]">
+        <div className="text-text flex flex-col justify-between rounded-[1.75rem] bg-cards p-10 text-[1.25rem]/[1.5rem] normal-case [box-shadow:0px_3px_1px_0px_rgba(56,_118,_203,_0.20)]">
           <p>{TOKEN_INFO[symbol?.toUpperCase() as keyof typeof TOKEN_INFO]}</p>
           <p className="mt-auto flex w-full items-center justify-between text-lg">
             <span className="text-gray-100">Contract</span>
             {vaults && selectedVault ? (
-              <TokenAddressByChainPopover
-                data={tokenVaults}
-                value={selectedVault}
-                onChange={(chain) => setSelectedVault(chain)}
-              />
+              <TokenAddressByChainPopover data={tokenVaults} />
             ) : (
               <Skeleton className="h-6 w-60" />
             )}

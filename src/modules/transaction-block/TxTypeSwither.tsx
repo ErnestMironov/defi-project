@@ -23,7 +23,6 @@ export const TxTypeSwitcher = (props: TxTypeSwitcherProperties) => {
   return (
     <AnimatedTabs
       {...props}
-      layoutId="tx-type-switcher"
       tabs={TABS}
       activeTab={txType}
       onTabChange={(value) => handleTabChange(value as TxType)}

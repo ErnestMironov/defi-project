@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import { useAdminActions } from '@api/maat-finance/useAdminActions'
+import ActionIcon from '@assets/icons/action.svg'
+import ChainIcon from '@assets/icons/chain.svg'
 import Sort from '@assets/icons/sort.svg'
 import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
@@ -22,13 +24,18 @@ export const AdminTable = (props: AdminTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Tx Hash' },
+    chain: {
+      items: SELECT_CHAINS,
+      value: [],
+      placeholder: 'All Chains',
+      icon: <ChainIcon />,
+    },
     actions_type: {
       items: SELECT_ADMIN_ACTION_TYPES,
       value: [],
       placeholder: 'All Actions',
+      icon: <ActionIcon />,
     },
-    // from: { items: SELECT_ADMIN_FROM, value: [], placeholder: 'From...' },
-    chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
   })
   const { search, ...selectFilters } = filters
   const { page, size, onPageChange, onPageSizeChange } = usePages()
@@ -71,36 +78,42 @@ export const AdminTable = (props: AdminTableProperties) => {
   }
 
   return (
-    <div className={cn('', className)} {...rest}>
-      <TableFilters filters={filters} setFilters={handleFiltersChange} />
-      <Table className={cn('', isPlaceholderData && 'animate-pulse')}>
-        <Table.Head>
-          <Table.Row>
-            <Table.HeadCell>Function</Table.HeadCell>
-            <Table.HeadCell>From</Table.HeadCell>
-            <Table.HeadCell>To</Table.HeadCell>
-            <Table.HeadCell>Chain</Table.HeadCell>
-            <Table.HeadCell>Tx Hash</Table.HeadCell>
-            <Table.HeadCell
-              className={cn('cursor-pointer')}
-              onClick={() => onSortChange('creation_time')}
-            >
-              <div className="flex items-center gap-[0.79rem]">
-                <span>Created</span>
-                {sort === 'creation_time' && (
-                  <Sort
-                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
-                  />
-                )}
-              </div>
-            </Table.HeadCell>
-          </Table.Row>
-        </Table.Head>
-        <Table.Body>{renderBody()}</Table.Body>
-      </Table>
+    <>
+      <div className={cn('', className)} {...rest}>
+        <TableFilters filters={filters} setFilters={handleFiltersChange} />
+        <Table className={cn('', isPlaceholderData && 'animate-pulse')}>
+          <Table.Head>
+            <Table.Row>
+              <Table.HeadCell>Function</Table.HeadCell>
+              <Table.HeadCell className="w-60">From</Table.HeadCell>
+              <Table.HeadCell className="w-60">To</Table.HeadCell>
+              <Table.HeadCell className="w-60">Chain</Table.HeadCell>
+              <Table.HeadCell
+                className={cn('cursor-pointer w-[12.5rem]')}
+                onClick={() => onSortChange('creation_time')}
+              >
+                <div className="flex items-center gap-[0.38rem]">
+                  <span>Created</span>
+                  {sort === 'creation_time' && (
+                    <Sort
+                      className={cn(
+                        'size-5 shrink-0',
+                        orderBy === 'desc' && 'rotate-180',
+                      )}
+                    />
+                  )}
+                </div>
+              </Table.HeadCell>
+            </Table.Row>
+          </Table.Head>
+          <Table.Body className="[&_tr:last-child:after]:rounded-b-[1.25rem]">
+            {renderBody()}
+          </Table.Body>
+        </Table>
+      </div>
       {data && data?.total_items > 0 && (
         <Pagination
-          className="mt-6"
+          className="absolute inset-x-0 -bottom-16"
           totalCount={data.total_items}
           currentPage={page}
           onPageChange={onPageChange}
@@ -108,7 +121,7 @@ export const AdminTable = (props: AdminTableProperties) => {
           size={size}
         />
       )}
-    </div>
+    </>
   )
 }
 

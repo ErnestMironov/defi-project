@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 
-const FRAMES = ['1D', '1W', '1M', '3M', 'MAX']
+const FRAMES = ['All time', 'Year', 'Month', 'Week', 'Day']
 export type FrameType = (typeof FRAMES)[number]
 
-export const useFrameSelect = (initialFrame: FrameType = '1M') => {
+export const useFrameSelect = (initialFrame: FrameType = 'All time') => {
   const [currentTimestamp, setCurrentTimestamp] = useState<number>(1)
   const [currentFrame, setCurrentFrame] = useState<FrameType>(initialFrame)
 
@@ -15,23 +15,27 @@ export const useFrameSelect = (initialFrame: FrameType = '1M') => {
   const onFrameChange = (frame: FrameType) => {
     setCurrentFrame(frame)
     switch (frame) {
-      case '1D': {
+      case 'Day': {
         setCurrentTimestamp(dayjs().subtract(1, 'day').unix())
         break
       }
-      case '1W': {
+      case 'Week': {
         setCurrentTimestamp(dayjs().subtract(1, 'week').unix())
         break
       }
-      case '1M': {
+      case 'Month': {
         setCurrentTimestamp(dayjs().subtract(1, 'month').unix())
         break
       }
-      case '3M': {
-        setCurrentTimestamp(dayjs().subtract(3, 'month').unix())
+      case 'Year': {
+        setCurrentTimestamp(dayjs().subtract(1, 'year').unix())
         break
       }
-      case 'MAX': {
+      // case '3M': {
+      //   setCurrentTimestamp(dayjs().subtract(3, 'month').unix())
+      //   break
+      // }
+      case 'All time': {
         setCurrentTimestamp(1)
         break
       }

@@ -1,4 +1,7 @@
 import type { EventsParameters } from '@api/maat-finance/useEvents'
+import ActionIcon from '@assets/icons/action.svg'
+import ChainIcon from '@assets/icons/chain.svg'
+import StatusIcon from '@assets/icons/status.svg'
 import {
   SELECT_CHAINS,
   SELECT_LAST_EVENT_ACTIONS,
@@ -24,13 +27,24 @@ export const Transactions = (props: EventsProperties) => {
     <TransactionsHistoryDesktop
       filters={{
         search: { value: '', placeholder: 'Tx hash  / Address' },
+        chain: {
+          items: SELECT_CHAINS,
+          value: [],
+          placeholder: 'All Chains',
+          icon: <ChainIcon />,
+        },
+        status: {
+          items: SELECT_STATUSES,
+          value: [],
+          placeholder: 'Every Status',
+          icon: <StatusIcon />,
+        },
         actions_type: {
           items: SELECT_LAST_EVENT_ACTIONS,
           value: [],
           placeholder: 'All Actions',
+          icon: <ActionIcon />,
         },
-        status: { items: SELECT_STATUSES, value: [], placeholder: 'All Status' },
-        chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
       }}
       {...props}
     />

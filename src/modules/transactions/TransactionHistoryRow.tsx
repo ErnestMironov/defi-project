@@ -1,12 +1,9 @@
 import type { Event } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
 import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { ACTION_TYPE } from '@constants/action-type'
-import { STATUS_COLOR } from '@constants/status-color'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
@@ -16,6 +13,10 @@ import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+import { ActionType } from './actions/ActionType'
+import { EventRowOptions } from './actions/EventRowOptions'
+import { StatusChip } from './status/StatusChip'
 
 interface TransactionHistoryRowProperties extends ComponentProps<'div'> {
   event: Event
@@ -27,37 +28,37 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
   const navigate = useNavigate()
   return (
     <Table.Row
-      className="cursor-pointer"
+      className="group cursor-pointer *:px-7 *:py-4"
       onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.hash}`)}
     >
       <Table.Cell>
-        {ACTION_TYPE[event.action_type as keyof typeof ACTION_TYPE]}
-      </Table.Cell>
-      <Table.Cell
-        className="uppercase"
-        style={{ color: STATUS_COLOR[event.status as keyof typeof STATUS_COLOR] }}
-      >
-        {event.status}
+        <ActionType tx={event} />
       </Table.Cell>
       <Table.Cell>
-        <div className="flex items-center gap-3">
-          <span className="block min-w-12">
-            {event.amount && event.vault
-              ? formatAmount(
-                  formatUnits(BigInt(event.amount), event.vault.token.decimals),
-                  {
-                    notation: 'compact',
-                  },
-                )
-              : 'N/A'}
-          </span>
-          {event.vault && (
-            <IconWithLabelComponent
-              symbol={event.vault.token.symbol}
-              className="size-8"
-            />
-          )}
-        </div>
+        {event.amount ? (
+          <div className="flex items-center gap-[0.38rem]">
+            <p className="min-w-10 text-end">
+              {event.vault
+                ? formatAmount(
+                    formatUnits(BigInt(event.amount), event.vault.token.decimals),
+                    {
+                      notation: 'compact',
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    },
+                  )
+                : 'N/A'}
+            </p>
+            {event.vault && (
+              <IconWithLabelComponent
+                symbol={event.vault.token.symbol}
+                className="size-8"
+              />
+            )}
+          </div>
+        ) : (
+          <div className="h-14 w-full rounded-lg border border-stroke-100 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center bg-repeat" />
+        )}
       </Table.Cell>
       <Table.Cell>
         <div className="flex items-center gap-2">
@@ -76,24 +77,32 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
         </div>
       </Table.Cell>
       <Table.Cell>
-        <div className="flex w-full items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(event.txFrom)}</p>
-          <CopyButton text={event.txFrom} className="ml-4 size-6 shrink-0" />
-        </div>
+        <StatusChip tx={event} />
       </Table.Cell>
       <Table.Cell>
         <div className="flex w-full items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(event.hash)}</p>
-          <CopyButton text={event.hash} className="ml-4 size-6 shrink-0" />
+          <p className="min-w-24 text-sm/[1.5rem]">{shortenAddress(event.txFrom)}</p>
+          <CopyButton text={event.txFrom} className="shrink-0" />
+        </div>
+      </Table.Cell>
+      {/* <Table.Cell>
+        <div className="flex w-full items-center">
+          <p className="min-w-24">{shortenAddress(event.hash)}</p>
+          <CopyButton text={event.hash} className="shrink-0" />
           <ScanLink
             chainId={event.src_chain_id}
             txHash={event.hash}
             className="ml-3 size-5 shrink-0"
           />
         </div>
-      </Table.Cell>
-      <Table.Cell className="text-gray-100">
+      </Table.Cell> */}
+      <Table.Cell className="text-text-2100">
         {getFromNow(dayjs(event.creation_time).toString())}
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex justify-end">
+          <EventRowOptions event={event} />
+        </div>
       </Table.Cell>
     </Table.Row>
   )
