@@ -1,27 +1,31 @@
-import type { StatusType } from '@api/maat-finance/types'
+import type { Action } from '@api/maat-finance/types'
 import { STATUS_COLOR } from '@constants/status-color'
+import { ActionType } from '@modules/transactions/actions/ActionType'
+import { StatusChip } from '@modules/transactions/status/StatusChip'
 import { cn } from '@utils/cn'
 import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
 
-import { TransactionInfoTitle } from './TransactionInfoTitle'
 import type { Tag } from './TransactionTags'
 import { TransactionTags } from './TransactionTags'
 
 interface TransactionInfoHeaderProperties extends ComponentProps<'div'> {
-  title: string
   tags: Tag[]
-  status?: StatusType
-  date: string
+  action: Action
 }
 
 export const TransactionInfoHeader = (props: TransactionInfoHeaderProperties) => {
-  const { className, title, tags, status, date, ...rest } = props
+  const { className, action, tags, ...rest } = props
+  const status = action?.status
+  const date = action?.creation_time
   return (
-    <div className={cn('', className)} {...rest}>
+    <div className={cn('px-[1.75rem] py-4', className)} {...rest}>
       <div className="flex w-full items-center justify-between">
-        <TransactionInfoTitle title={title} />
-        <TransactionTags tags={tags} />
+        <ActionType tx={action} />
+        <div className="flex items-center gap-2">
+          <StatusChip tx={action} />
+          <TransactionTags tags={tags} />
+        </div>
       </div>
       <div className="mt-4 hidden items-center gap-3 text-base max-lg:flex">
         <span
@@ -31,7 +35,9 @@ export const TransactionInfoHeader = (props: TransactionInfoHeaderProperties) =>
           {status}
         </span>
         <span className="text-gray-50">|</span>
-        <span className="text-gray-100">{dayjs(date).format('DD.MM.YYYY HH:mm:ss')}</span>
+        <span className="text-text-2100">
+          {dayjs(date).format('DD.MM.YYYY HH:mm:ss')}
+        </span>
       </div>
       {/* {status === 'fail' && isBelowDesktop && (
         <div className={cn('mt-1 text-base', '')} style={{ color: '#FF4057' }}>

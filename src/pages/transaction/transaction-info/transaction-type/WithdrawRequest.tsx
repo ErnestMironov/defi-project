@@ -30,21 +30,16 @@ export const WithdrawRequest = (props: WithdrawRequestProperties) => {
     return <></>
   }
 
-  const tags: Tag[] = ['USER']
+  const tags: Tag[] = ['User']
 
   if (!withoutRelated) {
-    tags.push('TRIGGER')
+    tags.push('Trigger')
   }
 
   return (
     <TransactionInfoContainer className={className} {...rest}>
-      <TransactionInfoHeader
-        title="Withdraw request"
-        tags={tags}
-        status={data?.status}
-        date={data?.creation_time}
-      />
-      <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
+      <TransactionInfoHeader tags={tags} action={data} />
+      <div className="grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
         <TransactionHash
           value={data?.hash}
           chainId={data?.src_chain_id}
