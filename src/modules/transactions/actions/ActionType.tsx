@@ -1,4 +1,4 @@
-import type { Event } from '@api/maat-finance/types'
+import type { Action, Event } from '@api/maat-finance/types'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { ACTION_TYPE } from '@constants/action-type'
@@ -49,7 +49,7 @@ const getIcon = (actionType: Event['action_type']) => {
 }
 
 interface ActionTypeProperties extends ComponentProps<'div'> {
-  tx: Event
+  tx: Event | Action
 }
 
 export const ActionType = (props: ActionTypeProperties) => {

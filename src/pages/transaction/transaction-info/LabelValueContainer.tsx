@@ -6,7 +6,7 @@ export const LabelValueContainer = (props: ComponentProps<'div'>) => {
   return (
     <div
       className={cn(
-        'flex w-full items-center justify-between rounded-xl border border-stroke-100 p-4 [&>div:first-child]:text-base [&>div:first-child]:text-gray-100',
+        'flex w-full items-center justify-between py-4 px-6 [&>div:first-child]:text-sm [&>div:first-child]:text-text-2100',
         className,
       )}
       {...rest}

@@ -1,5 +1,6 @@
 import type { Action } from '@api/maat-finance/types'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
+import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
 
@@ -28,21 +29,21 @@ export const RebalanceRequest = (props: RebalanceRequestProperties) => {
     return <></>
   }
 
-  const tags: Tag[] = ['SYSTEM']
+  const tags: Tag[] = ['System']
 
   if (!withoutRelated) {
-    tags.push('REACTION')
+    tags.push('Reaction')
   }
 
   return (
     <TransactionInfoContainer className={className} {...rest}>
-      <TransactionInfoHeader
-        title="Rebalance request"
-        tags={tags}
-        status={data?.status}
-        date={data?.creation_time}
-      />
-      <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
+      <TransactionInfoHeader title="Rebalance request" tags={tags} action={data} />
+      <div
+        className={cn(
+          'grid grid-cols-6 max-lg:grid-cols-1',
+          // 'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
+        )}
+      >
         <TransactionHash
           value={data?.hash}
           className="col-span-3"
