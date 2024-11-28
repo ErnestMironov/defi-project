@@ -2,7 +2,7 @@ import type { Token } from '@0xsquid/squid-types'
 import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import type { OptionType } from '@components/select/Select'
-import { CHAIN_IDS_BY_BACKEND_NAMES } from '@constants/chains'
+import { CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO } from '@constants/chains'
 import { useBestApy } from '@hooks/useBestApy'
 import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
@@ -35,8 +35,8 @@ export const useAllAssets = (chains: OptionType[]) => {
       const chainIds = new Set(
         chains.map(
           (chain) =>
-            CHAIN_IDS_BY_BACKEND_NAMES[
-              chain.value as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES
+            CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO[
+              chain.value as keyof typeof CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO
             ],
         ),
       )
