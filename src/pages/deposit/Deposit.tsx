@@ -1,9 +1,9 @@
 import usdc from '@assets/images/usdc-3d.png'
 import usdt from '@assets/images/usdt-3d.png'
+import BgLines from '@assets/vectors/bg-lines.svg'
 import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
 import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { useCheckRegistration } from '@hooks/useCheckRegistration'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -11,7 +11,7 @@ import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
 
 export const Deposit = () => {
-  useCheckRegistration()
+  // useCheckRegistration()
 
   const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
   const { isBelowDesktop } = useDeviceWidth()
@@ -40,6 +40,7 @@ export const Deposit = () => {
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-between gap-10 pb-10">
+      <BgLines className="fixed inset-0 z-[-1] w-full" />
       <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
         {isBelowDesktop && <TVLDisplay />}
 
