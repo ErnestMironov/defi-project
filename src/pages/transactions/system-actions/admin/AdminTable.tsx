@@ -8,7 +8,6 @@ import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
-import { Skeleton } from '@components/ui/skeleton'
 import { SELECT_ADMIN_ACTION_TYPES, SELECT_CHAINS } from '@constants/select-constant'
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
@@ -16,7 +15,7 @@ import { cn } from '@utils/cn'
 import { isHash } from '@utils/hash-or-address'
 import { type ComponentProps, useState } from 'react'
 
-import { AdminTableRow } from './AdminTableRow'
+import { AdminTableRow, AdminTableRowSkeleton } from './AdminTableRow'
 
 interface AdminTableProperties extends ComponentProps<'div'> {}
 
@@ -58,23 +57,29 @@ export const AdminTable = (props: AdminTableProperties) => {
   }
 
   const renderBody = () => {
-    if (isLoading || !!error) {
-      return (
-        <>
-          {Array.from({ length: size })?.map((_, index) => (
-            <AdminTableRowSkeleton key={index} />
-          ))}
-        </>
-      )
+    switch (true) {
+      case isLoading || !!error: {
+        return (
+          <>
+            {Array.from({ length: size })?.map((_, index) => (
+              <AdminTableRowSkeleton key={index} className="h-[5.4rem]" />
+            ))}
+          </>
+        )
+      }
+      case data?.total_items === 0: {
+        return <Table.EmptyState>No data was found</Table.EmptyState>
+      }
+      default: {
+        return (
+          <>
+            {data?.items?.map((item) => (
+              <AdminTableRow key={item.hash} adminEvent={item} />
+            ))}
+          </>
+        )
+      }
     }
-    if (data?.total_items === 0) {
-      return <Table.EmptyState>No data was found</Table.EmptyState>
-    }
-    return (
-      <>
-        {data?.items?.map((item) => <AdminTableRow key={item.hash} adminEvent={item} />)}
-      </>
-    )
   }
 
   return (
@@ -84,7 +89,7 @@ export const AdminTable = (props: AdminTableProperties) => {
         <Table className={cn('', isPlaceholderData && 'animate-pulse')}>
           <Table.Head>
             <Table.Row>
-              <Table.HeadCell>Function</Table.HeadCell>
+              <Table.HeadCell className="w-[49.5rem]">Function</Table.HeadCell>
               <Table.HeadCell className="w-60">From</Table.HeadCell>
               <Table.HeadCell className="w-60">To</Table.HeadCell>
               <Table.HeadCell className="w-60">Chain</Table.HeadCell>
@@ -122,30 +127,5 @@ export const AdminTable = (props: AdminTableProperties) => {
         />
       )}
     </>
-  )
-}
-
-const AdminTableRowSkeleton = () => {
-  return (
-    <Table.Row>
-      <Table.Cell>
-        <Skeleton className="h-10 w-40 rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-40 rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-40 rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-40 rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-40 rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-40 rounded-xl" />
-      </Table.Cell>
-    </Table.Row>
   )
 }

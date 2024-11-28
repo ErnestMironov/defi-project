@@ -57,21 +57,27 @@ export const ReportsTable = (props: ReportsTableProperties) => {
   }
 
   const renderBody = () => {
-    if (isLoading || error) {
-      return (
-        <>
-          {Array.from({ length: size }).map((_, index) => (
-            <ReportsTableRowSkeleton key={index} />
-          ))}
-        </>
-      )
+    switch (true) {
+      case isLoading || error: {
+        return (
+          <>
+            {Array.from({ length: size }).map((_, index) => (
+              <ReportsTableRowSkeleton key={index} className="h-[5.4rem]" />
+            ))}
+          </>
+        )
+      }
+      case data?.total_items === 0: {
+        return <Table.EmptyState>No data was found</Table.EmptyState>
+      }
+      default: {
+        return (
+          <>
+            {data?.items?.map((report, i) => <ReportsTableRow report={report} key={i} />)}
+          </>
+        )
+      }
     }
-    if (data?.total_items === 0) {
-      return <Table.EmptyState>No data was found</Table.EmptyState>
-    }
-    return (
-      <>{data?.items?.map((report, i) => <ReportsTableRow report={report} key={i} />)}</>
-    )
   }
   return (
     <>
@@ -80,12 +86,12 @@ export const ReportsTable = (props: ReportsTableProperties) => {
         <Table className={cn(isPlaceholderData && 'animate-pulse')}>
           <Table.Head>
             <Table.Row>
-              <Table.HeadCell className="min-w-[12.1rem]">From</Table.HeadCell>
-              <Table.HeadCell className="min-w-[12.1rem]">Token</Table.HeadCell>
-              <Table.HeadCell className="min-w-[12.1rem]">PPS</Table.HeadCell>
-              <Table.HeadCell className="min-w-[12.1rem]">Chain</Table.HeadCell>
+              <Table.HeadCell className="w-[28.5rem]">From</Table.HeadCell>
+              <Table.HeadCell className="w-[18.75rem]">Token</Table.HeadCell>
+              <Table.HeadCell className="w-[18.25rem]">PPS</Table.HeadCell>
+              <Table.HeadCell className="w-60">Chain</Table.HeadCell>
               <Table.HeadCell
-                className={cn('cursor-pointer')}
+                className={cn('cursor-pointer w-[12.5rem]')}
                 onClick={() => onSortChange('creation_time')}
               >
                 <div className="flex items-center gap-[0.38rem]">

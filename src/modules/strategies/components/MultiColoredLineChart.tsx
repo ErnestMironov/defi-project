@@ -1,4 +1,5 @@
 import type { FrameType } from '@components/frames-select/useFrameSelect'
+import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import dayjs from 'dayjs'
@@ -24,10 +25,19 @@ interface AreaChartComponentProperties {
   yAxisType?: 'percent' | 'usd'
   dataKey?: 'apy' | 'tvl'
   isFetching?: boolean
+  isLoading?: boolean
 }
 
 export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
-  const { data, frame, className, yAxisType = 'usd', dataKey = 'apy', isFetching } = props
+  const {
+    data,
+    frame,
+    className,
+    yAxisType = 'usd',
+    dataKey = 'apy',
+    isLoading,
+    isFetching,
+  } = props
   const tooltipFormatter = (value: string) =>
     yAxisType === 'usd'
       ? formatUsdValue(value, { notation: 'compact' })
@@ -50,6 +60,14 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
       }
     }
     return dayjs(value).format(format)
+  }
+
+  if (isLoading) {
+    return (
+      <div className={cn('size-full', isFetching && 'animate-pulse', className)}>
+        <Skeleton className="size-full rounded-3xl" />
+      </div>
+    )
   }
 
   return (

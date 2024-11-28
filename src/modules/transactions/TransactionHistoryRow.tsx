@@ -3,6 +3,7 @@ import Arrow from '@assets/icons/arrow.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { Table } from '@components/table'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
+import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Dialog, DialogContent } from '@components/ui/dialog'
 import { Skeleton } from '@components/ui/skeleton'
 import { ROUTES } from '@routes/routes'
@@ -118,25 +119,27 @@ export const TransactionHistoryRowSkeleton = (props: ComponentProps<'tr'>) => {
   return (
     <Table.Row className={cn(className)}>
       <Table.Cell>
-        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-6 w-60" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-6 w-32" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-6 w-32" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-6 w-32" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-6 w-32" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-40" />
+        <Skeleton className="h-6 w-32" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-40" />
+        <div className="flex justify-end">
+          <TableRowOptionsTrigger />
+        </div>
       </Table.Cell>
     </Table.Row>
   )

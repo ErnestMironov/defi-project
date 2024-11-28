@@ -4,6 +4,7 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
+import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Skeleton } from '@components/ui/skeleton'
 import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { cn } from '@utils/cn'
@@ -59,8 +60,10 @@ export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
       <Table.Cell className="text-gray-100">
         {getFromNow(new Date(report.creation_time).toString())}
       </Table.Cell>
-      <Table.Cell className="w-1">
-        <ReportsRowOptions event={report} />
+      <Table.Cell>
+        <div className="flex justify-end">
+          <ReportsRowOptions event={report} />
+        </div>
       </Table.Cell>
     </Table.Row>
   )
@@ -69,30 +72,26 @@ export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
 export const ReportsTableRowSkeleton = (props: ComponentProps<'tr'>) => {
   const { className, ...rest } = props
   return (
-    <Table.Row
-      className={cn(
-        '[&>td>*]:inline-block [&>td>*]:align-middle [&>td>*]:leading-[0rem]',
-        className,
-      )}
-      {...rest}
-    >
+    <Table.Row className={cn(className)} {...rest}>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="size-9" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
-      <Table.Cell className="text-gray-100">
-        <Skeleton className="h-10 w-full" />
+      <Table.Cell>
+        <div className="flex justify-end">
+          <TableRowOptionsTrigger />
+        </div>
       </Table.Cell>
     </Table.Row>
   )

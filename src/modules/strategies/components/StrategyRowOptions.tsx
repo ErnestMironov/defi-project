@@ -17,10 +17,13 @@ export const StrategyRowOptions = (props: StrategyRowOptionsProperties) => {
   const { copyWithToast } = useClipboard()
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
-        <BaseContainer className="flex size-14 items-center justify-center rounded-2xl group-hover:shadow-test-2 [&]:shadow-none">
-          <OptionsDots className="size-4" />
-        </BaseContainer>
+      <PopoverTrigger
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsOpen(true)
+        }}
+      >
+        <TableRowOptionsTrigger />
       </PopoverTrigger>
       <PopoverContent
         align="end"
@@ -58,5 +61,13 @@ export const StrategyRowOptions = (props: StrategyRowOptionsProperties) => {
         </button>
       </PopoverContent>
     </Popover>
+  )
+}
+
+export const TableRowOptionsTrigger = (_props: ComponentProps<'div'>) => {
+  return (
+    <BaseContainer className="flex size-14 items-center justify-center rounded-2xl group-hover:shadow-test-2 [&]:shadow-none">
+      <OptionsDots className="size-4" />
+    </BaseContainer>
   )
 }

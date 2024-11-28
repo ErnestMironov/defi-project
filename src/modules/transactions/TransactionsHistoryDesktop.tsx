@@ -59,7 +59,7 @@ export const TransactionsHistoryDesktop = (
       case isPlaceholderData:
       case !!error: {
         return Array.from({ length: size }).map((_, index) => (
-          <TransactionHistoryRowSkeleton key={index} className="h-24" />
+          <TransactionHistoryRowSkeleton key={index} className="h-[5.4rem]" />
         ))
       }
       case data?.items?.length === 0: {
@@ -82,9 +82,9 @@ export const TransactionsHistoryDesktop = (
       <Table className={cn('', className)}>
         <Table.Head>
           <Table.Row className="text-text-2100 *:py-4 *:first:pl-7 *:last:pr-7">
-            <Table.HeadCell>Action</Table.HeadCell>
+            <Table.HeadCell className="w-[23.5rem]">Action</Table.HeadCell>
             <Table.HeadCell
-              className={cn('cursor-pointer')}
+              className={cn('cursor-pointer w-[18.75rem]')}
               onClick={() => onSortChange('amount')}
             >
               <div className="flex items-center gap-[0.38rem]">
@@ -96,11 +96,11 @@ export const TransactionsHistoryDesktop = (
                 )}
               </div>
             </Table.HeadCell>
-            <Table.HeadCell>Chain</Table.HeadCell>
-            <Table.HeadCell>Status</Table.HeadCell>
-            <Table.HeadCell>From</Table.HeadCell>
+            <Table.HeadCell className="w-[18.75rem]">Chain</Table.HeadCell>
+            <Table.HeadCell className="w-[16.25rem]">Status</Table.HeadCell>
+            <Table.HeadCell className="w-[16.25rem]">From</Table.HeadCell>
             <Table.HeadCell
-              className={cn('cursor-pointer')}
+              className={cn('cursor-pointer w-[12.5rem]')}
               onClick={() => onSortChange('creation_time')}
             >
               <div className="flex items-center gap-[0.38rem]">
