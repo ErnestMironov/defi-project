@@ -1,5 +1,5 @@
-import CheckCopy from '@assets/icons/check-copy.svg'
-import Copy from '@assets/icons/copy.svg'
+// import CheckCopy from '@assets/icons/check-copy.svg'
+import Copy from '@assets/icons/copy-icon.svg'
 import { useClipboard } from '@hooks/common/useClipboard'
 import { cn } from '@utils/cn'
 import { motion } from 'framer-motion'
@@ -11,8 +11,8 @@ interface CopyButtonProperties extends ComponentProps<'div'> {
 
 export const CopyButton = (props: CopyButtonProperties) => {
   const { copyWithToast } = useClipboard()
-  const { className, text } = props
-  const [isCopied, setIsCopied] = useState(false)
+  const { className, text, children } = props
+  const [_, setIsCopied] = useState(false)
 
   const handleCopy = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
@@ -26,15 +26,11 @@ export const CopyButton = (props: CopyButtonProperties) => {
   return (
     <motion.div
       onClick={handleCopy}
-      className={cn('flex size-6 cursor-pointer justify-start', className)}
+      className={cn('flex size-4 cursor-pointer justify-start', className)}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.9 }}
     >
-      {isCopied ? (
-        <CheckCopy type="button" className="size-full overflow-visible" />
-      ) : (
-        <Copy type="button" className="size-full overflow-visible" />
-      )}
+      {children ?? <Copy type="button" className="size-full overflow-visible" />}
     </motion.div>
   )
 }

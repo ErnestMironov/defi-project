@@ -1,0 +1,73 @@
+import type { Strategy } from '@api/maat-finance/types'
+import CopyIcon from '@assets/icons/copy-icon.svg'
+import OptionsDots from '@assets/icons/options-dots.svg'
+import ShareIcon from '@assets/icons/share.svg'
+import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
+import { useClipboard } from '@hooks/common/useClipboard'
+import { BaseContainer } from '@pages/analytics/components/BaseContainer'
+import { type ComponentProps, useState } from 'react'
+
+interface StrategyRowOptionsProperties extends ComponentProps<'div'> {
+  strategy: Strategy
+}
+
+export const StrategyRowOptions = (props: StrategyRowOptionsProperties) => {
+  const { strategy } = props
+  const [isOpen, setIsOpen] = useState(false)
+  const { copyWithToast } = useClipboard()
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsOpen(true)
+        }}
+      >
+        <TableRowOptionsTrigger />
+      </PopoverTrigger>
+      <PopoverContent
+        align="end"
+        className="*:w-full *:rounded-xl *:p-3 hover:*:bg-[#8585A914]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={() => {
+            copyWithToast(strategy.address)
+            setIsOpen(false)
+          }}
+          type="button"
+          className="flex items-center gap-2"
+        >
+          <CopyIcon className="size-4" /> Copy Address
+        </button>
+        <button
+          onClick={() => {
+            copyWithToast(strategy.id)
+            setIsOpen(false)
+          }}
+          type="button"
+          className="flex items-center gap-2"
+        >
+          <CopyIcon className="size-4" /> Copy Strategy ID
+        </button>
+        <button
+          onClick={() => {
+            setIsOpen(false)
+          }}
+          type="button"
+          className="flex items-center gap-2"
+        >
+          <ShareIcon className="size-4" /> Share Link
+        </button>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
+export const TableRowOptionsTrigger = (_props: ComponentProps<'div'>) => {
+  return (
+    <BaseContainer className="flex size-14 items-center justify-center rounded-2xl group-hover:shadow-test-2 [&]:shadow-none">
+      <OptionsDots className="size-4" />
+    </BaseContainer>
+  )
+}

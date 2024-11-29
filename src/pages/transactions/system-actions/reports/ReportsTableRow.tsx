@@ -1,8 +1,10 @@
 import type { ReportType } from '@api/maat-finance/types'
+import Rocket from '@assets/icons/rocket.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
+import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Skeleton } from '@components/ui/skeleton'
 import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { cn } from '@utils/cn'
@@ -12,6 +14,8 @@ import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
 
+import { ReportsRowOptions } from './EventRowOptions'
+
 interface IncentivesTableRowProperties extends ComponentProps<'tr'> {
   report: ReportType
 }
@@ -19,19 +23,29 @@ interface IncentivesTableRowProperties extends ComponentProps<'tr'> {
 export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
   const { className, report, ...rest } = props
   return (
-    <Table.Row
-      className={cn(
-        '[&>td>*]:inline-block [&>td>*]:align-middle [&>td>*]:leading-[0rem]',
-        className,
-      )}
-      {...rest}
-    >
+    <Table.Row className={cn('group', className)} {...rest}>
       <Table.Cell>
-        {SYSTEM_ADDRESSES[report.txFrom as keyof typeof SYSTEM_ADDRESSES]}
+        <div className="flex items-center gap-4">
+          <Rocket className="size-8 shrink-0" />
+          <div>
+            <p className="text-base/[1.5rem]">
+              {SYSTEM_ADDRESSES[report.txFrom as keyof typeof SYSTEM_ADDRESSES]}
+            </p>
+            <div className="flex items-center gap-[0.38rem]">
+              <p className="text-text-2100">{shortenAddress(report.hash)}</p>
+              <CopyButton text={report.hash} />
+              <ScanLink
+                chainId={report.vault.chain_id}
+                txHash={report.hash}
+                className="size-4 shrink-0"
+              />
+            </div>
+          </div>
+        </div>
       </Table.Cell>
       <Table.Cell>
         <div>
-          <IconWithLabelComponent className="size-9" symbol={report.vault.token.symbol} />
+          <IconWithLabelComponent className="size-4" symbol={report.vault.token.symbol} />
         </div>
       </Table.Cell>
       <Table.Cell>
@@ -41,21 +55,15 @@ export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
         })}
       </Table.Cell>
       <Table.Cell>
-        <div>
-          <IconWithLabelComponent className="size-9" symbol={report.vault.chain_id} />
-        </div>
-      </Table.Cell>
-      <Table.Cell>
-        <span>{shortenAddress(report.hash)}</span>
-        <CopyButton text={report.hash} className="ml-4" />
-        <ScanLink
-          chainId={report.vault.chain_id}
-          txHash={report.hash}
-          className="ml-3 size-5 shrink-0"
-        />
+        <IconWithLabelComponent className="size-4" symbol={report.vault.chain_id} />
       </Table.Cell>
       <Table.Cell className="text-gray-100">
         {getFromNow(new Date(report.creation_time).toString())}
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex justify-end">
+          <ReportsRowOptions event={report} />
+        </div>
       </Table.Cell>
     </Table.Row>
   )
@@ -64,30 +72,26 @@ export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
 export const ReportsTableRowSkeleton = (props: ComponentProps<'tr'>) => {
   const { className, ...rest } = props
   return (
-    <Table.Row
-      className={cn(
-        '[&>td>*]:inline-block [&>td>*]:align-middle [&>td>*]:leading-[0rem]',
-        className,
-      )}
-      {...rest}
-    >
+    <Table.Row className={cn(className)} {...rest}>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="size-9" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
-      <Table.Cell className="text-gray-100">
-        <Skeleton className="h-10 w-full" />
+      <Table.Cell>
+        <div className="flex justify-end">
+          <TableRowOptionsTrigger />
+        </div>
       </Table.Cell>
     </Table.Row>
   )

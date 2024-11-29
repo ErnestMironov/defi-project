@@ -1,7 +1,9 @@
 import type { OptionType } from '@components/select/Select'
 import {
+  SelectActionWithIcon,
   SelectChainWithIcon,
   SelectItemWithIcon,
+  SelectStatusWithIcon,
 } from '@components/select/SelectItemWithIcon'
 import {
   CHAIN_IDS_BY_BACKEND_NAMES,
@@ -47,6 +49,12 @@ export const SORT_BY_TVL: OptionType[] = [
   { label: 'Lowest TVL', value: 'Lowest TVL' },
 ]
 
+export const SORT_BY: OptionType[] = [
+  { label: 'Most Relevant', value: 'Most Relevant' },
+  { label: 'APY', value: 'APY' },
+  { label: 'TVL', value: 'TVL' },
+]
+
 export const SELECT_CHAINS: OptionType[] = Object.entries(CHAIN_IDS_BY_BACKEND_NAMES).map(
   ([key, value]) => ({
     label: SelectChainWithIcon({ chainId: Number(value) }),
@@ -70,13 +78,13 @@ export const SELECT_PROTOCOLS: OptionType[] = Object.entries(
 
 export const SELECT_LAST_EVENT_ACTIONS: OptionType[] = Object.entries(
   ANALYTICS_PAGE_EVENT_ACTION_TYPE,
-).map(([key, value]) => ({
-  label: value,
+).map(([key]) => ({
+  label: SelectActionWithIcon({ action: key }),
   value: key,
 }))
 
 export const SELECT_STATUSES: OptionType[] = STATUSES.map((value) => ({
-  label: value.charAt(0).toUpperCase() + value.slice(1),
+  label: SelectStatusWithIcon({ status: value }),
   value,
 }))
 

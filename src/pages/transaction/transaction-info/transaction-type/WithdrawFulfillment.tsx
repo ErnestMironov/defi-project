@@ -27,21 +27,16 @@ export const WithdrawFulfillment = (props: WithdrawFulfillmentProperties) => {
     return <></>
   }
 
-  const tags: Tag[] = ['SYSTEM']
+  const tags: Tag[] = ['System']
 
   if (!withoutRelated) {
-    tags.push('REACTION')
+    tags.push('Reaction')
   }
 
   return (
     <TransactionInfoContainer className={className} {...rest}>
-      <TransactionInfoHeader
-        title="Withdraw fulfillment"
-        tags={tags}
-        status={data?.status}
-        date={data?.creation_time}
-      />
-      <div className="mt-4 grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
+      <TransactionInfoHeader title="Withdraw fulfillment" tags={tags} action={data} />
+      <div className="grid grid-cols-6 gap-3 max-lg:grid-cols-1 max-lg:gap-[0.38rem]">
         <TransactionHash
           value={data?.hash}
           chainId={data?.src_chain_id}

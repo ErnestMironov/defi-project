@@ -1,6 +1,5 @@
 import type { EventsParameters } from '@api/maat-finance/useEvents'
 import type { TableFiltersType } from '@components/filters/TableFilters'
-import { SectionTitle } from '@components/section/SectionTitle'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
@@ -19,19 +18,22 @@ export const TransactionHistory = (props: TransactionHistoryProperties) => {
 
   return (
     <div {...rest} className={cn('', className)}>
-      <SectionTitle>Transactions</SectionTitle>
-      <Tabs className="mt-12" defaultValue="maat">
-        <TabsList className="*:w-[12.5rem]">
-          <TabsTrigger value="maat">MAAT</TabsTrigger>
-          <TabsTrigger value="incentives">INCENTIVES</TabsTrigger>
+      <Tabs defaultValue="maat">
+        <TabsList className="w-full justify-start rounded-none border-b border-stroke-100 px-8 *:py-3">
+          <TabsTrigger variant="underline" value="maat">
+            Maat Events
+          </TabsTrigger>
+          <TabsTrigger variant="underline" value="incentives">
+            Incentives
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="maat">
+        <TabsContent value="maat" className="mt-0">
           <MaatTransactionsHistory
             filters={maatFilters}
             eventParameters={eventParameters}
           />
         </TabsContent>
-        <TabsContent value="incentives">
+        <TabsContent value="incentives" className="mt-0">
           <IncentivesHistory filters={incentivesFilters} />
         </TabsContent>
       </Tabs>

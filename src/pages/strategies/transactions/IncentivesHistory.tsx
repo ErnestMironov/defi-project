@@ -1,3 +1,6 @@
+import ActionIcon from '@assets/icons/action.svg'
+import AssetIcon from '@assets/icons/asset.svg'
+import ChainIcon from '@assets/icons/chain.svg'
 import {
   SELECT_CHAINS,
   SELECT_INCENTIVES_ACTIONS,
@@ -19,13 +22,24 @@ export const IncentivesHistory: React.FC<IncentivesHistoryProperties> = (props) 
     <IncentivesHistoryDesktop
       filters={{
         search: { value: '', placeholder: 'Tx Hash' },
+        chain: {
+          items: SELECT_CHAINS,
+          placeholder: 'All Chains',
+          value: [],
+          icon: <ChainIcon />,
+        },
+        token: {
+          items: SELECT_TOKENS,
+          placeholder: 'All Tokens',
+          value: [],
+          icon: <AssetIcon />,
+        },
         actions_type: {
           items: SELECT_INCENTIVES_ACTIONS,
           placeholder: 'All Actions',
           value: [],
+          icon: <ActionIcon />,
         },
-        token: { items: SELECT_TOKENS, placeholder: 'All Tokens', value: [] },
-        chain: { items: SELECT_CHAINS, placeholder: 'All Chains', value: [] },
       }}
       {...props}
     />

@@ -10,9 +10,6 @@ export interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   apy?: number
   tvl?: number
   rebalancingVolume?: number
-  img: string
-  imageClassName?: string
-  withLink?: boolean
   loading?: boolean
   error?: any
   loadingVolume?: boolean

@@ -1,12 +1,13 @@
 import type { Action } from '@api/maat-finance/types'
 import { useGetTransactionInfo } from '@api/maat-finance/useGetTransactionInfo'
+import ArrowLeft from '@assets/icons/arrow-left.svg'
 import { SectionTitle } from '@components/section/SectionTitle'
 import { MAIN_ACTION_TYPE } from '@constants/action-type'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { Footer } from '@layouts/footer/Footer'
 import { cn } from '@utils/cn'
 import { type ComponentProps, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import type { Address } from 'viem'
 
 import { Breadcrumbs } from './Breadcrumbs'
@@ -30,7 +31,7 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
   const { isBelowDesktop } = useDeviceWidth()
   const { tx_hash } = useParams()
   const { data, isLoading } = useGetTransactionInfo(tx_hash as Address)
-
+  const navigate = useNavigate()
   const [mainAction, setMainAction] = useState<Action | undefined>(undefined)
   const [relatedActions, setRelatedActions] = useState<Action[]>([])
 
@@ -78,8 +79,17 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
-      <Breadcrumbs />
-      <TransactionHeader data={mainAction} className="mt-10" />
+      <button
+        type="button"
+        className="mt-16 flex items-center gap-1 text-[1.25rem]/[2rem] font-medium text-text-2100"
+        onClick={() => navigate(-1)}
+      >
+        <div className="flex size-6 items-center justify-center">
+          <ArrowLeft className="size-4" />
+        </div>
+        <span>Back to Events</span>
+      </button>
+      {/* <TransactionHeader data={mainAction} className="mt-10" /> */}
       <TransactionInfo
         isLoading={isLoading}
         className="mt-10"

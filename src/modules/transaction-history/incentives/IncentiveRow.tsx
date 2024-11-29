@@ -1,8 +1,11 @@
 import type { IncentiveEvent } from '@api/maat-finance/types'
+import CheckSquare from '@assets/icons/check-square.svg'
+import CompounderIcon from '@assets/icons/compounder.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
+import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Skeleton } from '@components/ui/skeleton'
 import { INCENTIVE_ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
@@ -12,6 +15,8 @@ import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
+
+import { IncentiveRowOptions } from './EventRowOptions'
 
 interface IncentiveRowProperties extends ComponentProps<'div'> {
   event: IncentiveEvent
@@ -25,43 +30,64 @@ export const IncentiveRow = (props: IncentiveRowProperties) => {
     const token = event.token_in || event.token_out
     if (amount && token) {
       return (
-        <div className="flex items-center gap-3">
-          <span className="block min-w-10">
+        <div className="flex items-center gap-2">
+          <p className="leading-4">
             {formatAmount(formatUnits(BigInt(amount), token.decimals), {
               notation: 'compact',
               maximumFractionDigits: 4,
             })}
-          </span>
-          <IconWithLabelComponent symbol={token.symbol} className="size-8" />
+          </p>
+          <IconWithLabelComponent symbol={token.symbol} />
         </div>
       )
     }
-    return '-'
+    return (
+      <div className="h-14 w-full rounded-lg border border-stroke-100 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center bg-repeat dark:bg-[url('/src/assets/icons/dashes-dark.svg')]" />
+    )
   }
 
   return (
-    <Table.Row>
+    <Table.Row className="group">
       <Table.Cell>
-        {INCENTIVE_ACTION_TYPE[event.action_type as keyof typeof INCENTIVE_ACTION_TYPE]}
+        <div className="flex items-center gap-4">
+          <CheckSquare className="size-8 shrink-0" />
+          <div>
+            <p className="leading-4">
+              {
+                INCENTIVE_ACTION_TYPE[
+                  event.action_type as keyof typeof INCENTIVE_ACTION_TYPE
+                ]
+              }
+            </p>
+            <div className="flex items-center gap-[0.38rem]">
+              <p className="text-text-2100">{shortenAddress(event.hash)}</p>
+              <CopyButton text={event.hash} />
+              <ScanLink
+                chainId={event.src_chain_id}
+                txHash={event.hash}
+                className="size-4 shrink-0"
+              />
+            </div>
+          </div>
+        </div>
       </Table.Cell>
-      <Table.Cell className="capitalize">{event.entity_initializer}</Table.Cell>
       <Table.Cell>{renderAmount()}</Table.Cell>
+      <Table.Cell className="capitalize">
+        <div className="flex items-center gap-2">
+          <CompounderIcon />
+          <p>{event.entity_initializer}</p>
+        </div>
+      </Table.Cell>
       <Table.Cell>
         <IconWithLabelComponent symbol={event.src_chain_id} className="size-8 gap-3" />
       </Table.Cell>
-      <Table.Cell>
-        <div className="flex items-center">
-          <p className="min-w-[7.5rem]">{shortenAddress(event.hash)}</p>
-          <CopyButton text={event.hash} className="ml-4 size-6 shrink-0" />
-          <ScanLink
-            chainId={event.src_chain_id}
-            txHash={event.hash}
-            className="ml-3 size-5 shrink-0"
-          />
-        </div>
-      </Table.Cell>
-      <Table.Cell className="text-gray-100">
+      <Table.Cell className="text-text-2100">
         {getFromNow(dayjs(event.creation_time).toString())}
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex justify-end">
+          <IncentiveRowOptions event={event} />
+        </div>
       </Table.Cell>
     </Table.Row>
   )
@@ -70,30 +96,26 @@ export const IncentiveRow = (props: IncentiveRowProperties) => {
 export const IncentivesRowSkeleton = (props: ComponentProps<'tr'>) => {
   const { className, ...rest } = props
   return (
-    <Table.Row
-      className={cn(
-        '[&>td>*]:inline-block [&>td>*]:align-middle [&>td>*]:leading-[0rem]',
-        className,
-      )}
-      {...rest}
-    >
+    <Table.Row className={cn(className)} {...rest}>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-40" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-8 w-40" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
-      <Table.Cell className="text-gray-100">
-        <Skeleton className="h-8 w-20" />
+      <Table.Cell>
+        <div className="flex justify-end">
+          <TableRowOptionsTrigger />
+        </div>
       </Table.Cell>
     </Table.Row>
   )

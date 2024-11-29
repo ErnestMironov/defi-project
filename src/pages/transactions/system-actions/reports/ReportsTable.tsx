@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-no-useless-fragment */
 import { useReports } from '@api/maat-finance/useReports'
+import AssetIcon from '@assets/icons/asset.svg'
+import ChainIcon from '@assets/icons/chain.svg'
 import Sort from '@assets/icons/sort.svg'
 import { getMultiSelectParameters } from '@components/filters/getMultiSelectParamsFromEntries'
 import type { TableFiltersType } from '@components/filters/TableFilters'
@@ -21,8 +23,18 @@ export const ReportsTable = (props: ReportsTableProperties) => {
   const { className, ...rest } = props
   const [filters, setFilters] = useState<TableFiltersType>({
     search: { value: '', placeholder: 'Tx Hash' },
-    token: { items: SELECT_TOKENS, value: [], placeholder: 'All Tokens' },
-    chain: { items: SELECT_CHAINS, value: [], placeholder: 'All Chains' },
+    chain: {
+      items: SELECT_CHAINS,
+      value: [],
+      placeholder: 'All Chains',
+      icon: <ChainIcon />,
+    },
+    token: {
+      items: SELECT_TOKENS,
+      value: [],
+      placeholder: 'All Tokens',
+      icon: <AssetIcon />,
+    },
   })
   const { search, ...selectFilters } = filters
   const { page, size, onPageChange, onPageSizeChange } = usePages()
@@ -45,53 +57,65 @@ export const ReportsTable = (props: ReportsTableProperties) => {
   }
 
   const renderBody = () => {
-    if (isLoading || error) {
-      return (
-        <>
-          {Array.from({ length: size }).map((_, index) => (
-            <ReportsTableRowSkeleton key={index} />
-          ))}
-        </>
-      )
+    switch (true) {
+      case isLoading || error: {
+        return (
+          <>
+            {Array.from({ length: size }).map((_, index) => (
+              <ReportsTableRowSkeleton key={index} className="h-[5.4rem]" />
+            ))}
+          </>
+        )
+      }
+      case data?.total_items === 0: {
+        return <Table.EmptyState>No data was found</Table.EmptyState>
+      }
+      default: {
+        return (
+          <>
+            {data?.items?.map((report, i) => <ReportsTableRow report={report} key={i} />)}
+          </>
+        )
+      }
     }
-    if (data?.total_items === 0) {
-      return <Table.EmptyState>No data was found</Table.EmptyState>
-    }
-    return (
-      <>{data?.items?.map((report, i) => <ReportsTableRow report={report} key={i} />)}</>
-    )
   }
   return (
-    <div className={cn('', className)} {...rest}>
-      <TableFilters filters={filters} setFilters={handleFiltersChange} />
-      <Table className={cn(isPlaceholderData && 'animate-pulse')}>
-        <Table.Head>
-          <Table.Row>
-            <Table.HeadCell>From</Table.HeadCell>
-            <Table.HeadCell>Token</Table.HeadCell>
-            <Table.HeadCell>PPS</Table.HeadCell>
-            <Table.HeadCell>Chain</Table.HeadCell>
-            <Table.HeadCell>Tx Hash</Table.HeadCell>
-            <Table.HeadCell
-              className={cn('cursor-pointer')}
-              onClick={() => onSortChange('creation_time')}
-            >
-              <div className="flex items-center gap-[0.79rem]">
-                <span>Created</span>
-                {sort === 'creation_time' && (
-                  <Sort
-                    className={cn('size-5 shrink-0', orderBy === 'desc' && 'rotate-180')}
-                  />
-                )}
-              </div>
-            </Table.HeadCell>
-          </Table.Row>
-        </Table.Head>
-        <Table.Body>{renderBody()}</Table.Body>
-      </Table>
+    <>
+      <div className={cn('', className)} {...rest}>
+        <TableFilters filters={filters} setFilters={handleFiltersChange} />
+        <Table className={cn(isPlaceholderData && 'animate-pulse')}>
+          <Table.Head>
+            <Table.Row>
+              <Table.HeadCell className="w-[28.5rem]">From</Table.HeadCell>
+              <Table.HeadCell className="w-[18.75rem]">Token</Table.HeadCell>
+              <Table.HeadCell className="w-[18.25rem]">PPS</Table.HeadCell>
+              <Table.HeadCell className="w-60">Chain</Table.HeadCell>
+              <Table.HeadCell
+                className={cn('cursor-pointer w-[12.5rem]')}
+                onClick={() => onSortChange('creation_time')}
+              >
+                <div className="flex items-center gap-[0.38rem]">
+                  <span>Created</span>
+                  {sort === 'creation_time' && (
+                    <Sort
+                      className={cn(
+                        'size-5 shrink-0',
+                        orderBy === 'desc' && 'rotate-180',
+                      )}
+                    />
+                  )}
+                </div>
+              </Table.HeadCell>
+            </Table.Row>
+          </Table.Head>
+          <Table.Body className="[&_tr:last-child:after]:rounded-b-[1.25rem]">
+            {renderBody()}
+          </Table.Body>
+        </Table>
+      </div>
       {data && (
         <Pagination
-          className="mt-6"
+          className="absolute -bottom-16"
           totalCount={data?.total_items}
           currentPage={page}
           onPageChange={onPageChange}
@@ -99,6 +123,6 @@ export const ReportsTable = (props: ReportsTableProperties) => {
           size={size}
         />
       )}
-    </div>
+    </>
   )
 }

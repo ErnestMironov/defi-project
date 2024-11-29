@@ -124,6 +124,7 @@ export const formatAmount = (
   if (!value && value !== 0) return 'N/A'
 
   const parsedValue = Number.parseFloat(value.toString())
+
   return new Intl.NumberFormat('en-US', {
     ...options,
   }).format(parsedValue)

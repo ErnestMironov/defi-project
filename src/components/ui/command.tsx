@@ -35,7 +35,7 @@ const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, reference) => (
-  <div className="flex items-center border-b px-3">
+  <div className="flex items-center border-b border-stroke-100 px-3">
     <Search className="mr-2 size-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       ref={reference}
@@ -78,7 +78,7 @@ const CommandGroup = React.forwardRef<
 >(({ className, ...props }, reference) => (
   <CommandPrimitive.Group
     ref={reference}
-    className={cn('*:flex *:flex-col *:gap-5', className)}
+    className={cn('*:flex *:flex-col *:gap-1', className)}
     {...props}
   />
 ))
@@ -104,8 +104,9 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={reference}
     className={cn(
-      'group relative flex w-full cursor-pointer select-none items-center justify-between gap-2 text-lg outline-none',
-      'hover:before:bg-main-15 before:pointer-events-none before:h-[calc(100%+1rem)] before:w-[calc(100%+1rem)] before:rounded-xl before:absolute before:-top-2 before:-left-2 before:transition-width before:duration-200 before:ease-in-out before:group-hover:w-full',
+      'group relative flex w-full p-3 cursor-pointer select-none rounded-[0.75rem] items-center justify-between gap-[0.38rem] text-sm outline-none',
+      'hover:bg-[#8585A914] data-[select=true]:bg-[#8585A914]',
+      className,
     )}
     {...props}
   >

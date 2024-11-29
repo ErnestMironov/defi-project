@@ -128,7 +128,6 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
           { id: 'apy', label: 'APY' },
           { id: 'tvl', label: 'TVL' },
         ]}
-        layoutId="tokens"
         onTabChange={(tab) => setActiveTab(tab as 'apy' | 'tvl')}
       />
       <div className="mt-6 flex items-start">

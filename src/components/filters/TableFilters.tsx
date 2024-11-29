@@ -4,14 +4,15 @@ import { SearchInput } from '@components/text-input/SearchInput'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
-export type SelectOption = {
+export type MultiSelectOption = {
   items: OptionType[]
   value: OptionType[]
   placeholder?: string
+  icon?: React.ReactNode
 }
 export type SearchOption = { value: string; placeholder?: string }
 
-type SelectFilters =
+type MultiSelectFilters =
   | 'actions_type'
   | 'token'
   | 'status'
@@ -24,7 +25,7 @@ type SelectFilters =
   | 'incentive-from'
 
 export type TableFiltersType = {
-  [key in SelectFilters]?: SelectOption
+  [key in MultiSelectFilters]?: MultiSelectOption
 } & { search?: SearchOption }
 
 interface TableFiltersProperties extends ComponentProps<'div'> {
@@ -37,15 +38,13 @@ export const TableFilters = (props: TableFiltersProperties) => {
   const { search: searchFilter, ...selectFilters } = filters
   return (
     <div
-      className={cn(
-        'mb-2 mt-8 flex items-center gap-4 rounded-3xl bg-cards p-6 *:w-[15.625rem] *:h-[3.375rem]',
-        className,
-      )}
+      className={cn('flex items-center gap-4 pr-4 border-b border-stroke-100', className)}
       {...rest}
     >
       {searchFilter && (
         <SearchInput
-          className="grow"
+          className="grow border-r border-stroke-100 bg-input-default px-6"
+          classNames={{ input: 'py-6' }}
           value={searchFilter.value}
           onValueChange={(value: string) =>
             setFilters({
@@ -56,27 +55,31 @@ export const TableFilters = (props: TableFiltersProperties) => {
           placeholder={searchFilter.placeholder}
         />
       )}
-      {Object.entries(selectFilters).map(([key, value]) => {
-        return (
-          <MultiSelect
-            variant="outline"
-            key={key}
-            options={value.items}
-            value={value.value}
-            onChange={(option) =>
-              setFilters({
-                ...filters,
-                [key]: {
-                  ...filters[key as keyof typeof filters],
-                  items: value.items,
-                  value: option,
-                },
-              })
-            }
-            placeholder={value.placeholder}
-          />
-        )
-      })}
+      <div className="flex h-full items-center gap-2 *:w-[12.5rem]">
+        {Object.entries(selectFilters).map(([key, value]) => {
+          return (
+            <MultiSelect
+              variant="outline"
+              key={key}
+              icon={value.icon}
+              options={value.items}
+              value={value.value}
+              onChange={(option) =>
+                setFilters({
+                  ...filters,
+                  [key]: {
+                    ...filters[key as keyof typeof filters],
+                    items: value.items,
+                    value: option,
+                  },
+                })
+              }
+              placeholder={value.placeholder}
+            />
+          )
+        })}
+      </div>
+
       {/* Clear filters  */}
       {/* {Object.values(selectFilters).some((value) => {
         return value.value.length > 0

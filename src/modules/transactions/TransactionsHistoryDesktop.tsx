@@ -6,7 +6,6 @@ import { getMultiSelectParameters } from '@components/filters/getMultiSelectPara
 import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
-import { SectionTitle } from '@components/section/SectionTitle'
 import { Table } from '@components/table'
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
@@ -60,7 +59,7 @@ export const TransactionsHistoryDesktop = (
       case isPlaceholderData:
       case !!error: {
         return Array.from({ length: size }).map((_, index) => (
-          <TransactionHistoryRowSkeleton key={index} className="h-24" />
+          <TransactionHistoryRowSkeleton key={index} className="h-[5.4rem]" />
         ))
       }
       case data?.items?.length === 0: {
@@ -78,19 +77,17 @@ export const TransactionsHistoryDesktop = (
     }
   }
   return (
-    <div {...props} className={cn('', className)}>
-      <SectionTitle>Events</SectionTitle>
+    <>
       <TableFilters filters={filters} setFilters={handleFiltersChange} />
-      <Table>
+      <Table className={cn('', className)}>
         <Table.Head>
-          <Table.Row>
-            <Table.HeadCell>Action</Table.HeadCell>
-            <Table.HeadCell>Status</Table.HeadCell>
+          <Table.Row className="text-text-2100 *:py-4 *:first:pl-7 *:last:pr-7">
+            <Table.HeadCell className="w-[23.5rem]">Action</Table.HeadCell>
             <Table.HeadCell
-              className={cn('cursor-pointer')}
+              className={cn('cursor-pointer w-[18.75rem]')}
               onClick={() => onSortChange('amount')}
             >
-              <div className="flex items-center gap-[0.79rem]">
+              <div className="flex items-center gap-[0.38rem]">
                 <span>Amount</span>
                 {sort === 'amount' && (
                   <Sort
@@ -99,14 +96,14 @@ export const TransactionsHistoryDesktop = (
                 )}
               </div>
             </Table.HeadCell>
-            <Table.HeadCell>Chain</Table.HeadCell>
-            <Table.HeadCell>From</Table.HeadCell>
-            <Table.HeadCell>Tx Hash</Table.HeadCell>
+            <Table.HeadCell className="w-[18.75rem]">Chain</Table.HeadCell>
+            <Table.HeadCell className="w-[16.25rem]">Status</Table.HeadCell>
+            <Table.HeadCell className="w-[16.25rem]">From</Table.HeadCell>
             <Table.HeadCell
-              className={cn('cursor-pointer')}
+              className={cn('cursor-pointer w-[12.5rem]')}
               onClick={() => onSortChange('creation_time')}
             >
-              <div className="flex items-center gap-[0.79rem]">
+              <div className="flex items-center gap-[0.38rem]">
                 <span>Created</span>
                 {sort === 'creation_time' && (
                   <Sort
@@ -121,7 +118,7 @@ export const TransactionsHistoryDesktop = (
       </Table>
       {data && (
         <Pagination
-          className="mt-6"
+          className="absolute inset-x-0 -bottom-16"
           currentPage={page}
           totalCount={data.total_items}
           onPageChange={onPageChange}
@@ -129,6 +126,6 @@ export const TransactionsHistoryDesktop = (
           onPageSizeChange={onPageSizeChange}
         />
       )}
-    </div>
+    </>
   )
 }
