@@ -30,7 +30,7 @@ svg {
 
     body {
       width: 100vw;
-      @apply font-arial text-text-1100 bg-bg;
+      @apply font-montreal font-medium text-text-1100 bg-bg;
       &.scroll-locked {
         overflow: hidden !important;
         touch-action: none;

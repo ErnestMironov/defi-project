@@ -15,7 +15,7 @@ const TableHead = forwardRef<
   return (
     <thead
       className={cn(
-        '[&_tr>th]:text-text-2100 *:border-b [&>tr>th]:py-4 [&>tr>th]:first:pl-7 [&>tr>th]:last:pr-7',
+        '[&_tr>th]:text-text-2100 *:border-b *:border-stroke-100 [&>tr>th]:py-4 [&>tr>th]:first:pl-7 [&>tr>th]:last:pr-7',
         className,
       )}
       {...rest}
@@ -84,7 +84,7 @@ const TableHeadCell = forwardRef<
   return (
     <th
       {...rest}
-      className={cn('px-4 py-2 text-left font-normal', rest.className)}
+      className={cn('px-4 py-2 text-left font-medium', rest.className)}
       ref={reference}
     >
       {children}
@@ -125,7 +125,7 @@ export const Table = forwardRef<
 >(({ className, children, ...rest }, reference) => (
   <table
     ref={reference}
-    className={cn('w-full overflow-hidden text-sm/[1.5rem] font-normal', className)}
+    className={cn('w-full overflow-hidden text-sm/[1.5rem] font-medium', className)}
     {...rest}
   >
     {children}

@@ -37,7 +37,7 @@ interface SingleSelectTriggerProperties
 const singleSelectVariants = cva('', {
   variants: {
     variant: {
-      default: 'rounded-xl border border-stroke-100 bg-cards',
+      default: 'rounded-xl border border-stroke-100 bg-cards-widget',
       /**
        * @description color2 is cards-widget
        */
@@ -77,8 +77,8 @@ const SingleSelectTrigger = (props: SingleSelectTriggerProperties) => {
       className={cn(
         'flex size-full items-center justify-between [&>svg]:size-4',
         'shadow-test',
-        className,
         singleSelectVariants({ variant }),
+        className,
       )}
     >
       <div className="flex items-center gap-2 [&_svg]:size-4">
