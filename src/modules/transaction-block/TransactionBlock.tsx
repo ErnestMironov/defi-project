@@ -1,5 +1,4 @@
 import { useGetSwapRoute } from '@api/lifi/hooks/useGetSwapRoute'
-import { ShadowBox } from '@components/box/ShadowBox'
 import { Button } from '@components/ui/button'
 import { TX_TYPE } from '@constants/txTypes'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
@@ -34,9 +33,9 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
 
   return (
     <>
-      <ShadowBox
+      <div
         className={clsx(
-          'flex w-full flex-col px-6 py-8 max-lg:gap-6 max-lg:p-4',
+          'gradient-border-animated relative flex w-full flex-col rounded-3xl px-6 py-8 shadow-block max-lg:gap-6 max-lg:p-4',
           className,
         )}
         {...rest}
@@ -56,7 +55,7 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
             Connect wallet
           </Button>
         )}
-      </ShadowBox>
+      </div>
       <FailModal />
       <DoneModal />
     </>

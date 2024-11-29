@@ -202,6 +202,7 @@ module.exports = {
         'dark-shadow--hover': 'var(--dark-shadow-hover)',
         'test': 'var(--shadow-test)',
         'test-2': 'var(--shadow-test-2)',
+        'block': '0px 6px 66px 0px rgba(97, 96, 255, 0.15), 0px 6px 9px 0px rgba(97, 96, 255, 0.04)',
       },
       keyframes: {
         "accordion-down": {
@@ -234,6 +235,10 @@ module.exports = {
           '0%': { transform: 'translateX(-200%)', width: '50%' },
           '100%': { transform: 'translateX(calc(100% + 100/50*100%))', width: '50%' },
         },
+        'gradient-rotate': {
+          '0%': { 'background-position': '0% 0%' },
+          '100%': { 'background-position': '100% 100%' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -243,6 +248,7 @@ module.exports = {
           translateIn: 'translateIn 0.15s ease-in-out forwards',
           "caret-blink": "caret-blink 1.25s ease-out infinite",
           shimmer: 'shimmer 3s infinite linear',
+          'gradient-rotate': 'gradient-rotate 3s linear infinite',
         },
         fillOpacity: {
           '0': '0',
