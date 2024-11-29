@@ -1,7 +1,6 @@
 import { Button } from '@components/ui/button'
 import { useAppKitTheme } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
-import { AnimatePresence, motion } from 'framer-motion'
 import type { ComponentProps } from 'react'
 
 import MoonV1Svg from './assets/moon-v1.svg'
@@ -14,38 +13,71 @@ export function ThemeToggler(props: ThemeToggleProperties) {
   const { className } = props
   const { setTheme, theme } = useTheme()
   const { setThemeMode } = useAppKitTheme()
-  const handleThemeToggle = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-    setThemeMode(theme === 'dark' ? 'light' : 'dark')
+
+  const handleSetLightTheme = () => {
+    setTheme('light')
+    setThemeMode('light')
+  }
+
+  const handleSetDarkTheme = () => {
+    setTheme('dark')
+    setThemeMode('dark')
   }
 
   return (
-    <Button
-      size="icon"
-      variant="container"
-      onClick={handleThemeToggle}
+    <div
       className={cn(
-        'flex size-12 justify-center items-center overflow-hidden',
+        'relative flex items-center w-auto h-auto rounded-[12px] p-2 gap-2',
+        'transition-colors',
+        theme === 'light' ? 'border-stroke-element border' : 'border-transparent',
         className,
       )}
     >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={theme}
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 20, opacity: 0 }}
-          transition={{
-            y: { type: 'spring', stiffness: 500, damping: 25 },
-          }}
-        >
-          {theme === 'dark' ? (
-            <MoonV1Svg className="size-7 overflow-visible" />
-          ) : (
-            <SunV1Svg className="size-7 overflow-visible" />
+      {/* Анимированный фон */}
+      {/* <motion.div
+        className={cn(
+          'absolute left-0 top-0 z-0 h-[40px] w-[40px] rounded-[12px] mx-2 my-2 bg-main-100',
+        )}
+        initial={false}
+        animate={{
+          x: theme === 'light' ? '0%' : '112%',
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 300,
+          damping: 25,
+        }}
+      /> */}
+
+      {/* Кнопка для светлой темы */}
+      <div className="relative z-10 flex w-1/2 items-center justify-center ">
+        <Button
+          size="icon"
+          variant="container"
+          onClick={handleSetLightTheme}
+          className={cn(
+            'flex justify-center items-center w-auto h-auto rounded-[12px]',
+            theme === 'light' ? 'bg-main-100' : 'bg-auto',
           )}
-        </motion.div>
-      </AnimatePresence>
-    </Button>
+        >
+          <SunV1Svg className="size-5" />
+        </Button>
+      </div>
+
+      {/* Кнопка для темной темы */}
+      <div className="relative z-10 flex w-1/2 items-center justify-center">
+        <Button
+          size="icon"
+          variant="container"
+          onClick={handleSetDarkTheme}
+          className={cn(
+            'flex justify-center items-center w-auto h-auto border-xl',
+            theme === 'light' ? 'text-white ' : 'text-gray-500 bg-main-100',
+          )}
+        >
+          <MoonV1Svg className="size-5" />
+        </Button>
+      </div>
+    </div>
   )
 }

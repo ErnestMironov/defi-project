@@ -46,7 +46,7 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
       className={clsx('flex items-center', hidden && 'invisible', className)}
     >
       <Link onClick={close} to="/" className="flex items-center justify-center">
-        <Logo className="relative z-[51] size-9 fill-text" />
+        <Logo className="fill-text relative z-[51] size-9" />
       </Link>
       <div className="relative z-[51] ml-auto flex items-center gap-4">
         {opened && (
@@ -55,12 +55,12 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
           </Link>
         )}
         <EmptyWallet
-          className="size-6 overflow-visible [&_path]:fill-text"
+          className="[&_path]:fill-text size-6 overflow-visible"
           onClick={() => openConnectModal()}
         />
         <div
           onClick={toggle}
-          className="relative z-[51] size-6 overflow-visible [&>svg]:size-full [&_path]:fill-text"
+          className="[&_path]:fill-text relative z-[51] size-6 overflow-visible [&>svg]:size-full"
         >
           {opened ? <Close /> : <Burger />}
         </div>

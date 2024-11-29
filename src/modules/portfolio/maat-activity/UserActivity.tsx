@@ -55,7 +55,6 @@ export const UserActivity = (props: UserActivityProperties) => {
       )}
       {!!filteredByStatusData?.completed.length && (
         <>
-          <h6 className="mt-6 text-base text-gray-100">Completed</h6>
           <div className={cn('space-y-6 mt-5 overflow-y-auto -mr-2 pr-2 user-activity')}>
             {filteredByStatusData?.completed.map((event, i) => (
               <UserTransactionItem key={i} event={event} />

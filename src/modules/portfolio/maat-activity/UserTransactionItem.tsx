@@ -1,30 +1,95 @@
 import type { Event } from '@api/maat-finance/types'
-import Expand from '@assets/icons/expand-with-bg.svg'
-import LinkWithBrackets from '@assets/icons/link-with-bracket.svg'
+import LinkIcon from '@assets/icons/externalLinkIcon.svg'
+import TransactionDetails from '@assets/icons/TransactionDetails.svg'
 import { ScanLink } from '@components/scan-link/ScanLink'
-import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
-import { formatAmount, formatUsdValue } from '@utils/formatValue'
-import dayjs from 'dayjs'
+import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import { formatUnits } from 'viem'
 
 import DepositIcon from '../assets/icons/deposit.svg'
-import WithdrawIcon from '../assets/icons/withdraw.svg'
+import WithdrawIcon from '../assets/icons/portfolioWithdraw.svg'
+import { StatusLabel } from '../components/StatusLabel'
 
 interface UserTransactionItemProperties extends ComponentProps<'div'> {
   event: Event
 }
 
 export const STATUS_MAP = {
-  success: 'Success',
+  completed: 'completed',
   'in progress': 'Pending',
   failed: 'Failed',
 } as const
+
+const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props) => {
+  const { event } = props
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger className="rounded-xl border p-2 text-gray-700 hover:bg-gray-200">
+        <span className="size-full shadow-test">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="17"
+            height="16"
+            viewBox="0 0 17 16"
+            fill="none"
+          >
+            <path
+              d="M8.29167 8.66536C8.65986 8.66536 8.95833 8.36689 8.95833 7.9987C8.95833 7.63051 8.65986 7.33203 8.29167 7.33203C7.92348 7.33203 7.625 7.63051 7.625 7.9987C7.625 8.36689 7.92348 8.66536 8.29167 8.66536Z"
+              stroke="#8585A9"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M8.29167 4.0013C8.65986 4.0013 8.95833 3.70283 8.95833 3.33464C8.95833 2.96645 8.65986 2.66797 8.29167 2.66797C7.92348 2.66797 7.625 2.96645 7.625 3.33464C7.625 3.70283 7.92348 4.0013 8.29167 4.0013Z"
+              stroke="#8585A9"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M8.29167 13.3333C8.65986 13.3333 8.95833 13.0349 8.95833 12.6667C8.95833 12.2985 8.65986 12 8.29167 12C7.92348 12 7.625 12.2985 7.625 12.6667C7.625 13.0349 7.92348 13.3333 8.29167 13.3333Z"
+              stroke="#8585A9"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content
+        className="mr-2 mt-4 w-[248px]  rounded-xl border border-stroke-40100 bg-white p-2 shadow-[0px_6px_66px_0px_rgba(0,0,0,0.06),0px_6px_9px_0px_rgba(0,0,0,0.04)]"
+        side="left"
+        align="end"
+      >
+        <DropdownMenu.Item className="cursor-pointer rounded-xl p-4 hover:[background:linear-gradient(0deg,rgba(133,133,169,0.08)0%,rgba(133,133,169,0.08)100%),#FFF]">
+          <Link
+            to={`${ROUTES.TRANSACTIONS}/${event.hash}`}
+            className="flex w-full items-center gap-4"
+          >
+            <TransactionDetails className="size-5" />
+            <p className="text-base">Transaction Details</p>
+          </Link>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item className="cursor-pointer rounded-xl p-4 hover:[background:linear-gradient(0deg,rgba(133,133,169,0.08)0%,rgba(133,133,169,0.08)100%),#FFF]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <LinkIcon className="size-5" />
+              <p className="ml-1 text-base">Etherscan</p>
+            </div>
+            <ScanLink chainId={event.src_chain_id} txHash={event.hash} className="ml-1" />
+          </div>
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  )
+}
 
 export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const { event, className, ...rest } = props
@@ -32,7 +97,9 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const renderIcon = () => {
     switch (event.action_type) {
       case 'DEPOSIT': {
-        return <DepositIcon className="size-full" />
+        return (
+          <DepositIcon className="size-full [&_path:first-child]:stroke-red-100 [&_path]:fill-red-100" />
+        )
       }
       case 'WITHDRAW':
       case 'WITHDRAW_REQUEST': {
@@ -48,64 +115,36 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
     <div className={cn('flex items-center', className)} {...rest}>
       <div
         className={cn(
-          'relative flex size-9 items-center justify-center rounded-full bg-gray-20',
-          event.status === 'failed' && 'border-[0.0938rem] border-red-50 bg-input-error',
+          'relative flex size-14 items-center justify-center rounded-xl bg-main-15',
+          event.action_type === 'DEPOSIT' && 'bg-red-15',
         )}
       >
         <div
-          className={cn(
-            'size-5 [&_path]:fill-gray-80',
-            event.status === 'failed' && '[&_path]:fill-red-50',
-          )}
+          className={cn('size-10', event.status === 'failed' && '[&_path]:fill-red-50')}
         >
           {renderIcon()}
         </div>
-        <TokenIconComponent
-          symbol={event.src_chain_id}
-          className="absolute -right-0.5 bottom-0 size-3.5 rounded-full border border-cards"
-        />
       </div>
       <div className="ml-3 space-y-1">
         <div className="flex items-center">
-          <p className="text-[1.25rem]/[1.5rem] font-medium text-text">
+          <p className="text-text text-[1.25rem]/[1.5rem] font-medium">
             {
               LAST_EVENT_ACTION_TYPE[
                 event.action_type as keyof typeof LAST_EVENT_ACTION_TYPE
               ]
             }
           </p>
-          <Link to={`${ROUTES.TRANSACTIONS}/${event.hash}`} className="ml-[0.38rem]">
+          {/* <Link to={`${ROUTES.TRANSACTIONS}/${event.hash}`} className="ml-[0.38rem]">
             <Expand className="size-6" />
           </Link>
           <ScanLink
             chainId={event.src_chain_id}
             txHash={event.hash}
             className="ml-1 size-6"
-          >
-            <LinkWithBrackets className="size-full" />
-          </ScanLink>
+          /> */}
         </div>
         <p className="text-base text-gray-100">
-          {dayjs(event.creation_time).format('DD/MM/YY HH:mm')}
-          <span
-            className={cn(
-              'ml-2 text-gray-100',
-              event.status === 'success' && 'text-green-100',
-              event.status === 'failed' && 'text-red-100',
-              event.status === 'in progress' && 'text-dark-blue-100',
-            )}
-          >
-            {STATUS_MAP[event.status as keyof typeof STATUS_MAP]}
-          </span>
-        </p>
-      </div>
-      <div className="ml-auto space-y-1">
-        <div className="flex items-center gap-[0.38rem]">
-          <TokenIconComponent
-            symbol={event.vault.token.symbol}
-            className="size-[1.125rem]"
-          />
-          <p className="text-[1.25rem]/[1.5rem] font-medium">
+          <p className="text-base font-medium">
             {formatAmount(
               formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
               {
@@ -113,10 +152,18 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               },
-            )}
+            )}{' '}
+            {event.vault.token.symbol}
           </p>
+          {/*  */}
+        </p>
+      </div>
+      <div className="ml-auto space-y-1">
+        <div className="flex items-center gap-[0.38rem]">
+          <StatusLabel status={event.status} />
+          <DropdownMenuForPortfolio event={event} />
         </div>
-        <p className="text-end text-base text-gray-100">
+        {/* <p className="text-end text-base text-gray-100">
           {formatUsdValue(
             formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
             {
@@ -125,7 +172,7 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
               maximumFractionDigits: 2,
             },
           )}
-        </p>
+        </p> */}
       </div>
     </div>
   )

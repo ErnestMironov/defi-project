@@ -1,9 +1,11 @@
 import { useFormattedVaultData } from '@hooks/useFormattedVaultData'
 import { cn } from '@utils/cn'
+import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps } from 'react'
 import { useAccount } from 'wagmi'
 
 import { AllAssets } from '../all-assets/AllAssets'
+import { NoDeposit } from '../all-assets/NoDeposit'
 import { VaultTokenItem, VaultTokenItemSkeleton } from './VaultTokenItem'
 
 interface UserTokensProperties extends ComponentProps<'div'> {}
@@ -24,10 +26,22 @@ export const UserTokens = (props: UserTokensProperties) => {
       )
     }
 
+    if (!formattedData || formattedData.length === 0) {
+      return null
+    }
+
+    if (
+      !formattedData ||
+      formattedData.length === 0 ||
+      +formatAmount(formattedData?.[0]?.balance) <= 0
+    ) {
+      return <NoDeposit />
+    }
+
     return (
       <div className="user-assets flex flex-col gap-6">
         {formattedData.map((item, i) => (
-          <VaultTokenItem key={i} {...item} />
+          <VaultTokenItem key={i} {...item} balance={formatAmount(item.balance)} />
         ))}
       </div>
     )

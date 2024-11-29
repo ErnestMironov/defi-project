@@ -7,7 +7,10 @@ import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
+import { usePortfolioModalState } from './hooks/UsePortfolioModalState'
 import { MobileHeader } from './MobileHeader'
+import OpenPortfolioButton from './PortfolioButton'
+import { PortfolioModal } from './PortfolioModal'
 import { Sidebar } from './Sidebar'
 
 interface HeaderProperties extends ComponentProps<'div'> {}
@@ -15,6 +18,7 @@ interface HeaderProperties extends ComponentProps<'div'> {}
 export const Header = ({ className, ...rest }: HeaderProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
   const account = useAccount()
+  const { isOpen, handlePortfolioClose, handlePortfolioOpen } = usePortfolioModalState()
 
   if (isBelowDesktop) {
     return <MobileHeader className={className} {...rest} />
@@ -28,9 +32,13 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
         <Sidebar />
       </div>
       {account.address ? (
-        <Link to={ROUTES.POINTS}>
-          <PointsBalance />
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link to={ROUTES.POINTS}>
+            <PointsBalance />
+          </Link>
+          <OpenPortfolioButton onClick={() => handlePortfolioOpen()} />
+          <PortfolioModal isOpen={isOpen} onClose={handlePortfolioClose} />
+        </div>
       ) : (
         <ConnectWallet className="rounded-[12.5rem] bg-cards-widget px-6 py-4 text-[1.25rem] text-gray-100 dark:bg-[rgba(153,_152,_184,_0.10)] dark:text-white" />
       )}

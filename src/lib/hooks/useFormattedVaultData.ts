@@ -19,6 +19,7 @@ export const useFormattedVaultData = (address?: `0x${string}`) => {
       .filter((token) => token.balance > 999_999)
       .sort((a, b) => Number(b.balance) - Number(a.balance))
   }, [data?.shares])
+  console.log(balances)
 
   const formattedData = useMemo(() => {
     const formatted: TokenData[] = []

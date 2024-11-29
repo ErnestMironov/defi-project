@@ -1,51 +1,58 @@
-import { Button } from '@components/ui/button'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'
+import { formatAmount } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 
 import Add from './assets/icons/add.svg'
-import Arrow from './assets/icons/arrow.svg'
 import Deposit from './assets/icons/deposit.svg'
 import Withdraw from './assets/icons/withdraw.svg'
 
-interface DepositWithdrawButtonsProperties extends ComponentProps<'div'> {}
+interface DepositWithdrawButtonsProperties extends ComponentProps<'div'> {
+  value: number
+}
 
 export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
-  const { className, ...rest } = props
+  const { className, value, ...rest } = props
   const { setTxType } = useTxStore()
 
   return (
-    <div className={cn('grid grid-cols-2 gap-2 max-lg:grid-cols-3', className)} {...rest}>
+    <div
+      className={cn(
+        'grid gap-2',
+        +formatAmount(value) > 0 ? 'grid-cols-3' : 'grid-cols-2',
+        className,
+      )}
+      {...rest}
+    >
       <Link
         to="/"
         onClick={() => setTxType('deposit')}
-        className="flex flex-col items-center justify-center gap-3 rounded-xl bg-light-blue-15 py-5 normal-case text-dark-blue-100 max-lg:gap-[0.38rem] lg:font-bold"
+        className="flex flex-col  justify-start gap-3 rounded-xl bg-light-blue-15 p-5 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold"
       >
-        <Deposit className="size-6 max-lg:size-7" />
-        <span className="text-base max-lg:text-sm">Deposit</span>
+        <Deposit className="size-6 max-lg:size-7 " />
+        <span className="text-md font-medium max-lg:text-sm">Deposit</span>
       </Link>
-      <Link
-        to="/"
-        onClick={() => setTxType('withdraw')}
-        className="flex flex-col items-center justify-center gap-3 rounded-xl bg-light-blue-15 py-5 normal-case text-dark-blue-100 max-lg:gap-[0.38rem] lg:font-bold"
-      >
-        <Withdraw className="size-6 max-lg:size-7" />
-        <span className="text-base max-lg:text-sm">Withdraw</span>
-      </Link>
-      <div className="flex items-center rounded-xl border-light-blue-30 px-4 py-2 max-lg:flex-col max-lg:justify-center max-lg:gap-[0.38rem] max-lg:bg-light-blue-15 lg:col-span-2 lg:border">
-        <Add className="size-5 max-lg:size-6" />
-        <p className="ml-[0.38rem] text-base text-dark-blue-100 max-lg:text-sm">
-          Buy Crypto
-        </p>
-        <Button
-          size="icon"
-          variant="light"
-          className="ml-auto flex size-9 flex-col gap-3 rounded-[0.42856rem] bg-light-blue-15 normal-case max-lg:hidden"
+      {+formatAmount(value) > 0 && (
+        <Link
+          to="/"
+          onClick={() => setTxType('withdraw')}
+          className={cn(
+            'flex flex-col  justify-start gap-3 rounded-xl bg-light-blue-15 p-5 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold',
+          )}
         >
-          <Arrow className="shrink-0" />
-        </Button>
-      </div>
+          <Withdraw className="size-6 max-lg:size-7" />
+          <span className="text-md font-medium max-lg:text-sm">Withdraw</span>
+        </Link>
+      )}
+      <Link
+        onClick={() => setTxType('deposit')}
+        to="/"
+        className="flex flex-col  justify-start gap-3 rounded-xl bg-light-blue-15 p-5 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold"
+      >
+        <Add className="size-6 max-lg:size-7" />
+        <span className="text-md font-medium max-lg:text-sm">Buy crypto</span>
+      </Link>
     </div>
   )
 }

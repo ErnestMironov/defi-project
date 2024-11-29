@@ -83,7 +83,7 @@ export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) 
           {/* wallet */}
           <div className="flex items-center">
             <Metamask className="size-5" />
-            <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
+            <p className="text-text ml-3">{shortenAddress(address ?? '')}</p>
             <CopyButton text={address as string} className="ml-2 size-5" />
           </div>
           {/* header */}

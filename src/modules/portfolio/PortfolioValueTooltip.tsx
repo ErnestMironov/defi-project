@@ -7,9 +7,13 @@ import {
   TooltipTrigger,
 } from '@components/ui/tooltip'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import type { ComponentProps } from 'react'
 import { useState } from 'react'
 
-export const PortfolioValueTooltip = () => {
+interface PortfolioValueTooltipProperties extends ComponentProps<'div'> {}
+
+export const PortfolioValueTooltip = (props: PortfolioValueTooltipProperties) => {
+  const { className, ...rest } = props
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {
     return <PortfolioValueTooltipMobile />
