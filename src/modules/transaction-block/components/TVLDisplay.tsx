@@ -21,11 +21,11 @@ export const TVLDisplay: React.FC<TVLDisplayProperties> = ({ className }) => {
   return (
     <div
       className={cn(
-        'flex items-center gap-3 text-[1.125rem] lg:text-[1.25rem] leading-[120%]',
+        'flex items-center gap-[0.37rem] font-medium text-base text-text-2100 leading-[120%]',
         className,
       )}
     >
-      <span className="text-[#9998B8]">TVL</span>
+      <span className="text-text-50">TVL</span>
       {isProtocolMetricsLoading ? (
         <Skeleton className="h-6 w-20" />
       ) : (
