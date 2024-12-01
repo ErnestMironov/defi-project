@@ -1,17 +1,15 @@
-import Filter from '@assets/icons/filter.svg'
-import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
-import {
-  DrawerIconTrigger,
-  MobileFiltersDrawer,
-} from '@components/select/MobileFiltersDrawer'
+import { useUserShares } from '@api/contracts/useGetUserShares'
 import type { OptionType } from '@components/select/Select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
-import { SELECT_CHAINS_FOR_PORTFOLIO } from '@constants/select-constant'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useState } from 'react'
+import { type ComponentProps, useMemo, useState } from 'react'
+import { useAccount } from 'wagmi'
 
-import { AssetItem, AssetItemSkeleton } from './AssetItem'
+import { ChainsList } from '../components/ChainList'
+import { TokensList } from '../components/TokenList'
+import { AssetItemSkeleton } from './AssetItem'
 import { EmptyState } from './EmptyState'
+import { NoDeposit } from './NoDeposit'
 import { useAllAssets } from './useAllAssets'
 
 interface AllAssetsProperties extends ComponentProps<'div'> {}
@@ -20,30 +18,16 @@ export const AllAssets = (props: AllAssetsProperties) => {
   const { className, ...rest } = props
   const [chains, setChains] = useState<OptionType[]>([])
   const { tokens, isLoading, potentialUsdProfit } = useAllAssets(chains)
+  const { address } = useAccount()
+  const { data: userShares } = useUserShares(address)
 
-  const renderTokens = () => {
-    return (
-      <div className="">
-        {/* <DustTooltip usdValue={potentialUsdProfit} /> */}
-        <div className="mt-4">
-          <div className="h-auto w-full rounded-xl bg-light-blue-15 px-4 py-2 text-center text-white">
-            <span className="text-base text-main-100 opacity-70">Yield Potential</span>{' '}
-            <span className="text-base text-main-100">
-              ${potentialUsdProfit}
-              /year
-            </span>
-          </div>
-        </div>
-        <div
-          className={cn('-mr-2 mt-6 flex flex-col gap-6 overflow-auto pr-2 all-assets')}
-        >
-          {tokens.map((token, i) => (
-            <AssetItem key={i} token={token} />
-          ))}
-        </div>
-      </div>
-    )
-  }
+  const hasDeposits = useMemo(() => {
+    return userShares?.shares && userShares.shares.length > 0
+  }, [userShares])
+
+  const hasWalletTokens = useMemo(() => {
+    return tokens && tokens.length > 0
+  }, [tokens])
 
   return (
     <div className={cn('', className)} {...rest}>
@@ -53,28 +37,13 @@ export const AllAssets = (props: AllAssetsProperties) => {
             <AssetItemSkeleton key={i} />
           ))}
         </div>
-      ) : tokens?.length === 0 ? (
+      ) : !hasDeposits && !hasWalletTokens ? (
         <EmptyState />
       ) : (
         <div className="">
-          {/* <MultiSelect
-        id="all-assets-chains"
-        align="end"
-        className="w-fit max-lg:hidden"
-        classNames={{
-          content: 'rounded-[1rem] text-sm w-full border border-gray-20',
-          trigger:
-            'h-[2.125rem] w-fit text-sm [box-shadow:0px_2px_1px_0px_rgba(135,_99,_243,_0.12)] rounded-xl',
-        }}
-        options={SELECT_CHAINS_FOR_PORTFOLIO}
-        value={chains}
-        onChange={(value) => setChains(value)}
-        placeholder="All Chains"
-        variant="color2"
-      />  */}
-
+          <NoDeposit />
           <Tabs defaultValue="tokens" className="">
-            <TabsList className="w-full justify-start gap-4 border-b">
+            <TabsList className="w-full justify-start gap-4 border-b px-6">
               <TabsTrigger
                 variant="unstyled"
                 value="tokens"
@@ -83,33 +52,20 @@ export const AllAssets = (props: AllAssetsProperties) => {
                 Tokens
               </TabsTrigger>
               <TabsTrigger
-                value="activity"
+                value="chains"
                 variant="unstyled"
                 className="py-4 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:text-main-100"
               >
                 Chains
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="tokens">{renderTokens()}</TabsContent>
-            {/* <TabsContent value="activity">
-          <UserActivity />
-        </TabsContent> */}
+            <TabsContent value="tokens">
+              <TokensList tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
+            </TabsContent>
+            <TabsContent value="chains">
+              <ChainsList tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
+            </TabsContent>
           </Tabs>
-          <MobileFiltersDrawer
-            className="lg:hidden"
-            title="Filters"
-            resetFilters={() => {
-              setChains([])
-            }}
-            trigger={<DrawerIconTrigger Icon={Filter} active={chains.length > 0} />}
-          >
-            <MobileCheckboxSelect
-              label="Chains"
-              value={chains}
-              options={SELECT_CHAINS_FOR_PORTFOLIO}
-              onChange={setChains}
-            />
-          </MobileFiltersDrawer>
         </div>
       )}
     </div>

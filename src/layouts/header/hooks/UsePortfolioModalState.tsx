@@ -4,7 +4,6 @@ export const usePortfolioModalState = () => {
   const [isOpen, setIsOpen] = useState(true)
 
   const handlePortfolioOpen = () => {
-    console.log('open123')
     setIsOpen(!isOpen)
   }
 

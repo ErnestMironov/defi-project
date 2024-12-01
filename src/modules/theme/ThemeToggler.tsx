@@ -1,6 +1,7 @@
 import { Button } from '@components/ui/button'
 import { useAppKitTheme } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
+import { motion } from 'framer-motion'
 import type { ComponentProps } from 'react'
 
 import MoonV1Svg from './assets/moon-v1.svg'
@@ -27,40 +28,50 @@ export function ThemeToggler(props: ThemeToggleProperties) {
   return (
     <div
       className={cn(
-        'relative flex items-center w-auto h-auto rounded-[12px] p-2 gap-2',
+        'relative flex items-center w-auto h-auto rounded-xl p-1 gap-2',
         'transition-colors',
         theme === 'light' ? 'border-stroke-element border' : 'border-transparent',
         className,
       )}
     >
       {/* Анимированный фон */}
-      {/* <motion.div
+      <motion.div
         className={cn(
-          'absolute left-0 top-0 z-0 h-[40px] w-[40px] rounded-[12px] mx-2 my-2 bg-main-100',
+          'absolute top-1 left-1 z-0 rounded-[12px]',
+          'bg-main-100', // Добавьте соответствующие цвета для тем
+          'transition-all duration-300 ease-out',
         )}
         initial={false}
         animate={{
-          x: theme === 'light' ? '0%' : '112%',
+          x: theme === 'light' ? '0%' : '140%',
+          width: '35%',
+          height: '85%',
         }}
         transition={{
           type: 'spring',
           stiffness: 300,
-          damping: 25,
+          damping: 30,
+          duration: 0.3,
         }}
-      /> */}
+      />
 
       {/* Кнопка для светлой темы */}
-      <div className="relative z-10 flex w-1/2 items-center justify-center ">
+      <div className="relative z-10 flex w-1/2 items-center justify-center">
         <Button
           size="icon"
           variant="container"
           onClick={handleSetLightTheme}
           className={cn(
             'flex justify-center items-center w-auto h-auto rounded-[12px]',
-            theme === 'light' ? 'bg-main-100' : 'bg-auto',
+            theme === 'light' ? 'bg-main-100' : 'bg-transparent',
           )}
         >
-          <SunV1Svg className="size-5" />
+          <SunV1Svg
+            className={cn(
+              theme === 'light' ? 'fill-white' : 'fill-gray-400 [&_path]:stroke-gray-400',
+              'size-6',
+            )}
+          />
         </Button>
       </div>
 
@@ -71,11 +82,16 @@ export function ThemeToggler(props: ThemeToggleProperties) {
           variant="container"
           onClick={handleSetDarkTheme}
           className={cn(
-            'flex justify-center items-center w-auto h-auto border-xl',
-            theme === 'light' ? 'text-white ' : 'text-gray-500 bg-main-100',
+            'flex justify-center items-center w-auto h-auto rounded-[12px]',
+            theme === 'dark' ? '!bg-main-100' : 'bg-transparent',
           )}
         >
-          <MoonV1Svg className="size-5" />
+          <MoonV1Svg
+            className={cn(
+              theme === 'dark' ? 'fill-white [&_path]:stroke-white' : '',
+              'size-6',
+            )}
+          />
         </Button>
       </div>
     </div>

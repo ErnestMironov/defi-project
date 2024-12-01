@@ -45,7 +45,7 @@ export const UserActivity = (props: UserActivityProperties) => {
     <div {...rest} className={cn(className)}>
       {!!filteredByStatusData?.pending.length && (
         <>
-          <h6 className="text-base text-gray-100">In Progress</h6>
+          <h6 className="text-base text-gray-100 ">In Progress</h6>
           <div className={cn('space-y-6 mt-5 overflow-y-auto -mr-2 pr-2')}>
             {filteredByStatusData?.pending.map((event, i) => (
               <UserTransactionItem key={i} event={event} />
@@ -55,7 +55,11 @@ export const UserActivity = (props: UserActivityProperties) => {
       )}
       {!!filteredByStatusData?.completed.length && (
         <>
-          <div className={cn('space-y-6 mt-5 overflow-y-auto -mr-2 pr-2 user-activity')}>
+          <div
+            className={cn(
+              'space-y-6 mt-5 overflow-y-auto -mr-2 pr-2 user-activity  px-6',
+            )}
+          >
             {filteredByStatusData?.completed.map((event, i) => (
               <UserTransactionItem key={i} event={event} />
             ))}

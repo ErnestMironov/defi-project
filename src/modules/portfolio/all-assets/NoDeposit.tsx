@@ -12,7 +12,7 @@ export const NoDeposit = (props: NoDepositProperties) => {
   return (
     <div
       className={cn(
-        'flex flex-col gap-[16px] items-center justify-between flex-row border-b',
+        'flex flex-col gap-[16px] items-center justify-between flex-row border-b  pl-6',
         className,
       )}
       {...rest}
@@ -32,12 +32,10 @@ export const NoDeposit = (props: NoDepositProperties) => {
       </div>
       <div className="relative flex items-center justify-center">
         {' '}
-        {/* Добавлен relative */}
         {/* <Circle className="absolute z-0 size-12" />
         <Circle className="absolute z-0 size-60" />
         <Circle className="size-70 absolute z-0" /> */}
         <img src={NoDepositImage} alt="" className="z-10 max-w-[190px]" />
-        {/* Добавлен z-10 */}
       </div>
     </div>
   )

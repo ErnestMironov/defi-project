@@ -1,6 +1,6 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
+import ArrowRight from '@assets/icons/left-arrow.svg'
 import Metamask from '@assets/icons/metamask.svg'
-import { CopyButton } from '@components/copy/CopyButton'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { usePortfolioData } from '@hooks/usePortfolioStore'
 import { useWindowSize } from '@hooks/useWindowSize'
@@ -18,7 +18,16 @@ import { createPortal } from 'react-dom'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-export const PortfolioModal = ({ isOpen, onClose }) => {
+interface PortfolioModalProperties extends React.HTMLAttributes<HTMLDivElement> {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export const PortfolioModal = ({
+  isOpen,
+  onClose,
+  ...rest
+}: PortfolioModalProperties) => {
   const { address } = useAccount()
   const { height } = useWindowSize()
   const { yield: yieldData, isLoadingYield } = usePortfolioData()
@@ -46,6 +55,7 @@ export const PortfolioModal = ({ isOpen, onClose }) => {
       onClose()
     }
   }
+  console.log(totalYield)
   const sidebarReference = useClickOutside(handleClickOutside, ['#all-assets-chains'])
 
   return createPortal(
@@ -53,69 +63,104 @@ export const PortfolioModal = ({ isOpen, onClose }) => {
       {isOpen && (
         <motion.div
           ref={sidebarReference}
-          className="auto fixed right-0 top-0 z-50 mr-20 mt-4 h-auto w-full max-w-[482px] overflow-hidden rounded-xl bg-white px-6 py-4 shadow-lg"
-          transition={{
-            duration: 0.5,
-            ease: [0.22, 1, 0.36, 1],
-            opacity: { duration: 0.2 },
-          }}
+          className="fixed right-0 top-0 z-50 mr-8 mt-4 flex"
         >
-          <div className="flex h-auto w-full items-center justify-between py-4">
-            <div className="flex items-center ">
-              <button
-                type="button"
-                className="flex items-center"
-                onClick={() => openConnectModal()}
+          <div className="relative mr-3 flex items-start pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex size-12 items-center justify-center rounded-full bg-cards hover:bg-gray-50"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="17"
+                height="16"
+                viewBox="0 0 17 16"
+                fill="none"
               >
-                <Metamask className="size-5" />
-                <p className="text-text ml-3 text-lg">{shortenAddress(address ?? '')}</p>
-              </button>
-              <CopyButton text={address as string} className="ml-2 size-5" />
-            </div>
-            <ThemeToggler />
+                <path
+                  d="M12.9587 12.668L4.29199 4.00133"
+                  stroke="#8585A9"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M12.959 4.00128L4.29235 12.668"
+                  stroke="#8585A9"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
           </div>
-          <div className="hide-scrollbar pointer-events-auto h-full overflow-y-auto overflow-x-hidden bg-cards">
-            <div className="flex items-start justify-between">
-              <div>
-                <SeparatedUsdValue
-                  loading={isUserSharesLoading}
-                  value={portfolioValue}
-                  className={cn(
-                    'mt-2 ',
-                    portfolioValue > 0 ? 'text-text' : 'text-gray-100',
-                  )}
-                />
-                <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">
-                  <span>Portfolio Value</span>
-                  <PortfolioValueTooltip />
-                </h6>
+          <div className="h-auto w-full max-w-[482px] overflow-hidden rounded-3xl bg-cards py-4 shadow-lg">
+            <div className="flex h-auto w-full items-center justify-between px-6 py-4">
+              <div className="relative flex items-center">
+                <button
+                  type="button"
+                  className="flex items-center"
+                  onClick={() => openConnectModal()}
+                >
+                  <div className="flex rounded-xl">
+                    <div className="flex items-center justify-center rounded-l-xl border px-6 py-4">
+                      <Metamask className="size-5" />
+                      <p className="ml-3 text-lg font-medium leading-6 text-text-100">
+                        {shortenAddress(address ?? '')}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center rounded-r-xl border px-4">
+                      <ArrowRight className="size-5" />
+                    </div>
+                  </div>
+                </button>
               </div>
-              <div>
-                <SeparatedUsdValue
-                  loading={isLoadingYield}
-                  value={totalYield}
-                  className={cn('mt-2', totalYield > 0 ? 'text-text' : 'text-gray-100')}
-                />
-                <h6 className="truncate text-lg text-gray-100">Total yield generated</h6>
-              </div>
+              <ThemeToggler />
             </div>
-
-            {/* deposit/withdraw/buy and UserActivityTabs */}
-            <ActionButtons className="mt-6" value={portfolioValue} />
-            <UserActivityTabs
-              value={portfolioValue}
-              className={cn(
-                'mt-8 [&_.all-assets]:max-h-[12vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden ',
-                {
-                  '[&_.user-activity]:max-h-[25vh]': height > 768,
-                  '[&_.all-assets]:max-h-[20vh]': height > 768,
-                },
-              )}
-            />
+            <div className="hide-scrollbar pointer-events-auto h-full overflow-y-auto overflow-x-hidden bg-cards">
+              <div className="flex items-start justify-between  px-6">
+                <div>
+                  <SeparatedUsdValue
+                    loading={isUserSharesLoading}
+                    value={portfolioValue}
+                    className={cn(
+                      'mt-2 ',
+                      portfolioValue > 0 ? 'text-text' : 'text-gray-100',
+                    )}
+                  />
+                  <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">
+                    <span>Portfolio Value</span>
+                    <PortfolioValueTooltip />
+                  </h6>
+                </div>
+                <div className="mr-12">
+                  <SeparatedUsdValue
+                    loading={isLoadingYield}
+                    value={totalYield}
+                    className={cn('mt-2', totalYield > 0 ? 'text-text' : 'text-gray-100')}
+                  />
+                  <h6 className="truncate text-lg text-gray-100">
+                    Total yield generated
+                  </h6>
+                </div>
+              </div>
+              <ActionButtons className="mt-6 px-6" value={portfolioValue} />
+              <UserActivityTabs
+                value={portfolioValue}
+                className={cn(
+                  'mt-8 [&_.all-assets]:max-h-[12vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden ',
+                  {
+                    '[&_.user-activity]:max-h-[25vh]': height > 768,
+                    '[&_.all-assets]:max-h-[20vh]': height > 768,
+                  },
+                )}
+              />
+            </div>
           </div>
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body, // Рендерим в body
+    document.body,
   )
 }

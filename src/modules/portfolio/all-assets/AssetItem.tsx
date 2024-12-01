@@ -21,7 +21,7 @@ export const AssetItem = ({ token }: AssetItemProperties) => {
           token: 'rounded-full',
         }}
         position="bottom-right"
-        width="2.14288rem"
+        width="3rem"
       />
 
       <div className="ml-3 flex flex-col items-start max-lg:items-start max-lg:text-left">
@@ -44,8 +44,8 @@ export const AssetItem = ({ token }: AssetItemProperties) => {
 
 export const AssetItemSkeleton = () => {
   return (
-    <div className="flex w-full cursor-pointer items-center max-lg:items-start">
-      <div className="relative flex size-10 items-center justify-center">
+    <div className="mt-2 flex w-full cursor-pointer items-center px-6 max-lg:items-start">
+      <div className="relative flex size-10 items-center justify-center ">
         <Skeleton className="size-full rounded-full" />
         <Skeleton className="absolute bottom-0 right-0 size-[0.8em]" />
       </div>
