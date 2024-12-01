@@ -1,4 +1,4 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import ArrowDown from '@assets/icons/arrow-up.svg'
 import {
   Accordion,
   AccordionContent,

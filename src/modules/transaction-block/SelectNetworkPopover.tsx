@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import ArrowDown from '@assets/icons/arrow-up.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'

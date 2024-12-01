@@ -1,4 +1,4 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import ArrowDown from '@assets/icons/arrow-up.svg'
 import Lightning from '@assets/icons/blue-lightning.svg'
 import type { HTMLAttributes } from 'react'
 import React from 'react'

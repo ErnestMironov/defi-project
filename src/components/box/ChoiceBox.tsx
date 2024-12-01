@@ -1,4 +1,4 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import ArrowUp from '@assets/icons/arrow-up.svg'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { TokenIconComponent } from '@components/token-icon'
 import { cn } from '@utils/cn'
@@ -24,22 +24,21 @@ export const ChoiceBox = ({
   return (
     <ShadowBox
       className={cn(
-        'flex cursor-pointer items-center justify-center gap-3 rounded-full px-7 text-md transition-shadow max-lg:gap-2 max-lg:px-4 max-lg:py-3 max-lg:text-base lg:min-h-14',
+        'inline-flex cursor-pointer items-center justify-between gap-2 rounded-[62.4375rem] px-4 transition-shadow py-[1.25rem]',
         className,
         disabled && 'cursor-default',
-        !disabled && 'hover:shadow-shadow--hover dark:hover:shadow-dark-shadow--hover',
       )}
     >
       {icon ||
         (symbol && (
           <TokenIconComponent symbol={symbol} className="size-8 max-lg:size-5" />
         ))}
-      <div className="whitespace-nowrap">{value}</div>
+      <div className="whitespace-nowrap leading-none">{value}</div>
       {!disabled && (
-        <ArrowDown
+        <ArrowUp
           className={cn(
-            'size-4 max-lg:size-3 transition group-data-[state="open"]:rotate-180',
-            opened && 'rotate-180',
+            'size-4 max-lg:size-3 transition group-data-[state="closed"]:rotate-180',
+            !opened && 'rotate-180',
           )}
         />
       )}

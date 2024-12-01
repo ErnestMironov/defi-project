@@ -247,7 +247,6 @@ export const SelectDepositAsset = () => {
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>
         <ChoiceBox
-          className="min-w-[10.5rem]"
           value={asset?.contract_ticker_symbol || 'Select asset'}
           icon={
             asset?.contract_ticker_symbol && (

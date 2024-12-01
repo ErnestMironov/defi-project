@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unused-prop-types */
-import ChevronDown from '@assets/icons/arrow-down.svg'
+import ChevronDown from '@assets/icons/arrow-up.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@components/ui/drawer'

@@ -35,12 +35,12 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
     <>
       <div
         className={clsx(
-          'gradient-border-animated relative flex w-full flex-col rounded-3xl py-4 shadow-block max-lg:gap-6 max-lg:p-4',
+          'gradient-border-animated relative flex w-full flex-col rounded-3xl pb-3 pt-4 shadow-block max-lg:gap-6 max-lg:p-4',
           className,
         )}
         {...rest}
       >
-        <div className="flex px-4 max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:mb-10 lg:items-center lg:justify-between">
+        <div className="mb-4 flex px-4 max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:items-center lg:justify-between">
           <TxTypeSwitcher />
           {!isBelowDesktop && <TVLDisplay />}
         </div>

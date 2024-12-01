@@ -31,7 +31,7 @@ export const AmountInput = forwardRef(
             type="text"
             placeholder="0.00"
             className={cn(
-              'text-2.5xl relative w-full border-none bg-transparent py-0 pl-0 pr-3 leading-[120%] placeholder:text-text focus:outline-none lg:pr-2 lg:text-4xl lg:font-normal',
+              'placeholder:text-text-20 text-[2.625rem] bg-transparent font-medium leading-[3.25rem] tracking-[-0.02625rem] focus:outline-none',
               className,
               error && 'text-red-100',
             )}

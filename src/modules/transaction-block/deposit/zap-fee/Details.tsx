@@ -1,4 +1,4 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import ArrowDown from '@assets/icons/arrow-up.svg'
 import { Dialog, DialogContent, DialogTitle } from '@components/ui/dialog'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'

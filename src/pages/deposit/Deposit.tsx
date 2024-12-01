@@ -1,8 +1,4 @@
-import usdc from '@assets/images/usdc-3d.png'
-import usdt from '@assets/images/usdt-3d.png'
 import BgLines from '@assets/vectors/bg-lines.svg'
-import { ShadowBoxWithValue } from '@components/box/ShadowBoxWithValue'
-import { Skeleton } from '@components/ui/skeleton'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
@@ -45,36 +41,6 @@ export const Deposit = () => {
       </div>
       <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
         {isBelowDesktop && <TVLDisplay />}
-
-        <div className="grid grid-cols-2 gap-3">
-          {isStrategiesLoading ? (
-            <>
-              {Array.from({ length: 2 }).map((_, i) => (
-                <Skeleton
-                  key={i}
-                  className="h-[7.875rem] w-full rounded-3xl max-lg:h-[6.125rem]"
-                />
-              ))}
-            </>
-          ) : (
-            <>
-              <ShadowBoxWithValue label="Up to" value={`${Math.trunc(bestUSDCAPy)}%`}>
-                <img
-                  src={usdc}
-                  alt="usdc"
-                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
-                />
-              </ShadowBoxWithValue>
-              <ShadowBoxWithValue label="Up to" value={`${Math.trunc(bestUSDTAPy)}%`}>
-                <img
-                  src={usdt}
-                  alt="usdt"
-                  className="animate-oscillate-smooth absolute -bottom-8 -right-4 size-32 brightness-[1.2] max-lg:size-[5.86rem]"
-                />
-              </ShadowBoxWithValue>
-            </>
-          )}
-        </div>
         <TransactionBlock />
       </div>
       <div className="grid w-full translate-y-full justify-between gap-4 pb-10 max-lg:mt-20 lg:grid-cols-[1fr,2fr,1fr]">

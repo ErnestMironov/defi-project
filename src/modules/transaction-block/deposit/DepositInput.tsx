@@ -1,7 +1,8 @@
-import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics.ts'
-import Wallet from '@assets/icons/wallet.svg'
+import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import { AmountInput } from '@components/amount-input/AmountInput'
+import { VaultInfoBox } from '@components/box/VaultInfoBox'
 import { Button } from '@components/ui/button'
+import { useVaultAPY } from '@hooks/useVaultAPY'
 import { cn } from '@utils/cn'
 import {
   formatAmount,
@@ -9,13 +10,13 @@ import {
   formatValueWithPrecision,
 } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput.tsx'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
-import { useTxStore } from '../store/useTxStore.ts'
+import { useTxStore } from '../store/useTxStore'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
 import ZapFee from './zap-fee/ZapFee'
@@ -50,6 +51,30 @@ const calculateUSDValue = (tokenValue: BigNumber, assetQuote: BigNumber): string
 
 export const DepositInput = () => {
   const { isConnected } = useAccount()
+
+  const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
+
+  const { setVault } = useTxStore()
+  const vaultSet = useRef(false)
+
+  useEffect(() => {
+    if (!vaultSet.current && !isStrategiesLoading) {
+      if (bestUSDCAPy !== undefined && bestUSDTAPy !== undefined) {
+        if (Number(bestUSDCAPy) > Number(bestUSDTAPy)) {
+          setVault('USDC')
+        } else if (Number(bestUSDTAPy) > Number(bestUSDCAPy)) {
+          setVault('USDT')
+        }
+      } else if (bestUSDCAPy === undefined) {
+        setVault('USDT')
+      } else if (bestUSDTAPy === undefined) {
+        setVault('USDC')
+      } else {
+        setVault('USDT')
+      }
+      vaultSet.current = true
+    }
+  }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
 
   const {
     depositAsset: asset,
@@ -149,10 +174,13 @@ export const DepositInput = () => {
     <div>
       <div
         className={cn(
-          'rounded-2xl bg-input-default p-6 max-lg:px-3',
+          'bg-input-default py-6 px-8 max-lg:px-3 border-y border-stroke-100',
           error && 'bg-input-error',
         )}
       >
+        <span className="text-[0.875rem] font-medium leading-6 text-text-2100 opacity-50">
+          You deposit
+        </span>
         <div className="flex w-full items-center justify-between gap-2">
           {isConnected && asset ? (
             <AmountInput
@@ -162,8 +190,8 @@ export const DepositInput = () => {
               onChange={(value) => handleAction('token', value)}
             />
           ) : (
-            <p className="text-md text-gray-100 max-lg:text-sm">
-              Select the desired asset...
+            <p className="text-[1.5rem] font-medium leading-[3.25rem] tracking-[-0.015rem] text-text-20">
+              Select the desired asset
             </p>
           )}
 
@@ -176,14 +204,16 @@ export const DepositInput = () => {
               onValueChange={(value) => handleAction('usd', value)}
               error={!!error}
             />
-            <div className="flex items-center">
-              <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
-              <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {formatTokenBalance(asset.balance, asset.contract_decimals)}
+            <div className="flex items-center gap-3">
+              <p>
+                <span className="ml-2 mr-[.19rem] text-text-2100">
+                  {formatTokenBalance(asset.balance, asset.contract_decimals)}
+                </span>
+                <span className="text-text-260">{asset.contract_ticker_symbol}</span>
               </p>
               <button
                 type="button"
-                className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
+                className="rounded-md border border-stroke-100 bg-white px-[0.56rem] text-[0.875rem] font-medium leading-[1.5625rem] text-text-2100"
                 onClick={() => handleAction('token', prettyAssetBalance)}
               >
                 Max
@@ -193,9 +223,13 @@ export const DepositInput = () => {
         )}
         {error ? <p className="mt-3 text-lg text-red-100">{error}</p> : null}
       </div>
+      <div className="flex w-full justify-between gap-4 px-4">
+        <VaultInfoBox vaultName="USDC" apy={`${Math.trunc(bestUSDCAPy)}%`} />
+        <VaultInfoBox vaultName="USDT" apy={`${Math.trunc(bestUSDTAPy)}%`} />
+      </div>
       <div
         className={cn(
-          'mt-4 flex w-full flex-col items-center justify-between rounded-2xl bg-input-default p-6 max-lg:mt-2 max-lg:px-3',
+          'flex w-full flex-col items-center justify-between rounded-2xl bg-input-default p-6 max-lg:mt-2 max-lg:px-3',
           error && 'bg-input-error',
         )}
       >
@@ -207,8 +241,8 @@ export const DepositInput = () => {
               disabled
             />
           ) : (
-            <p className="text-md text-gray-100 max-lg:text-sm">
-              Select the desired vault...
+            <p className="text-[1.5rem] font-medium leading-[3.25rem] tracking-[-0.015rem] text-text-20">
+              Select the desired vault
             </p>
           )}
           <SelectVault />
@@ -236,9 +270,6 @@ export const DepositInput = () => {
         )}
       </div>
 
-      {/* {inputValue && isTxZAP ? <ZapFee className="mt-4" /> : null} */}
-      <ZapFee className="mt-4" />
-
       {isConnected && (
         <Button
           size="lg"
@@ -249,6 +280,7 @@ export const DepositInput = () => {
           {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}
         </Button>
       )}
+      <ZapFee className="mt-4" />
     </div>
   )
 }

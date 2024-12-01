@@ -3,6 +3,7 @@ import DepositIconInactive from '@assets/icons/deposit-icon-inactive.svg'
 import WithdrawIconActive from '@assets/icons/withdraw-icon-active.svg'
 import WithdrawIconInactive from '@assets/icons/withdraw-icon-inactive.svg'
 import { TX_TYPE } from '@constants/txTypes'
+import clsx from 'clsx'
 import { motion } from 'framer-motion'
 import { type FC, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -59,7 +60,10 @@ export const TxTypeSwitcher: FC = () => {
             type="button"
             ref={(el) => (tabsReference.current[index] = el)}
             onClick={() => setTxType(tab.value)}
-            className="relative z-10 flex items-center px-4 py-3 text-[0.875rem] font-medium leading-none text-white transition-colors"
+            className={clsx(
+              'relative z-10 flex items-center px-4 py-3 text-sm font-medium transition-colors',
+              txType === tab.value ? 'text-white' : 'text-[#8585A9]',
+            )}
           >
             <TabContent
               icon={tab.icon}
