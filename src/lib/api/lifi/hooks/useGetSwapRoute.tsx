@@ -49,13 +49,18 @@ export function useGetSwapRoute() {
     )
       return undefined
 
+    if (!depositAsset.contract_decimals) {
+      console.warn(`Missing decimals for token ${depositAsset.contract_address}`)
+      return undefined
+    }
+
     return {
       fromAddress: address,
       fromChain: depositFromNetwork.toString(),
       fromToken: depositAsset.contract_address,
       fromAmount: parseUnits(
         debouncedInputValue,
-        depositAsset.contract_decimals ?? 6,
+        depositAsset.contract_decimals,
       ).toString(),
       toChain: depositToNetwork.toString(),
       toToken: vaultDepositTokenAddress,
@@ -101,17 +106,21 @@ export function useGetSwapRoute() {
       vaultDepositTokenAddress &&
       vaultAddress
     ) {
+      // Subtract 0.1% from estimatedTokens for safety margin
+      const safetyMargin = (estimatedTokens * BigInt(1)) / BigInt(1000)
+      const adjustedTokens = estimatedTokens - safetyMargin
+
       const depositTxData = encodeFunctionData({
         abi: tokenVaultAbi,
         functionName: 'deposit',
-        args: [estimatedTokens, address],
+        args: [adjustedTokens, address],
       })
 
       const secondParameters: ContractCallsQuoteRequest = {
         ...firstParameters,
         contractCalls: [
           {
-            fromAmount: estimatedTokens.toString(),
+            fromAmount: adjustedTokens.toString(),
             fromTokenAddress: vaultDepositTokenAddress,
             toContractAddress: vaultAddress,
             toContractCallData: depositTxData,
