@@ -1,6 +1,5 @@
 import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import { AmountInput } from '@components/amount-input/AmountInput'
-import { VaultInfoBox } from '@components/box/VaultInfoBox'
 import { Button } from '@components/ui/button'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { cn } from '@utils/cn'
@@ -14,6 +13,7 @@ import DollarInput from '../components/DollarInput'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { SwappableInputs } from './components/SwappableInputs'
+import { VaultSelection } from './components/VaultSelection'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
 import ZapFee from './zap-fee/ZapFee'
@@ -50,7 +50,7 @@ const calculateUSDValue = (tokenValue: BigNumber, assetQuote: BigNumber): string
 
 export const DepositInput = () => {
   const { isConnected } = useAccount()
-  const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
+  const { bestUSDCApy, bestUSDTApy, isLoading: isStrategiesLoading } = useVaultAPY()
   const {
     depositAsset: asset,
     inputValue,
@@ -69,14 +69,14 @@ export const DepositInput = () => {
   const vaultSet = useRef(false)
   useEffect(() => {
     if (!vaultSet.current && !isStrategiesLoading) {
-      if (bestUSDCAPy !== undefined && bestUSDTAPy !== undefined) {
-        setVault(Number(bestUSDCAPy) > Number(bestUSDTAPy) ? 'USDC' : 'USDT')
+      if (bestUSDCApy !== undefined && bestUSDTApy !== undefined) {
+        setVault(Number(bestUSDCApy) > Number(bestUSDTApy) ? 'USDC' : 'USDT')
       } else {
-        setVault(bestUSDCAPy === undefined ? 'USDT' : 'USDC')
+        setVault(bestUSDCApy === undefined ? 'USDT' : 'USDC')
       }
       vaultSet.current = true
     }
-  }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
+  }, [bestUSDCApy, bestUSDTApy, setVault, isStrategiesLoading])
 
   // Protocol metrics and APY calculation
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
@@ -192,11 +192,7 @@ export const DepositInput = () => {
         {error && <p className="mt-3 text-lg text-red-100">{error}</p>}
       </div>
 
-      {/* Vault Selection Section */}
-      <div className="flex w-full justify-between gap-4 px-4">
-        <VaultInfoBox vaultName="USDC" apy={`${Math.trunc(bestUSDCAPy)}%`} />
-        <VaultInfoBox vaultName="USDT" apy={`${Math.trunc(bestUSDTAPy)}%`} />
-      </div>
+      <VaultSelection />
 
       {/* Deposit Details Section */}
       <div

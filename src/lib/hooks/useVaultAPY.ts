@@ -3,8 +3,8 @@ import { formatAmount } from '@utils/formatValue'
 import { useMemo } from 'react'
 
 interface UseVaultAPYReturn {
-  bestUSDCAPy: number
-  bestUSDTAPy: number
+  bestUSDCApy: number
+  bestUSDTApy: number
   isLoading: boolean
 }
 
@@ -13,7 +13,7 @@ export const useVaultAPY = (): UseVaultAPYReturn => {
     size: 100,
   })
 
-  const bestUSDCAPy = useMemo(() => {
+  const bestUSDCApy = useMemo(() => {
     const USDCStrategies = strategies?.items.filter(
       (strategy) => strategy.token.symbol.toUpperCase() === 'USDC',
     )
@@ -27,7 +27,7 @@ export const useVaultAPY = (): UseVaultAPYReturn => {
     )
   }, [strategies?.items])
 
-  const bestUSDTAPy = useMemo(() => {
+  const bestUSDTApy = useMemo(() => {
     const USDTStrategies = strategies?.items.filter(
       (strategy) => strategy.token.symbol.toUpperCase() === 'USDT',
     )
@@ -42,8 +42,8 @@ export const useVaultAPY = (): UseVaultAPYReturn => {
   }, [strategies?.items])
 
   return {
-    bestUSDCAPy,
-    bestUSDTAPy,
+    bestUSDCApy,
+    bestUSDTApy,
     isLoading,
   }
 }

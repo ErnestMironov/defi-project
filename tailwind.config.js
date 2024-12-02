@@ -171,6 +171,7 @@ module.exports = {
         stroke: {
           100: 'var(--stroke-100)',
           40100: 'var(--stroke-40100)',
+          element: 'var(--stroke-element)',
         },
         text: {
           1100: 'var(--text-1100)',
