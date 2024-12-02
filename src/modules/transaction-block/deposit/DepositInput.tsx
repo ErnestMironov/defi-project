@@ -1,30 +1,29 @@
 import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
-import SwitchIcon from '@assets/icons/switch.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
-import { ShadowBox } from '@components/box/ShadowBox.tsx'
 import { VaultInfoBox } from '@components/box/VaultInfoBox'
 import { Button } from '@components/ui/button'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { cn } from '@utils/cn'
-import {
-  formatAmount,
-  formatTokenBalance,
-  formatValueWithPrecision,
-} from '@utils/formatValue'
+import { formatAmount, formatValueWithPrecision } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-import DollarInput from '../components/DollarInput.tsx'
+import DollarInput from '../components/DollarInput'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
+import { SwappableInputs } from './components/SwappableInputs'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import { SelectVault } from './SelectVault'
 import ZapFee from './zap-fee/ZapFee'
 
 type InputType = 'usd' | 'token'
 
+// Constants
+const MIN_DEPOSIT_USD = 1
+
+// Utility functions
 const calculateTokenValue = (usdValue: BigNumber, assetQuote: BigNumber): number => {
   if (
     assetQuote.isZero() ||
@@ -34,7 +33,6 @@ const calculateTokenValue = (usdValue: BigNumber, assetQuote: BigNumber): number
   ) {
     return 0
   }
-
   return +usdValue.div(assetQuote).toFixed(4)
 }
 
@@ -47,37 +45,12 @@ const calculateUSDValue = (tokenValue: BigNumber, assetQuote: BigNumber): string
   ) {
     return '0.00'
   }
-
   return tokenValue.multipliedBy(assetQuote).toFixed(2)
 }
 
 export const DepositInput = () => {
   const { isConnected } = useAccount()
-
   const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
-
-  const { setVault } = useTxStore()
-  const vaultSet = useRef(false)
-
-  useEffect(() => {
-    if (!vaultSet.current && !isStrategiesLoading) {
-      if (bestUSDCAPy !== undefined && bestUSDTAPy !== undefined) {
-        if (Number(bestUSDCAPy) > Number(bestUSDTAPy)) {
-          setVault('USDC')
-        } else if (Number(bestUSDTAPy) > Number(bestUSDCAPy)) {
-          setVault('USDT')
-        }
-      } else if (bestUSDCAPy === undefined) {
-        setVault('USDT')
-      } else if (bestUSDTAPy === undefined) {
-        setVault('USDC')
-      } else {
-        setVault('USDT')
-      }
-      vaultSet.current = true
-    }
-  }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
-
   const {
     depositAsset: asset,
     inputValue,
@@ -89,11 +62,25 @@ export const DepositInput = () => {
     setInputValue,
     setCurrentModal,
     setInputValueInUSD,
+    setVault,
   } = useTxStore()
 
+  // Vault selection logic
+  const vaultSet = useRef(false)
+  useEffect(() => {
+    if (!vaultSet.current && !isStrategiesLoading) {
+      if (bestUSDCAPy !== undefined && bestUSDTAPy !== undefined) {
+        setVault(Number(bestUSDCAPy) > Number(bestUSDTAPy) ? 'USDC' : 'USDT')
+      } else {
+        setVault(bestUSDCAPy === undefined ? 'USDT' : 'USDC')
+      }
+      vaultSet.current = true
+    }
+  }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
+
+  // Protocol metrics and APY calculation
   const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
     useProtocolMetrics({})
-
   const usdcApy = protocolMetrics?.history?.USDC?.apy
   const usdtApy = protocolMetrics?.history?.USDT?.apy
 
@@ -104,49 +91,55 @@ export const DepositInput = () => {
       isProtocolMetricsLoading ||
       !usdcApy ||
       !usdtApy
-    )
+    ) {
       return 0
+    }
 
     const totalInUSD = BigNumber(depositTotalInUSD)
-
-    if (vault === 'USDC') {
-      return totalInUSD.div(100).multipliedBy(BigNumber(usdcApy))
-    }
-    return totalInUSD.div(100).multipliedBy(BigNumber(usdtApy))
+    const apy = vault === 'USDC' ? usdcApy : usdtApy
+    return totalInUSD.div(100).multipliedBy(BigNumber(apy))
   }, [depositTotalInUSD, isProtocolMetricsLoading, usdcApy, usdtApy, vault])
 
+  // Asset balance handling
   const assetBalance = formatUnits(
     BigInt(asset?.balance?.toString() || '0'),
     asset?.contract_decimals || 6,
   )
-
   const prettyAssetBalance = formatValueWithPrecision(assetBalance, 5)
+
+  // Input validation
+  const validateInput = (
+    inputValueBN: BigNumber,
+    assetBalanceBN: BigNumber,
+  ): string | null => {
+    if ((asset && assetBalanceBN.isZero()) || inputValueBN.isNaN()) {
+      return 'Invalid input or balance'
+    }
+    if (inputValueBN.isGreaterThan(assetBalanceBN)) {
+      return 'Exceeds balance'
+    }
+    if (inputValueInUSD && +inputValueInUSD < MIN_DEPOSIT_USD) {
+      return 'Deposit amount cannot be less than 1$'
+    }
+    return null
+  }
 
   const [error, setError] = useState('')
 
   useEffect(() => {
     const inputValueBN = BigNumber(+inputValue)
     const assetBalanceBN = BigNumber(assetBalance)
+    const validationError = validateInput(inputValueBN, assetBalanceBN)
 
-    if ((asset && assetBalanceBN.isZero()) || inputValueBN.isNaN()) {
-      setInputValueInUSD('0.00')
-      setError('Invalid input or balance')
-      return
-    }
-
-    if (inputValueBN.isGreaterThan(assetBalanceBN)) {
-      setError('Exceeds balance')
-      return
-    }
-
-    if (inputValueInUSD && +inputValueInUSD < 1) {
-      setError('Deposit amount cannot be less than 1$')
+    if (validationError) {
+      setError(validationError)
       return
     }
 
     setError('')
-  }, [asset, assetBalance, inputValue, inputValueInUSD, setInputValueInUSD])
+  }, [asset, assetBalance, inputValue, inputValueInUSD])
 
+  // Input handling
   const handleAction = (type: InputType, value: string) => {
     if (!value) {
       setInputValue('')
@@ -154,26 +147,23 @@ export const DepositInput = () => {
       return
     }
 
-    let assetQuoteBN = BigNumber(asset?.rate ?? 1)
+    const assetQuoteBN = BigNumber(
+      swapRoute?.action?.fromToken?.priceUSD || asset?.rate || 1,
+    )
     const numericValue = BigNumber(value)
 
-    if (swapRoute) {
-      assetQuoteBN = BigNumber(swapRoute?.action?.fromToken?.priceUSD || 1)
-    }
-
     if (type === 'usd') {
-      setInputValueInUSD(value) // Set the input value for USD type
-      const tokenValue = calculateTokenValue(numericValue, assetQuoteBN) // Calculate token value based on the exchange rate
-      setInputValue(tokenValue.toString()) // Set the input value in USD
-    } else if (type === 'token') {
-      setInputValue(value) // Set the input value for token type
-      const usdValue = calculateUSDValue(numericValue, assetQuoteBN) // Calculate USD value based on the exchange rate
-      setInputValueInUSD(usdValue.toString()) // Set the input value in USD
+      setInputValueInUSD(value)
+      setInputValue(calculateTokenValue(numericValue, assetQuoteBN).toString())
+    } else {
+      setInputValue(value)
+      setInputValueInUSD(calculateUSDValue(numericValue, assetQuoteBN))
     }
   }
 
   return (
     <div>
+      {/* Deposit Input Section */}
       <div
         className={cn(
           'bg-input-default py-6 px-8 max-lg:px-3 border-y border-stroke-100',
@@ -184,59 +174,31 @@ export const DepositInput = () => {
           You deposit
         </span>
         <div className="flex items-center justify-between gap-2">
-          {isConnected && asset ? (
-            <AmountInput
-              value={inputValue}
+          <div className="min-w-0 flex-1">
+            <SwappableInputs
+              tokenValue={inputValue}
+              usdValue={inputValueInUSD}
+              onTokenValueChange={(value) => handleAction('token', value)}
+              onUsdValueChange={(value) => handleAction('usd', value)}
               error={error}
-              decimals={18}
-              wrapperClassName="flex-1 min-w-0"
-              onChange={(value) => handleAction('token', value)}
+              asset={asset ? { ...asset, balance: BigInt(asset.balance) } : undefined}
+              onMaxClick={() => handleAction('token', prettyAssetBalance)}
+              rightElement={
+                isConnected ? <SelectDepositAsset /> : <SelectWithoutWalletPlaceholder />
+              }
             />
-          ) : (
-            <p className="text-[1.5rem] font-medium leading-[3.25rem] tracking-[-0.015rem] text-text-20">
-              Select the desired asset
-            </p>
-          )}
-
-          {isConnected ? <SelectDepositAsset /> : <SelectWithoutWalletPlaceholder />}
-        </div>
-        {isConnected && asset && (
-          <div className="mt-3 flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                className="flex size-6 items-center justify-center gap-2.5 rounded border border-stroke-100 bg-[#FFF] px-1 py-0 [box-shadow:0px_2px_1px_0px_rgba(214,_200,_255,_0.22)]"
-              >
-                <SwitchIcon />
-              </button>
-              <DollarInput
-                value={inputValueInUSD}
-                onValueChange={(value) => handleAction('usd', value)}
-                error={!!error}
-              />
-            </div>
-            <div className="flex items-center gap-3">
-              <p>
-                <span className="ml-2 mr-[.19rem] text-text-2100">
-                  {formatTokenBalance(asset.balance, asset.contract_decimals)}
-                </span>
-                <span className="text-text-260">{asset.contract_ticker_symbol}</span>
-              </p>
-              <ShadowBox
-                className="cursor-pointer select-none rounded-md border border-stroke-100 bg-white px-[0.56rem] text-[0.875rem] font-medium leading-[1.5625rem] text-text-2100"
-                onClick={() => handleAction('token', prettyAssetBalance)}
-              >
-                Max
-              </ShadowBox>
-            </div>
           </div>
-        )}
-        {error ? <p className="mt-3 text-lg text-red-100">{error}</p> : null}
+        </div>
+        {error && <p className="mt-3 text-lg text-red-100">{error}</p>}
       </div>
+
+      {/* Vault Selection Section */}
       <div className="flex w-full justify-between gap-4 px-4">
         <VaultInfoBox vaultName="USDC" apy={`${Math.trunc(bestUSDCAPy)}%`} />
         <VaultInfoBox vaultName="USDT" apy={`${Math.trunc(bestUSDTAPy)}%`} />
       </div>
+
+      {/* Deposit Details Section */}
       <div
         className={cn(
           'flex w-full flex-col items-center justify-between rounded-2xl bg-input-default p-6 max-lg:mt-2 max-lg:px-3',
@@ -280,6 +242,7 @@ export const DepositInput = () => {
         )}
       </div>
 
+      {/* Action Button */}
       {isConnected && (
         <Button
           size="lg"

@@ -1,68 +1,123 @@
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
+
+const DEFAULT_DECIMALS = 18
+const DEFAULT_PLACEHOLDER = '0.00'
 
 interface AmountInputProperties extends Omit<ComponentProps<'input'>, 'onChange'> {
+  /** Callback when input value changes */
   onChange?: (value: string) => void
+  /** Error state */
   error?: string
+  /** Maximum number of decimal places */
   decimals?: number
+  /** Current input value */
   value: string
+  /** Text to display after the input (e.g. currency symbol) */
   after?: string
+  /** Additional className for the wrapper div */
   wrapperClassName?: string
 }
 
-export const AmountInput = forwardRef(
-  (props: AmountInputProperties, reference: React.Ref<HTMLInputElement>) => {
+const formatInputValue = (value: string, decimals: number): string => {
+  if (value === '') return value
+
+  let formattedValue = value
+
+  // Add leading zero for decimal numbers
+  if (formattedValue.startsWith('.')) {
+    formattedValue = `0${formattedValue}`
+  }
+
+  // Remove non-numeric characters except decimal point
+  formattedValue = formattedValue.replaceAll(/[^\d.]|(?<=\..*)\./g, '')
+
+  // Limit decimal places
+  const [whole, decimal] = formattedValue.split('.')
+  if (decimal?.length > decimals) {
+    formattedValue = `${whole}.${decimal.slice(0, decimals)}`
+  }
+
+  // Remove leading zeros except for "0" itself
+  return formattedValue.replace(/^0+/, '0')
+}
+
+export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
+  (props, reference) => {
     const {
       onChange,
       value,
       error,
-      decimals = 18,
+      decimals = DEFAULT_DECIMALS,
       after,
       className,
       wrapperClassName,
       ...rest
     } = props
+
+    // Reference for measuring input width
+    const measureReference = useRef<HTMLSpanElement>(null)
+    const [inputWidth, setInputWidth] = useState(0)
+
+    // Update input width when value changes
+    useEffect(() => {
+      if (measureReference.current) {
+        setInputWidth(measureReference.current.offsetWidth)
+      }
+    }, [value])
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const formattedValue = formatInputValue(event.target.value, decimals)
+      onChange?.(formattedValue)
+    }
+
+    const baseInputClasses = cn(
+      'placeholder:text-text-20',
+      'text-[2.625rem]',
+      'bg-transparent',
+      'font-medium',
+      'leading-[3.25rem]',
+      'tracking-[-0.02625rem]',
+    )
+
     return (
       <div className={cn('relative size-full min-h-10', wrapperClassName)}>
-        {!props.readOnly && (
-          <input
-            {...rest}
-            type="text"
-            placeholder="0.00"
+        <div className="flex items-center">
+          {/* Hidden element for measuring input width */}
+          <span
+            ref={measureReference}
             className={cn(
-              'placeholder:text-text-20 text-[2.625rem] bg-transparent font-medium leading-[3.25rem] tracking-[-0.02625rem] focus:outline-none',
-              className,
-              error && 'text-red-100',
-            )}
-            onChange={(event) => {
-              let inputValue = event.target.value
-              if (inputValue?.startsWith('.')) {
-                inputValue = `0${inputValue}`
-              }
-              let filteredValue = inputValue.replaceAll(/[^\d.]|(?<=\..*)\./g, '')
-              const [whole, decimal] = filteredValue.split('.')
-              if (decimal?.length > decimals) {
-                filteredValue = `${whole}.${decimal.slice(0, decimals)}`
-              }
-              filteredValue = filteredValue.replace(/^0+/, '0')
-              onChange?.(filteredValue)
-            }}
-            value={value}
-            ref={reference}
-          />
-        )}
-        {after && value && (
-          <div
-            className={cn(
-              'pointer-events-none select-none absolute inset-0 size-full truncate border-none bg-transparent py-0 pl-0 pr-3 text-2.5xl leading-[120%] placeholder:text-gray-100 focus:outline-none lg:pr-2 lg:text-4xl font-normal',
-              !props.readOnly && 'text-transparent',
+              'invisible absolute whitespace-pre',
+              baseInputClasses,
               className,
             )}
           >
-            {value} <span className="text-gray-80">{after}</span>
-          </div>
-        )}
+            {value || DEFAULT_PLACEHOLDER}
+          </span>
+
+          {/* Actual input element */}
+          <input
+            {...rest}
+            type="text"
+            placeholder={DEFAULT_PLACEHOLDER}
+            style={{ width: `${inputWidth}px` }}
+            className={cn(
+              baseInputClasses,
+              'focus:outline-none',
+              error && 'text-red-100',
+              className,
+            )}
+            onChange={handleChange}
+            value={value}
+            ref={reference}
+          />
+
+          {/* Optional suffix */}
+          {after && (
+            <span className="ml-[0.2rem] text-[1rem] text-[#A5A5A5]">{after}</span>
+          )}
+        </div>
       </div>
     )
   },
