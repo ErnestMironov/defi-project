@@ -34,20 +34,18 @@ const DollarInput: React.FC<DollarInputProperties> = ({
 
   return (
     <div
-      className={cn(
-        'rounded-xl bg-[rgba(97,_96,_255,_0.05)] dark:bg-[rgba(97,_96,_255,_0.15)] px-3 py-2 lg:text-[1.25rem] text-text-80',
-        {
-          'bg-red-5 text-red-100': error,
-        },
-      )}
+      className={cn('text-text-260', {
+        'bg-red-5 text-red-100': error,
+        'text-text-30100': value,
+      })}
     >
-      <span>$ </span>
+      <span>$</span>
       <span ref={valueSpanReference} className="absolute text-text-80 opacity-0">
         {value || '0.00'}
       </span>
       <AmountInput
         className={cn(
-          'text-text-80 focus:outline-none inline-flex lg:text-[1.25rem] text-base !p-0 leading-none w-fit placeholder:text-text-80',
+          'text-text-30100 focus:outline-none inline-flex text-base !p-0 leading-none w-fit placeholder:text-text-2100',
           {
             'text-red-500': error,
           },

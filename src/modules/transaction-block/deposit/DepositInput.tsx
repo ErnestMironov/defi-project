@@ -1,5 +1,7 @@
 import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
+import SwitchIcon from '@assets/icons/switch.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
+import { ShadowBox } from '@components/box/ShadowBox.tsx'
 import { VaultInfoBox } from '@components/box/VaultInfoBox'
 import { Button } from '@components/ui/button'
 import { useVaultAPY } from '@hooks/useVaultAPY'
@@ -181,12 +183,13 @@ export const DepositInput = () => {
         <span className="text-[0.875rem] font-medium leading-6 text-text-2100 opacity-50">
           You deposit
         </span>
-        <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2">
           {isConnected && asset ? (
             <AmountInput
               value={inputValue}
               error={error}
               decimals={18}
+              wrapperClassName="flex-1 min-w-0"
               onChange={(value) => handleAction('token', value)}
             />
           ) : (
@@ -198,12 +201,20 @@ export const DepositInput = () => {
           {isConnected ? <SelectDepositAsset /> : <SelectWithoutWalletPlaceholder />}
         </div>
         {isConnected && asset && (
-          <div className="mt-3 flex w-full items-center justify-between">
-            <DollarInput
-              value={inputValueInUSD}
-              onValueChange={(value) => handleAction('usd', value)}
-              error={!!error}
-            />
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                className="flex size-6 items-center justify-center gap-2.5 rounded border border-stroke-100 bg-[#FFF] px-1 py-0 [box-shadow:0px_2px_1px_0px_rgba(214,_200,_255,_0.22)]"
+              >
+                <SwitchIcon />
+              </button>
+              <DollarInput
+                value={inputValueInUSD}
+                onValueChange={(value) => handleAction('usd', value)}
+                error={!!error}
+              />
+            </div>
             <div className="flex items-center gap-3">
               <p>
                 <span className="ml-2 mr-[.19rem] text-text-2100">
@@ -211,13 +222,12 @@ export const DepositInput = () => {
                 </span>
                 <span className="text-text-260">{asset.contract_ticker_symbol}</span>
               </p>
-              <button
-                type="button"
-                className="rounded-md border border-stroke-100 bg-white px-[0.56rem] text-[0.875rem] font-medium leading-[1.5625rem] text-text-2100"
+              <ShadowBox
+                className="cursor-pointer select-none rounded-md border border-stroke-100 bg-white px-[0.56rem] text-[0.875rem] font-medium leading-[1.5625rem] text-text-2100"
                 onClick={() => handleAction('token', prettyAssetBalance)}
               >
                 Max
-              </button>
+              </ShadowBox>
             </div>
           </div>
         )}

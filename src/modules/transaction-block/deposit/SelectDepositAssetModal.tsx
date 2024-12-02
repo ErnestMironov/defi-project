@@ -91,13 +91,13 @@ function TokensListItem({
       />
 
       <div className="ml-3 flex flex-col items-start max-lg:items-start max-lg:text-left">
-        <p className="text-[1.25rem]/[1.75rem] text-text max-lg:max-w-[8.5rem] ">
+        <p className="text-text text-[1.25rem]/[1.75rem] max-lg:max-w-[8.5rem] ">
           {token.contract_ticker_symbol}
         </p>
         <p className="text-[0.9375rem]/[1.125rem] text-gray-80">{chainData?.name}</p>
       </div>
       <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
-        <p className="text-base text-text">
+        <p className="text-text text-base">
           {formatAmount(formatTokenBalance(token?.balance, token?.contract_decimals), {
             maximumFractionDigits: token.contract_decimals > 6 ? 6 : 2,
           })}{' '}
@@ -152,7 +152,7 @@ const ResponsiveDialogContent: React.FC<ResponsiveDialogContentProperties> = ({
   }
 
   return (
-    <DialogContent className="gap-6 text-text max-lg:max-w-[95vw]" {...props}>
+    <DialogContent className="text-text gap-6 max-lg:max-w-[95vw]" {...props}>
       {children}
     </DialogContent>
   )
@@ -248,6 +248,7 @@ export const SelectDepositAsset = () => {
       <DialogTrigger>
         <ChoiceBox
           value={asset?.contract_ticker_symbol || 'Select asset'}
+          className={cn(asset?.contract_ticker_symbol && 'py-[0.62rem] px-[0.75rem]')}
           icon={
             asset?.contract_ticker_symbol && (
               <TokenWithNetwork
