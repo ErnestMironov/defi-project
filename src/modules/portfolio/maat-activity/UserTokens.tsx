@@ -35,9 +35,11 @@ export const UserTokens = (props: UserTokensProperties) => {
 
     return (
       <div className="user-assets flex flex-col gap-6">
-        {formattedData.map((item, i) => (
-          <VaultTokenItem key={i} {...item} balance={formatAmount(item.balance)} />
-        ))}
+        {formattedData
+          .filter((item) => +formatAmount(item.balance) > 0)
+          .map((item, i) => (
+            <VaultTokenItem key={i} {...item} balance={formatAmount(item.balance)} />
+          ))}
       </div>
     )
   }

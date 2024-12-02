@@ -1,6 +1,4 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
-import ArrowRight from '@assets/icons/left-arrow.svg'
-import Metamask from '@assets/icons/metamask.svg'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { usePortfolioData } from '@hooks/usePortfolioStore'
 import { useWindowSize } from '@hooks/useWindowSize'
@@ -11,12 +9,13 @@ import { PortfolioValueTooltip } from '@modules/portfolio/PortfolioValueTooltip'
 import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
-import { shortenAddress } from '@utils/transform'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
+
+import MetamaskButton from './PortfolioButton'
 
 interface PortfolioModalProperties extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean
@@ -55,7 +54,6 @@ export const PortfolioModal = ({
       onClose()
     }
   }
-  console.log(totalYield)
   const sidebarReference = useClickOutside(handleClickOutside, ['#all-assets-chains'])
 
   return createPortal(
@@ -64,12 +62,16 @@ export const PortfolioModal = ({
         <motion.div
           ref={sidebarReference}
           className="fixed right-0 top-0 z-50 mr-8 mt-4 flex"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 50 }}
+          transition={{ duration: 0.3 }}
         >
           <div className="relative mr-3 flex items-start pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex size-12 items-center justify-center rounded-full bg-cards hover:bg-gray-50"
+              className="flex size-12 items-center justify-center rounded-xl bg-cards hover:bg-gray-50"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -95,30 +97,16 @@ export const PortfolioModal = ({
               </svg>
             </button>
           </div>
-          <div className="h-auto w-full max-w-[482px] overflow-hidden rounded-3xl bg-cards py-4 shadow-lg">
+          <div className="size-auto max-w-[482px] overflow-y-auto rounded-3xl bg-cards py-4 shadow-lg">
             <div className="flex h-auto w-full items-center justify-between px-6 py-4">
-              <div className="relative flex items-center">
-                <button
-                  type="button"
-                  className="flex items-center"
-                  onClick={() => openConnectModal()}
-                >
-                  <div className="flex rounded-xl">
-                    <div className="flex items-center justify-center rounded-l-xl border px-6 py-4">
-                      <Metamask className="size-5" />
-                      <p className="ml-3 text-lg font-medium leading-6 text-text-100">
-                        {shortenAddress(address ?? '')}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-center rounded-r-xl border px-4">
-                      <ArrowRight className="size-5" />
-                    </div>
-                  </div>
-                </button>
-              </div>
+              <MetamaskButton
+                onClick={onClose}
+                isOpen={isOpen}
+                openConnectModal={() => openConnectModal()}
+              />
               <ThemeToggler />
             </div>
-            <div className="hide-scrollbar pointer-events-auto h-full overflow-y-auto overflow-x-hidden bg-cards">
+            <div className="hide-scrollbar pointer-events-auto h-auto max-h-[80vh] overflow-y-auto bg-cards">
               <div className="flex items-start justify-between  px-6">
                 <div>
                   <SeparatedUsdValue

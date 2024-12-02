@@ -7,10 +7,10 @@ import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
+import MetamaskButton from './components/PortfolioButton'
+import { PortfolioModal } from './components/PortfolioModal'
 import { usePortfolioModalState } from './hooks/UsePortfolioModalState'
 import { MobileHeader } from './MobileHeader'
-import OpenPortfolioButton from './PortfolioButton'
-import { PortfolioModal } from './PortfolioModal'
 import { Sidebar } from './Sidebar'
 
 interface HeaderProperties extends ComponentProps<'div'> {}
@@ -36,7 +36,11 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
           <Link to={ROUTES.POINTS}>
             <PointsBalance />
           </Link>
-          <OpenPortfolioButton onClick={() => handlePortfolioOpen()} />
+          <MetamaskButton
+            onClick={() => handlePortfolioOpen()}
+            isOpen={isOpen}
+            openConnectModal={() => {}}
+          />
           <PortfolioModal isOpen={isOpen} onClose={handlePortfolioClose} />
         </div>
       ) : (
