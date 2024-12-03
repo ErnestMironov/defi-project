@@ -220,16 +220,18 @@ export const DepositInput = () => {
       </div>
 
       {/* Action Button */}
-      {isConnected && (
-        <Button
-          size="lg"
-          disabled={!inputValue || !!error}
-          className="w-full max-lg:mt-6 lg:mt-10"
-          onClick={() => setCurrentModal('review')}
-        >
-          {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}
-        </Button>
-      )}
+      <div className="flex flex-col items-center justify-center px-4 py-3">
+        {isConnected && (
+          <Button
+            size="lg"
+            disabled={!inputValue || !!error}
+            className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+            onClick={() => setCurrentModal('review')}
+          >
+            {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}
+          </Button>
+        )}
+      </div>
       <ZapFee className="mt-4" />
     </div>
   )
