@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export const usePortfolioModalState = () => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const handlePortfolioOpen = () => {
     setIsOpen(!isOpen)
