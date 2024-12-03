@@ -24,7 +24,7 @@ export const ChoiceBox = ({
   return (
     <ShadowBox
       className={cn(
-        'inline-flex cursor-pointer items-center justify-between gap-2 rounded-[62.4375rem] px-4 transition-shadow py-[1.25rem]',
+        'inline-flex cursor-pointer items-center justify-between gap-2 rounded-[62.4375rem] py-[0.62rem] px-[0.75rem] transition-shadow',
         className,
         disabled && 'cursor-default',
       )}

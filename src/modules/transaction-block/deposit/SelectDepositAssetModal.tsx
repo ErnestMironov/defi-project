@@ -49,7 +49,7 @@ export const SelectDepositAsset = () => {
       <DialogTrigger>
         <ChoiceBox
           value={asset?.contract_ticker_symbol || 'Select asset'}
-          className={cn(asset?.contract_ticker_symbol && 'py-[0.62rem] px-[0.75rem]')}
+          className={cn(asset?.contract_ticker_symbol)}
           icon={
             asset?.contract_ticker_symbol && (
               <TokenWithNetwork

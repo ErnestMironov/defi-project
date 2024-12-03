@@ -3,13 +3,12 @@ import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { cn } from '@utils/cn'
-import { formatAmount, formatValueWithPrecision } from '@utils/formatValue'
+import { formatValueWithPrecision } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-import DollarInput from '../components/DollarInput'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { SwappableInputs } from './components/SwappableInputs'
@@ -197,10 +196,13 @@ export const DepositInput = () => {
       {/* Deposit Details Section */}
       <div
         className={cn(
-          'flex w-full flex-col items-center justify-between rounded-2xl bg-input-default p-6 max-lg:mt-2 max-lg:px-3',
+          'flex w-full flex-col items-start justify-between py-6 px-8 max-lg:mt-2 max-lg:px-3 border border-stroke-100',
           error && 'bg-input-error',
         )}
       >
+        <span className="text-[0.875rem] font-medium leading-6 text-text-2100 opacity-50">
+          You stake
+        </span>
         <div className="flex w-full items-center justify-between gap-2">
           {isConnected && asset ? (
             <AmountInput
@@ -215,27 +217,6 @@ export const DepositInput = () => {
           )}
           <SelectVault />
         </div>
-        {isConnected && asset && (
-          <div className="mt-3 flex w-full items-center justify-between">
-            <DollarInput
-              value={formatAmount(depositTotalInUSD, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-              disabled
-            />
-            {yourYearlyEarnings ? (
-              <p className="text-[0.8125rem] leading-[120%] text-gray-100 lg:text-[1.125rem]">
-                + $
-                {formatAmount(yourYearlyEarnings.toString(), {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}{' '}
-                over 1 year
-              </p>
-            ) : null}
-          </div>
-        )}
       </div>
 
       {/* Action Button */}
