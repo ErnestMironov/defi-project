@@ -31,12 +31,13 @@ export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) 
     address as Address,
   )
 
-  const portfolioValue = useMemo(() => {
+  const portfolioValue: number = useMemo(() => {
     return Object.values(assetsData ?? {}).reduce(
       (accumulator, value) => accumulator + value,
       0,
     )
   }, [assetsData])
+  console.log(portfolioValue, 'portfolioValue')
 
   const totalYield = useMemo(() => {
     const yieldSum = Object.values(yieldData ?? {}).reduce(
@@ -109,9 +110,9 @@ export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) 
             </div>
           </div>
           {/* deposit/withdraw/buy */}
-          <ActionButtons className="mt-6" />
+          <ActionButtons className="mt-6" value={portfolioValue} />
           {/* tokens/activity */}
-          <UserActivityTabs className="mt-8" />
+          <UserActivityTabs className="mt-8" value={portfolioValue} />
         </div>
       </DrawerContent>
     </Drawer>

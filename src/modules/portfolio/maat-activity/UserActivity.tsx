@@ -28,6 +28,8 @@ export const UserActivity = (props: UserActivityProperties) => {
     { completed: [], pending: [] } as { [key: string]: Event[] },
   )
 
+  console.log(filteredByStatusData)
+
   if (isLoading || error)
     return (
       <div className={cn('space-y-6', className)} {...rest}>
@@ -57,7 +59,7 @@ export const UserActivity = (props: UserActivityProperties) => {
         <>
           <div
             className={cn(
-              'space-y-6 mt-5 overflow-y-auto -mr-2 pr-2 user-activity  px-6',
+              'space-y-6 mt-5 mb-5 overflow-y-auto -mr-2 pr-2 user-activity  px-6',
             )}
           >
             {filteredByStatusData?.completed.map((event, i) => (

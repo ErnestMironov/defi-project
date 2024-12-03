@@ -13,7 +13,6 @@ export const UserTokens = (props: UserTokensProperties) => {
   const { className, ...rest } = props
   const { address } = useAccount()
   const { formattedData, isLoading } = useFormattedVaultData(address)
-  console.log(formattedData)
   const renderTokens = () => {
     if (isLoading) {
       return (

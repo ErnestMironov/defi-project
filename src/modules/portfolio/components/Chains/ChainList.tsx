@@ -3,7 +3,7 @@ import ArrowDown from '@assets/icons/arrow-down.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { cn } from '@utils/cn'
-import { formatUsdValue } from '@utils/formatValue'
+import { formatTokenBalance, formatUsdValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 
@@ -69,7 +69,11 @@ const ChainItem = ({
 
                 <div className="ml-2 flex flex-col">
                   <span className="">
-                    {token.balance_usd} {token.contract_ticker_symbol}
+                    {formatTokenBalance(token.balance, token.contract_decimals).slice(
+                      0,
+                      5,
+                    )}{' '}
+                    {token.contract_ticker_symbol}
                   </span>
                   <div className="flex flex-row items-center gap-1">
                     <TokenIconComponent
@@ -120,6 +124,13 @@ export const ChainsList = ({
 
   return (
     <div className={cn(`px-1 pb-1  ${className}`)}>
+      {/* <MultiSelect
+        options={SELECT_CHAINS}
+        value={selectedChain}
+        onChange={setSelectedChain}
+        placeholder=""
+        className="w-[12.5rem]"
+      /> */}
       <YieldPotential potentialUsdProfit={potentialUsdProfit} />
       <div className={cn(' py-4 flex flex-col gap-4  rounded-xl ')}>
         {Object.values(groupedByChain).map(

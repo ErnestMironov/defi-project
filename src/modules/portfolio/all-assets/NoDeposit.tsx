@@ -1,5 +1,6 @@
 import NoDepositImage from '@assets/images/NoDeposit.png'
 import { Button } from '@components/ui/button'
+import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
@@ -8,6 +9,7 @@ import Deposit from '../assets/icons/deposit.svg'
 interface NoDepositProperties extends ComponentProps<'div'> {}
 
 export const NoDeposit = (props: NoDepositProperties) => {
+  const { setTxType } = useTxStore()
   const { className, ...rest } = props
   return (
     <div
@@ -25,6 +27,7 @@ export const NoDeposit = (props: NoDepositProperties) => {
         <Button
           variant="default"
           className="mt-4 h-auto max-w-[130px] items-center p-3 px-4 text-sm font-normal normal-case"
+          onClick={() => setTxType('deposit')}
         >
           <Deposit className="size-4 [&_path]:fill-white [&_path]:stroke-[#6160FF]" />
           Deposit now

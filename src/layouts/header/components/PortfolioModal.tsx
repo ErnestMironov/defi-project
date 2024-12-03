@@ -15,18 +15,14 @@ import { createPortal } from 'react-dom'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-import MetamaskButton from './PortfolioButton'
+import PortfolioButton from './PortfolioButton'
 
 interface PortfolioModalProperties extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean
   onClose: () => void
 }
 
-export const PortfolioModal = ({
-  isOpen,
-  onClose,
-  ...rest
-}: PortfolioModalProperties) => {
+export const PortfolioModal = ({ isOpen, onClose }: PortfolioModalProperties) => {
   const { address } = useAccount()
   const { height } = useWindowSize()
   const { yield: yieldData, isLoadingYield } = usePortfolioData()
@@ -54,7 +50,9 @@ export const PortfolioModal = ({
       onClose()
     }
   }
-  const sidebarReference = useClickOutside(handleClickOutside, ['#all-assets-chains'])
+  const sidebarReference = useClickOutside(handleClickOutside, [
+    '#all-assets-chains, #chain-filter',
+  ])
 
   return createPortal(
     <AnimatePresence>
@@ -97,23 +95,24 @@ export const PortfolioModal = ({
               </svg>
             </button>
           </div>
-          <div className="size-auto max-w-[482px] overflow-y-auto rounded-3xl bg-cards py-4 shadow-lg">
+          <div className="size-auto w-[482px]  overflow-y-auto rounded-3xl bg-cards pt-4 shadow-lg">
             <div className="flex h-auto w-full items-center justify-between px-6 py-4">
-              <MetamaskButton
+              <PortfolioButton
                 onClick={onClose}
                 isOpen={isOpen}
                 openConnectModal={() => openConnectModal()}
+                balance={portfolioValue}
               />
               <ThemeToggler />
             </div>
             <div className="hide-scrollbar pointer-events-auto h-auto max-h-[80vh] overflow-y-auto bg-cards">
-              <div className="flex items-start justify-between  px-6">
-                <div>
+              <div className="grid grid-cols-4 gap-4 px-6">
+                <div className="col-span-2">
                   <SeparatedUsdValue
                     loading={isUserSharesLoading}
                     value={portfolioValue}
                     className={cn(
-                      'mt-2 ',
+                      'mt-2',
                       portfolioValue > 0 ? 'text-text' : 'text-gray-100',
                     )}
                   />
@@ -122,7 +121,7 @@ export const PortfolioModal = ({
                     <PortfolioValueTooltip />
                   </h6>
                 </div>
-                <div className="mr-12">
+                <div className="col-span-2 col-start-3">
                   <SeparatedUsdValue
                     loading={isLoadingYield}
                     value={totalYield}

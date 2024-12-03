@@ -8,12 +8,17 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
+import { getShortFromNow } from '@utils/get-day-difference'
 import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import { formatUnits } from 'viem'
 
+import BlueBackground from '../assets/icons/background/blue.svg'
+import PurpleBackground from '../assets/icons/background/purple.svg'
+import BridgeIcon from '../assets/icons/bridge.svg'
 import DepositIcon from '../assets/icons/deposit.svg'
 import WithdrawIcon from '../assets/icons/portfolioWithdraw.svg'
+import RebalanceIcon from '../assets/icons/rebalance.svg'
 import { StatusLabel } from '../components/StatusLabel'
 
 interface UserTransactionItemProperties extends ComponentProps<'div'> {
@@ -64,20 +69,20 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
         </span>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
-        className="mr-2 mt-4 w-[248px]  rounded-xl border border-stroke-40100 bg-white p-2 shadow-[0px_6px_66px_0px_rgba(0,0,0,0.06),0px_6px_9px_0px_rgba(0,0,0,0.04)]"
+        className="mr-2 mt-4 w-[248px]  rounded-xl border border-stroke-40100 bg-cards p-2 shadow-[0px_6px_66px_0px_rgba(0,0,0,0.06),0px_6px_9px_0px_rgba(0,0,0,0.04)]"
         side="left"
         align="end"
       >
-        <DropdownMenu.Item className="cursor-pointer rounded-xl p-4 hover:[background:linear-gradient(0deg,rgba(133,133,169,0.08)0%,rgba(133,133,169,0.08)100%),#FFF]">
+        <DropdownMenu.Item className="cursor-pointer rounded-xl bg-cards p-4 hover:bg-light-blue-15">
           <Link
             to={`${ROUTES.TRANSACTIONS}/${event.hash}`}
             className="flex w-full items-center gap-4"
           >
             <TransactionDetails className="size-5" />
-            <p className="text-base">Transaction Details</p>
+            <p className="text-base text-text-1100">Transaction Details</p>
           </Link>
         </DropdownMenu.Item>
-        <DropdownMenu.Item className="cursor-pointer rounded-xl p-4 hover:[background:linear-gradient(0deg,rgba(133,133,169,0.08)0%,rgba(133,133,169,0.08)100%),#FFF]">
+        <DropdownMenu.Item className="cursor-pointer rounded-xl p-4 hover:bg-light-blue-15">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <LinkIcon className="size-5" />
@@ -103,7 +108,28 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
       }
       case 'WITHDRAW':
       case 'WITHDRAW_REQUEST': {
-        return <WithdrawIcon className="size-full" />
+        return (
+          <div className="relative size-full">
+            <BlueBackground className="absolute inset-0 size-full" />
+            <WithdrawIcon className="absolute inset-0 m-auto size-4" />
+          </div>
+        )
+      }
+      case 'BRIDGE': {
+        return (
+          <div className="relative size-full">
+            <PurpleBackground className="absolute inset-0 size-full" />
+            <BridgeIcon className="absolute inset-0 m-auto size-4" />
+          </div>
+        )
+      }
+      case 'REBALANCE': {
+        return (
+          <div className="relative size-full">
+            <BlueBackground className="absolute inset-0 size-full" />
+            <RebalanceIcon className="absolute inset-0 m-auto size-4" />
+          </div>
+        )
       }
       default: {
         return null
@@ -160,6 +186,9 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
       </div>
       <div className="ml-auto space-y-1">
         <div className="flex items-center gap-[0.38rem]">
+          <span className="text-sm text-gray-100">
+            {getShortFromNow(event.creation_time)}
+          </span>
           <StatusLabel status={event.status} />
           <DropdownMenuForPortfolio event={event} />
         </div>

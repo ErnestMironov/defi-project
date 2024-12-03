@@ -1,4 +1,5 @@
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { usePortfolioData } from '@hooks/usePortfolioStore'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
 import { PointsBalance } from '@modules/points-balance/PointsBalance'
 import { ROUTES } from '@routes/routes'
@@ -7,7 +8,7 @@ import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import { useAccount } from 'wagmi'
 
-import MetamaskButton from './components/PortfolioButton'
+import PortfolioButton from './components/PortfolioButton'
 import { PortfolioModal } from './components/PortfolioModal'
 import { usePortfolioModalState } from './hooks/UsePortfolioModalState'
 import { MobileHeader } from './MobileHeader'
@@ -19,6 +20,7 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
   const account = useAccount()
   const { isOpen, handlePortfolioClose, handlePortfolioOpen } = usePortfolioModalState()
+  const { yield: yieldData } = usePortfolioData()
 
   if (isBelowDesktop) {
     return <MobileHeader className={className} {...rest} />
@@ -36,9 +38,10 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
           <Link to={ROUTES.POINTS}>
             <PointsBalance />
           </Link>
-          <MetamaskButton
+          <PortfolioButton
             onClick={() => handlePortfolioOpen()}
             isOpen={isOpen}
+            balance={yieldData?.totalYield}
             openConnectModal={() => {}}
           />
           <PortfolioModal isOpen={isOpen} onClose={handlePortfolioClose} />

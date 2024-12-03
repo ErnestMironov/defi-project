@@ -16,7 +16,7 @@ interface AllAssetsProperties extends ComponentProps<'div'> {}
 
 export const AllAssets = (props: AllAssetsProperties) => {
   const { className, ...rest } = props
-  const [chains, setChains] = useState<OptionType[]>([])
+  const [chains] = useState<OptionType[]>([])
   const { tokens, isLoading, potentialUsdProfit } = useAllAssets(chains)
   const { address } = useAccount()
   const { data: userShares } = useUserShares(address)

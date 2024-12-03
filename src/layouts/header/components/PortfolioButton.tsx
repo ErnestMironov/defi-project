@@ -1,37 +1,47 @@
 import ArrowRight from '@assets/icons/arrow-right-short.svg'
 import DoubleArrow from '@assets/icons/double-arrow.svg'
 import Metamask from '@assets/icons/metamask.svg'
+import { formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useAccount } from 'wagmi'
 
-interface MetamaskButtonProperties extends React.HTMLAttributes<HTMLButtonElement> {
+interface PortfolioButtonProperties extends React.HTMLAttributes<HTMLButtonElement> {
   isOpen: boolean
   openConnectModal: () => void
+  balance: number
 }
 
-const MetamaskButton: React.FC<MetamaskButtonProperties> = ({
+const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
   onClick,
   isOpen,
   openConnectModal = () => {},
+  balance,
 }) => {
   const { address } = useAccount()
+
+  const formattedBalance = useMemo(() => {
+    if (isOpen) {
+      return shortenAddress(address ?? '')
+    }
+    return formatUsdValue(balance ?? 0)
+  }, [isOpen, address, balance])
 
   return (
     <button
       type="button"
-      className="flex items-center"
+      className=" min-w-[10.375rem] rounded-2xl bg-cards shadow-test-2 transition-colors"
       onClick={isOpen ? openConnectModal : onClick}
     >
-      <div className="flex rounded-2xl bg-cards  ">
-        <div className="flex items-center justify-center rounded-l-2xl border p-3 px-4">
-          <Metamask className="size-5" />
-          <p className="ml-3 text-sm font-medium leading-6 text-text-100">
-            {shortenAddress(address ?? '')}
+      <div className="flex w-full">
+        <div className="flex flex-1 items-center justify-center gap-2 rounded-l-2xl border px-4 py-3">
+          <Metamask className="size-6 shrink-0" />
+          <p className="truncate text-sm font-medium leading-6 text-text-100">
+            {formattedBalance}
           </p>
         </div>
         <button
-          className="flex items-center justify-center rounded-r-2xl border px-3"
+          className="hover:bg-cards/50 flex items-center justify-center rounded-r-2xl border px-3 transition-colors"
           type="button"
         >
           {isOpen ? (
@@ -45,4 +55,4 @@ const MetamaskButton: React.FC<MetamaskButtonProperties> = ({
   )
 }
 
-export default MetamaskButton
+export default PortfolioButton

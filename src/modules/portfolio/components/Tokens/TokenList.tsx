@@ -3,9 +3,11 @@ import ArrowDown from '@assets/icons/arrow-down.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { cn } from '@utils/cn'
-import { formatUsdValue } from '@utils/formatValue'
+import { formatTokenBalance, formatUsdValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
+
+import { YieldPotential } from '../YieldPotential'
 
 interface GroupedTokenListWithExceptionsProperties extends ComponentProps<'div'> {
   tokens: ITokenData[]
@@ -16,20 +18,12 @@ interface GroupedTokenListWithExceptionsProperties extends ComponentProps<'div'>
 const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData[] }) => {
   const [isOpen, setIsOpen] = useState(false)
   const mainToken = tokenGroup[0]
-  const formatBalance = (balance: string): string => {
-    const numericBalance = Number.parseFloat(balance) / 1e6
-    return numericBalance.toFixed(3)
-  }
-  const isUsdcGroup =
-    mainToken.contract_ticker_symbol === 'USDC' ||
-    mainToken.contract_ticker_symbol === 'USDC.e'
-  console.log(tokenGroup)
+
   const totalBalanceUsd = tokenGroup.reduce(
     (sum, token) => sum + Number(token.balance_usd),
     0,
   )
   const totalBalance = tokenGroup.reduce((sum, token) => sum + Number(token.balance), 0)
-
   return (
     <div
       className={cn(
@@ -44,15 +38,22 @@ const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex  justify-center gap-2">
+        <div className="flex  items-start gap-2">
           <TokenIconComponent
             symbol={mainToken.contract_ticker_symbol}
-            className={cn(' rounded-full', isOpen ? 'size-7' : 'size-12')}
+            className={cn(
+              'rounded-full transition-all duration-300',
+              isOpen ? 'size-7' : 'size-12',
+            )}
           />
 
           <div>
-            <span className="text-base font-medium">
-              {formatBalance(totalBalance.toString())} {mainToken.contract_ticker_symbol}
+            <span className="font-medium text-text-100">
+              {formatTokenBalance(
+                totalBalance.toString(),
+                mainToken.contract_decimals,
+              ).slice(0, 5)}{' '}
+              {mainToken.contract_ticker_symbol}
             </span>
             {!isOpen && (
               <div className="relative flex">
@@ -60,18 +61,26 @@ const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData
                   <TokenIconComponent
                     key={token.chain_id}
                     symbol={token.chain_id}
-                    className={cn('absolute size-4 rounded-full', `left-${index * -4}`)}
+                    className={cn('absolute size-5 rounded-full', index !== 0 && '-ml-2')}
+                    style={{
+                      left: index === 0 ? 0 : `${index * 14}px`,
+                    }}
                   />
                 ))}
               </div>
             )}
           </div>
-          <span className={`ml-2 transition-transform ${isOpen ? 'rotate-90' : ''}`}>
-            <ArrowDown className="rotate-90" />
+          <span className={`transition-transform ${isOpen ? 'rotate-90' : ''}`}>
+            <ArrowDown className="size-4 rotate-90" />
           </span>
         </div>
         <div className="pr-2 text-right">
-          <p className="text-base font-medium">{formatUsdValue(totalBalanceUsd)}</p>
+          <p className="font-medium">
+            <span className="text-text-50">{formatUsdValue(totalBalanceUsd)[0]}</span>
+            <span className="text-text-100">
+              {formatUsdValue(totalBalanceUsd).slice(1)}
+            </span>
+          </p>
         </div>
       </div>
 
@@ -89,11 +98,14 @@ const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData
                 />
                 <div className="flex flex-col">
                   <span className="">
-                    {formatBalance(token.balance.toString())}{' '}
+                    {formatTokenBalance(
+                      totalBalance.toString(),
+                      mainToken.contract_decimals,
+                    ).slice(0, 5)}{' '}
                     {token.contract_ticker_symbol}
                   </span>
 
-                  <span className="flex items-center gap-0.5 text-sm text-text-2100">
+                  <span className="flex gap-0.5 text-sm text-text-2100">
                     <TokenIconComponent
                       symbol={token.chain_id}
                       className="size-4 rounded-full"
@@ -116,37 +128,33 @@ const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData
 export default function TokenList({
   tokens,
   className,
+  potentialUsdProfit,
 }: GroupedTokenListWithExceptionsProperties) {
   const groupedTokens = tokens.reduce(
     (accumulator, token) => {
-      const symbol = token.contract_ticker_symbol
-      if (symbol === 'USDC' || symbol === 'USDC.e') {
-        const key = 'USDC'
-        if (!accumulator[key]) {
-          accumulator[key] = []
-        }
-        accumulator[key].push(token)
-      } else {
-        if (!accumulator[symbol]) {
-          accumulator[symbol] = []
-        }
-        accumulator[symbol].push(token)
+      const logoUrl = token.logo_url
+      if (!accumulator[logoUrl]) {
+        accumulator[logoUrl] = []
       }
+      accumulator[logoUrl].push(token)
       return accumulator
     },
     {} as Record<string, ITokenData[]>,
   )
 
   return (
-    <div className={cn(`px-1 pb-1 ${className}`)}>
-      <div className={cn('py-4 flex flex-col gap-4 rounded-xl')}>
-        {Object.values(groupedTokens).map((tokenGroup) => (
-          <GroupedTokenItemWithExceptions
-            key={tokenGroup[0].contract_ticker_symbol}
-            tokenGroup={tokenGroup}
-          />
-        ))}
+    <>
+      <YieldPotential potentialUsdProfit={potentialUsdProfit} />
+      <div className={cn(`px-1 pb-1 ${className}`)}>
+        <div className={cn('py-4 flex flex-col gap-4 rounded-xl')}>
+          {Object.values(groupedTokens).map((tokenGroup) => (
+            <GroupedTokenItemWithExceptions
+              key={tokenGroup[0].logo_url}
+              tokenGroup={tokenGroup}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
