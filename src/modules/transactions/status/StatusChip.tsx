@@ -1,10 +1,10 @@
-import type { Event } from '@api/maat-finance/types'
+import type { Action, Event } from '@api/maat-finance/types'
 import { STATUS_COLOR } from '@constants/status-color'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
 interface StatusChipProperties extends ComponentProps<'div'> {
-  tx: Event
+  tx: Event | Action
 }
 
 export const StatusChip = (props: StatusChipProperties) => {
@@ -17,7 +17,11 @@ export const StatusChip = (props: StatusChipProperties) => {
     ? STATUS_COLOR.skip
     : STATUS_COLOR[tx.status as keyof typeof STATUS_COLOR]
 
-  const text = isFailedRebalance ? 'skip' : tx.status
+  const text = isFailedRebalance
+    ? 'skip'
+    : tx.status === 'success'
+    ? 'completed'
+    : tx.status
 
   return (
     <div

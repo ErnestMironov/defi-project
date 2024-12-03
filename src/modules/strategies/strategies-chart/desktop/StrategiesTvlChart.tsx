@@ -5,7 +5,6 @@ import { cn } from '@utils/cn'
 import { type ComponentProps, useMemo } from 'react'
 
 import { MultiColoredLineChart } from '../../components/MultiColoredLineChart'
-import { StrategiesChartSkeleton } from './StrategiesApyChart'
 import type { StrategiesMetricsChartData } from './StrategiesCharts'
 import { useDesktopStrategies } from './useDesktopStrategies'
 
@@ -51,7 +50,7 @@ export const StrategiesTvlChart = (props: StrategiesChartProperties) => {
   }, [currentStrategies, strategiesMetrics])
 
   if (isLoading || !!error || !!strategiesError || isStrategiesLoading) {
-    return <StrategiesChartSkeleton title="TVL" />
+    return null
   }
 
   return (

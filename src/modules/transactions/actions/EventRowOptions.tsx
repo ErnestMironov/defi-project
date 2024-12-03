@@ -1,10 +1,9 @@
 import type { Event } from '@api/maat-finance/types'
 import CopyIcon from '@assets/icons/copy-icon.svg'
-import OptionsDots from '@assets/icons/options-dots.svg'
 import ShareIcon from '@assets/icons/share.svg'
+import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { useClipboard } from '@hooks/common/useClipboard'
-import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { type ComponentProps, useState } from 'react'
 
 interface EventRowOptionsProperties extends ComponentProps<'div'> {
@@ -17,10 +16,13 @@ export const EventRowOptions = (props: EventRowOptionsProperties) => {
   const { copyWithToast } = useClipboard()
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
-        <BaseContainer className="flex size-14 items-center justify-center rounded-2xl group-hover:shadow-test-2 [&]:shadow-none">
-          <OptionsDots className="size-4" />
-        </BaseContainer>
+      <PopoverTrigger
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsOpen(true)
+        }}
+      >
+        <TableRowOptionsTrigger />
       </PopoverTrigger>
       <PopoverContent
         align="end"

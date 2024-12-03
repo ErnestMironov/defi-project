@@ -23,7 +23,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
       case loading:
       case !!error: {
         return Array.from({ length: size }).map((_, index) => (
-          <StrategyRowSkeleton key={index} className="h-[6.25rem]" />
+          <StrategyRowSkeleton key={index} className="h-[5.4rem]" />
         ))
       }
       case strategies?.length === 0: {
@@ -45,11 +45,11 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
     <Table>
       <Table.Head>
         <Table.Row className="text-text-2100 *:py-4 *:first:pl-7 *:last:pr-7">
-          <Table.HeadCell>Strategy</Table.HeadCell>
-          <Table.HeadCell className="min-w-[12.1rem]">Token</Table.HeadCell>
-          <Table.HeadCell className="min-w-[12.1rem]">Chain</Table.HeadCell>
+          <Table.HeadCell className="w-[24.75rem]">Strategy</Table.HeadCell>
+          <Table.HeadCell className="w-[16.25rem]">Token</Table.HeadCell>
+          <Table.HeadCell className="w-[16.25rem]">Chain</Table.HeadCell>
           <Table.HeadCell
-            className="min-w-[12.1rem] cursor-pointer"
+            className="w-[16.25rem] cursor-pointer"
             onClick={() => onSortChange?.('apy')}
           >
             <div className="inline-flex items-center gap-[0.38rem]">
@@ -65,7 +65,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
             </div>
           </Table.HeadCell>
           <Table.HeadCell
-            className="min-w-[12.1rem] cursor-pointer"
+            className="w-[16.25rem] cursor-pointer"
             onClick={() => onSortChange?.('tvl')}
           >
             <div className="inline-flex items-center gap-[0.38rem]">
@@ -80,7 +80,7 @@ export const StrategyTable: React.FC<StrategyTableProperties> = (props) => {
               )}
             </div>
           </Table.HeadCell>
-          <Table.HeadCell className="min-w-[12.1rem]">Address</Table.HeadCell>
+          <Table.HeadCell className="w-[16.25rem]">Address</Table.HeadCell>
         </Table.Row>
       </Table.Head>
       <Table.Body className="[&_tr:last-child:after]:h-[calc(100%-6px)] [&_tr:last-child:after]:rounded-b-[1.25rem]">

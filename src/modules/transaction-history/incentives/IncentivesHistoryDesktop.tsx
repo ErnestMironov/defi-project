@@ -6,7 +6,6 @@ import type { TableFiltersType } from '@components/filters/TableFilters'
 import { TableFilters } from '@components/filters/TableFilters'
 import { Pagination } from '@components/pagination/Pagination'
 import { Table } from '@components/table'
-import { Skeleton } from '@components/ui/skeleton'
 import { usePages } from '@hooks/common/usePages'
 import { useSort } from '@hooks/common/useSort'
 import { cn } from '@utils/cn'
@@ -14,7 +13,7 @@ import { isHash } from '@utils/hash-or-address'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 
-import { IncentiveRow } from './IncentiveRow'
+import { IncentiveRow, IncentivesRowSkeleton } from './IncentiveRow'
 
 interface IncentivesHistoryProperties extends ComponentProps<'div'> {
   filters: TableFiltersType
@@ -52,7 +51,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
       case isPlaceholderData:
       case !!error: {
         return Array.from({ length: size }).map((_, index) => (
-          <TransactionsHistoryDesktopSkeleton key={index} count={size} {...props} />
+          <IncentivesRowSkeleton key={index} />
         ))
       }
       case data?.items?.length === 0: {
@@ -76,9 +75,9 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeadCell>Action</Table.HeadCell>
+              <Table.HeadCell className="w-[29.75rem]">Action</Table.HeadCell>
               <Table.HeadCell
-                className={cn('cursor-pointer min-w-[12.1rem]')}
+                className={cn('cursor-pointer w-[18.75rem]')}
                 onClick={() => onSortChange('amount')}
               >
                 <div className="flex items-center gap-[0.38rem]">
@@ -93,10 +92,10 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
                   )}
                 </div>
               </Table.HeadCell>
-              <Table.HeadCell className="min-w-[12.1rem]">From</Table.HeadCell>
-              <Table.HeadCell className="min-w-[12.1rem]">Chain</Table.HeadCell>
+              <Table.HeadCell className="w-[18.75rem]">From</Table.HeadCell>
+              <Table.HeadCell className="w-[18.75rem]">Chain</Table.HeadCell>
               <Table.HeadCell
-                className={cn('cursor-pointer')}
+                className={cn('cursor-pointer w-[15rem]')}
                 onClick={() => onSortChange('creation_time')}
               >
                 <div className="flex items-center gap-[0.38rem]">
@@ -129,32 +128,5 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
         />
       )}
     </>
-  )
-}
-
-const TransactionsHistoryDesktopSkeleton: React.FC<
-  React.HTMLAttributes<HTMLDivElement> & { count?: number }
-> = (_props) => {
-  return (
-    <Table.Row>
-      <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
-      </Table.Cell>
-      <Table.Cell>
-        <Skeleton className="h-10 w-full rounded-xl" />
-      </Table.Cell>
-    </Table.Row>
   )
 }

@@ -110,11 +110,11 @@ export const ScanLink = (props: ScanLinkProperties) => {
       {arrow ? (
         <div
           className={cn(
-            'flex size-5 items-center justify-center rounded border border-stroke-100',
+            'flex size-5 py-[0.1rem] items-center justify-center rounded border border-stroke-100',
             className,
           )}
         >
-          <ArrowTopRight className="size-2.5" />
+          <ArrowTopRight className="aspect-square size-full" />
         </div>
       ) : (
         children || <ScanLogo className="size-full" />

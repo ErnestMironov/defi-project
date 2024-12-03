@@ -11,7 +11,6 @@ import { Swap } from './transaction-type/Swap'
 import { WithdrawFromStrategy } from './transaction-type/WithdrawFromStrategy'
 import { WithdrawFulfillment } from './transaction-type/WithdrawFulfillment'
 import { WithdrawRequest } from './transaction-type/WithdrawRequest'
-import { TransactionInfoContainer } from './TransactionInfoContainer'
 
 interface TransactionInfoProperties extends ComponentProps<'div'> {
   type?: LAST_EVENT_ACTION
@@ -25,7 +24,7 @@ export const TransactionInfo = (props: TransactionInfoProperties) => {
 
   if (isLoading) {
     return (
-      <TransactionInfoContainer className={className} {...rest}>
+      <div className={className} {...rest}>
         <div className="flex items-center justify-between gap-3">
           <Skeleton className="h-8 w-60 bg-stroke-100 dark:bg-stroke-100" />
           <div className="flex items-center gap-3">
@@ -41,7 +40,7 @@ export const TransactionInfo = (props: TransactionInfoProperties) => {
           <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
           <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100 max-lg:hidden" />
         </div>
-      </TransactionInfoContainer>
+      </div>
     )
   }
 

@@ -3,16 +3,13 @@ import ChartIcon from '@assets/icons/chart.svg'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
 import { Table } from '@components/table'
-import { TokenIconComponent } from '@components/token-icon'
-import { Skeleton } from '@components/ui/skeleton'
-import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
-import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps, useMemo } from 'react'
 
 import { MultiColoredLineChart } from '../../components/MultiColoredLineChart'
 import type { StrategiesMetricsChartData } from './StrategiesCharts'
+import { TopStrategyRow, TopStrategyRowSkeleton } from './TopStrategyRow'
 import { useDesktopStrategies } from './useDesktopStrategies'
 
 interface StrategiesChartProperties extends ComponentProps<'div'> {}
@@ -56,9 +53,9 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
     })
   }, [topStrategiesWithColors, strategiesMetrics])
 
-  if (isLoading || !!error || !!strategiesError || isStrategiesLoading) {
-    return <StrategiesChartSkeleton title="APY" />
-  }
+  // if (isLoading || !!error || !!strategiesError || isStrategiesLoading) {
+  //   return null
+  // }
 
   return (
     <div
@@ -69,7 +66,7 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
       )}
       {...rest}
     >
-      <div className="flex-1 py-8">
+      <div className="py-8">
         <div className="flex items-center justify-between gap-4 border-b border-stroke-100 px-8 pb-[1.31rem]">
           <div className="space-y-1">
             <h2 className="text-lg uppercase">APY</h2>
@@ -82,14 +79,15 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
           />
         </div>
         <MultiColoredLineChart
-          className="mt-6 h-[14.5rem] px-8"
+          isLoading={isLoading || !!error}
+          className="mt-6 h-[14.5rem] w-[69.0625rem] px-8"
           data={formattedStrategiesMetrics}
           frame="MAX"
           yAxisType="percent"
           dataKey="apy"
         />
       </div>
-      <div className="divide-y divide-stroke-100">
+      <div className="flex-1 divide-y divide-stroke-100">
         <div className="p-4">
           <BaseContainer className="flex w-fit items-center gap-2 rounded-xl px-4 py-3 text-sm/[1.5rem] font-medium">
             <ChartIcon className="size-4" /> Top 3
@@ -98,81 +96,22 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
         <Table>
           <Table.Head className="[&>tr>th]:py-2 [&>tr>th]:first:pl-5 [&>tr>th]:last:pr-5">
             <Table.Row>
-              <Table.HeadCell>Token</Table.HeadCell>
-              <Table.HeadCell>Chain</Table.HeadCell>
-              <Table.HeadCell>APY</Table.HeadCell>
+              <Table.HeadCell className="w-[7.5rem]">Token</Table.HeadCell>
+              <Table.HeadCell className="w-[9.375rem]">Chain</Table.HeadCell>
+              <Table.HeadCell className="w-[9.375rem]">APY</Table.HeadCell>
               <Table.HeadCell>Protocol</Table.HeadCell>
             </Table.Row>
           </Table.Head>
-          <Table.Body className="[&_tr:after:last-child]:rounded-br-[1.25rem]">
-            {topStrategiesWithColors.map((strategy, i) => (
-              <Table.Row key={i} className="*:px-5 *:py-8">
-                <Table.Cell>
-                  <div className="flex items-center gap-[0.38rem]">
-                    <TokenIconComponent
-                      symbol={strategy.strategy.token.symbol}
-                      className="size-4"
-                    />
-                    <p>{strategy.strategy.token.symbol}</p>
-                  </div>
-                </Table.Cell>
-                <Table.Cell>
-                  <div className="flex items-center gap-[0.38rem]">
-                    <TokenIconComponent
-                      symbol={strategy.strategy.token.chain_id}
-                      className="size-4"
-                    />
-                    <p>
-                      {
-                        CHAIN_NAMES_BY_ID[
-                          strategy.strategy.token
-                            .chain_id as keyof typeof CHAIN_NAMES_BY_ID
-                        ]
-                      }
-                    </p>
-                  </div>
-                </Table.Cell>
-                <Table.Cell>
-                  {formatAmount(strategy.strategy.apy, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                  <span className="text-text-260">%</span>
-                </Table.Cell>
-                <Table.Cell>{strategy.strategy.protocol}</Table.Cell>
-                <Table.Cell>
-                  <div className="flex items-center gap-[0.38rem]">
-                    <p className="font-medium text-text-260">#{i + 1}</p>
-                    <div
-                      className="size-2 rounded-full"
-                      style={{ backgroundColor: strategy.color }}
-                    />
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-            ))}
+          <Table.Body className="[&_tr:after:last-child]:rounded-br-[1.25rem] [&_tr]:h-[5.5rem]">
+            {!!strategiesError || isStrategiesLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <TopStrategyRowSkeleton key={i} />
+                ))
+              : topStrategiesWithColors.map((strategy, i) => (
+                  <TopStrategyRow key={i} strategy={strategy} i={i} />
+                ))}
           </Table.Body>
         </Table>
-      </div>
-    </div>
-  )
-}
-
-export const StrategiesChartSkeleton = (
-  props: ComponentProps<'div'> & { title: string },
-) => {
-  const { className, title, ...rest } = props
-
-  return (
-    <div className={cn('flex w-full gap-5', className)} {...rest}>
-      <div className="flex-1">
-        <div className="flex items-center justify-between">
-          <h2 className="text-[2rem]/[2.4rem]">{title}</h2>
-          <Skeleton className="h-10 w-48" />
-        </div>
-        <div className="mt-6 h-[26.5625rem]">
-          <Skeleton className="size-full" />
-        </div>
       </div>
     </div>
   )

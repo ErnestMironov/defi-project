@@ -82,7 +82,7 @@ export interface SelectedAssetState {
   arrivalGas: string
   setArrivalGas: (value: string) => void
 
-  // Squid route information
+  // LiFi route information
   swapRoute: LiFiStep | undefined
   setSwapRoute: (route: LiFiStep | undefined) => void
 

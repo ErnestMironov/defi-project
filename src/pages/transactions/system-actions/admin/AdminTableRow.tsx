@@ -6,6 +6,8 @@ import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
+import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
+import { Skeleton } from '@components/ui/skeleton'
 import { ADMIN_ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
 import { getFromNow } from '@utils/get-day-difference'
@@ -100,8 +102,38 @@ export const AdminTableRow = (props: AdminTableRowProperties) => {
       <Table.Cell className="text-gray-100">
         {getFromNow(dayjs(adminEvent.creation_time).toString())}
       </Table.Cell>
-      <Table.Cell className="w-1">
-        <AdminEventRowOptions event={adminEvent} />
+      <Table.Cell>
+        <div className="flex justify-end">
+          <AdminEventRowOptions event={adminEvent} />
+        </div>
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+
+export const AdminTableRowSkeleton = (props: ComponentProps<'tr'>) => {
+  const { className, ...rest } = props
+  return (
+    <Table.Row className={cn('', className)} {...rest}>
+      <Table.Cell>
+        <Skeleton className="h-6 w-52" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-32" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-32" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-32" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-32" />
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex justify-end">
+          <TableRowOptionsTrigger />
+        </div>
       </Table.Cell>
     </Table.Row>
   )

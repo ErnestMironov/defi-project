@@ -51,7 +51,7 @@ const TableRow = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElem
       <tr
         {...rest}
         className={cn(
-          'text-text-1100 rounded-l-[0.75rem] rounded-r-[0.75rem]',
+          'group text-text-1100 rounded-l-[0.75rem] rounded-r-[0.75rem]',
           className,
         )}
         ref={reference}

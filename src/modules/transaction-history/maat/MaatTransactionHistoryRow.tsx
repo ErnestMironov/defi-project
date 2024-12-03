@@ -77,8 +77,10 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
       <Table.Cell className="text-gray-100">
         {getFromNow(dayjs(event.creation_time).toString())}
       </Table.Cell>
-      <Table.Cell className="w-1">
-        <EventRowOptions event={event} />
+      <Table.Cell>
+        <div className="flex justify-end">
+          <EventRowOptions event={event} />
+        </div>
       </Table.Cell>
     </Table.Row>
   )

@@ -1,8 +1,6 @@
 import type { StatusType } from '@api/maat-finance/types'
 import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
-import { CHAIN_IDS_BY_NAME } from '@constants/chains'
 import { STATUS_COLOR } from '@constants/status-color'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
@@ -26,14 +24,14 @@ export const TransactionHash = (props: InfoPairElementsProperties) => {
   return (
     <LabelValueContainer className={className} {...rest}>
       <div>{label || (isBelowDesktop ? 'Tx Hash' : 'Transaction Hash')}</div>
-      <div className="flex items-center gap-2">
-        <span className="text-text-90">{shortenAddress(value ?? '')}</span>
-        <ScanLink
+      <div className="flex items-center gap-1">
+        <span className="">{shortenAddress(value ?? '')}</span>
+        {/* <ScanLink
           chainId={chainId ?? CHAIN_IDS_BY_NAME.Arbitrum}
           txHash={type === 'tx' ? value : undefined}
           address={type === 'address' ? value : undefined}
-          className="ml-3 size-5 shrink-0"
-        />
+          className="size-4 shrink-0"
+        /> */}
         <CopyButton text={value ?? ''} />
       </div>
     </LabelValueContainer>
@@ -82,11 +80,11 @@ export const TokenAmount = (
       <>
         <LabelValueContainer className={className} {...rest}>
           <div>{tokenLabel}</div>
-          <IconWithLabelComponent symbol={symbol} className="size-6" />
+          <IconWithLabelComponent symbol={symbol} className="[&_svg]:size-4" />
         </LabelValueContainer>
         <LabelValueContainer className={className} {...rest}>
           <div>{amountLabel}</div>
-          <div className="flex items-center justify-end gap-[0.38rem] text-base">
+          <div className="flex items-center justify-end gap-[0.38rem] text-sm">
             <p>
               {formatAmount(value ?? '', {
                 notation: 'compact',
@@ -105,9 +103,9 @@ export const TokenAmount = (
       <div>
         {tokenLabel} / {amountLabel}
       </div>
-      <div className="flex flex-col items-end">
-        <div className="flex items-center gap-2 text-text-80">
-          <TokenIconComponent symbol={symbol} className="size-5" />
+      <div className="flex items-center justify-end gap-[0.38rem] text-sm/[1.3rem]">
+        <div className="flex items-center gap-[0.38rem]">
+          <TokenIconComponent symbol={symbol} className="size-4" />
           <span>
             {formatAmount(value ?? '', {
               notation: 'compact',
@@ -115,7 +113,7 @@ export const TokenAmount = (
             {symbol}
           </span>
         </div>
-        <div className="mt-[0.28rem] text-semi-base text-gray-100">
+        <div className="text-text-2100 before:content-['('] after:content-[')']">
           {formatUsdValue(usdValue)}
         </div>
       </div>
@@ -161,7 +159,16 @@ export const Timestamp = (props: InfoPairElementsProperties) => {
   return (
     <LabelValueContainer className={cn(className, 'max-lg:hidden')} {...rest}>
       <div>{label}</div>
-      <div>{dayjs(value).format('DD.MM.YYYY HH:mm:ss')}</div>
+      <div className="flex items-center gap-2">
+        {dayjs(value)
+          .format('DD.MM.YYYY HH:mm:ss')
+          .split(' ')
+          .map((part, index) => (
+            <span key={part} className={cn(index === 1 && 'text-text-2100')}>
+              {part}
+            </span>
+          ))}
+      </div>
     </LabelValueContainer>
   )
 }

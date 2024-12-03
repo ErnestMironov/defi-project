@@ -12,7 +12,10 @@ import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { StrategyRowOptions } from './components/StrategyRowOptions'
+import {
+  StrategyRowOptions,
+  TableRowOptionsTrigger,
+} from './components/StrategyRowOptions'
 
 interface StrategyRowProperties {
   strategy: Strategy
@@ -81,27 +84,29 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
 export const StrategyRowSkeleton = (props: ComponentProps<'tr'>) => {
   const { className } = props
   return (
-    <Table.Row className={cn(className)}>
-      <Table.Cell className="px-10 py-6">
-        <Skeleton className="h-6 w-full" />
+    <Table.Row className={cn('group cursor-pointer *:px-7 *:py-4', className)}>
+      <Table.Cell>
+        <Skeleton className="h-6 w-52" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-full" />
-      </Table.Cell>
-      <Table.Cell className="w-[10.1rem]">
-        <Skeleton className="h-6 w-full" />
-      </Table.Cell>
-      <Table.Cell className="w-[10.1rem]">
-        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-6 w-40" />
       </Table.Cell>
       <Table.Cell>
-        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-6 w-40" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton className="h-6 w-40" />
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex justify-end">
+          <TableRowOptionsTrigger />
+        </div>
       </Table.Cell>
     </Table.Row>
   )
