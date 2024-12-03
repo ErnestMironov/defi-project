@@ -2,9 +2,9 @@ import SwitchIcon from '@assets/icons/switch.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { formatTokenBalance } from '@utils/formatValue'
-import { useState } from 'react'
 
 import DollarInput from '../../components/DollarInput'
+import { useInputsMode } from '../hooks/useInputsMode'
 
 interface Asset {
   balance: string | bigint
@@ -43,7 +43,7 @@ export const SwappableInputs = ({
   onMaxClick,
   rightElement,
 }: SwappableInputsProperties) => {
-  const [isSwapped, setIsSwapped] = useState(false)
+  const { isSwapped, setIsSwapped } = useInputsMode()
 
   // Early return if no asset is selected
   if (!asset) {
