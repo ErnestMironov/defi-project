@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "Montreal";
+  font-style: normal;
+  font-weight: 400;
+  src: url("PPNeueMontreal-Book.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Montreal";
+  font-style: normal;
+  font-weight: 500;
+  src: url("PPNeueMontreal-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Montreal";
+  font-style: normal;
+  font-weight: 700;
+  src: url("PPNeueMontreal-Bold.otf") format("opentype");
+}

@@ -7,6 +7,7 @@ stages:
   - cleanup
   - deploy_prod
   - deploy_dev
+  - send_anime
 
 variables:
   IMAGE_NAME: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHA
@@ -17,6 +18,27 @@ build:
     - curl -s -X POST https://api.telegram.org/bot$BOT_TOKEN/sendMessage -d chat_id=$CHAT_BOT_ID -d text="🔨New MAAT-Frontend Build Started%0A👨‍💻$GITLAB_USER_NAME"
     - docker build . -t $IMAGE_NAME
     - docker push $IMAGE_NAME
+  tags:
+    - dev
+  only:
+    - main
+    - dev
+
+send_anime:
+  stage: send_anime
+  when: on_success
+  allow_failure: true 
+  script:
+    - |
+      response=$(curl -s "https://giphy.com/search/anime-hentai") && gif_urls=$(echo "$response" | grep -o 'https://media[0-9]*\.giphy\.com/media/[^"]*\.gif') && gif_array=()
+      while IFS= read -r line; do
+        gif_array+=("$line")
+      done <<< "$gif_urls" && if [ ${#gif_array[@]} -gt 0 ]; then
+      gif_url=${gif_array[$((RANDOM % ${#gif_array[@]}))]}
+      curl -s -X POST https://api.telegram.org/bot$BOT_TOKEN/sendVideo -d chat_id=$CHAT_BOT_ID -d video=$gif_url
+      else
+          echo "No GIFs found."
+      fi
   tags:
     - dev
   only:

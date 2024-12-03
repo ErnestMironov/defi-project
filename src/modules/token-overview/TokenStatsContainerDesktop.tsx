@@ -1,5 +1,5 @@
 import Chevron from '@assets/icons/arrow-down.svg'
-import { TokenIconComponent } from '@components/token-icon'
+import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { TokenVaultsPopover } from '@modules/token-vaults-popover/TokenVaultsPopover'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
@@ -34,10 +34,7 @@ export const TokenStatsContainerDesktop = (props: TokenStatsContainerProperties)
   return (
     <BaseContainer className={cn('divide-y divide-stroke-100', className)} {...rest}>
       <div className="flex items-center justify-between px-8 py-3 text-[0.875rem]/[1.5rem] font-medium">
-        <div className="flex items-center gap-[0.38rem]">
-          <TokenIconComponent symbol={tokenName} className="size-4" />
-          {tokenName}
-        </div>
+        <IconWithLabelComponent symbol={tokenName} className="font-aeonik" />
         <TokenVaultsPopover symbol={tokenName} />
       </div>
       <div
