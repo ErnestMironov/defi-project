@@ -102,7 +102,7 @@ export const AdminTable = (props: AdminTableProperties) => {
                   {sort === 'creation_time' && (
                     <Sort
                       className={cn(
-                        'size-5 shrink-0',
+                        'size-4 shrink-0',
                         orderBy === 'desc' && 'rotate-180',
                       )}
                     />

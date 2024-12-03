@@ -11,6 +11,8 @@ module.exports = {
   theme: {
     fontFamily: {
       arial: ["Arial", "sans-serif"],
+      montreal: ["Montreal", "sans-serif"],
+      aeonik: ["AeonikPro", "sans-serif"],
     },
     fontSize: {
       'xs': ['0.8125rem', {lineHeight: '0.975rem',}],

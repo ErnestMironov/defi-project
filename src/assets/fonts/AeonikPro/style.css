@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "AeonikPro";
+  font-style: normal;
+  font-weight: normal;
+  src: url("Aeonik Pro Regular.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "AeonikPro";
+  font-style: normal;
+  font-weight: 500;
+  src: url("Aeonik Pro Medium.ttf") format("ttf");
+}

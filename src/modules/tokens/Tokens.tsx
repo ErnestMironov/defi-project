@@ -27,6 +27,7 @@ export const TokenCharts = (props: TokensProperties) => {
     <BaseContainer className={cn(className, '')} {...rest}>
       <div className="flex h-[4.5rem] items-center gap-2 border-b border-stroke-100 px-6">
         <MultiSelect
+          variant="outline"
           options={SELECT_CHAINS}
           value={selectedChain}
           onChange={setSelectedChain}
@@ -35,6 +36,7 @@ export const TokenCharts = (props: TokensProperties) => {
           icon={<ChainIcon />}
         />
         <MultiSelect
+          variant="outline"
           options={SELECT_PROTOCOLS}
           value={selectedProtocol}
           onChange={setSelectedProtocol}

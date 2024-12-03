@@ -37,7 +37,7 @@ interface MultiSelectTriggerProperties
 const multiSelectVariants = cva('', {
   variants: {
     variant: {
-      default: 'rounded-xl border border-stroke-100 bg-cards',
+      default: 'rounded-xl border border-stroke-100 bg-cards-widget',
       /**
        * @description color2 is cards-widget
        */
