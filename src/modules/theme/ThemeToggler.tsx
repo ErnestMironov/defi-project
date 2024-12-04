@@ -34,11 +34,10 @@ export function ThemeToggler(props: ThemeToggleProperties) {
         className,
       )}
     >
-      {/* Анимированный фон */}
       <motion.div
         className={cn(
           'absolute top-1 left-1 z-0 rounded-[12px]',
-          'bg-main-100', // Добавьте соответствующие цвета для тем
+          'bg-main-100',
           'transition-all duration-300 ease-out',
         )}
         initial={false}
