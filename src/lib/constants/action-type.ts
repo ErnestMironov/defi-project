@@ -33,7 +33,7 @@ export const LAST_EVENT_ACTION_TYPE = {
   WITHDRAW_FULFILLMENT: 'Withdraw fulfillment',
   DEPOSIT: 'Deposit',
   REBALANCE_REQUEST: 'Rebalance request',
-  WITHDRAW_REQUEST: 'Withdraw',
+  WITHDRAW_REQUEST: 'Withdraw request',
   INC_HARVEST: 'Harvest',
   INC_SWAP: 'Swap',
   INC_COMPOUND: 'Compound',
