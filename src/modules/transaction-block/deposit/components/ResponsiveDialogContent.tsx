@@ -43,7 +43,10 @@ export const ResponsiveDialogContent = ({
   }
 
   return (
-    <DialogContent className="text-text gap-6 max-lg:max-w-[95vw]" {...props}>
+    <DialogContent
+      className={cn('text-text gap-6 max-lg:max-w-[95vw]', className)}
+      {...props}
+    >
       {children}
     </DialogContent>
   )

@@ -24,7 +24,7 @@ export const useTokensList = (
   return useMemo(() => {
     if (!userTokens) return []
 
-    if (chain && userTokens[chain]) {
+    if (chain) {
       const chainTokens = userTokens[chain] || []
       const filteredChainTokens = searchValue
         ? searchTokens(chainTokens, searchValue)

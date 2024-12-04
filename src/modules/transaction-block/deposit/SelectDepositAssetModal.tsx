@@ -4,10 +4,10 @@
 import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import Search from '@assets/icons/search.svg'
-import WarnIcon from '@assets/icons/warn.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
+import { SystemMessage } from '@components/system-message'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
-import { Dialog, DialogHeader, DialogTitle, DialogTrigger } from '@components/ui/dialog'
+import { Dialog, DialogHeader, DialogTrigger } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
 import { type ChainType } from '@constants/chains'
@@ -55,7 +55,11 @@ export const SelectDepositAsset = () => {
               <TokenWithNetwork
                 symbol={asset?.contract_ticker_symbol}
                 network={asset?.chain_id}
+                tokenLogoFallback={asset?.logo_url}
                 position="bottom-right"
+                classNames={{
+                  token: 'rounded-full overflow-hidden',
+                }}
                 width={isBelowDesktop ? '1.25rem' : '2.14288rem'}
               />
             )
@@ -63,35 +67,40 @@ export const SelectDepositAsset = () => {
         />
       </DialogTrigger>
 
-      <ResponsiveDialogContent opened={opened} setOpened={setOpened}>
-        <div className="flex flex-col gap-8 max-lg:gap-4">
-          <DialogHeader className="max-lg:text-left">
-            <DialogTitle>Select asset</DialogTitle>
-          </DialogHeader>
+      <ResponsiveDialogContent
+        className="max-w-[31.25rem] border border-stroke-100"
+        opened={opened}
+        setOpened={setOpened}
+      >
+        <DialogHeader className="border-b border-stroke-100 px-6 py-[1.12rem] normal-case max-lg:text-left">
+          <h3 className="text-base/none font-medium text-text-3100">Select assets</h3>
+        </DialogHeader>
 
-          <div className="relative flex w-full items-center rounded-2xl border border-stroke-100 px-6 py-4 max-lg:max-w-full">
+        <div className="relative flex w-full items-stretch gap-2 px-6 py-4 max-lg:max-w-full">
+          <label
+            htmlFor="search-input"
+            className="flex grow items-center gap-2 rounded-xl bg-input-default px-6 py-4"
+          >
             <Search />
-            <label htmlFor="search-input" className="mx-3 grow">
-              <input
-                id="search-input"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                type="text"
-                className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
-                placeholder="Search"
-              />
-            </label>
-            <SelectNetworkPopover
-              chain={chain}
-              onChange={setNetwork}
-              trigger={<SelectChainTrigger chain={chain} />}
-              showAllNetworksOption
+            <input
+              id="search-input"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              type="text"
+              className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
+              placeholder="Search"
             />
-          </div>
+          </label>
+          <SelectNetworkPopover
+            chain={chain}
+            onChange={setNetwork}
+            trigger={<SelectChainTrigger chain={chain} />}
+            showAllNetworksOption
+          />
         </div>
 
-        <ScrollArea className="-mx-4 h-[19.5rem] overscroll-none px-4 max-lg:h-auto max-lg:grow">
-          <div className="space-y-2">
+        <ScrollArea className="h-[19.5rem] overscroll-none px-1 max-lg:h-auto max-lg:grow">
+          <div className="space-y-1">
             {isLoading && (
               <>
                 {Array.from({ length: 4 }).map((_, i) => (
@@ -108,17 +117,19 @@ export const SelectDepositAsset = () => {
                 key={`${token?.contract_address}-${token?.chain_id}`}
                 onChange={handleSelect}
                 token={token}
+                selected={
+                  `${asset?.contract_address}-${asset?.chain_id}` ===
+                  `${token.contract_address}-${token.chain_id}`
+                }
               />
             ))}
 
             {filteredTokens?.length === 0 && searchValue && (
-              <div className="flex h-auto items-start gap-2 rounded-xl bg-orange-15 p-4">
-                <WarnIcon className="size-[2.14288rem] text-red-600" />
-                <p className="flex flex-col gap-2 font-[Arial] text-[1.25rem] leading-[150%]">
-                  Unknown token
-                  <span className="text-base leading-none">This token was not found</span>
-                </p>
-              </div>
+              <SystemMessage
+                className="mx-5"
+                variant="error"
+                message="Whoops...This token was not found"
+              />
             )}
           </div>
         </ScrollArea>

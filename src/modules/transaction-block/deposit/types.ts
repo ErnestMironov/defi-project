@@ -11,6 +11,7 @@ export interface ResponsiveDialogContentProperties
 export interface TokensListItemProperties {
   onChange: (asset: ITokenData) => void
   token: ITokenData
+  selected?: boolean
 }
 
 export interface SelectChainTriggerProperties {
