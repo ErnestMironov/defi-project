@@ -1,8 +1,10 @@
 import type { Event } from '@api/maat-finance/types'
 import LinkIcon from '@assets/icons/externalLinkIcon.svg'
+import MoreOptionsIcon from '@assets/icons/more-options.svg'
 import TransactionDetails from '@assets/icons/TransactionDetails.svg'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Skeleton } from '@components/ui/skeleton'
+import { ACTION_ICONS } from '@constants/action-icon'
 import { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ROUTES } from '@routes/routes'
@@ -16,7 +18,6 @@ import { formatUnits } from 'viem'
 import BlueBackground from '../assets/icons/background/blue.svg'
 import PurpleBackground from '../assets/icons/background/purple.svg'
 import BridgeIcon from '../assets/icons/bridge.svg'
-import DepositIcon from '../assets/icons/deposit.svg'
 import WithdrawIcon from '../assets/icons/portfolioWithdraw.svg'
 import RebalanceIcon from '../assets/icons/rebalance.svg'
 import { StatusLabel } from '../components/StatusLabel'
@@ -36,40 +37,10 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger className="rounded-xl border p-2 text-gray-700 hover:bg-gray-200">
-        <span className="size-full shadow-test">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="17"
-            height="16"
-            viewBox="0 0 17 16"
-            fill="none"
-          >
-            <path
-              d="M8.29167 8.66536C8.65986 8.66536 8.95833 8.36689 8.95833 7.9987C8.95833 7.63051 8.65986 7.33203 8.29167 7.33203C7.92348 7.33203 7.625 7.63051 7.625 7.9987C7.625 8.36689 7.92348 8.66536 8.29167 8.66536Z"
-              stroke="#8585A9"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M8.29167 4.0013C8.65986 4.0013 8.95833 3.70283 8.95833 3.33464C8.95833 2.96645 8.65986 2.66797 8.29167 2.66797C7.92348 2.66797 7.625 2.96645 7.625 3.33464C7.625 3.70283 7.92348 4.0013 8.29167 4.0013Z"
-              stroke="#8585A9"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M8.29167 13.3333C8.65986 13.3333 8.95833 13.0349 8.95833 12.6667C8.95833 12.2985 8.65986 12 8.29167 12C7.92348 12 7.625 12.2985 7.625 12.6667C7.625 13.0349 7.92348 13.3333 8.29167 13.3333Z"
-              stroke="#8585A9"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
+        <MoreOptionsIcon className="size-full" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
-        className="mr-2 mt-4 w-[248px]  rounded-xl border border-stroke-40100 bg-cards p-2 shadow-[0px_6px_66px_0px_rgba(0,0,0,0.06),0px_6px_9px_0px_rgba(0,0,0,0.04)]"
+        className="mr-2 mt-4 w-[15.5rem] rounded-xl border border-stroke-40100 bg-cards p-2 shadow-test-2"
         side="left"
         align="end"
       >
@@ -102,9 +73,7 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const renderIcon = () => {
     switch (event.action_type) {
       case 'DEPOSIT': {
-        return (
-          <DepositIcon className="size-full [&_path:first-child]:stroke-red-100 [&_path]:fill-red-100" />
-        )
+        return <ACTION_ICONS.DEPOSIT className="size-full" />
       }
       case 'WITHDRAW':
       case 'WITHDRAW_REQUEST': {
@@ -160,14 +129,6 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
               ]
             }
           </p>
-          {/* <Link to={`${ROUTES.TRANSACTIONS}/${event.hash}`} className="ml-[0.38rem]">
-            <Expand className="size-6" />
-          </Link>
-          <ScanLink
-            chainId={event.src_chain_id}
-            txHash={event.hash}
-            className="ml-1 size-6"
-          /> */}
         </div>
         <p className="text-base text-gray-100">
           <p className="text-base font-medium">
@@ -192,16 +153,6 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
           <StatusLabel status={event.status} />
           <DropdownMenuForPortfolio event={event} />
         </div>
-        {/* <p className="text-end text-base text-gray-100">
-          {formatUsdValue(
-            formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
-            {
-              notation: 'compact',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            },
-          )}
-        </p> */}
       </div>
     </div>
   )

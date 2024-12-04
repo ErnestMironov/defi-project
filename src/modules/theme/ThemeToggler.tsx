@@ -54,7 +54,6 @@ export function ThemeToggler(props: ThemeToggleProperties) {
         }}
       />
 
-      {/* Кнопка для светлой темы */}
       <div className="relative z-10 flex w-1/2 items-center justify-center">
         <Button
           size="icon"
@@ -74,7 +73,6 @@ export function ThemeToggler(props: ThemeToggleProperties) {
         </Button>
       </div>
 
-      {/* Кнопка для темной темы */}
       <div className="relative z-10 flex w-1/2 items-center justify-center">
         <Button
           size="icon"
