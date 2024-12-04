@@ -24,14 +24,6 @@ export const UserTokens = (props: UserTokensProperties) => {
       )
     }
 
-    // if (
-    //   !formattedData ||
-    //   formattedData.length === 0 ||
-    //   +formatAmount(formattedData?.[0]?.balance) <= 0
-    // ) {
-    //   return <NoDeposit />
-    // }
-
     return (
       <div className="user-assets flex flex-col gap-6">
         {formattedData
