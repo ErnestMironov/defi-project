@@ -38,7 +38,7 @@ const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex  items-start gap-2">
+        <div className="flex  items-start justify-center gap-2">
           <TokenIconComponent
             symbol={mainToken.contract_ticker_symbol}
             className={cn(
@@ -48,32 +48,56 @@ const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData
           />
 
           <div>
-            <span className="font-medium text-text-100">
-              {formatTokenBalance(
-                totalBalance.toString(),
-                mainToken.contract_decimals,
-              ).slice(0, 5)}{' '}
-              {mainToken.contract_ticker_symbol}
-            </span>
+            <div className="flex items-center justify-center gap-1">
+              <span className="font-medium text-text-100">
+                {formatTokenBalance(
+                  totalBalance.toString(),
+                  mainToken.contract_decimals,
+                ).slice(0, 5)}{' '}
+                {mainToken.contract_ticker_symbol}
+              </span>
+              <span className={`transition-transform ${isOpen ? 'rotate-90' : ''}`}>
+                <ArrowDown className="size-4 rotate-90" />
+              </span>
+            </div>
+
             {!isOpen && (
               <div className="relative flex">
-                {tokenGroup.map((token, index) => (
-                  <TokenIconComponent
-                    key={token.chain_id}
-                    symbol={token.chain_id}
-                    className={cn('absolute size-5 rounded-full', index !== 0 && '-ml-2')}
-                    style={{
-                      left: index === 0 ? 0 : `${index * 14}px`,
-                    }}
-                  />
-                ))}
+                {tokenGroup.length > 4 ? (
+                  <>
+                    {tokenGroup.slice(0, 4).map((token, index) => (
+                      <TokenIconComponent
+                        key={token.chain_id}
+                        symbol={token.chain_id}
+                        className={cn(
+                          'absolute size-5 rounded-full',
+                          index !== 0 && '-ml-2',
+                          index === 0 ? 'left-0' : `left-${index * 14}`,
+                        )}
+                      />
+                    ))}
+                    <span className="absolute left-16 size-5 rounded-full">
+                      +{tokenGroup.length - 4}
+                    </span>
+                  </>
+                ) : (
+                  tokenGroup.map((token, index) => (
+                    <TokenIconComponent
+                      key={token.chain_id}
+                      symbol={token.chain_id}
+                      className={cn(
+                        'absolute size-5 rounded-full',
+                        index !== 0 && '-ml-2',
+                        index === 0 ? 'left-0' : `left-${index * 14}`,
+                      )}
+                    />
+                  ))
+                )}
               </div>
             )}
           </div>
-          <span className={`transition-transform ${isOpen ? 'rotate-90' : ''}`}>
-            <ArrowDown className="size-4 rotate-90" />
-          </span>
         </div>
+
         <div className="pr-2 text-right">
           <p className="font-medium">
             <span className="text-text-50">{formatUsdValue(totalBalanceUsd)[0]}</span>
