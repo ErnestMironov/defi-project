@@ -58,12 +58,8 @@
 	--violet-80: #8763f3cc;
 	--orange-100: #ff964b;
 	--orange-15: #ff964b26;
-
-	/* SHADOWS */
-	--shadow: 0 3px 1px 0 rgba(135 99 243 / 0.12);
-	--shadow-hover: 0px 4px 1px 0px rgba(135, 99, 243, 0.12);
-	--dark-shadow: 0 2px 1px 0 rgba(214 200 255 / 0.22);
-	--dark-shadow-hover: 0 4px 1px 0 rgba(214 200 255 / 0.22);
+	--text-2100: 133 133 169;
+	--text-3100: 133 133 169;
 }
 
 .dark {
@@ -117,6 +113,8 @@
 	--violet-30: #8763f34d;
 	--violet-50: #8763f380;
 	--violet-80: #8763f3cc;
+	--text-2100: 133 133 169;
+	--text-3100: 255 255 255;
 }
 
 // ! V2 vars. NEED TO REPLACE ALL TOP COLORS WITH THAT FRESH NEW COLORS
@@ -153,11 +151,10 @@
 	--text-1100: #323949;
 	--text-170: #ffffffb2;
 	--text-100: #0e1118;
-	--text-2100: #8585a9;
+	--text-2100: 133 133 169;
 	--text-260: #8585a999;
 	--text-270: #8585a9b2;
 	--text-20: #0e111833;
-	--text-3100: #8585a9;
 	--text-30: #8585a94d;
 	--text-30100: #0e11184d;
 	--text-4100: #eea91e;
@@ -208,7 +205,7 @@
 	--text-1100: #ffffff;
 	--text-170: #8585a9b2;
 	--text-100: #ffffff;
-	--text-2100: #8585a9;
+	--text-2100: 133 133 169;
 	--text-260: #8585a999;
 	--text-270: #8585a9b2;
 	--text-20: #8585a933;

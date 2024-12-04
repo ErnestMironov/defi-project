@@ -1,7 +1,9 @@
 import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import { AmountInput } from '@components/amount-input/AmountInput'
+import { ChoiceBox } from '@components/box/ChoiceBox'
 import { Button } from '@components/ui/button'
 import { useVaultAPY } from '@hooks/useVaultAPY'
+import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { formatValueWithPrecision } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
@@ -14,7 +16,6 @@ import { useTxStore } from '../store/useTxStore'
 import { SwappableInputs } from './components/SwappableInputs'
 import { VaultSelection } from './components/VaultSelection'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
-import { SelectVault } from './SelectVault'
 import ZapFee from './zap-fee/ZapFee'
 
 type InputType = 'usd' | 'token'
@@ -63,6 +64,8 @@ export const DepositInput = () => {
     setInputValueInUSD,
     setVault,
   } = useTxStore()
+
+  const { open: openConnectModal } = useAppKit()
 
   // Vault selection logic
   const vaultSet = useRef(false)
@@ -215,13 +218,18 @@ export const DepositInput = () => {
               Select the desired vault
             </p>
           )}
-          <SelectVault />
+          <ChoiceBox
+            disabled
+            value={`${vault} Vault`}
+            symbol={vault}
+            className="overflow-visible px-4"
+          />
         </div>
       </div>
 
       {/* Action Button */}
       <div className="flex flex-col items-center justify-center px-4 py-3">
-        {isConnected && (
+        {isConnected ? (
           <Button
             size="lg"
             disabled={!inputValue || !!error}
@@ -230,9 +238,17 @@ export const DepositInput = () => {
           >
             {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}
           </Button>
+        ) : (
+          <Button
+            size="lg"
+            className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+            onClick={() => openConnectModal({ view: 'Connect' })}
+          >
+            Connect Wallet
+          </Button>
         )}
       </div>
-      <ZapFee className="mt-4" />
+      <ZapFee />
     </div>
   )
 }

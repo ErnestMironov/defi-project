@@ -23,10 +23,7 @@ const ZapFee: React.FC<ZapFeeProperties> = ({ className }) => {
 
   return (
     <div className={className}>
-      <ShortInfo
-        openHandler={() => handleOpenChange(true)}
-        summaryAndFees={summaryAndFees}
-      />
+      <ShortInfo openHandler={() => handleOpenChange(true)} />
       <Details
         open={open}
         onOpenChange={handleOpenChange}

@@ -18,7 +18,7 @@ export const VaultInfoBox = (props: VaultInfoBoxProperties) => {
     <ShadowBox
       className={cn(
         'flex flex-[1_0_0] cursor-pointer items-center gap-2.5 rounded-2xl px-6 py-4 transition-all',
-        !active && 'border-transparent shadow-none',
+        !active && 'border-transparent !shadow-none',
       )}
       onClick={onClick}
     >

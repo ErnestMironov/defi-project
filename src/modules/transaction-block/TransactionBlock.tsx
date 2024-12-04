@@ -1,11 +1,8 @@
 import { useGetSwapRoute } from '@api/lifi/hooks/useGetSwapRoute'
-import { Button } from '@components/ui/button'
 import { TX_TYPE } from '@constants/txTypes'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { useAppKit } from '@reown/appkit/react'
 import clsx from 'clsx'
 import { type ComponentProps } from 'react'
-import { useAccount } from 'wagmi'
 
 import { TVLDisplay } from './components/TVLDisplay'
 import { DepositInput } from './deposit/DepositInput'
@@ -27,15 +24,11 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
   useGetSwapRoute()
   useSetDepositDetails()
 
-  const { open: openConnectModal } = useAppKit()
-
-  const { isConnected } = useAccount()
-
   return (
     <>
       <div
         className={clsx(
-          'gradient-border-animated relative flex w-full flex-col rounded-3xl pb-3 pt-4 shadow-block max-lg:gap-6 max-lg:p-4',
+          'gradient-border-animated relative flex w-full flex-col rounded-3xl pt-4 shadow-block max-lg:gap-6 max-lg:p-4',
           className,
         )}
         {...rest}
@@ -46,15 +39,6 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
         </div>
         {txType === TX_TYPE.DEPOSIT && <DepositInput />}
         {txType === TX_TYPE.WITHDRAW && <WithdrawInput />}
-        {!isConnected && (
-          <Button
-            className="w-full lg:mt-10"
-            size="lg"
-            onClick={() => openConnectModal()}
-          >
-            Connect wallet
-          </Button>
-        )}
       </div>
       <FailModal />
       <DoneModal />
