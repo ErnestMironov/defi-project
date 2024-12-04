@@ -1,8 +1,9 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
+import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import type { OptionType } from '@components/select/Select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { cn } from '@utils/cn'
-import { type ComponentProps, useMemo, useState } from 'react'
+import { type ComponentProps } from 'react'
 import { useAccount } from 'wagmi'
 
 import { ChainsList } from '../components/Chains/ChainList'
@@ -14,60 +15,71 @@ import { useAllAssets } from './useAllAssets'
 
 interface AllAssetsProperties extends ComponentProps<'div'> {}
 
+const LoadingState = () => (
+  <div className="flex flex-col gap-6 overflow-auto">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <AssetItemSkeleton key={i} />
+    ))}
+  </div>
+)
+
+const EmptyStateView = () => <EmptyState />
+
+const AssetsTabs = ({
+  tokens,
+  potentialUsdProfit,
+}: {
+  tokens: ITokenData[]
+  potentialUsdProfit: string
+}) => (
+  <Tabs defaultValue="tokens" className="">
+    <TabsList className="w-full justify-start gap-4 border-b px-6">
+      <TabsTrigger
+        variant="unstyled"
+        value="tokens"
+        className="py-4 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:text-main-100"
+      >
+        Tokens
+      </TabsTrigger>
+      <TabsTrigger
+        value="chains"
+        variant="unstyled"
+        className="py-4 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:text-main-100"
+      >
+        Chains
+      </TabsTrigger>
+    </TabsList>
+    <TabsContent value="tokens">
+      <TokensList tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
+    </TabsContent>
+    <TabsContent value="chains">
+      <ChainsList tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
+    </TabsContent>
+  </Tabs>
+)
+
 export const AllAssets = (props: AllAssetsProperties) => {
   const { className, ...rest } = props
-  const [chains] = useState<OptionType[]>([])
+  const chains: OptionType[] = []
   const { tokens, isLoading, potentialUsdProfit } = useAllAssets(chains)
   const { address } = useAccount()
   const { data: userShares } = useUserShares(address)
 
-  const hasDeposits = useMemo(() => {
-    return userShares?.shares && userShares.shares.length > 0
-  }, [userShares])
+  const hasDeposits = userShares?.shares && userShares.shares.length > 0
+  const hasWalletTokens = tokens && tokens.length > 0
 
-  const hasWalletTokens = useMemo(() => {
-    return tokens && tokens.length > 0
-  }, [tokens])
+  if (isLoading) {
+    return <LoadingState />
+  }
+
+  if (!hasDeposits && !hasWalletTokens) {
+    return <EmptyStateView />
+  }
 
   return (
     <div className={cn('', className)} {...rest}>
-      {isLoading ? (
-        <div className="flex flex-col gap-6 overflow-auto">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <AssetItemSkeleton key={i} />
-          ))}
-        </div>
-      ) : !hasDeposits && !hasWalletTokens ? (
-        <EmptyState />
-      ) : (
-        <div className="">
-          <NoDeposit />
-          <Tabs defaultValue="tokens" className="">
-            <TabsList className="w-full justify-start gap-4 border-b px-6">
-              <TabsTrigger
-                variant="unstyled"
-                value="tokens"
-                className="py-4 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:text-main-100"
-              >
-                Tokens
-              </TabsTrigger>
-              <TabsTrigger
-                value="chains"
-                variant="unstyled"
-                className="py-4 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:text-main-100"
-              >
-                Chains
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="tokens">
-              <TokensList tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
-            </TabsContent>
-            <TabsContent value="chains">
-              <ChainsList tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
-            </TabsContent>
-          </Tabs>
-        </div>
-      )}
+      <NoDeposit />
+      <AssetsTabs tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
     </div>
   )
 }
