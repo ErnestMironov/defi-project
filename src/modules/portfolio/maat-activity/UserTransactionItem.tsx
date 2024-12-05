@@ -4,8 +4,7 @@ import MoreOptionsIcon from '@assets/icons/more-options.svg'
 import TransactionDetails from '@assets/icons/TransactionDetails.svg'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Skeleton } from '@components/ui/skeleton'
-import { ACTION_ICONS } from '@constants/action-icon'
-import { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
+import { LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO } from '@constants/action-type'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
@@ -18,6 +17,7 @@ import { formatUnits } from 'viem'
 import BlueBackground from '../assets/icons/background/blue.svg'
 import PurpleBackground from '../assets/icons/background/purple.svg'
 import BridgeIcon from '../assets/icons/bridge.svg'
+import DepositIcon from '../assets/icons/deposit.svg'
 import WithdrawIcon from '../assets/icons/portfolioWithdraw.svg'
 import RebalanceIcon from '../assets/icons/rebalance.svg'
 import { StatusLabel } from '../components/StatusLabel'
@@ -73,7 +73,9 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const renderIcon = () => {
     switch (event.action_type) {
       case 'DEPOSIT': {
-        return <ACTION_ICONS.DEPOSIT className="size-full" />
+        return (
+          <DepositIcon className="size-full [&_path:first-child]:stroke-red-100 [&_path]:fill-red-100" />
+        )
       }
       case 'WITHDRAW':
       case 'WITHDRAW_REQUEST': {
@@ -106,6 +108,16 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
     }
   }
 
+  const formatTransactionAction = (action: string) => {
+    const words = action.split(' ')
+    return (
+      <>
+        <span className="text-text-1100">{words[0]}</span>
+        <span className="text-text-260">{` ${words.slice(1).join(' ')}`}</span>
+      </>
+    )
+  }
+
   return (
     <div className={cn('flex items-center', className)} {...rest}>
       <div
@@ -122,15 +134,15 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
       </div>
       <div className="ml-3 space-y-1">
         <div className="flex items-center">
-          <p className="text-text text-[1.25rem]/[1.5rem] font-medium">
-            {
-              LAST_EVENT_ACTION_TYPE[
-                event.action_type as keyof typeof LAST_EVENT_ACTION_TYPE
-              ]
-            }
+          <p className=" text-[1.25rem]/[1.5rem] font-medium leading-4 ">
+            {formatTransactionAction(
+              LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO[
+                event.action_type as keyof typeof LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO
+              ],
+            )}
           </p>
         </div>
-        <p className="text-base text-gray-100">
+        <p className="text-base text-text-2100">
           <p className="text-base font-medium">
             {formatAmount(
               formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
