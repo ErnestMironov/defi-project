@@ -11,10 +11,10 @@ interface VaultTokenItemProperties extends ComponentProps<'div'>, TokenData {}
 export const VaultTokenItem = (props: VaultTokenItemProperties) => {
   const { balance, symbol, apy, className, ...rest } = props
   return (
-    <div className={cn('flex items-center gap-3', className)} {...rest}>
+    <div className={cn('flex items-center gap-2', className)} {...rest}>
       <TokenIconComponent symbol={symbol} className="size-12" />
       <div className="flex flex-col">
-        <p className="text-[1.25rem] font-medium text-text-1100">
+        <p className="text-base font-medium text-text-1100">
           {formatAmount(balance, {
             notation: 'compact',
             minimumFractionDigits: 2,
@@ -22,7 +22,7 @@ export const VaultTokenItem = (props: VaultTokenItemProperties) => {
           })}{' '}
           {symbol}
         </p>
-        <p className="flex gap-[.38rem] text-base text-gray-100">
+        <p className="flex gap-[.38rem] text-base text-text-2100">
           {formatUsdValue(balance, {
             notation: 'compact',
             minimumFractionDigits: 2,
@@ -31,7 +31,7 @@ export const VaultTokenItem = (props: VaultTokenItemProperties) => {
         </p>
       </div>
       <div className="ml-auto font-medium text-text-1100">
-        <p className="text-lg font-medium leading-6">{formatPercentValue(apy)}</p>
+        <p className="text-base font-medium leading-6">{formatPercentValue(apy)}</p>
         <p className="text-right text-base text-text-2100">APY</p>
       </div>
     </div>

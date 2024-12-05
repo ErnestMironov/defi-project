@@ -10,7 +10,6 @@ import { ChainsList } from '../components/Chains/ChainList'
 import TokensList from '../components/Tokens/TokenList'
 import { AssetItemSkeleton } from './AssetItem'
 import { EmptyState } from './EmptyState'
-import { NoDeposit } from './NoDeposit'
 import { useAllAssets } from './useAllAssets'
 
 interface AllAssetsProperties extends ComponentProps<'div'> {}
@@ -78,7 +77,6 @@ export const AllAssets = (props: AllAssetsProperties) => {
 
   return (
     <div className={cn('', className)} {...rest}>
-      <NoDeposit />
       <AssetsTabs tokens={tokens} potentialUsdProfit={potentialUsdProfit} />
     </div>
   )
