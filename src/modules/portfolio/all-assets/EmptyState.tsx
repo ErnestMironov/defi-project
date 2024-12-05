@@ -12,9 +12,9 @@ export const EmptyState = (props: EmptyStateProperties) => {
     <div className={className} {...rest}>
       <div className="mt-4 flex items-center justify-center">
         <div className="relative flex items-center ">
-          <USDC className="absolute left-0 size-14" style={{ marginLeft: '-27px' }} />
-          <ETH className="z-10 size-20" />
-          <USDT className="absolute right-0 size-14" style={{ marginRight: '-27px' }} />
+          <USDC className="absolute left-0 size-12 -translate-x-8 opacity-50" />
+          <ETH className="z-10 size-16 rounded-full border-2 border-white" />
+          <USDT className="absolute right-0 size-12 translate-x-8 opacity-50" />
         </div>
       </div>
       <RefillWalletTooltip className="mt-5" />
