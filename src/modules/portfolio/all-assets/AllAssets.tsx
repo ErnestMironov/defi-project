@@ -37,14 +37,14 @@ const AssetsTabs = ({
       <TabsTrigger
         variant="unstyled"
         value="tokens"
-        className="py-4 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:text-main-100"
+        className="py-3 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100"
       >
         Tokens
       </TabsTrigger>
       <TabsTrigger
         value="chains"
         variant="unstyled"
-        className="py-4 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:text-main-100"
+        className="py-3 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100"
       >
         Chains
       </TabsTrigger>
