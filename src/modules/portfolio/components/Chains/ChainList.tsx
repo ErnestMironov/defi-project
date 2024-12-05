@@ -123,13 +123,6 @@ export const ChainsList = ({
 
   return (
     <div className={cn(`px-1 pb-1  ${className}`)}>
-      {/* <MultiSelect
-        options={SELECT_CHAINS}
-        value={selectedChain}
-        onChange={setSelectedChain}
-        placeholder=""
-        className="w-[12.5rem]"
-      /> */}
       <YieldPotential potentialUsdProfit={potentialUsdProfit} />
       <div className={cn(' py-4 flex flex-col gap-4  rounded-xl ')}>
         {Object.values(groupedByChain).map(
