@@ -123,7 +123,7 @@ const GroupedTokenItemWithExceptions = ({ tokenGroup }: { tokenGroup: ITokenData
                 <div className="flex flex-col">
                   <span className="">
                     {formatTokenBalance(
-                      totalBalance.toString(),
+                      token.balance.toString(),
                       mainToken.contract_decimals,
                     ).slice(0, 5)}{' '}
                     {token.contract_ticker_symbol}
