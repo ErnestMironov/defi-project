@@ -1,7 +1,7 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
+import ClosePortfolioIcon from '@assets/icons/portfolio-close.svg'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { usePortfolioData } from '@hooks/usePortfolioStore'
-import { useWindowSize } from '@hooks/useWindowSize'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
@@ -24,7 +24,6 @@ interface PortfolioModalProperties extends React.HTMLAttributes<HTMLDivElement> 
 
 export const PortfolioModal = ({ isOpen, onClose }: PortfolioModalProperties) => {
   const { address } = useAccount()
-  const { height } = useWindowSize()
   const { yield: yieldData, isLoadingYield } = usePortfolioData()
   const { data: userShares, isLoading: isUserSharesLoading } = useUserShares(address)
   const { open: openConnectModal } = useAppKit()
@@ -71,31 +70,10 @@ export const PortfolioModal = ({ isOpen, onClose }: PortfolioModalProperties) =>
               onClick={onClose}
               className="flex size-12 items-center justify-center rounded-xl bg-cards hover:bg-gray-50"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="17"
-                height="16"
-                viewBox="0 0 17 16"
-                fill="none"
-              >
-                <path
-                  d="M12.9587 12.668L4.29199 4.00133"
-                  stroke="#8585A9"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12.959 4.00128L4.29235 12.668"
-                  stroke="#8585A9"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <ClosePortfolioIcon />
             </button>
           </div>
-          <div className="size-auto w-[482px]  overflow-y-auto rounded-3xl bg-cards pt-4 shadow-lg">
+          <div className="size-auto max-h-screen w-[30.125rem] overflow-y-auto rounded-3xl bg-cards pt-4 shadow-lg">
             <div className="flex h-auto w-full items-center justify-between px-6 py-4">
               <PortfolioButton
                 onClick={onClose}
@@ -136,11 +114,7 @@ export const PortfolioModal = ({ isOpen, onClose }: PortfolioModalProperties) =>
               <UserActivityTabs
                 value={portfolioValue}
                 className={cn(
-                  'mt-8 [&_.all-assets]:max-h-[12vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden ',
-                  {
-                    '[&_.user-activity]:max-h-[25vh]': height > 768,
-                    '[&_.all-assets]:max-h-[20vh]': height > 768,
-                  },
+                  'mt-8 [&_.all-assets]:max-h-[calc(90vh-200px)] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden',
                 )}
               />
             </div>
