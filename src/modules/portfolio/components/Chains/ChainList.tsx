@@ -26,12 +26,14 @@ const ChainItem = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const chainName = CHAIN_NAMES_BY_ID[chainId as keyof typeof CHAIN_NAMES_BY_ID]
-
+  console.log(tokens)
   return (
     <div
       className={cn(
         'relative rounded-xl pt-4 pb-4 hover:bg-light-blue-15',
-        isOpen ? 'border border-stroke-100 hover:bg-transparent' : '',
+        isOpen
+          ? 'border bg-[rgba(133, 133, 169, 0.03)] border-stroke-100 hover:bg-transparent'
+          : '',
       )}
     >
       <div
@@ -69,10 +71,7 @@ const ChainItem = ({
 
                 <div className="ml-2 flex flex-col">
                   <span className="">
-                    {formatTokenBalance(token.balance, token.contract_decimals).slice(
-                      0,
-                      5,
-                    )}{' '}
+                    {formatTokenBalance(token.balance, token.contract_decimals)}{' '}
                     {token.contract_ticker_symbol}
                   </span>
                   <div className="flex flex-row items-center gap-1">
