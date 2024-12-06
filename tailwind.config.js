@@ -204,6 +204,7 @@ module.exports = {
         'dark-shadow--hover': 'var(--dark-shadow-hover)',
         'test': 'var(--shadow-test)',
         'test-2': 'var(--shadow-test-2)',
+        'widget-gradient': 'var(--widget-gradient)',
       },
       keyframes: {
         "accordion-down": {
