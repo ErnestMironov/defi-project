@@ -9,7 +9,7 @@ import { useEffect, useRef } from 'react'
 export const Deposit = () => {
   // useCheckRegistration()
 
-  const { bestUSDCAPy, bestUSDTAPy, isLoading: isStrategiesLoading } = useVaultAPY()
+  const { bestUSDCApy, bestUSDTApy, isLoading: isStrategiesLoading } = useVaultAPY()
   const { isBelowDesktop } = useDeviceWidth()
 
   const { setVault } = useTxStore()
@@ -17,22 +17,22 @@ export const Deposit = () => {
 
   useEffect(() => {
     if (!vaultSet.current && !isStrategiesLoading) {
-      if (bestUSDCAPy !== undefined && bestUSDTAPy !== undefined) {
-        if (Number(bestUSDCAPy) > Number(bestUSDTAPy)) {
+      if (bestUSDCApy !== undefined && bestUSDTApy !== undefined) {
+        if (Number(bestUSDCApy) > Number(bestUSDTApy)) {
           setVault('USDC')
-        } else if (Number(bestUSDTAPy) > Number(bestUSDCAPy)) {
+        } else if (Number(bestUSDTApy) > Number(bestUSDCApy)) {
           setVault('USDT')
         }
-      } else if (bestUSDCAPy === undefined) {
+      } else if (bestUSDCApy === undefined) {
         setVault('USDT')
-      } else if (bestUSDTAPy === undefined) {
+      } else if (bestUSDTApy === undefined) {
         setVault('USDC')
       } else {
         setVault('USDT')
       }
       vaultSet.current = true
     }
-  }, [bestUSDCAPy, bestUSDTAPy, setVault, isStrategiesLoading])
+  }, [bestUSDCApy, bestUSDTApy, setVault, isStrategiesLoading])
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-between gap-10  pb-10">

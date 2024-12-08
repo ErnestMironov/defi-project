@@ -1,6 +1,7 @@
 import SwitchIcon from '@assets/icons/switch.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { ShadowBox } from '@components/box/ShadowBox'
+import { cn } from '@utils/cn'
 import { formatTokenBalance } from '@utils/formatValue'
 
 import DollarInput from '../../components/DollarInput'
@@ -98,7 +99,7 @@ export const SwappableInputs = ({
   // Render balance information
   const balanceInfo = (
     <div className="flex items-center gap-3">
-      <p>
+      <p className={cn('flex items-center', error && '[&>span]:text-red-100')}>
         <span className="ml-2 mr-[.19rem] text-text-2100">
           {formatTokenBalance(asset.balance, asset.contract_decimals)}
         </span>

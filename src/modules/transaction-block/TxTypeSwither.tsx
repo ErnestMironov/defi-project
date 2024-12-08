@@ -29,6 +29,7 @@ export const TxTypeSwitcher: FC = () => {
   const { txType, setTxType } = useTxStore()
   const [metrics, setMetrics] = useState({ width: 0, left: 0 })
   const tabsReference = useRef<(HTMLButtonElement | null)[]>([])
+  const observerReference = useRef<ResizeObserver | null>(null)
 
   const updateTabMetrics = useCallback(() => {
     const activeTab = tabsReference.current[TABS.findIndex((tab) => tab.value === txType)]
@@ -41,9 +42,42 @@ export const TxTypeSwitcher: FC = () => {
   }, [txType])
 
   useEffect(() => {
+    // Create ResizeObserver to track button size changes
+    observerReference.current = new ResizeObserver(() => {
+      requestAnimationFrame(updateTabMetrics)
+    })
+
+    // Observe all tab buttons
+    tabsReference.current.forEach((button) => {
+      if (button) {
+        observerReference.current?.observe(button)
+      }
+    })
+
     updateTabMetrics()
-    const timers = [100, 150, 300].map((delay) => setTimeout(updateTabMetrics, delay))
-    return () => timers.forEach(clearTimeout)
+    // Multiple attempts to calculate metrics with increasing delays
+    const timers = [0, 50, 100, 200, 500].map((delay) =>
+      setTimeout(updateTabMetrics, delay),
+    )
+
+    return () => {
+      timers.forEach(clearTimeout)
+      observerReference.current?.disconnect()
+    }
+  }, [updateTabMetrics])
+
+  useEffect(() => {
+    // Update metrics when tab becomes visible
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        updateTabMetrics()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [updateTabMetrics])
 
   useEffect(() => {

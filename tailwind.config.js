@@ -188,6 +188,7 @@ module.exports = {
           4100: 'var(--text-4100)',
           4030: 'var(--text-4030)',
           50: 'var(--text-50)',
+          60: 'var(--text-60)',
           5070: 'var(--text-5070)',
           80100: 'var(--text-80100)',
         },
