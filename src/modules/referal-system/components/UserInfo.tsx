@@ -1,51 +1,62 @@
-import Asterisk from '@assets/icons/asterisk.svg'
-import StartBold from '@assets/icons/start-bold.svg'
 import { cn } from '@utils/cn'
 
 import UserAvatar from '../assets/avatar.png'
+import LeaderBoard from './BestBruddas'
+import BonusMultiplier from './BonusMultiplier'
+import ReferalLinks from './ReferalLinks'
+import StarPoint from './StarPoint'
+import UserLevel from './UserLevel'
+import UserPoints from './UserPoints'
 
 interface UserInfoProperties extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function UserInfo({ className, ...props }: UserInfoProperties) {
   return (
     <div className={cn('', className)} {...props}>
-      <div className="">
-        <div className="flex  h-auto w-[77rem] items-center rounded-3xl bg-cards-widget font-montreal">
-          <div className="p-5">
-            <img src={UserAvatar} alt="user avatar" className="width-[12.375rem]" />
-          </div>
-          <div>
-            <div className="flex items-center  gap-2 text-[2.625rem] font-medium text-violet-100">
-              Test Muckle{' '}
-              <p className="rounded-md bg-violet-100 px-2 py-1 text-sm text-white">
-                lvl 1
-              </p>
-            </div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-row gap-4">
+          <div className=" h-auto">
+            <div className="flex w-[77rem] flex-col rounded-3xl bg-cards-widget font-montreal">
+              <div className="flex items-center">
+                <div className="flex w-[34rem] flex-row items-center justify-center">
+                  <div className="p-6">
+                    <img
+                      src={UserAvatar}
+                      alt="user avatar"
+                      className="h-auto w-[12.375rem]"
+                    />
+                  </div>
+                  <div className="">
+                    <div className="flex items-center gap-2 text-[2.625rem] font-medium">
+                      <span className="text-violet-100">Test Muckle</span>
+                      <div className="flex items-center gap-2">
+                        <p className="rounded-md bg-violet-100 px-2 py-1 text-sm text-white">
+                          LVL 1
+                        </p>
+                      </div>
+                    </div>
 
-            <p className="text-sm font-medium leading-5 text-text-2100">
-              "I would walk 20 miles to listen to my worst enemy if I could learn
-              something."
-            </p>
+                    <p className="text-sm font-medium leading-5 text-text-2100">
+                      "I would walk 20 miles to listen to my worst enemy if I could learn
+                      something."
+                    </p>
 
-            <div className="mt-4 flex gap-2">
-              <div className="flex items-center gap-1 rounded-md  bg-[#8585A90D] p-1 px-2">
-                <Asterisk />
-                <p className="text-sm font-medium text-text-2100">Multiplier</p>
-                <p className="text-sm font-medium">x1.5</p>
-              </div>
-              <div className="flex items-center justify-center gap-1 rounded-md  bg-main-15 p-1 px-2 text-sm">
-                <p className="text-sm font-medium text-main-100">+</p>
-                <StartBold className="size-4" />
-                <p className="text-sm font-medium text-main-100">200</p>
-              </div>
-              <div className="flex items-center justify-center gap-1 rounded-md  bg-main-15 p-1 px-2 text-sm">
-                <StartBold className="size-4" />
-                <p className="text-sm font-medium text-main-100">
-                  25 / <span className="text-main-80">user</span>
-                </p>
+                    <div className="mt-4 flex gap-2">
+                      <BonusMultiplier multiplier={1.5} />
+                      <StarPoint value={200} />
+                      <UserPoints value={25} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ml-auto pl-32 pr-16">
+                  <UserLevel className="w-full" />
+                </div>
               </div>
             </div>
+            <LeaderBoard className="mt-4" />
           </div>
+          <ReferalLinks codes={['B12GAH', '0FA882', '123456']} />
         </div>
       </div>
     </div>

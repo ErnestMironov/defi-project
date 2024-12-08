@@ -64,9 +64,9 @@ export const Points = (_props: PointsProperties) => {
         ))}
       </div>
 
-      <div className="grid ">
+      <div className="mb-12">
         <div className="col-span-1">
-          <UserInfo />
+          <UserInfo className="" />
         </div>
       </div>
     </div>
