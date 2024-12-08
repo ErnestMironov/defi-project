@@ -104,10 +104,16 @@ export function useGetSwapRoute() {
       estimatedTokens &&
       !isFirstRequestPending &&
       vaultDepositTokenAddress &&
-      vaultAddress
+      vaultAddress &&
+      depositAsset?.contract_decimals
     ) {
-      // Subtract 0.1% from estimatedTokens for safety margin
-      const safetyMargin = (estimatedTokens * BigInt(1)) / BigInt(1000)
+      // Calculate both 0.1% and 10 cents safety margins
+      const percentMargin = (estimatedTokens * BigInt(1)) / BigInt(1000) // 0.1%
+      const tenCents = BigInt(10) ** BigInt(depositAsset.contract_decimals) / BigInt(10) // 0.1 token
+
+      // Use the smaller value
+      const safetyMargin = percentMargin < tenCents ? percentMargin : tenCents
+
       const adjustedTokens = estimatedTokens - safetyMargin
 
       const depositTxData = encodeFunctionData({
@@ -139,6 +145,7 @@ export function useGetSwapRoute() {
     address,
     vaultDepositTokenAddress,
     vaultAddress,
+    depositAsset?.contract_decimals,
   ])
 
   const {

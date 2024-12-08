@@ -1,7 +1,7 @@
 import { Button } from '@components/ui/button'
 import { useAppKitTheme } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import type { ComponentProps } from 'react'
 
 import MoonV1Svg from './assets/moon-v1.svg'
@@ -14,38 +14,83 @@ export function ThemeToggler(props: ThemeToggleProperties) {
   const { className } = props
   const { setTheme, theme } = useTheme()
   const { setThemeMode } = useAppKitTheme()
-  const handleThemeToggle = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-    setThemeMode(theme === 'dark' ? 'light' : 'dark')
+
+  const handleSetLightTheme = () => {
+    setTheme('light')
+    setThemeMode('light')
+  }
+
+  const handleSetDarkTheme = () => {
+    setTheme('dark')
+    setThemeMode('dark')
   }
 
   return (
-    <Button
-      size="icon"
-      variant="container"
-      onClick={handleThemeToggle}
+    <div
       className={cn(
-        'flex size-12 justify-center items-center overflow-hidden',
+        'relative flex items-center w-auto h-auto rounded-xl p-1 gap-2',
+        'transition-colors',
+        theme === 'light' ? 'border-stroke-element border' : 'border-transparent',
         className,
       )}
     >
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={theme}
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 20, opacity: 0 }}
-          transition={{
-            y: { type: 'spring', stiffness: 500, damping: 25 },
-          }}
-        >
-          {theme === 'dark' ? (
-            <MoonV1Svg className="size-7 overflow-visible" />
-          ) : (
-            <SunV1Svg className="size-7 overflow-visible" />
+      <motion.div
+        className={cn(
+          'absolute top-1 left-1 z-0 rounded-[12px]',
+          'bg-main-100',
+          'transition-all duration-300 ease-out',
+        )}
+        initial={false}
+        animate={{
+          x: theme === 'light' ? '0%' : '140%',
+          width: '35%',
+          height: '85%',
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 300,
+          damping: 30,
+          duration: 0.3,
+        }}
+      />
+
+      <div className="relative z-10 flex w-1/2 items-center justify-center">
+        <Button
+          size="icon"
+          variant="container"
+          onClick={handleSetLightTheme}
+          className={cn(
+            'flex justify-center items-center w-auto h-auto rounded-[12px]',
+            theme === 'light' ? 'bg-main-100' : 'bg-transparent',
           )}
-        </motion.div>
-      </AnimatePresence>
-    </Button>
+        >
+          <SunV1Svg
+            className={cn(
+              theme === 'light' ? 'fill-white' : 'fill-gray-400 [&_path]:stroke-gray-400',
+              'size-6',
+            )}
+          />
+        </Button>
+      </div>
+
+      <div className="relative z-10 flex w-1/2 items-center justify-center">
+        <Button
+          size="icon"
+          variant="container"
+          onClick={handleSetDarkTheme}
+          className={cn(
+            'flex justify-center items-center w-auto h-auto rounded-[12px]',
+            theme === 'dark' ? '!bg-main-100' : 'bg-transparent',
+          )}
+        >
+          <MoonV1Svg
+            className={cn(
+              theme === 'dark' ? 'fill-white [&_path]:stroke-white' : '',
+              'size-6',
+            )}
+          />
+        </Button>
+      </div>
+    </div>
   )
 }

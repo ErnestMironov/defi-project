@@ -19,13 +19,17 @@ export const SeparatedUsdValue = ({
   const renderBody = () => {
     if (loading) return <Skeleton className="h-[2.8rem] w-28" />
     return (
-      <>
-        <span className="text-[2.375rem]/[120%]">{integerPart}</span>
-        <span className="text-3xl">
+      <div
+        className={cn(
+          +integerPart > 0 && +decimalPart > 0 ? 'text-text' : 'text-gray-100',
+        )}
+      >
+        <span className="text-[28px]">{integerPart}</span>
+        <span className="text-[28px]">
           <span className={cn(!decimalPart && 'hidden')}>.</span>
           {decimalPart}
         </span>
-      </>
+      </div>
     )
   }
   return (
