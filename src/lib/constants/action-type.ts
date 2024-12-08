@@ -44,6 +44,17 @@ export const LAST_EVENT_ACTION_TYPE = {
   VAULT_DEPRECATED: 'Vault deprecated',
 } as const
 
+export const LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO = {
+  DEPOSIT_IN_STRATEGY: 'Deposit from strategy',
+  DEPOSIT: 'Deposit',
+  WITHDRAW_FROM_STRATEGY: 'Withdraw from strategy',
+  WITHDRAW: 'Withdraw',
+  WITHDRAW_REQUEST: 'Withdraw request',
+  WITHDRAW_FULFILLMENT: 'Withdraw fulfillment',
+  REBALANCE: 'Rebalance',
+  BRIDGE: 'Bridge',
+} as const
+
 // Create a type from the keys of ACTION_TYPE
 export type LAST_EVENT_ACTION = keyof typeof LAST_EVENT_ACTION_TYPE
 

@@ -9,6 +9,8 @@ import {
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useState } from 'react'
 
+// interface PortfolioValueTooltipProperties extends ComponentProps<'div'> {}
+
 export const PortfolioValueTooltip = () => {
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {

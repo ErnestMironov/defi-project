@@ -58,7 +58,7 @@ export const Sidebar: FC = () => {
 
   const portfolioValue = useMemo(() => {
     if (!userShares?.shares) return 0
-
+    console.log(userShares)
     return userShares?.shares?.reduce<number>(
       (accumulator, value) =>
         accumulator + Number(formatUnits(value.balance, value.decimals)),
@@ -96,7 +96,7 @@ export const Sidebar: FC = () => {
       backgroundColor: 'var(--cards)',
     },
     openPortfolio: {
-      width: '28.1875rem',
+      width: '32.1875rem',
       maxHeight: '90vh',
       borderRadius: '2rem',
       padding: '1.5rem 2rem',
@@ -134,41 +134,60 @@ export const Sidebar: FC = () => {
       </div>
     ),
     portfolio: (
-      <div className="hide-scrollbar pointer-events-auto h-full overflow-y-auto overflow-x-hidden bg-cards">
-        <div className="flex items-start justify-between">
-          <div>
-            <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">
-              <span>Portfolio Value</span>
-              <PortfolioValueTooltip />
-            </h6>
-            <SeparatedUsdValue
-              loading={isUserSharesLoading}
-              value={portfolioValue}
-              className="mt-2"
-            />
+      <>
+        {isOpen && (
+          <div className="flex h-auto w-full items-center justify-between py-4">
+            <div className="flex items-center ">
+              <button
+                type="button"
+                className="flex items-center"
+                onClick={() => openConnectModal()}
+              >
+                <Metamask className="size-5" />
+                <p className="text-text ml-3 text-lg">{shortenAddress(address ?? '')}</p>
+              </button>
+              <CopyButton text={address as string} className="ml-2 size-5" />
+            </div>
+            <ThemeToggler />
           </div>
-          <div>
-            <h6 className="truncate text-lg text-gray-100">Total yield generated</h6>
-            <SeparatedUsdValue
-              loading={isLoadingYield}
-              value={totalYield}
-              className={cn('mt-2', totalYield > 0 ? 'text-green-100' : 'text-text')}
-            />
+        )}
+        <div className="hide-scrollbar pointer-events-auto h-full overflow-y-auto overflow-x-hidden bg-cards">
+          <div className="flex items-start justify-between">
+            <div>
+              <SeparatedUsdValue
+                loading={isUserSharesLoading}
+                value={portfolioValue}
+                className={cn('mt-2', portfolioValue > 0 ? 'text-text' : 'text-gray-100')}
+              />
+              <h6 className="flex items-center gap-[0.38rem] text-lg text-gray-100">
+                <span>Portfolio Value</span>
+                <PortfolioValueTooltip />
+              </h6>
+            </div>
+            <div>
+              <SeparatedUsdValue
+                loading={isLoadingYield}
+                value={totalYield}
+                className={cn('mt-2', totalYield > 0 ? 'text-text' : 'text-gray-100')}
+              />
+              <h6 className="truncate text-lg text-gray-100">Total yield generated</h6>
+            </div>
           </div>
+
+          {/* deposit/withdraw/buy and UserActivityTabs */}
+          <ActionButtons className="mt-6" value={portfolioValue} />
+          <UserActivityTabs
+            value={portfolioValue}
+            className={cn(
+              'mt-8 [&_.all-assets]:max-h-[12vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden ',
+              {
+                '[&_.user-activity]:max-h-[25vh]': height > 768,
+                '[&_.all-assets]:max-h-[20vh]': height > 768,
+              },
+            )}
+          />
         </div>
-        {/* deposit/withdraw/buy */}
-        <ActionButtons className="mt-6" />
-        {/* tokens/activity */}
-        <UserActivityTabs
-          className={cn(
-            'mt-8 [&_.all-assets]:max-h-[12vh] [&_.all-assets]:overflow-y-auto [&_.all-assets]:overflow-x-hidden [&_.user-activity]:max-h-[15vh]  [&_.user-activity]:overflow-y-auto [&_.user-activity]:overflow-x-hidden ',
-            {
-              '[&_.user-activity]:max-h-[25vh]': height > 768,
-              '[&_.all-assets]:max-h-[20vh]': height > 768,
-            },
-          )}
-        />
-      </div>
+      </>
     ),
   }
 
@@ -198,7 +217,7 @@ export const Sidebar: FC = () => {
       >
         <div className="flex items-center justify-between">
           <Link to="/">
-            <Logo className="h-[1.36063rem] w-[3.655rem] shrink-0 fill-text" />
+            <Logo className="fill-text h-[1.36063rem] w-[3.655rem] shrink-0" />
           </Link>
           <motion.div
             animate={{ rotate: isOpen ? 360 : 0 }}
@@ -222,23 +241,6 @@ export const Sidebar: FC = () => {
               {sidebarContentVariants[currentContent]}
             </motion.div>
           </AnimatePresence>
-        )}
-
-        {isOpen && (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <button
-                type="button"
-                className="flex items-center"
-                onClick={() => openConnectModal()}
-              >
-                <Metamask className="size-5" />
-                <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
-              </button>
-              <CopyButton text={address as string} className="ml-2 size-5" />
-            </div>
-            <ThemeToggler />
-          </div>
         )}
       </motion.div>
     </AnimatePresence>,

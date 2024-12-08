@@ -55,7 +55,7 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
       {/* wallet */}
       <div className={cn('flex items-center', !address && 'hidden')}>
         <Metamask className="size-5" />
-        <p className="ml-3 text-text">{shortenAddress(address ?? '')}</p>
+        <p className="text-text ml-3">{shortenAddress(address ?? '')}</p>
         <CopyButton text={address as string} className="ml-2 size-5" />
       </div>
       {/* header */}
@@ -81,9 +81,9 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
         </div>
       </div>
       {/* deposit/withdraw/buy */}
-      <ActionButtons className="mt-6" />
+      <ActionButtons className="mt-6" value={portfolioValue} />
       {/* tokens/activity */}
-      <UserActivityTabs className="mt-8" />
+      <UserActivityTabs className="mt-8" value={portfolioValue} />
     </div>
   )
 }

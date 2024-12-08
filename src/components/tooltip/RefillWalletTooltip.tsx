@@ -1,4 +1,5 @@
-import Coins from '@assets/icons/buy-crypto.svg'
+import Add from '@assets/icons/add.svg'
+import { Button } from '@components/ui/button'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
@@ -8,16 +9,21 @@ export const RefillWalletTooltip = (props: RefillWalletTooltipProperties) => {
   const { className, ...rest } = props
   return (
     <div
-      className={cn(
-        'py-4 px-3 rounded-xl bg-[rgba(97,_96,_255,_0.05)] text-text-80 flex items-start gap-[0.38rem]',
-        className,
-      )}
+      className={cn('px-7 pb-6 text-text-80 items-start gap-[0.38rem]', className)}
       {...rest}
     >
-      <Coins className="size-6" />
-      <p className="text-semi-base/[1.3125rem]">
-        Oops... We didn&apos;t manage to find tokens on your wallet
-      </p>
+      <div className="text-center">
+        <p className="text-md font-medium text-text-100">
+          Seems like you have just started
+        </p>
+        <p className="mb-4 text-semi-base text-text-2100">
+          Buy your favourite coins with ease and start earning yield with MAAT
+        </p>
+        <Button variant="default" className="px-5 py-4 text-base font-normal normal-case">
+          <Add className="mr-2 size-7" />
+          Buy crypto
+        </Button>
+      </div>
     </div>
   )
 }

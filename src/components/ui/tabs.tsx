@@ -11,7 +11,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={reference}
     className={cn(
-      'inline-flex items-center gap-8 max-lg:gap-2 justify-center rounded-md text-gray-80',
+      'inline-flex items-center gap-8 max-lg:gap-2 justify-center text-gray-80',
       className,
     )}
     {...props}
@@ -49,7 +49,7 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, reference) => (
   <TabsPrimitive.Content
     ref={reference}
-    className={cn('mt-6 focus-visible:outline-none', className)}
+    className={cn('focus-visible:outline-none', className)}
     {...props}
   />
 ))
