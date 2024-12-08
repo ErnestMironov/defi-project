@@ -31,7 +31,6 @@ export const WithdrawReviewContent = ({
     withdrawToNetwork,
     setIntermediateError,
     setCurrentStep,
-    setCurrentModal,
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -99,16 +98,6 @@ export const WithdrawReviewContent = ({
   const isAnyStatusPending = (): boolean => {
     return [switchStatus, approveStatus, withdrawStatus].includes('pending')
   }
-
-  useEffect(() => {
-    if (withdrawStatus === 'success') {
-      setCurrentModal('done')
-    }
-
-    if (withdrawStatus === 'error') {
-      setCurrentModal('error')
-    }
-  }, [setCurrentModal, withdrawStatus])
 
   useEffect(() => {
     if (approveError || withdrawError || switchStatus === 'error') {

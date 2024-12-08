@@ -1,7 +1,7 @@
 import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
-import { Switch } from '@components/ui/switch.tsx'
+import { Switch } from '@components/ui/switch'
 import type { ChainType } from '@constants/chains.ts'
 import { cn } from '@utils/cn'
 import { formatAmount, formatValueWithPrecision } from '@utils/formatValue.ts'
@@ -10,11 +10,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-import DollarInput from '../components/DollarInput.tsx'
+import DollarInput from '../components/DollarInput'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
-import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork.tsx'
+import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork'
 
 interface InputWrapperProperties extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode

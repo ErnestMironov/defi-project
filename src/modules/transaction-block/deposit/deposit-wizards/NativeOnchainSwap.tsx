@@ -17,7 +17,7 @@ import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
 export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  allStepsCompleted,
+  _allStepsCompleted,
 }) => {
   const {
     vault,
@@ -129,7 +129,7 @@ export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties
           <WizardStep
             icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
             title={`Switch to ${depositAssetChain?.name}`}
-            status={allStepsCompleted ? 'success' : switchStatus}
+            status={_allStepsCompleted ? 'success' : switchStatus}
           />
           <WizardStep
             icon={<ReceiveSquare className={cn('size-8')} />}

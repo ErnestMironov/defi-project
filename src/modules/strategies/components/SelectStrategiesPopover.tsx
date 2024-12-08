@@ -1,4 +1,4 @@
-import ChevronDown from '@assets/icons/arrow-down.svg'
+import ChevronDown from '@assets/icons/arrow-up.svg'
 import Check from '@assets/icons/check.svg'
 import Setting from '@assets/icons/setting.svg'
 import type { OptionType } from '@components/select/Select'

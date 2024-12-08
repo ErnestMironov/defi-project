@@ -15,7 +15,6 @@ const ESTIMATED_TIME_TO_COMPLETE_WITHDRAW = 60 * 15
 export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
   const { address } = useAccount()
   const {
-    setCurrentModal,
     mtToken,
     withdrawToNetwork,
     withdrawFromNetwork,
@@ -75,7 +74,6 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
         },
         onError: (e) => {
           console.error(e.message)
-          setCurrentModal('error')
           setStatus('error')
         },
       },

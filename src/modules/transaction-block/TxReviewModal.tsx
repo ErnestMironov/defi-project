@@ -1,4 +1,6 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@components/ui/dialog'
+import CollapseIcon from '@assets/icons/collapse.svg'
+import ExpandIcon from '@assets/icons/expand_2.svg'
+import { Dialog, DialogContent, DialogHeader } from '@components/ui/dialog'
 import { cloneElement } from 'react'
 
 import { DepositReviewContent } from './deposit/DepositReviewContent'
@@ -20,6 +22,8 @@ export const TxReviewModal = () => {
     isTransactionFromStore,
     setBrakeBalance,
     brakeBalance,
+    collapseTxInfo,
+    setCollapseTxInfo,
   } = useTxStore()
 
   const isTransactionSent =
@@ -33,6 +37,7 @@ export const TxReviewModal = () => {
     setCurrentStep(1)
     setCurrentModal(null)
     setBrakeBalance(false)
+    setCollapseTxInfo(false)
   }
 
   const renderContent = () => {
@@ -52,21 +57,35 @@ export const TxReviewModal = () => {
       <Dialog open={currentModal === 'review'}>
         <DialogContent
           onClose={handleClose}
-          className="max-w-[38.75rem] gap-8 overflow-visible rounded-[2rem] px-4 text-text max-lg:bottom-0 max-lg:top-auto max-lg:z-[100] max-lg:max-w-full max-lg:translate-y-0 max-lg:rounded-b-none lg:gap-10 lg:px-0 lg:pb-7 lg:pt-10"
+          className="text-text max-w-[38.75rem] overflow-visible !bg-transparent"
           showCloseButton
         >
-          <DialogHeader className="flex flex-row justify-between gap-4 lg:px-8">
-            <DialogTitle className="text-2xl font-normal normal-case leading-[2.625rem] max-lg:text-left lg:text-[1.75rem]">
-              {txType === 'deposit' ? 'Deposit' : 'Withdraw'}
-            </DialogTitle>
-            {intermediateError && (
-              <div className="rounded-[12.5rem] bg-red-5 px-4 py-2 text-red-100">
-                {intermediateError.split('.')[0]}
-              </div>
-            )}
-          </DialogHeader>
+          <div className="overflow-hidden rounded-3xl bg-cards-widget">
+            <DialogHeader className="flex flex-row justify-between gap-4 lg:px-8">
+              {intermediateError && (
+                <div className="rounded-[12.5rem] bg-red-5 px-4 py-2 text-red-100">
+                  {intermediateError.split('.')[0]}
+                </div>
+              )}
+            </DialogHeader>
 
-          {renderContent()}
+            {renderContent()}
+            <button
+              type="button"
+              className="flex w-full flex-row items-center justify-center gap-[0.38rem] border-t border-stroke-100 bg-text-3100/5 px-6 py-3 text-[0.875rem] font-medium text-text-3100"
+              onClick={() => setCollapseTxInfo(!collapseTxInfo)}
+            >
+              {collapseTxInfo ? (
+                <>
+                  <ExpandIcon className="size-4" /> See Details
+                </>
+              ) : (
+                <>
+                  <CollapseIcon className="size-4" /> Condense
+                </>
+              )}
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
     </>

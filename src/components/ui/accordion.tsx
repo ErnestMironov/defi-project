@@ -1,4 +1,4 @@
-import ChevronDown from '@assets/icons/arrow-down.svg'
+import ChevronDown from '@assets/icons/arrow-up.svg'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { cn } from '@utils/cn'
 import * as React from 'react'

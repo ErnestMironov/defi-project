@@ -1,4 +1,4 @@
-import Arrow from '@assets/icons/arrow-down.svg'
+import Arrow from '@assets/icons/arrow-up.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Command, CommandGroup, CommandItem, CommandList } from '@components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'

@@ -1,4 +1,4 @@
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import Lightning from '@assets/icons/green-lightning.svg'
 import { Dialog, DialogContent, DialogTitle } from '@components/ui/dialog'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'
@@ -30,11 +30,8 @@ const Line: React.FC<
   }
 > = ({ title, value, usd, ...props }) => {
   return (
-    <div
-      {...props}
-      className="flex items-baseline justify-between text-[1.125rem] text-text-80"
-    >
-      <p className="text-[1rem] text-text-80 ">{title}</p>
+    <div {...props} className="flex items-baseline justify-between text-text-80">
+      <p className="text-text-3100/70">{title}</p>
       <p className="text-[1rem] text-text-80 ">
         {value} {usd && <span className="text-gray-100">(${usd})</span>}
       </p>
@@ -52,36 +49,18 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChan
   const { txDifficulty } = useTxStore()
   return (
     <Dialog open={open} onOpenChange={() => onOpenChange(false)}>
-      <DialogContent
-        showCloseButton={false}
-        className="max-w-[38.75rem] gap-8 overflow-y-auto rounded-[2rem]"
-      >
-        <DialogTitle className="flex justify-between text-center">
-          <div className="h-full w-8" />
-          Details
-          <button
-            type="button"
-            className="flex h-full w-8 items-center justify-end"
-            onClick={() => onOpenChange(false)}
-          >
-            <ArrowDown className="size-6" />
-          </button>
+      <DialogContent showCloseButton className="max-w-[38.75rem] gap-8 rounded-[2rem]">
+        <DialogTitle className="flex justify-between px-8 py-6 text-center text-base normal-case text-text-3100">
+          <div className="flex items-center gap-1 text-gray-100 max-lg:text-[0.8125rem] ">
+            <Lightning className="h-[0.83356rem] w-[0.75031rem]" />
+            <span>Fees</span>
+          </div>
+          <span>($5.12 / 0.05 ETH)</span>
         </DialogTitle>
 
-        <div
-          style={{
-            opacity: txDifficulty === 'cross_chain' ? 1 : 0.4,
-          }}
-        >
-          <NetworkSelector disabled={false} />
-          <Text className="mt-3">
-            Representation tokens can be given only on supported chains. <br /> You can
-            change network.
-          </Text>
-        </div>
-        <div className="flex flex-col gap-4">
-          <h3 className="text-[1.125rem] font-bold">Summary</h3>
-          <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 bg-[rgba(222,_221,_236,_0.10)] px-12 py-6 text-text-3100">
+          <h3 className="text-base font-[500]">Summary</h3>
+          <div className="flex flex-col gap-1">
             <Line
               title="Convert from"
               value={summaryAndFees.convertFrom.value}
@@ -93,22 +72,6 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChan
               usd={summaryAndFees.minReceive.usd}
             />
             <Line title="Exchange rate" value={summaryAndFees.exchangeRate} />
-          </div>
-        </div>
-        <div className="block h-px w-full bg-stroke-100" />
-        <div className="flex flex-col gap-4">
-          <h3 className="text-[1.125rem] font-bold">Fee breakdown</h3>
-          <div className="flex flex-col gap-3">
-            <Line
-              title="Cross-chain gas fees"
-              value={summaryAndFees.crossChainFee.value}
-              usd={summaryAndFees.crossChainFee.usd}
-            />
-            <Line
-              title="Expected gas refund"
-              value={`- ${summaryAndFees.expectedGasRefund.value}`}
-              usd={summaryAndFees.expectedGasRefund.usd}
-            />
             <Line
               title="Total"
               value={summaryAndFees.total.value}
@@ -116,6 +79,8 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChan
             />
           </div>
         </div>
+
+        {txDifficulty === 'cross_chain' && <NetworkSelector disabled={false} />}
       </DialogContent>
     </Dialog>
   )
