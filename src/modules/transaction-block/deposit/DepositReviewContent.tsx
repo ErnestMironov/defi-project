@@ -2,7 +2,6 @@ import { USDC_TOKENS } from '@constants/usdc'
 import { USDT_TOKENS } from '@constants/usdt'
 import { SupportedChainsByVault, Tokens } from '@constants/vaults'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
-import { parseFloatLocale } from '@utils/formatValue'
 import { useMemo } from 'react'
 
 import { useTxStore } from '../store/useTxStore'
@@ -20,17 +19,11 @@ export const DepositReviewContent = ({
   const {
     depositAsset: asset,
     vault,
-    inputValue: amount,
-    inputValueInUSD,
     depositFromNetwork,
     depositToNetwork,
-    depositTotalAmount,
-    depositTotalInUSD,
-    setCurrentModal,
   } = useTxStore()
 
   const chainData = useTokenAsset(asset?.chain_id)
-  const inputValue = parseFloatLocale(amount, 8) as string
 
   return useMemo(() => {
     if (!asset || !chainData) {

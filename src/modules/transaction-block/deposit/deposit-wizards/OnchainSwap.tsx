@@ -14,9 +14,7 @@ import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  _allStepsCompleted,
-}) => {
+export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = () => {
   const [currentStep, setCurrentStep] = useState(1)
 
   const {
@@ -167,7 +165,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
       <TxReviewInfo
         recipient={{
           label: 'Recipient',
-          value: vaultAddress,
+          value: vaultAddress ?? '',
         }}
         chain={depositFromNetwork ?? 0}
         withdraw={{

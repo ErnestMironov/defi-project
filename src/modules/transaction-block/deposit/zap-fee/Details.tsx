@@ -1,26 +1,11 @@
 import Lightning from '@assets/icons/green-lightning.svg'
 import { Dialog, DialogContent, DialogTitle } from '@components/ui/dialog'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
-import { cn } from '@utils/cn'
 import type { HTMLAttributes } from 'react'
 import React from 'react'
 
 import { NetworkSelector } from './NetworkSelector'
 import type { SummaryAndFees } from './summaryAndFees'
-
-const Text: React.FC<HTMLAttributes<HTMLParagraphElement>> = ({ children, ...props }) => {
-  return (
-    <p
-      {...props}
-      className={cn(
-        'font-[Arial] text-[1rem] font-normal not-italic leading-[120%] text-[#9998B8] text-balance',
-        props.className,
-      )}
-    >
-      {children}
-    </p>
-  )
-}
 
 const Line: React.FC<
   HTMLAttributes<HTMLDivElement> & {

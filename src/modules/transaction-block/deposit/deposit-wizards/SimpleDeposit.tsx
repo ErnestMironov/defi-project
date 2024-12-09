@@ -15,9 +15,7 @@ import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = ({
-  _allStepsCompleted,
-}) => {
+export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = () => {
   const { chainId } = useAccount()
   const {
     depositAsset: asset,
@@ -188,7 +186,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
       <TxReviewInfo
         recipient={{
           label: 'Recipient',
-          value: vaultAddress,
+          value: vaultAddress ?? '',
         }}
         chain={depositFromNetwork ?? 0}
         withdraw={{

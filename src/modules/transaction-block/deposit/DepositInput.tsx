@@ -1,4 +1,3 @@
-import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { Button } from '@components/ui/button'
@@ -7,7 +6,7 @@ import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { formatValueWithPrecision } from '@utils/formatValue'
 import BigNumber from 'bignumber.js'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -55,7 +54,6 @@ export const DepositInput = () => {
     depositAsset: asset,
     inputValue,
     inputValueInUSD,
-    depositTotalInUSD,
     depositTotalAmount,
     vault,
     swapRoute,
@@ -79,28 +77,6 @@ export const DepositInput = () => {
       vaultSet.current = true
     }
   }, [bestUSDCApy, bestUSDTApy, setVault, isStrategiesLoading])
-
-  // Protocol metrics and APY calculation
-  const { isLoading: isProtocolMetricsLoading, data: protocolMetrics } =
-    useProtocolMetrics({})
-  const usdcApy = protocolMetrics?.history?.USDC?.apy
-  const usdtApy = protocolMetrics?.history?.USDT?.apy
-
-  const yourYearlyEarnings = useMemo(() => {
-    if (
-      !depositTotalInUSD ||
-      depositTotalInUSD === '0.00' ||
-      isProtocolMetricsLoading ||
-      !usdcApy ||
-      !usdtApy
-    ) {
-      return 0
-    }
-
-    const totalInUSD = BigNumber(depositTotalInUSD)
-    const apy = vault === 'USDC' ? usdcApy : usdtApy
-    return totalInUSD.div(100).multipliedBy(BigNumber(apy))
-  }, [depositTotalInUSD, isProtocolMetricsLoading, usdcApy, usdtApy, vault])
 
   // Asset balance handling
   const assetBalance = formatUnits(
