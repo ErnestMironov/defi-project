@@ -33,7 +33,7 @@ export const TokenIconComponent = ({
     )
 
   const { TokenIcon } = asset
-  return <TokenIcon {...rest} className={cn('', className)} />
+  return <TokenIcon {...rest} className={cn('size-5', className)} />
 }
 
 export const IconWithLabelComponent = ({
@@ -47,7 +47,7 @@ export const IconWithLabelComponent = ({
   const { TokenIcon, name } = asset
   return (
     <div className={cn('flex items-center gap-[0.38rem]', className)}>
-      <TokenIcon {...rest} className={cn('size-4')} />
+      <TokenIcon {...rest} className={cn('size-5')} />
       <p className="text-sm/[1rem]">{label || name}</p>
     </div>
   )

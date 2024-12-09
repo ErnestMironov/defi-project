@@ -19,8 +19,8 @@ interface TooltipComponentProperties extends ComponentProps<'div'> {
 
 export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties) => {
   return (
-    <div className="flex flex-col gap-1 rounded-2xl bg-cards px-[0.94rem] py-3 shadow-md lg:px-4">
-      <div className="text-[0.75rem] text-gray-100 lg:text-[0.79863rem]">
+    <div className="flex flex-col gap-1 rounded-xl border border-stroke-100 bg-cards-widget px-4 py-3 shadow-test">
+      <div className="text-sm text-text-2100">
         {dayjs(data[0].timestamp).format('DD MMM HH:mm')}
       </div>
       <div className="flex flex-col gap-[0.38rem]">
@@ -35,15 +35,6 @@ export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties
                 )}
               />
               <div className="text-base lg:text-[1.125rem]">{formatter(item.value)}</div>
-              {/* <div className="relative flex items-center justify-center overflow-hidden rounded-[0.31944rem] px-[0.32rem] py-[0.16rem] text-[0.75rem] lg:text-[0.95831rem]">
-                <div
-                  className="absolute inset-0 size-full opacity-15"
-                  style={{ backgroundColor: item.color }}
-                />
-                <div style={{ color: item.color }} className="z-2 opacity-1 relative">
-                  +{item.apy}%
-                </div>
-              </div> */}
             </div>
           )
         })}

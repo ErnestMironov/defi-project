@@ -60,7 +60,7 @@ export const StrategyApyChart = ({ className }: AreaChartComponentProperties) =>
   const renderContent = () => {
     switch (true) {
       case isLoading: {
-        return <Skeleton className="h-[18.25rem]" />
+        return <Skeleton className={cn('h-[13.7rem] mx-8 mb-5 rounded-2xl')} />
       }
       default: {
         return (

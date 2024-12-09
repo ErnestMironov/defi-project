@@ -90,7 +90,7 @@ export const TokenAmount = (
                 notation: 'compact',
               })}
             </p>
-            <p className="text-gray-100 before:content-['('] after:content-[')']">
+            <p className="text-text-260 before:content-['('] after:content-[')']">
               {formatUsdValue(usdValue)}
             </p>
           </div>
@@ -113,7 +113,7 @@ export const TokenAmount = (
             {symbol}
           </span>
         </div>
-        <div className="text-text-2100 before:content-['('] after:content-[')']">
+        <div className="text-text-260 before:content-['('] after:content-[')']">
           {formatUsdValue(usdValue)}
         </div>
       </div>
@@ -137,6 +137,7 @@ export const Vault = (props: InfoPairElementsProperties) => {
       <div className="flex items-center gap-2 text-text-90">
         <TokenIconComponent symbol={value} className="size-5" />
         <span>{value}</span>
+        {label === 'Vault' && <span>Vault</span>}
       </div>
     </LabelValueContainer>
   )
@@ -179,16 +180,11 @@ export const Strategy = (props: InfoPairElementsProperties & { symbols: string[]
     <LabelValueContainer className={className} {...rest}>
       <div>{label}</div>
       <div className="flex flex-wrap items-center justify-end gap-2">
-        <div className="flex items-center -space-x-2">
+        <div className="inline-flex items-center [&>*:not(:last-child)]:mr-1.5 [&>*:not(:last-child)]:after:content-['_/_'] [&>*]:after:text-text-260">
           {symbols.map((symbol) => (
-            <TokenIconComponent key={symbol} symbol={symbol} className="size-5" />
+            <IconWithLabelComponent key={symbol} symbol={symbol} />
           ))}
         </div>
-        <p className="[&_span:not(:last-child)]:after:content-['_/_']">
-          {symbols.map((symbol) => (
-            <span key={symbol}>{symbol}</span>
-          ))}
-        </p>
       </div>
     </LabelValueContainer>
   )

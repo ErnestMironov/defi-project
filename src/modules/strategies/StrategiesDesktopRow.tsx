@@ -1,5 +1,4 @@
 import type { Strategy } from '@api/maat-finance/types'
-import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
@@ -34,9 +33,7 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
           <div>
             <div className="flex items-center gap-2">
               <p className="text-base/[1.5rem]">{shortenAddress(strategy.id)}</p>
-              <div className="flex size-5 shrink-0 items-center justify-center rounded border border-stroke-100">
-                <ArrowTopRight className="size-2.5" />
-              </div>
+              <CopyButton text={strategy.id} className="size-4 shrink-0" />
             </div>
             <p className="text-sm/[1rem] text-text-2100">{strategy.protocol}</p>
           </div>

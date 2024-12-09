@@ -84,7 +84,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
             <Table.Row>
               <Table.HeadCell>Action</Table.HeadCell>
               <Table.HeadCell
-                className={cn('cursor-pointer')}
+                className={cn('cursor-pointer w-[16.875rem]')}
                 onClick={() => onSortChange('amount')}
               >
                 <div className="flex items-center gap-[0.38rem]">
@@ -99,10 +99,10 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
                   )}
                 </div>
               </Table.HeadCell>
-              <Table.HeadCell>Status</Table.HeadCell>
-              <Table.HeadCell>Chain</Table.HeadCell>
+              <Table.HeadCell className="w-[16.875rem]">Status</Table.HeadCell>
+              <Table.HeadCell className="w-[16.875rem]">Chain</Table.HeadCell>
               <Table.HeadCell
-                className={cn('cursor-pointer')}
+                className={cn('cursor-pointer w-[17rem]')}
                 onClick={() => onSortChange('creation_time')}
               >
                 <div className="flex items-center gap-[0.38rem]">
@@ -124,7 +124,7 @@ export const MaatTransactionsHistoryTable: React.FC<TransactionsHistoryPropertie
           </Table.Body>
         </Table>
       </div>
-      {data && (
+      {data && data.items?.length > 0 && (
         <Pagination
           className="absolute -bottom-16"
           currentPage={page}

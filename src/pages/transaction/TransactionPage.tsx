@@ -10,7 +10,6 @@ import { type ComponentProps, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { Address } from 'viem'
 
-import { Breadcrumbs } from './Breadcrumbs'
 import { TransactionInfo } from './transaction-info/TransactionInfo'
 import { TransactionHeader } from './TransactionHeader'
 
@@ -64,50 +63,53 @@ export const TransactionPage = (props: ComponentProps<'div'>) => {
   if (isLoading || !mainAction) {
     return (
       <div className={cn('mt-[4.5rem]', className)} {...rest}>
-        <Breadcrumbs />
-        <TransactionHeader isLoading className="mt-10" />
-        <TransactionInfo isLoading className="mt-10" type="DEPOSIT" />
-        <SectionTitle className="mt-[4.44rem]">Triggered transactions</SectionTitle>
-        <div className="mt-8 space-y-4">
-          <TransactionInfo isLoading />
+        <div className="mx-auto w-[60vw] space-y-8">
+          <button
+            type="button"
+            className="mt-16 flex items-center gap-1 text-[1.25rem]/[2rem] font-medium text-text-2100"
+            onClick={() => navigate(-1)}
+          >
+            <div className="flex size-6 items-center justify-center">
+              <ArrowLeft className="size-3" />
+            </div>
+            <span>Back to Events</span>
+          </button>
+          <TransactionInfo isLoading type="DEPOSIT" />
+          <TransactionInfo isLoading type="DEPOSIT" />
           <TransactionInfo isLoading />
         </div>
-        <Footer className="mt-[7.5rem]" />
       </div>
     )
   }
 
   return (
     <div className={cn('mt-[4.5rem]', className)} {...rest}>
-      <button
-        type="button"
-        className="mt-16 flex items-center gap-1 text-[1.25rem]/[2rem] font-medium text-text-2100"
-        onClick={() => navigate(-1)}
-      >
-        <div className="flex size-6 items-center justify-center">
-          <ArrowLeft className="size-4" />
-        </div>
-        <span>Back to Events</span>
-      </button>
-      {/* <TransactionHeader data={mainAction} className="mt-10" /> */}
-      <TransactionInfo
-        isLoading={isLoading}
-        className="mt-10"
-        type={mainAction?.action_type}
-        data={mainAction}
-        withoutRelated={relatedActions.length === 0}
-      />
-      {relatedActions?.length > 0 && (
-        <>
-          <SectionTitle className="mt-[4.44rem]">Triggered transactions</SectionTitle>
+      <div className="mx-auto w-[60vw]">
+        <button
+          type="button"
+          className="mt-16 flex items-center gap-1 text-[1.25rem]/[2rem] font-medium text-text-2100"
+          onClick={() => navigate(-1)}
+        >
+          <div className="flex size-6 items-center justify-center">
+            <ArrowLeft className="size-3" />
+          </div>
+          <span>Back to Events</span>
+        </button>
+        <TransactionInfo
+          isLoading={isLoading}
+          className="mt-8"
+          type={mainAction?.action_type}
+          data={mainAction}
+          withoutRelated={relatedActions.length === 0}
+        />
+        {relatedActions?.length > 0 && (
           <div className="mt-8 space-y-4">
             {relatedActions.map((action, i) => (
               <TransactionInfo key={i} type={action.action_type} data={action} />
             ))}
           </div>
-        </>
-      )}
-      <Footer className="mt-[7.5rem]" />
+        )}
+      </div>
     </div>
   )
 }

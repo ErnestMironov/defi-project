@@ -1,6 +1,7 @@
 import type { Action, Event } from '@api/maat-finance/types'
 import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
+import { Skeleton } from '@components/ui/skeleton'
 import { ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
@@ -73,17 +74,28 @@ export const ActionType = (props: ActionTypeProperties) => {
               </span>
             ))}
           </p>
-          <ScanLink
-            chainId={tx.src_chain_id}
-            txHash={tx.hash}
-            className="size-4 shrink-0"
-          />
+          <ScanLink chainId={tx.src_chain_id} txHash={tx.hash} className="shrink-0" />
         </div>
 
         <p className="flex items-center gap-[0.38rem] text-sm text-text-260">
           <span>{shortenAddress(tx.hash)}</span>
           <CopyButton className="size-3.5" text={tx.hash} />
         </p>
+      </div>
+    </div>
+  )
+}
+
+export const ActionTypeSkeleton = (props: ComponentProps<'div'>) => {
+  const { className, ...rest } = props
+  return (
+    <div className={cn('flex items-center gap-4', className)} {...rest}>
+      <Skeleton className="size-8 shrink-0" />
+      <div className="space-y-1">
+        <div className="flex items-center gap-[0.38rem]">
+          <Skeleton className="h-4 w-40" />
+        </div>
+        <Skeleton className="h-4 w-20" />
       </div>
     </div>
   )

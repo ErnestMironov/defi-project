@@ -101,7 +101,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           minTickGap={40}
           tickCount={10}
           ticks={filteredData?.map((tick) => tick.timestamp)}
-          // interval="preserveStartEnd"
+          interval="preserveEnd"
         />
         <YAxis
           axisLine={false}

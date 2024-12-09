@@ -117,7 +117,7 @@ export const IncentivesHistoryDesktop: React.FC<IncentivesHistoryProperties> = (
           </Table.Body>
         </Table>
       </div>
-      {data && (
+      {data && data.items?.length > 0 && (
         <Pagination
           className="absolute -bottom-16"
           currentPage={page}

@@ -1,6 +1,5 @@
 import type { Event } from '@api/maat-finance/types'
 import CopyIcon from '@assets/icons/copy-icon.svg'
-import ShareIcon from '@assets/icons/share.svg'
 import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { useClipboard } from '@hooks/common/useClipboard'
@@ -48,15 +47,6 @@ export const EventRowOptions = (props: EventRowOptionsProperties) => {
           className="flex items-center gap-2"
         >
           <CopyIcon className="size-4" /> Copy Event Hash
-        </button>
-        <button
-          onClick={() => {
-            setIsOpen(false)
-          }}
-          type="button"
-          className="flex items-center gap-2"
-        >
-          <ShareIcon className="size-4" /> Share Link
         </button>
       </PopoverContent>
     </Popover>
