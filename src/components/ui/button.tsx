@@ -1,3 +1,4 @@
+import TryAgainIcon from '@assets/icons/try-again.svg'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
@@ -25,6 +26,7 @@ const buttonVariants = cva(
         link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50',
         container:
           'text-text bg-cards hover:bg-cards-hover disabled:bg-cards dark:bg-cards-hover dark:hover:bg-cards',
+        error: 'bg-red-5 text-red-100 hover:bg-red-15 disabled:bg-red-5',
       },
       size: {
         default:
@@ -46,23 +48,38 @@ export interface ButtonProperties
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
+  error?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
   (
-    { className, variant, size, asChild = false, loading = false, children, ...props },
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loading = false,
+      error = false,
+      children,
+      ...props
+    },
     reference,
   ) => {
     const Comp = asChild ? Slot : 'button'
+
+    const buttonVariant = error ? 'error' : variant
+    const buttonContent = loading ? 'Pending' : children
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }), {
+        className={cn(buttonVariants({ variant: buttonVariant, size, className }), {
           'opacity-50 pointer-events-none': loading,
         })}
         ref={reference}
         {...props}
       >
-        {loading ? 'Pending' : children}
+        {buttonContent}
+        {error && <TryAgainIcon className="ml-2 size-4" />}
       </Comp>
     )
   },

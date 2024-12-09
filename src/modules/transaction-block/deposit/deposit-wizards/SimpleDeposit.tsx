@@ -120,11 +120,14 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           <Button
             loading={depositStatus === 'pending'}
             disabled={depositStatus === 'confirm_in_wallet'}
+            error={depositStatus === 'error'}
             type="button"
             onClick={deposit}
             className={className}
           >
-            {getButtonContent(depositStatus, 'Deposit')}
+            {depositStatus === 'error'
+              ? 'Transaction failed'
+              : getButtonContent(depositStatus, 'Deposit')}
           </Button>
         )
       }
