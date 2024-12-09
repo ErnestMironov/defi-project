@@ -60,6 +60,7 @@ const GroupedTokenItem = ({
               'rounded-full transition-all duration-300',
               isOpen ? 'size-7' : 'size-12',
             )}
+            tokenLogoFallback={tokenGroup[0].logo_url}
           />
           <div>
             <div className="flex items-center gap-1">
@@ -79,6 +80,7 @@ const GroupedTokenItem = ({
                       key={chainId}
                       symbol={chainId}
                       className={cn('size-5 rounded-full', index !== 0 && '-ml-2')}
+                      tokenLogoFallback={tokenGroup[0].logo_url}
                     />
                   ))}
                 {new Set(tokenGroup.map((token) => token.chain_id)).size > 4 && (
@@ -101,19 +103,20 @@ const GroupedTokenItem = ({
       </div>
 
       {isOpen && (
-        <div className="mt-1 rounded-lg px-1">
+        <div className="mt-1 select-none rounded-lg px-1">
           {tokenGroup.map((token) => (
             <div
               key={token.contract_ticker_symbol}
               className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-light-blue-15"
             >
-              <div className="flex items-center gap-1">
+              <div className="flex  items-center gap-1">
                 <TokenIconComponent
                   symbol={token.contract_ticker_symbol}
                   className="size-12 rounded-full"
+                  tokenLogoFallback={token.logo_url}
                 />
                 <div className="flex flex-col">
-                  <span>
+                  <span className="">
                     {formatAmount(
                       formatUnits(BigInt(token.balance), token.contract_decimals),
                     )}{' '}
@@ -123,6 +126,7 @@ const GroupedTokenItem = ({
                     <TokenIconComponent
                       symbol={token.chain_id}
                       className="size-4 rounded-full"
+                      tokenLogoFallback={token.logo_url}
                     />
                     {CHAIN_NAMES_BY_ID[token.chain_id as keyof typeof CHAIN_NAMES_BY_ID]}
                   </span>
