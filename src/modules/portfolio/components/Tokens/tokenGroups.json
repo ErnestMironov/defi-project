@@ -1,5 +1,13 @@
 {
-  "USDC": ["USDC", "USDC.e", "USDC.t", "USDC.axl", "USDC.wh", "USDC | Nomad"],
+  "USDC": [
+    "USDC",
+    "USDC.e",
+    "USDC.t",
+    "USDC.axl",
+    "USDC.wh",
+    "USDC | Nomad",
+    "aBasUSDC"
+  ],
   "USDT": [
     "USDT",
     "USDT.e",
