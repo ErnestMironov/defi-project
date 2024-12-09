@@ -1,15 +1,11 @@
-import DepositIcon from '@assets/icons/deposit.svg'
-import { TokenIconComponent } from '@components/token-icon'
-import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import { Button } from '@components/ui/button'
-import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
-import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
-import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { TxReviewInfo } from '@modules/transaction-block/components/TxReviewInfo'
+import { useTransactionAnimation } from '@modules/transaction-block/hooks/useTransactionAnimation'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
-import { cn } from '@utils/cn'
+import { replaceCommasWithDots, trimTrailingZeros } from '@utils/formatValue'
 import { useEffect, useState } from 'react'
 import { type Address, parseUnits } from 'viem'
 
@@ -18,25 +14,18 @@ import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  allStepsCompleted,
-}) => {
+export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = () => {
   const [currentStep, setCurrentStep] = useState(1)
-
-  const { isBelowDesktop } = useDeviceWidth()
 
   const {
     depositAsset,
-    vault,
+    vaultAddress,
     inputValue: amount,
     swapRoute,
+    depositFromNetwork,
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
-
-  const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
-
-  const [isOpen, setIsOpen] = useState(false)
 
   const {
     status: switchStatus,
@@ -75,7 +64,9 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
-  const ActionButton = () => {
+  const chainData = useTokenAsset(depositFromNetwork)
+
+  const ActionButton: React.FC<{ className?: string }> = ({ className = '' }) => {
     switch (currentStep) {
       case 1: {
         console.info(' ~ OnChainDeposit ~ currentStep:', 'switch to Arbitrum')
@@ -84,11 +75,11 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
             size="lg"
             type="button"
             onClick={switchChain}
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             loading={switchStatus === 'pending'}
             disabled={switchStatus === 'confirm_in_wallet'}
           >
-            {getButtonContent(switchStatus, 'Switch to Arbitrum')}
+            {getButtonContent(switchStatus, `Switch to ${chainData?.name}`)}
           </Button>
         )
       }
@@ -98,7 +89,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
           <Button
             size="lg"
             type="button"
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             onClick={approveBeforeSwap}
             loading={approveStatusBeforeSwap === 'pending'}
             disabled={approveStatusBeforeSwap === 'confirm_in_wallet'}
@@ -117,7 +108,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
             size="lg"
             type="button"
             onClick={swapAndDeposit}
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             loading={swapAndDepositStatus === 'pending'}
             disabled={swapAndDepositStatus === 'confirm_in_wallet'}
           >
@@ -166,43 +157,31 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
     setAnimationStatus('idle')
   }, [switchStatus, approveStatusBeforeSwap, swapAndDepositStatus, setAnimationStatus])
 
+  const TransactionAnimation = useTransactionAnimation()
+
   return (
     <div className="flex flex-col items-stretch gap-6 lg:gap-8">
-      {!isBelowDesktop && (
-        <div className="flex w-full flex-col items-stretch px-8">
-          <ActionButton />
-        </div>
-      )}
-      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
-        <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
-          <WizardStep
-            icon={
-              <TokenIconComponent width="2.625rem" symbol={depositAssetChain?.symbol} />
-            }
-            title={`Switch to ${depositAssetChain?.name}`}
-            status={allStepsCompleted ? 'success' : switchStatus}
-          />
-          <WizardStep
-            icon={
-              <TokenWithNetwork
-                symbol={depositAsset?.contract_ticker_symbol}
-                network={depositAsset?.chain_id}
-                width="2rem"
-              />
-            }
-            title="Approve"
-            status={allStepsCompleted ? 'success' : approveStatusBeforeSwap}
-            isDDOpen={isOpen}
-          />
-          <WizardStep
-            icon={<DepositIcon className={cn('size-8')} />}
-            title={`Deposit ${vault}`}
-            status={swapAndDepositStatus}
-            isDDOpen={isOpen}
-          />
-        </WizardDropDown>
+      <TransactionAnimation />
+      <TxReviewInfo
+        recipient={{
+          label: 'Recipient',
+          value: vaultAddress ?? '',
+        }}
+        chain={depositFromNetwork ?? 0}
+        withdraw={{
+          label: 'You deposit',
+          value: replaceCommasWithDots(trimTrailingZeros(amount)),
+          usdValue: amount,
+        }}
+        receive={{
+          label: 'You will stake',
+          value: amount,
+          usdValue: amount,
+        }}
+      />
+      <div className="flex w-full flex-col items-stretch px-8">
+        <ActionButton className="w-full px-[1.875rem] py-4 text-base font-medium normal-case leading-6" />
       </div>
-      {isBelowDesktop && <ActionButton />}
     </div>
   )
 }

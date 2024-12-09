@@ -1,30 +1,71 @@
 import type { Event } from '@api/maat-finance/types'
-import Expand from '@assets/icons/expand-with-bg.svg'
-import LinkWithBrackets from '@assets/icons/link-with-bracket.svg'
+import LinkIcon from '@assets/icons/externalLinkIcon.svg'
+import MoreOptionsIcon from '@assets/icons/more-options.svg'
+import TransactionDetails from '@assets/icons/TransactionDetails.svg'
 import { ScanLink } from '@components/scan-link/ScanLink'
-import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { LAST_EVENT_ACTION_TYPE } from '@constants/action-type'
+import { LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO } from '@constants/action-type'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ROUTES } from '@routes/routes'
 import { cn } from '@utils/cn'
-import { formatAmount, formatUsdValue } from '@utils/formatValue'
-import dayjs from 'dayjs'
+import { formatAmount } from '@utils/formatValue'
+import { getShortFromNow } from '@utils/get-day-difference'
 import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import { formatUnits } from 'viem'
 
+import BlueBackground from '../assets/icons/background/blue.svg'
+import PurpleBackground from '../assets/icons/background/purple.svg'
+import BridgeIcon from '../assets/icons/bridge.svg'
 import DepositIcon from '../assets/icons/deposit.svg'
-import WithdrawIcon from '../assets/icons/withdraw.svg'
+import WithdrawIcon from '../assets/icons/portfolioWithdraw.svg'
+import RebalanceIcon from '../assets/icons/rebalance.svg'
+import { StatusLabel } from '../components/StatusLabel'
 
 interface UserTransactionItemProperties extends ComponentProps<'div'> {
   event: Event
 }
 
 export const STATUS_MAP = {
-  success: 'Success',
+  completed: 'completed',
   'in progress': 'Pending',
   failed: 'Failed',
 } as const
+
+const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props) => {
+  const { event } = props
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger className="rounded-xl border p-2 text-gray-700 hover:bg-gray-200">
+        <MoreOptionsIcon className="size-full" />
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content
+        className="mr-2 mt-4 w-[15.5rem] rounded-xl border border-stroke-40100 bg-cards p-2 shadow-test-2"
+        side="left"
+        align="end"
+      >
+        <DropdownMenu.Item className="cursor-pointer rounded-xl bg-cards p-4 hover:bg-light-blue-15">
+          <Link
+            to={`${ROUTES.TRANSACTIONS}/${event.hash}`}
+            className="flex w-full items-center gap-4"
+          >
+            <TransactionDetails className="size-5" />
+            <p className="text-base text-text-1100">Transaction Details</p>
+          </Link>
+        </DropdownMenu.Item>
+        <DropdownMenu.Item className="cursor-pointer rounded-xl p-4 hover:bg-light-blue-15">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <LinkIcon className="size-5" />
+              <p className="ml-1 text-base">Etherscan</p>
+            </div>
+            <ScanLink chainId={event.src_chain_id} txHash={event.hash} className="ml-1" />
+          </div>
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  )
+}
 
 export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const { event, className, ...rest } = props
@@ -32,11 +73,34 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const renderIcon = () => {
     switch (event.action_type) {
       case 'DEPOSIT': {
-        return <DepositIcon className="size-full" />
+        return (
+          <DepositIcon className="size-full [&_path:first-child]:stroke-red-100 [&_path]:fill-red-100" />
+        )
       }
       case 'WITHDRAW':
       case 'WITHDRAW_REQUEST': {
-        return <WithdrawIcon className="size-full" />
+        return (
+          <div className="relative size-full">
+            <BlueBackground className="absolute inset-0 size-full" />
+            <WithdrawIcon className="absolute inset-0 m-auto size-4" />
+          </div>
+        )
+      }
+      case 'BRIDGE': {
+        return (
+          <div className="relative size-full">
+            <PurpleBackground className="absolute inset-0 size-full" />
+            <BridgeIcon className="absolute inset-0 m-auto size-4" />
+          </div>
+        )
+      }
+      case 'REBALANCE': {
+        return (
+          <div className="relative size-full">
+            <BlueBackground className="absolute inset-0 size-full" />
+            <RebalanceIcon className="absolute inset-0 m-auto size-4" />
+          </div>
+        )
       }
       default: {
         return null
@@ -44,68 +108,42 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
     }
   }
 
+  const formatTransactionAction = (action: string) => {
+    const words = action.split(' ')
+    return (
+      <>
+        <span className="text-text-1100">{words[0]}</span>
+        <span className="text-text-260">{` ${words.slice(1).join(' ')}`}</span>
+      </>
+    )
+  }
+
   return (
     <div className={cn('flex items-center', className)} {...rest}>
       <div
         className={cn(
-          'relative flex size-9 items-center justify-center rounded-full bg-gray-20',
-          event.status === 'failed' && 'border-[0.0938rem] border-red-50 bg-input-error',
+          'relative flex size-14 items-center justify-center rounded-xl bg-main-15',
+          event.action_type === 'DEPOSIT' && 'bg-red-15',
         )}
       >
         <div
-          className={cn(
-            'size-5 [&_path]:fill-gray-80',
-            event.status === 'failed' && '[&_path]:fill-red-50',
-          )}
+          className={cn('size-10', event.status === 'failed' && '[&_path]:fill-red-50')}
         >
           {renderIcon()}
         </div>
-        <TokenIconComponent
-          symbol={event.src_chain_id}
-          className="absolute -right-0.5 bottom-0 size-3.5 rounded-full border border-cards"
-        />
       </div>
       <div className="ml-3 space-y-1">
         <div className="flex items-center">
-          <p className="text-[1.25rem]/[1.5rem] font-medium text-text">
-            {
-              LAST_EVENT_ACTION_TYPE[
-                event.action_type as keyof typeof LAST_EVENT_ACTION_TYPE
-              ]
-            }
-          </p>
-          <Link to={`${ROUTES.TRANSACTIONS}/${event.hash}`} className="ml-[0.38rem]">
-            <Expand className="size-6" />
-          </Link>
-          <ScanLink
-            chainId={event.src_chain_id}
-            txHash={event.hash}
-            className="ml-1 size-6"
-          >
-            <LinkWithBrackets className="size-full" />
-          </ScanLink>
-        </div>
-        <p className="text-base text-gray-100">
-          {dayjs(event.creation_time).format('DD/MM/YY HH:mm')}
-          <span
-            className={cn(
-              'ml-2 text-gray-100',
-              event.status === 'success' && 'text-green-100',
-              event.status === 'failed' && 'text-red-100',
-              event.status === 'in progress' && 'text-dark-blue-100',
+          <p className=" text-[1.25rem]/[1.5rem] font-medium leading-4 ">
+            {formatTransactionAction(
+              LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO[
+                event.action_type as keyof typeof LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO
+              ],
             )}
-          >
-            {STATUS_MAP[event.status as keyof typeof STATUS_MAP]}
-          </span>
-        </p>
-      </div>
-      <div className="ml-auto space-y-1">
-        <div className="flex items-center gap-[0.38rem]">
-          <TokenIconComponent
-            symbol={event.vault.token.symbol}
-            className="size-[1.125rem]"
-          />
-          <p className="text-[1.25rem]/[1.5rem] font-medium">
+          </p>
+        </div>
+        <p className="text-base text-text-2100">
+          <p className="text-base font-medium">
             {formatAmount(
               formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
               {
@@ -113,19 +151,20 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               },
-            )}
+            )}{' '}
+            {event.vault.token.symbol}
           </p>
-        </div>
-        <p className="text-end text-base text-gray-100">
-          {formatUsdValue(
-            formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
-            {
-              notation: 'compact',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            },
-          )}
+          {/*  */}
         </p>
+      </div>
+      <div className="ml-auto space-y-1">
+        <div className="flex items-center gap-[0.38rem]">
+          <span className="text-sm text-gray-100">
+            {getShortFromNow(event.creation_time)}
+          </span>
+          <StatusLabel status={event.status} />
+          <DropdownMenuForPortfolio event={event} />
+        </div>
       </div>
     </div>
   )

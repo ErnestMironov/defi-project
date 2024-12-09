@@ -7,7 +7,7 @@ type PortfolioYield = {
 }
 
 const getPortfolioYield = (address: Address) => {
-  return apiClient.get<PortfolioYield>(`analytics/portfolio/assets/yield/${address}`)
+  return apiClient.get<PortfolioYield>(`analytics/portfolio/assets/${address}`)
 }
 
 export const usePortfolioYield = (address: Address) => {

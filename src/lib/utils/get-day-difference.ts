@@ -22,3 +22,20 @@ export const getFromNow = (date: string | number, suffix = false) => {
     .replace('a month', '1 month')
     .replace('a year', '1 year')
 }
+
+export const getShortFromNow = (date: string | number) => {
+  return dayjs(date)
+    .fromNow()
+    .replace('minutes', 'm')
+    .replace('seconds', 's')
+    .replace('hours', 'h')
+    .replace('days', 'd')
+    .replace('months', 'mo')
+    .replace('years', 'y')
+    .replace('a minute', '1m')
+    .replace('an hour', '1h')
+    .replace('a day', '1d')
+    .replace('a month', '1mo')
+    .replace('a year', '1y')
+    .replace(' ago', '')
+}

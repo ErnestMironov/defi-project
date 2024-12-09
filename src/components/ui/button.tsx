@@ -1,14 +1,16 @@
+import TryAgainIcon from '@assets/icons/try-again.svg'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-sm text-sm font-medium uppercase ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 max-lg:text-center',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-sm text-sm font-medium uppercase ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 max-lg:text-center',
   {
     variants: {
       variant: {
-        default: 'bg-main-100 text-white hover:bg-blue1 disabled:bg-main-30',
+        default:
+          'bg-main-100 text-white hover:bg-blue1 disabled:bg-text-5 disabled:text-text-dark/30',
         light:
           'hover:bg-light-blue-40 bg-light-blue-30 text-dark-blue-100 disabled:bg-light-blue-30',
         destructive:
@@ -23,7 +25,8 @@ const buttonVariants = cva(
           'hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50',
         link: 'text-slate-900 underline-offset-4 hover:underline dark:text-slate-50',
         container:
-          'bg-cards text-text hover:bg-cards-hover disabled:bg-cards dark:bg-cards-hover dark:hover:bg-cards',
+          'text-text bg-cards hover:bg-cards-hover disabled:bg-cards dark:bg-cards-hover dark:hover:bg-cards',
+        error: 'bg-red-5 text-red-100 hover:bg-red-15 disabled:bg-red-5',
       },
       size: {
         default:
@@ -45,23 +48,38 @@ export interface ButtonProperties
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
+  error?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
   (
-    { className, variant, size, asChild = false, loading = false, children, ...props },
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loading = false,
+      error = false,
+      children,
+      ...props
+    },
     reference,
   ) => {
     const Comp = asChild ? Slot : 'button'
+
+    const buttonVariant = error ? 'error' : variant
+    const buttonContent = loading ? 'Pending' : children
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }), {
+        className={cn(buttonVariants({ variant: buttonVariant, size, className }), {
           'opacity-50 pointer-events-none': loading,
         })}
         ref={reference}
         {...props}
       >
-        {loading ? 'Pending' : children}
+        {buttonContent}
+        {error && <TryAgainIcon className="ml-2 size-4" />}
       </Comp>
     )
   },

@@ -1,4 +1,4 @@
-import ChevronDown from '@assets/icons/arrow-down.svg'
+import ChevronDown from '@assets/icons/arrow-up.svg'
 import Check from '@assets/icons/check.svg'
 import * as SelectPrimitive from '@radix-ui/react-select'
 import { cn } from '@utils/cn'

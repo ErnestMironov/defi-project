@@ -1,4 +1,4 @@
-import Chevron from '@assets/icons/arrow-down.svg'
+import Chevron from '@assets/icons/arrow-up.svg'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { TokenVaultsPopover } from '@modules/token-vaults-popover/TokenVaultsPopover'

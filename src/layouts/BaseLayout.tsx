@@ -13,9 +13,7 @@ interface BaseLayoutProperties extends ComponentProps<'div'> {}
 export const BaseLayout = (_props: BaseLayoutProperties) => {
   const { theme } = useTheme()
   const { pathname } = useLocation()
-  const customBgPage = [ROUTES.PORTFOLIO, ROUTES.DEPOSIT, ROUTES.POINTS].includes(
-    pathname as never,
-  )
+  const customBgPage = [ROUTES.PORTFOLIO, ROUTES.POINTS].includes(pathname as never)
 
   return (
     <>

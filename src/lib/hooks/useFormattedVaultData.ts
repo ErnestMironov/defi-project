@@ -7,8 +7,8 @@ import { formatUnits } from 'viem'
 export const useFormattedVaultData = (address?: `0x${string}`) => {
   const { data, isLoading: isUserSharesLoading } = useUserShares(address)
   const {
-    bestUSDCAPy: usdcApy,
-    bestUSDTAPy: usdtApy,
+    bestUSDCApy: usdcApy,
+    bestUSDTApy: usdtApy,
     isLoading: isStrategiesLoading,
   } = useVaultAPY()
 

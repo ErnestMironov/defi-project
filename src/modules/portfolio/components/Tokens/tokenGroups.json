@@ -1,0 +1,35 @@
+{
+  "USDC": [
+    "USDC",
+    "USDC.e",
+    "USDC.t",
+    "USDC.axl",
+    "USDC.wh",
+    "USDC | Nomad",
+    "aBasUSDC"
+  ],
+  "USDT": [
+    "USDT",
+    "USDT.e",
+    "USDT+",
+    "USDT.axl",
+    "USDT.wh",
+    "USDT | Nomad",
+    "USDt"
+  ],
+  "DAI": ["DAI", "DAI+", "DAI.t", "DAI.axl", "DAI.wh", "DAI | Nomad", "DAI.e"],
+  "ETH": ["ETH", "WETH", "ETH.axl", "Ethereum", "wBETH", "aWETH"],
+  "BTC": ["BTC", "WBTC", "BTC.axl"],
+  "MATIC": ["MATIC", "WMATIC", "MATIC.axl", "MaticX"],
+  "LINK": ["LINK", "WLINK", "LINK.axl", "LINK.e"],
+  "LTC": ["LTC", "WLTC", "LTC.axl"],
+  "XRP": ["XRP", "WXRP", "XRP.axl", "XRP.e", "WXRP"],
+  "FBTC": ["FBTC", "FBTC.axl", "FBTC.e", "Fire Bitcoin"],
+  "LBTC": ["LBTC", "LBTC.axl", "LBTC.e", "Lombard Staked Bitcoin"],
+  "cbBTC": ["cbBTC", "cbBTC.axl", "cbBTC.e", "Coinbase Wrapped BTC"],
+  "BNB": ["BNB", "BNB.axl", "BNB.e", "BNB.wh", "BNB | Nomad", "BNB.t"],
+  "AVAX": ["AVAX", "AVAX.e", "AVAX.axl", "Avalanche"],
+  "YieldETH": ["YieldETH", "YieldETH.axl", "Real Yield ETH"],
+  "POL": ["POL", "POL.axl", "Polygon Ecosystem Token"],
+  "SEILOR": ["SEILOR", "SEILOR.axl", "SEILOR.e"]
+}

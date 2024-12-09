@@ -48,7 +48,7 @@ const CollapsedTransaction: React.FC<CollapsedTransactionProperties> = ({
             symbol={transaction.vault}
             network={CHAIN_IDS_BY_NAME.Arbitrum}
           />
-          <div className="flex items-center gap-1 rounded-[12.5rem] bg-green-15 px-2 py-1 leading-[120%] text-green-100">
+          <div className="bg-green-15 flex items-center gap-1 rounded-[12.5rem] px-2 py-1 leading-[120%] text-green-100">
             + {formatAmountValue(transaction.inputValue, 2)}{' '}
             {transaction.depositAsset?.contract_ticker_symbol}
           </div>
@@ -136,14 +136,6 @@ export const PendingTransactions: React.FC = () => {
     switch (transaction.status) {
       case 'pending': {
         setCurrentModal('review')
-        break
-      }
-      case 'success': {
-        setCurrentModal('done')
-        break
-      }
-      case 'error': {
-        setCurrentModal('error')
         break
       }
       default: {

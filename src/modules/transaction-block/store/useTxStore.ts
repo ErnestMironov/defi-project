@@ -8,6 +8,7 @@ import type { Address } from 'viem'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
+import type { STEP_STATUS } from '../deposit/interfaces'
 import type { UseGetMTokenInfoReturn } from '../withdraw/hooks/useGetMTokenInfo'
 import type { IPendingTransactionData } from './usePendingTransactionsStore'
 
@@ -70,6 +71,8 @@ export interface SelectedAssetState {
   setCurrentStep: (by: number) => void
   isTransactionCanBeCollapsed: boolean
   setTransactionCanBeCollapsed: (value: boolean) => void
+  collapseTxInfo: boolean
+  setCollapseTxInfo: (value: boolean) => void
 
   // Transaction-related information
   isTransactionFromStore: boolean
@@ -107,6 +110,16 @@ export interface SelectedAssetState {
   // Utility functions
   getFullState: () => Partial<SelectedAssetState>
   resetStore: () => void
+
+  // Transaction statuses
+  networkSwitchStatus: STEP_STATUS
+  approvalStatus: STEP_STATUS
+  transactionStatus: STEP_STATUS
+
+  // Actions
+  setNetworkSwitchStatus: (status: STEP_STATUS) => void
+  setApprovalStatus: (status: STEP_STATUS) => void
+  setTransactionStatus: (status: STEP_STATUS) => void
 }
 
 export const useTxStore = create<SelectedAssetState>()(
@@ -144,6 +157,9 @@ export const useTxStore = create<SelectedAssetState>()(
 
       vaultDepositTokenAddress: undefined,
       setVaultDepositTokenAddress: (by) => set({ vaultDepositTokenAddress: by }),
+
+      collapseTxInfo: false,
+      setCollapseTxInfo: (value) => set({ collapseTxInfo: value }),
 
       depositTotalAmount: '',
       setDepositTotalAmount: (by) => set({ depositTotalAmount: by }),
@@ -230,6 +246,7 @@ export const useTxStore = create<SelectedAssetState>()(
           withdrawToNetwork: null,
           mtToken: null,
           txType: TX_TYPE.DEPOSIT,
+          collapseTxInfo: false,
           currentModal: null,
           depositAmount: '',
           withdrawAmount: '',
@@ -252,6 +269,16 @@ export const useTxStore = create<SelectedAssetState>()(
 
       scalesClickCount: 0,
       setScalesClickCount: (value) => set({ scalesClickCount: value }),
+
+      // Transaction statuses
+      networkSwitchStatus: 'idle',
+      approvalStatus: 'idle',
+      transactionStatus: 'idle',
+
+      // Actions
+      setNetworkSwitchStatus: (status) => set({ networkSwitchStatus: status }),
+      setApprovalStatus: (status) => set({ approvalStatus: status }),
+      setTransactionStatus: (status) => set({ transactionStatus: status }),
     }),
     {
       name: 'TxStore',

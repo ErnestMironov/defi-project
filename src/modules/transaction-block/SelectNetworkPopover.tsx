@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import ArrowDown from '@assets/icons/arrow-down.svg'
 import Check from '@assets/icons/check.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
@@ -36,8 +35,8 @@ const ChainItem = ({
     <div
       onClick={() => onNetworkChange(chain)}
       className={cn(
-        'flex items-center justify-between rounded-[0.625rem] gap-2 px-3 py-1.5 cursor-pointer hover:bg-main-15',
-        chain === currentChain && 'bg-main-15',
+        'flex items-center justify-between rounded-[0.625rem] gap-2 px-3 py-1.5 cursor-pointer hover:bg-input-default',
+        chain === currentChain && 'bg-input-default',
       )}
     >
       <div className="flex  items-center gap-2">
@@ -76,19 +75,10 @@ export const SelectNetworkPopover = ({
 
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
-      <PopoverTrigger className="flex items-center gap-2">
-        {trigger}
-        <ArrowDown
-          className={cn(
-            'size-4 transition group-data-[state="open"]:rotate-180',
-            isOpened && 'rotate-180',
-          )}
-        />
-      </PopoverTrigger>
+      <PopoverTrigger className="flex items-center gap-2">{trigger}</PopoverTrigger>
       <PopoverContent
-        align="center"
-        sideOffset={24}
-        className="pointer-events-auto inline-block w-auto rounded-2xl border px-2 py-4 [&]:shadow-none"
+        align="end"
+        className="pointer-events-auto inline-block w-[16.25rem] rounded-2xl border px-2 py-4 [&]:shadow-none"
       >
         <div className="flex flex-col gap-1 ">
           {showAllNetworksOption && (

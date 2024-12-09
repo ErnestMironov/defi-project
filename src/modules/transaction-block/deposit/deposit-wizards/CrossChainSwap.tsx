@@ -19,7 +19,7 @@ import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
 export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  allStepsCompleted,
+  _allStepsCompleted,
 }) => {
   const {
     depositAsset,
@@ -154,7 +154,6 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     switchError,
   ])
 
-  // Добавляем новый useEffect для управления анимацией
   useEffect(() => {
     if (
       switchToAssetChainStatus === 'pending' ||
@@ -180,7 +179,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           <WizardStep
             icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
             title={`Switch to ${depositAssetChain?.name}`}
-            status={allStepsCompleted ? 'success' : switchToAssetChainStatus}
+            status={_allStepsCompleted ? 'success' : switchToAssetChainStatus}
           />
           <WizardStep
             icon={
@@ -191,7 +190,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
               />
             }
             title="Approve"
-            status={allStepsCompleted ? 'success' : approveStatus}
+            status={_allStepsCompleted ? 'success' : approveStatus}
             isDDOpen={isOpen}
           />
           <WizardStep

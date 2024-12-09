@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-small-switch */
-import Arrow from '@assets/icons/arrow-down.svg'
+import Arrow from '@assets/icons/arrow-up.svg'
 import { Command, CommandGroup, CommandItem, CommandList } from '@components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { cn } from '@utils/cn'
