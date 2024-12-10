@@ -159,9 +159,11 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
       </div>
       <div className="ml-auto space-y-1">
         <div className="flex items-center gap-[0.38rem]">
-          <span className="text-sm text-gray-100">
-            {getShortFromNow(event.creation_time)}
-          </span>
+          {event.status !== 'in progress' && (
+            <span className="text-sm text-text-2100">
+              {getShortFromNow(event.creation_time)}
+            </span>
+          )}
           <StatusLabel status={event.status} />
           <DropdownMenuForPortfolio event={event} />
         </div>
