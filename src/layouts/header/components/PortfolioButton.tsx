@@ -10,6 +10,7 @@ interface PortfolioButtonProperties extends React.HTMLAttributes<HTMLButtonEleme
   isOpen: boolean
   openConnectModal: () => void
   balance: number
+  isMobile?: boolean
 }
 
 const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
@@ -17,39 +18,45 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
   isOpen,
   openConnectModal = () => {},
   balance,
+  isMobile = false,
 }) => {
   const { address } = useAccount()
 
   const formattedBalance = useMemo(() => {
-    if (isOpen) {
+    if (isOpen && !isMobile) {
       return shortenAddress(address ?? '')
     }
     return formatAmount(balance ?? 0)
-  }, [isOpen, address, balance])
+  }, [isOpen, address, balance, isMobile])
 
   return (
     <button
       type="button"
-      className="size-auto min-w-[10.375rem] rounded-2xl border  border-stroke-100 bg-cards shadow-test-2 transition-colors dark:border dark:border-stroke-40100"
+      className="size-auto rounded-2xl border  border-stroke-100 bg-white  transition-colors dark:border-stroke-40100 dark:bg-cards-widget"
       onClick={isOpen ? openConnectModal : onClick}
     >
       <div className="flex w-full">
-        <div className="flex flex-1 items-center justify-center gap-1  px-4 py-3">
+        <div className="flex flex-1 items-center justify-center gap-1  border-r border-stroke-40100 px-4 py-3">
           <Metamask className="size-5 shrink-0" />
           <p className="truncate text-sm font-medium leading-6 text-text-100">
-            {!isOpen && <span className="text-text-4030">$</span>} {formattedBalance}
+            {(!isOpen || (isOpen && isMobile)) && (
+              <span className="text-text-4030">$</span>
+            )}{' '}
+            {formattedBalance}
           </p>
         </div>
-        <button
-          className="hover:bg-cards/50 flex items-center justify-center rounded-r-2xl border-l border-stroke-100 px-3 transition-colors dark:border-stroke-40100"
-          type="button"
-        >
-          {isOpen ? (
-            <ArrowRight className="size-4" />
-          ) : (
-            <DoubleArrow className="size-4" />
-          )}
-        </button>
+        {!isMobile && (
+          <button
+            className="flex items-center justify-center rounded-r-2xl  px-3 transition-colors dark:border-stroke-40100"
+            type="button"
+          >
+            {isOpen ? (
+              <ArrowRight className="size-4" />
+            ) : (
+              <DoubleArrow className="size-4" />
+            )}
+          </button>
+        )}
       </div>
     </button>
   )
