@@ -1,4 +1,4 @@
-import ArrowTopRight from '@assets/icons/arrow-top-right.svg'
+import BorderedArrowTopRight from '@assets/icons/bordered-arrow-top-right.svg'
 import Scan from '@assets/icons/scan.svg'
 import { SCAN_LINK_BY_CHAIN_ID } from '@constants/chains'
 import { cn } from '@utils/cn'
@@ -108,14 +108,7 @@ export const ScanLink = (props: ScanLinkProperties) => {
       {...rest}
     >
       {arrow ? (
-        <div
-          className={cn(
-            'flex size-5 py-[0.1rem] items-center justify-center rounded border border-stroke-100',
-            className,
-          )}
-        >
-          <ArrowTopRight className="aspect-square size-full" />
-        </div>
+        <BorderedArrowTopRight className={cn('size-4', className)} />
       ) : (
         children || <ScanLogo className="size-full" />
       )}

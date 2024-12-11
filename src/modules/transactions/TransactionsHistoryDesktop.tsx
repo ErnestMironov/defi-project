@@ -116,7 +116,7 @@ export const TransactionsHistoryDesktop = (
         </Table.Head>
         <Table.Body>{renderBody()}</Table.Body>
       </Table>
-      {data && (
+      {data && data.items?.length > 0 && (
         <Pagination
           className="absolute inset-x-0 -bottom-16"
           currentPage={page}

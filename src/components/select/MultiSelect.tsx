@@ -102,7 +102,7 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
       )}
     >
       <div className="flex items-center gap-2 [&_svg]:size-4">
-        {(value.length === 0 || value.length > 1) && icon}
+        {icon}
         {renderValue()}
       </div>
       <Arrow className="ml-1 rotate-180 transition group-data-[state=open]:rotate-0" />

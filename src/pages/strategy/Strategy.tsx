@@ -50,30 +50,33 @@ export const StrategyDesktop = (props: StrategyProperties) => {
         </div>
         <span>Back to Strategies</span>
       </button>
-      <div className="mt-4 flex gap-6">
-        <div className="flex w-full gap-4">
-          <BaseContainer className={cn('w-3/4', className)} {...rest}>
-            <StrategyHeader className="border-b border-stroke-100 px-9 py-7" />
+      <div className="mt-4 space-y-4">
+        <div className="flex gap-4 *:flex-1">
+          <BaseContainer className="flex flex-col">
+            <StrategyHeader className="grow border-b border-stroke-100 px-9 py-7" />
             <StrategyInfo />
-            <Tabs defaultValue="apy">
-              <TabsList className="w-full justify-start rounded-none border-b border-stroke-100 px-8 text-sm/[1.5rem] font-medium *:py-3">
-                <TabsTrigger variant="underline" value="apy">
-                  APY
-                </TabsTrigger>
-                <TabsTrigger variant="underline" value="tvl">
-                  TVL
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="apy" className="mt-0">
-                <StrategyApyChart className="h-60 px-8 pb-5" />
-              </TabsContent>
-              <TabsContent value="tvl" className="mt-0">
-                <StrategyTvlChart className="h-60 px-8 pb-5" />
-              </TabsContent>
-            </Tabs>
           </BaseContainer>
-          <StrategyInfoDesktop className="w-1/4" />
+          <StrategyInfoDesktop />
         </div>
+
+        <BaseContainer className={cn('w-full', className)} {...rest}>
+          <Tabs defaultValue="apy">
+            <TabsList className="w-full justify-start rounded-none border-b border-stroke-100 px-8 text-sm/[1.5rem] font-medium *:py-3">
+              <TabsTrigger variant="underline" value="apy">
+                APY
+              </TabsTrigger>
+              <TabsTrigger variant="underline" value="tvl">
+                TVL
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="apy" className="mt-0">
+              <StrategyApyChart className="h-60 px-8 pb-5" />
+            </TabsContent>
+            <TabsContent value="tvl" className="mt-0">
+              <StrategyTvlChart className="h-60 px-8 pb-5" />
+            </TabsContent>
+          </Tabs>
+        </BaseContainer>
       </div>
       <BaseContainer className="mb-48 mt-4 w-full">
         <TransactionHistory

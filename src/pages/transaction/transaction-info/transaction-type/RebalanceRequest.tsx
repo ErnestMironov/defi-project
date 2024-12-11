@@ -6,7 +6,6 @@ import { formatUnits } from 'viem'
 
 import {
   Chain,
-  Status,
   Timestamp,
   TokenAmount,
   TransactionHash,
@@ -41,7 +40,7 @@ export const RebalanceRequest = (props: RebalanceRequestProperties) => {
       <div
         className={cn(
           'grid grid-cols-6 max-lg:grid-cols-1',
-          // 'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
+          'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
         )}
       >
         <TransactionHash
@@ -49,7 +48,7 @@ export const RebalanceRequest = (props: RebalanceRequestProperties) => {
           className="col-span-3"
           chainId={data?.src_chain_id}
         />
-        <Status status={data?.status} className="col-span-3" />
+        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center" />
         <TokenAmount
           value={formatUnits(
             BigInt(data?.amount ?? 0),

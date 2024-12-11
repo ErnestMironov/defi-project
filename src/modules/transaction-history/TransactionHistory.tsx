@@ -21,7 +21,7 @@ export const TransactionHistory = (props: TransactionHistoryProperties) => {
       <Tabs defaultValue="maat">
         <TabsList className="w-full justify-start rounded-none border-b border-stroke-100 px-8 *:py-3">
           <TabsTrigger variant="underline" value="maat">
-            Maat Events
+            Maat Finance
           </TabsTrigger>
           <TabsTrigger variant="underline" value="incentives">
             Incentives

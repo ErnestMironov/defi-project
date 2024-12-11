@@ -21,52 +21,67 @@ export const StrategyInfo = (props: ComponentProps<'div'>) => {
     notation: 'compact',
   })
   if (isLoading || error) {
-    return <Skeleton className="h-6 w-full" />
+    return <StrategyInfoSkeleton className={className} {...rest} />
   }
   return (
-    <div>
-      <div
-        className={cn(
-          'divide-x-stroke-100 grid grid-cols-2 divide-x border-b border-stroke-100 text-sm/[1.5rem] *:flex *:items-center *:justify-between',
-          className,
-        )}
-        {...rest}
-      >
-        <div className="px-8 py-3">
-          <span className="text-text-2100">Chain</span>
-          <IconWithLabelComponent symbol={strategy?.chain_id} />
-        </div>
-        <div className="px-8 py-3">
-          <span className="text-text-2100">Token</span>
-          <IconWithLabelComponent symbol={strategy?.token?.symbol} />
-        </div>
+    <div
+      className={cn(
+        'border-stroke-100 grid grid-cols-2 *:border-b [&>*:nth-child(odd)]:border-r text-sm/[1.5rem] *:flex *:items-center *:justify-between',
+        className,
+      )}
+      {...rest}
+    >
+      <div className="px-8 py-3">
+        <span className="text-text-2100">Chain</span>
+        <IconWithLabelComponent symbol={strategy?.chain_id} />
       </div>
-      <div className="flex items-center justify-center gap-10 border-b border-stroke-100 *:space-y-[0.38rem] *:p-8 [&_h6]:text-text-2100 [&_p]:text-2.5xl">
-        <div>
-          <p>
-            {formattedApy}
-            <span className="text-text-2100">%</span>
-          </p>
-          <h6 className="text-text-2100">
-            APY <span className="text-text-260">Last 7 days</span>
-          </h6>
-        </div>
-        <div>
-          <p>
-            {formattedApy}
-            <span className="text-text-2100">%</span>
-          </p>
-          <h6 className="text-text-2100">
-            APY <span className="text-text-260">Last 30 days</span>
-          </h6>
-        </div>
-        <div>
-          <p>
-            <span className="text-text-2100">$</span>
-            {formattedTvl}
-          </p>
-          <h6 className="text-text-2100">TVL</h6>
-        </div>
+      <div className="px-8 py-3">
+        <span className="text-text-2100">Token</span>
+        <IconWithLabelComponent symbol={strategy?.token?.symbol} />
+      </div>
+      <div className="px-8 py-3">
+        <span className="text-text-2100">TVL</span>
+        <p>
+          {formattedTvl}
+          <span className="text-text-2100">$</span>
+        </p>
+      </div>
+      <div className="px-8 py-3">
+        <span className="text-text-2100">APY</span>
+        <p>
+          {formattedApy}
+          <span className="text-text-2100">%</span>
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export const StrategyInfoSkeleton = (props: ComponentProps<'div'>) => {
+  const { className, ...rest } = props
+  return (
+    <div
+      className={cn(
+        'border-stroke-100 grid grid-cols-2 *:border-b [&>*:nth-child(odd)]:border-r text-sm/[1.5rem] *:flex *:items-center *:justify-between',
+        className,
+      )}
+      {...rest}
+    >
+      <div className="px-8 py-3">
+        <span className="text-text-2100">Chain</span>
+        <Skeleton className="h-6 w-20" />
+      </div>
+      <div className="px-8 py-3">
+        <span className="text-text-2100">Token</span>
+        <Skeleton className="h-6 w-20" />
+      </div>
+      <div className="px-8 py-3">
+        <span className="text-text-2100">TVL</span>
+        <Skeleton className="h-6 w-20" />
+      </div>
+      <div className="px-8 py-3">
+        <span className="text-text-2100">APY</span>
+        <Skeleton className="h-6 w-20" />
       </div>
     </div>
   )

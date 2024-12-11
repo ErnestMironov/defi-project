@@ -62,28 +62,19 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
               )}
             </div>
           ) : (
-            <div className="h-14 w-full rounded-lg border border-stroke-100 bg-[url('/src/assets/icons/dashes.svg')] dark:bg-[url('/src/assets/icons/dashes-dark.svg')] bg-cover bg-center bg-repeat" />
+            <div className="h-14 w-[10.625rem] rounded-lg border border-stroke-100 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center bg-repeat dark:bg-[url('/src/assets/icons/dashes-dark.svg')]" />
           )}
         </Table.Cell>
         <Table.Cell>
           <div className="flex items-center gap-2">
             {event.dst_chain_id ? (
               <>
-                <TokenIconComponent
-                  symbol={event.src_chain_id}
-                  className="size-8 gap-3"
-                />
+                <TokenIconComponent symbol={event.src_chain_id} />
                 <Arrow />
-                <TokenIconComponent
-                  symbol={event.dst_chain_id}
-                  className="size-8 gap-3"
-                />
+                <TokenIconComponent symbol={event.dst_chain_id} />
               </>
             ) : (
-              <IconWithLabelComponent
-                symbol={event.src_chain_id}
-                className="size-8 gap-3"
-              />
+              <IconWithLabelComponent symbol={event.src_chain_id} />
             )}
           </div>
         </Table.Cell>

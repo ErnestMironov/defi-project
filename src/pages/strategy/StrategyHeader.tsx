@@ -17,7 +17,7 @@ export const StrategyHeader = (props: StrategyHeaderProperties) => {
   const protocol = strategy?.info?.protocol?.name
 
   if (isLoading || error) {
-    return <StrategyHeaderSkeleton />
+    return <StrategyHeaderSkeleton className={className} {...rest} />
   }
   return (
     <div className={cn('flex items-center gap-4', className)} {...rest}>
@@ -36,25 +36,13 @@ export const StrategyHeader = (props: StrategyHeaderProperties) => {
 const StrategyHeaderSkeleton = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
   return (
-    <div
-      className={cn(
-        'mt-10 flex items-center max-lg:items-start gap-8 max-lg:gap-2',
-        className,
-      )}
-      {...rest}
-    >
-      <div className="flex items-center -space-x-3 *:size-7 max-lg:-space-x-1.5 lg:*:size-16">
-        <Skeleton className="size-7 rounded-full" />
-        <Skeleton className="size-7 rounded-full" />
-        <Skeleton className="size-7 rounded-full" />
-      </div>
-      <div className="justify-center space-y-3">
-        <h1 className="text-[2rem]/[2.4rem] max-lg:text-2xl">
-          <Skeleton className="h-10 w-40" />
-        </h1>
-        <div className="flex items-center gap-2">
+    <div className={cn('flex items-center gap-4', className)} {...rest}>
+      <Skeleton className="size-8 shrink-0" />
+      <div>
+        <div className="flex items-center gap-[0.38rem] text-base/[1.5rem]">
           <Skeleton className="h-6 w-40" />
         </div>
+        <Skeleton className="mt-1 h-6 w-20" />
       </div>
     </div>
   )
