@@ -1,26 +1,28 @@
-import DepositIcon from '@assets/icons/deposit.svg'
-import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
-import { WizardDropDown } from '@modules/transaction-block/components/WizardDropDown'
-import { WizardStep } from '@modules/transaction-block/components/WizardStep'
+import { TxReviewInfo } from '@modules/transaction-block/components/TxReviewInfo'
+import { useTransactionAnimation } from '@modules/transaction-block/hooks/useTransactionAnimation'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
-import { cn } from '@utils/cn'
+import { replaceCommasWithDots, trimTrailingZeros } from '@utils/formatValue'
 import { useEffect, useState } from 'react'
 
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  _allStepsCompleted,
-}) => {
+export const NativeCrossChainSwap: React.FunctionComponent<
+  IDepositWizardProperties
+> = ({}) => {
   const {
     depositAsset,
     vault,
+    vaultAddress,
+    depositFromNetwork,
+    inputValue,
+    inputValueInUSD,
     currentStep,
     setCurrentStep,
     setIntermediateError,
@@ -54,14 +56,14 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
 
   const swapAndDepositStatus = useTransactionStatus(_swapAndDepositStatus)
 
-  const ActionButton = () => {
+  const ActionButton: React.FC<{ className?: string }> = ({ className = '' }) => {
     switch (currentStep) {
       case 1: {
         return (
           <Button
             size="lg"
             type="button"
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             onClick={switchToAssetChain}
             loading={switchToAssetChainStatus === 'pending'}
             disabled={switchToAssetChainStatus === 'confirm_in_wallet'}
@@ -78,7 +80,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
           <Button
             size="lg"
             type="button"
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             onClick={swapAndDeposit}
             loading={swapAndDepositStatus === 'pending'}
             disabled={swapAndDepositStatus === 'confirm_in_wallet'}
@@ -118,29 +120,31 @@ export const NativeCrossChainSwap: React.FunctionComponent<IDepositWizardPropert
     setAnimationStatus('idle')
   }, [switchToAssetChainStatus, swapAndDepositStatus, setAnimationStatus])
 
+  const TransactionAnimation = useTransactionAnimation()
+
   return (
-    <div className="flex flex-col items-stretch gap-6 lg:gap-8">
-      {!isBelowDesktop && (
-        <div className="flex flex-col items-stretch gap-2 px-8">
-          <ActionButton />
-        </div>
-      )}
-      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
-        <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
-          <WizardStep
-            icon={<TokenIconComponent width="2rem" symbol={depositAssetChain?.symbol} />}
-            title={`Switch to ${depositAssetChain?.name}`}
-            status={_allStepsCompleted ? 'success' : switchToAssetChainStatus}
-          />
-          <WizardStep
-            icon={<DepositIcon className={cn('size-8')} />}
-            title={`Deposit ${vault}`}
-            status={swapAndDepositStatus}
-            isDDOpen={isOpen}
-          />
-        </WizardDropDown>
+    <>
+      <TransactionAnimation />
+      <TxReviewInfo
+        recipient={{
+          label: 'Recipient',
+          value: vaultAddress ?? '',
+        }}
+        chain={depositFromNetwork ?? 0}
+        withdraw={{
+          label: 'You deposit',
+          value: replaceCommasWithDots(trimTrailingZeros(inputValue)),
+          usdValue: inputValueInUSD,
+        }}
+        receive={{
+          label: 'You stake',
+          value: inputValue,
+          usdValue: inputValueInUSD,
+        }}
+      />
+      <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">
+        <ActionButton className="w-full px-[1.875rem] py-4 text-base font-medium normal-case leading-6" />
       </div>
-      {isBelowDesktop && <ActionButton />}
-    </div>
+    </>
   )
 }
