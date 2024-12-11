@@ -1,5 +1,4 @@
 import { Button } from '@components/ui/button'
-import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { TxReviewInfo } from '@modules/transaction-block/components/TxReviewInfo'
 import { useTransactionAnimation } from '@modules/transaction-block/hooks/useTransactionAnimation'
@@ -7,7 +6,7 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { replaceCommasWithDots, trimTrailingZeros } from '@utils/formatValue'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { useApproveERC20 } from '../hooks/useApproveERC20'
@@ -18,7 +17,6 @@ import type { IDepositWizardProperties } from '../interfaces'
 export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> = () => {
   const {
     depositAsset,
-    vault,
     vaultAddress,
     depositFromNetwork,
     inputValue: amount,
@@ -29,10 +27,6 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
-
-  const [isOpen, setIsOpen] = useState(false)
-
-  const { isBelowDesktop } = useDeviceWidth()
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
@@ -121,7 +115,7 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
             disabled={swapAndDepositStatus === 'confirm_in_wallet'}
             className={className}
           >
-            {getButtonContent(swapAndDepositStatus, `Deposit ${vault}`)}
+            {getButtonContent(swapAndDepositStatus, `Deposit`)}
           </Button>
         )
       }

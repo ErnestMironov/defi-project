@@ -11,11 +11,10 @@ import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
-export const NativeOnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ({
-  _allStepsCompleted,
-}) => {
+export const NativeOnchainSwap: React.FunctionComponent<
+  IDepositWizardProperties
+> = () => {
   const {
-    vault,
     vaultAddress,
     currentStep,
     setCurrentStep,

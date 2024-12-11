@@ -1,5 +1,4 @@
 import { Button } from '@components/ui/button'
-import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { TxReviewInfo } from '@modules/transaction-block/components/TxReviewInfo'
 import { useTransactionAnimation } from '@modules/transaction-block/hooks/useTransactionAnimation'
@@ -7,7 +6,7 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { replaceCommasWithDots, trimTrailingZeros } from '@utils/formatValue'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { useSwap } from '../hooks/useSwap'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
@@ -18,7 +17,6 @@ export const NativeCrossChainSwap: React.FunctionComponent<
 > = ({}) => {
   const {
     depositAsset,
-    vault,
     vaultAddress,
     depositFromNetwork,
     inputValue,
@@ -28,10 +26,6 @@ export const NativeCrossChainSwap: React.FunctionComponent<
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
-
-  const { isBelowDesktop } = useDeviceWidth()
-
-  const [isOpen, setIsOpen] = useState(false)
 
   const depositAssetChain = useTokenAsset(depositAsset?.chain_id)
 
