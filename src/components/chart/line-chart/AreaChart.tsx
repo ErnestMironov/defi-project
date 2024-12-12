@@ -71,12 +71,12 @@ export const AreaChart = (props: AreaChartComponentProperties) => {
             bottom: 0,
           }}
         >
-          <CartesianGrid strokeDasharray="4 4" opacity={0.5} vertical={false} />
+          <CartesianGrid vertical={false} stroke="var(--stroke-40100)" />
           <XAxis
             tickLine={false}
             dataKey="timestamp"
             tickFormatter={tickFormatter}
-            className="text-[0.8125rem] [&_text]:fill-gray-100"
+            className="text-[0.8125rem] [&_text]:fill-text-270"
             minTickGap={40}
             tickCount={10}
             interval="preserveEnd"
@@ -86,7 +86,7 @@ export const AreaChart = (props: AreaChartComponentProperties) => {
             tickLine={false}
             tickMargin={5}
             tickFormatter={(value) => (value === 0 ? '' : tooltipFormatter(value))}
-            className="text-[0.8125rem] [&_text]:fill-gray-100"
+            className="text-[0.8125rem] [&_text]:fill-text-270"
             interval="preserveStartEnd"
           />
           <Tooltip

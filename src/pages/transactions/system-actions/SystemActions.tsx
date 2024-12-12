@@ -27,13 +27,13 @@ export const SystemActions = (props: SystemActionsProperties) => {
             Reports
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="admin" className="mt-0">
+        <TabsContent value="admin" >
           <AdminTable />
         </TabsContent>
-        <TabsContent value="incentives" className="mt-0">
+        <TabsContent value="incentives" >
           <IncentivesHistory />
         </TabsContent>
-        <TabsContent value="reports" className="mt-0">
+        <TabsContent value="reports" >
           <ReportsTable />
         </TabsContent>
       </Tabs>

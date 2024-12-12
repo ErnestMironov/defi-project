@@ -1,10 +1,9 @@
 import type { Strategy } from '@api/maat-finance/types'
-import { CopyButton } from '@components/copy/CopyButton'
-import { TokenIconComponent } from '@components/token-icon'
+import Dots from '@assets/icons/options-dots.svg'
+import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { ROUTES } from '@routes/routes'
-import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
+import { formatAmount, formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
 import { type ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -18,18 +17,20 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
   const navigate = useNavigate()
   return (
     <div
+      className="px-4 py-3"
       {...rest}
       onClick={() => {
         navigate(`${ROUTES.STRATEGIES}/${strategy.id}`)
       }}
     >
-      <div className="flex items-center gap-2">
-        <div className="flex items-center space-x-[-0.44rem] *:size-6">
-          <TokenIconComponent symbol={strategy.token.symbol} />
-          <TokenIconComponent symbol={strategy.chain_id} />
-          <TokenIconComponent symbol={strategy.protocol} />
-        </div>
-        <div className="text-lg [&>*:not(:last-child)]:after:content-['_/_']">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-2">
+          <TokenIconComponent symbol={strategy.protocol} className="size-8 shrink-0" />
+          <div className="text-sm/[1rem]">
+            <p>{shortenAddress(strategy.id)}</p>
+            <h6 className="text-text-260">{strategy.protocol}</h6>
+          </div>
+          {/* <div className="text-lg [&>*:not(:last-child)]:after:content-['_/_']">
           <span>{strategy.token.symbol}</span>
           <span>
             {
@@ -39,11 +40,20 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             }
           </span>
           <span>{strategy.protocol}</span>
+        </div> */}
         </div>
+        <p className="text-sm/[1rem]">
+          <span className="text-text-2100">APY</span>{' '}
+          {formatAmount(strategy.apy, { maximumFractionDigits: 2 })}
+          <span className="text-text-260">%</span>
+        </p>
       </div>
-      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-2 text-base even:[&>*]:justify-self-end">
-        <h6>Projected APY</h6>
-        <div className="font-bold">{formatPercentValue(strategy.apy)}</div>
+
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-2 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
+        <h6>Token</h6>
+        <IconWithLabelComponent symbol={strategy.token.symbol} />
+        <h6>Chain</h6>
+        <IconWithLabelComponent symbol={strategy.chain_id} />
         <h6>TVL</h6>
         <div>
           {formatUsdValue(strategy.tvl, {
@@ -51,10 +61,12 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             maximumFractionDigits: 2,
           })}
         </div>
-        <h6>Strategy ID</h6>
+        <h6>Address</h6>
         <div className="flex w-full items-center gap-2">
-          <p>{shortenAddress(strategy.id)}</p>
-          <CopyButton text={strategy.id} className="size-6 shrink-0" />
+          <p>{shortenAddress(strategy.address)}</p>
+          <div className="flex items-center justify-center rounded-lg border border-stroke-100 p-[0.38rem]">
+            <Dots className="size-[0.8125rem] shrink-0" />
+          </div>
         </div>
       </div>
     </div>

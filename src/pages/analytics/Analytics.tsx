@@ -26,7 +26,7 @@ export const Analytics = () => {
       value={tab ?? 'tokens'}
       onValueChange={onValueChange}
     >
-      <TabsList>
+      <TabsList className="mb-6 max-lg:mb-4 max-lg:gap-6">
         {TABS.map((_tab) => (
           <TabsTrigger variant="unstyled" className="capitalize" value={_tab}>
             {_tab}
@@ -53,13 +53,13 @@ export const Analytics = () => {
                 System Actions
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="events" className="mt-0">
+            <TabsContent value="events">
               <Transactions
                 className="[&_tr:last-child:after]:rounded-b-[1.25rem]"
                 parameters={{ transaction_type: 'trigger' }}
               />
             </TabsContent>
-            <TabsContent value="actions" className="mt-0">
+            <TabsContent value="actions">
               <SystemActions />
             </TabsContent>
           </Tabs>

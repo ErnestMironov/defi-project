@@ -16,7 +16,7 @@ interface TopStrategyRowProperties {
 export const TopStrategyRow = (props: TopStrategyRowProperties) => {
   const { strategy, i } = props
   return (
-    <Table.Row className="*:px-5 *:py-8">
+    <Table.Row className="*:px-5 *:py-8 max-lg:*:px-4 max-lg:*:py-0">
       <Table.Cell>
         <div className="flex items-center gap-[0.38rem]">
           <TokenIconComponent

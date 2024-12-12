@@ -49,7 +49,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
 
   return (
     <>
-      <BaseContainer {...props} className={cn('', className)}>
+      <BaseContainer {...props} className={cn('overflow-hidden', className)}>
         <TableFilters filters={filters} setFilters={handleFiltersChange} />
         <StrategyTable
           strategies={data?.items}

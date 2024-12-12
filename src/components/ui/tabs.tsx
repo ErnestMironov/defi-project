@@ -29,11 +29,11 @@ const TabsTrigger = React.forwardRef<
     ref={reference}
     className={cn(
       variant === 'unstyled' &&
-        'data-[state=active]:text-text-1100 text-[rgba(133, 133, 169, 0.60)] text-2xl',
+        'data-[state=active]:text-text-1100 text-[rgba(133, 133, 169, 0.60)] text-2xl max-lg:text-lg/[1.35rem]',
       variant === 'base' &&
         'uppercase bg-[rgba(153,_152,_184,_0.10)] rounded-[1.25rem] max-lg:rounded-[0.75rem] p-6 max-lg:py-4 max-lg:px-[2.5rem] text-[1.25rem] max-lg:text-base font-bold data-[state=active]:bg-main-15 data-[state=active]:text-main-100',
       variant === 'underline' &&
-        'text-gray-80 data-[state=active]:text-main-100 border-transparent border-b-2 data-[state=active]:border-main-100',
+        'text-gray-80 data-[state=active]:text-main-100 border-transparent border-b-2 data-[state=active]:border-main-100 max-lg:text-sm',
 
       'inline-flex items-center justify-center whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       className,

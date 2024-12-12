@@ -30,7 +30,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
   const { data, yAxisType, frame } = props
   const tooltipFormatter = (value?: string) => {
     if (yAxisType === 'percentage') {
-      return formatPercentValue(value)
+      return formatPercentValue(value, { maximumFractionDigits: 1 })
     }
     if (yAxisType === 'usd') {
       return formatUsdValue(value, { notation: 'compact' })
@@ -91,13 +91,13 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           bottom: 0,
         }}
       >
-        <CartesianGrid strokeDasharray="8 8" opacity={0.5} vertical={false} />
+        <CartesianGrid vertical={false} stroke="var(--stroke-40100)" />
         <XAxis
           axisLine
           tickLine={false}
           dataKey="timestamp"
           tickFormatter={tickFormatter}
-          className="text-[0.6875rem] [&_text]:fill-gray-100"
+          className="text-[0.6875rem] [&_text]:fill-text-270"
           minTickGap={40}
           tickCount={10}
           ticks={filteredData?.map((tick) => tick.timestamp)}
@@ -109,7 +109,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           type="number"
           domain={['dataMin', 'dataMax']}
           tickFormatter={(value) => (value === 0 ? '' : tooltipFormatter(value))}
-          className="text-[0.8125rem] [&_text]:fill-gray-100"
+          className="text-[0.8125rem] [&_text]:fill-text-270"
           interval="preserveStartEnd"
         />
         <Tooltip

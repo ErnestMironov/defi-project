@@ -1,3 +1,5 @@
+import StairsDown from '@assets/icons/stairs-down.svg'
+import StairsUp from '@assets/icons/stairs-up.svg'
 import type { OptionType } from '@components/select/Select'
 import {
   SelectActionWithIcon,
@@ -30,8 +32,8 @@ export const SELECT_TOKENS: OptionType[] = [
 ]
 
 export const SORT_BY_APY: OptionType[] = [
-  { label: 'Highest APY', value: 'Highest APY' },
-  { label: 'Lowest APY', value: 'Lowest APY' },
+  { label: 'Highest APY', value: 'Highest APY', Icon: StairsUp },
+  { label: 'Lowest APY', value: 'Lowest APY', Icon: StairsDown },
 ]
 
 export const SORT_BY_AMOUNT: OptionType[] = [
@@ -45,8 +47,8 @@ export const SORT_BY_DATE: OptionType[] = [
 ]
 
 export const SORT_BY_TVL: OptionType[] = [
-  { label: 'Highest TVL', value: 'Highest TVL' },
-  { label: 'Lowest TVL', value: 'Lowest TVL' },
+  { label: 'Highest TVL', value: 'Highest TVL', Icon: StairsUp },
+  { label: 'Lowest TVL', value: 'Lowest TVL', Icon: StairsDown },
 ]
 
 export const SORT_BY: OptionType[] = [

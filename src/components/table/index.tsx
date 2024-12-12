@@ -15,7 +15,7 @@ const TableHead = forwardRef<
   return (
     <thead
       className={cn(
-        '[&_tr>th]:text-text-2100 *:border-b *:border-stroke-100 [&>tr>th]:py-4 [&>tr>th]:first:pl-7 [&>tr>th]:last:pr-7',
+        '[&_tr>th]:text-text-2100 *:border-b *:border-stroke-100 [&>tr>th]:py-4 max-lg:[&>tr>th]:py-[0.38rem] [&>tr>th]:first:pl-7 [&>tr>th]:last:pr-7',
         className,
       )}
       {...rest}
@@ -33,6 +33,7 @@ const TableBody = forwardRef<
   return (
     <tbody
       className={cn(
+        'max-lg:[&>tr::after]:hidden',
         '[&>tr::after:hover]:rounded-l-[0.5rem] [&>tr::after:hover]:rounded-r-[0.5rem]',
         '[&>tr]:relative [&>tr::after]:pointer-events-none [&>tr::after:hover]:bg-[#8585A914] [&>tr]:after:h-[calc(100%-4px/2)] [&>tr:first-child]:after:h-[calc(100%-4px)] [&>tr:not(:first-child)]:after:top-[calc(8px/4)] [&>tr:first-child]:after:top-[4px] [&>tr]:after:w-[calc(100%-6px)] [&>tr:after]:absolute [&>tr:after]:left-1',
         className,

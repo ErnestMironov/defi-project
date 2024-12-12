@@ -1,10 +1,10 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import type { StrategiesParameters } from '@api/maat-finance/useStrategies'
 import { useInfiniteStrategies } from '@api/maat-finance/useStrategies'
+import Asset from '@assets/icons/asset.svg'
+import Chain from '@assets/icons/chain.svg'
 import Filter from '@assets/icons/filter.svg'
-import Sort from '@assets/icons/mobile-sort.svg'
-import { ArrowLink } from '@components/link/ArrowLink'
-import { SectionTitle } from '@components/section/SectionTitle'
+import Protocol from '@assets/icons/protocol.svg'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -13,7 +13,6 @@ import {
 import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
 import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
-import { Button } from '@components/ui/button'
 import { Loader } from '@components/ui/loader'
 import {
   SELECT_CHAINS,
@@ -23,7 +22,7 @@ import {
   SORT_BY_TVL,
 } from '@constants/select-constant'
 import { StrategyMobileList } from '@modules/strategies/StrategyMobileList'
-import { ROUTES } from '@routes/routes'
+import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import { useMemo, useState } from 'react'
 import { isAddress, isHash } from 'viem'
@@ -31,18 +30,12 @@ import { isAddress, isHash } from 'viem'
 type StrategyFilters = 'tokens' | 'protocols' | 'chains'
 
 interface StrategiesMobileProperties extends React.HTMLAttributes<HTMLDivElement> {
-  withLink?: boolean
   filters?: StrategyFilters[]
   params?: StrategiesParameters
 }
 
 export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) => {
-  const {
-    className,
-    withLink = true,
-    filters = ['tokens', 'protocols', 'chains'],
-    params,
-  } = props
+  const { className, filters = ['tokens', 'protocols', 'chains'], params } = props
   const [search, setSearch] = useState('')
   const [selectedTokens, setSelectedTokens] = useState<OptionType[]>([])
   const [selectedProtocols, setSelectedProtocols] = useState<OptionType[]>([])
@@ -93,8 +86,11 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
         return (
           <MobileCheckboxSelect
             label="Tokens"
+            className="[&_[cmdk-item]:first-child]:col-span-2"
+            icon={<Asset />}
             value={selectedTokens}
             options={SELECT_TOKENS}
+            placeholder="All Tokens"
             onChange={setSelectedTokens}
           />
         )
@@ -103,10 +99,11 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
         return (
           <MobileCheckboxSelect
             label="Protocols"
+            icon={<Protocol />}
             value={selectedProtocols}
             options={SELECT_PROTOCOLS}
+            placeholder="All Protocols"
             onChange={setSelectedProtocols}
-            // placeholder="All Protocols"
           />
         )
       }
@@ -114,10 +111,11 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
         return (
           <MobileCheckboxSelect
             label="Chains"
+            icon={<Chain />}
             value={selectedChains}
             options={SELECT_CHAINS}
+            placeholder="All Chains"
             onChange={setSelectedChains}
-            // placeholder="All Chains"
           />
         )
       }
@@ -128,85 +126,82 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
   }
 
   return (
-    <div {...props} className={cn('flex flex-col', className)}>
-      <div className="flex items-center justify-between">
-        <SectionTitle>Strategies</SectionTitle>
-        {withLink && <ArrowLink to={ROUTES.STRATEGIES} />}
-      </div>
-      <div className="mt-4 flex items-center gap-2">
-        <SearchInput
-          className="flex-1"
-          placeholder="Address / ID "
-          classNames={{
-            container: 'bg-cards border-none rounded-[0.5rem] py-[0.81rem] px-3',
-            input: 'mx-2',
-          }}
-          value={search}
-          onValueChange={setSearch}
-        />
-        {/* Filters */}
-        <MobileFiltersDrawer
-          title="Filters"
-          resetFilters={() => {
-            setSelectedTokens([])
-            setSelectedProtocols([])
-            setSelectedChains([])
-          }}
-          trigger={
-            <DrawerIconTrigger
-              Icon={Filter}
-              active={
-                selectedTokens.concat(selectedProtocols).concat(selectedChains).length > 0
-              }
+    <>
+      <BaseContainer {...props} className={cn('overflow-hidden rounded-2xl', className)}>
+        <div className="flex items-center gap-2 border-b border-stroke-100 pr-4">
+          <div className="flex-1 border-r border-stroke-100">
+            <SearchInput
+              placeholder="Address / ID "
+              classNames={{
+                container: 'bg-input-default border-none py-[0.81rem] px-4',
+                input: 'mx-2',
+              }}
+              value={search}
+              onValueChange={setSearch}
             />
-          }
-        >
-          {filters.map((filter) => renderFilters(filter))}
-        </MobileFiltersDrawer>
-        {/* Sort */}
-        <MobileFiltersDrawer
-          title="Sorting"
-          closeOnReset
-          resetFilters={() => {
-            setSelectedSort(undefined)
-          }}
-          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
-        >
-          <MobileRadioSelect
-            label="APY"
-            options={SORT_BY_APY}
-            value={selectedSort}
-            onChange={setSelectedSort}
-          />
-          <MobileRadioSelect
-            label="TVL"
-            options={SORT_BY_TVL}
-            value={selectedSort}
-            onChange={setSelectedSort}
-          />
-        </MobileFiltersDrawer>
-      </div>
-      <StrategyMobileList
-        className="mt-3"
-        strategies={data}
-        loading={isLoading || isPlaceholderData}
-        error={error}
-      />
+          </div>
+
+          {/* Filters */}
+          <MobileFiltersDrawer
+            title="Filters"
+            resetFilters={() => {
+              setSelectedTokens([])
+              setSelectedProtocols([])
+              setSelectedChains([])
+              setSelectedSort(undefined)
+            }}
+            trigger={
+              <DrawerIconTrigger
+                Icon={Filter}
+                active={
+                  selectedTokens.concat(selectedProtocols).concat(selectedChains).length >
+                    0 || !!selectedSort
+                }
+              />
+            }
+          >
+            <div>
+              <h6 className="mb-3 text-sm text-text-2100">Sorting</h6>
+              <BaseContainer className="rounded-2xl p-1">
+                <MobileRadioSelect
+                  label=""
+                  options={SORT_BY_APY}
+                  value={selectedSort}
+                  onChange={setSelectedSort}
+                />
+                <MobileRadioSelect
+                  label=""
+                  options={SORT_BY_TVL}
+                  value={selectedSort}
+                  onChange={setSelectedSort}
+                />
+              </BaseContainer>
+            </div>
+
+            {filters.map((filter) => renderFilters(filter))}
+          </MobileFiltersDrawer>
+        </div>
+        <StrategyMobileList
+          strategies={data}
+          loading={isLoading || isPlaceholderData}
+          error={error}
+        />
+      </BaseContainer>
       {isFetchingNextPage && (
         <div className="mt-6 flex h-8 w-full items-center justify-center">
           <Loader />
         </div>
       )}
       {hasNextPage && !isLoading && (
-        <Button
+        <button
+          type="button"
           disabled={isFetchingNextPage}
           onClick={() => fetchNextPage()}
-          className="mt-6 h-[3.185rem]"
-          size="lg"
+          className="mt-4 h-6 w-full text-sm text-text-50 underline"
         >
-          View more
-        </Button>
+          See more
+        </button>
       )}
-    </div>
+    </>
   )
 }
