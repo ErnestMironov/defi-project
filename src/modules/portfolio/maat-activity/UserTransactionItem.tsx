@@ -72,6 +72,8 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
 export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const { event, className, ...rest } = props
 
+  console.log(event)
+
   const renderIcon = () => {
     switch (event.action_type) {
       case 'DEPOSIT': {
@@ -111,12 +113,44 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   }
 
   const formatTransactionAction = (action: string) => {
+    if (!action) return null
+
     const words = action.split(' ')
+
     return (
       <>
         <span className="text-text-1100">{words[0]}</span>
         <span className="text-text-60">{` ${words.slice(1).join(' ')}`}</span>
       </>
+    )
+  }
+
+  const renderAmount = () => {
+    if (typeof event.vault === 'string') {
+      return (
+        <p className="text-base font-medium max-lg:text-sm">
+          {formatAmount(event.amount ?? 0, {
+            notation: 'compact',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{' '}
+          {event.vault}
+        </p>
+      )
+    }
+
+    return (
+      <p className="text-base font-medium max-lg:text-sm">
+        {formatAmount(
+          formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
+          {
+            notation: 'compact',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          },
+        )}{' '}
+        {event.vault.token.symbol}
+      </p>
     )
   }
 
@@ -147,20 +181,7 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
             )}
           </p>
         </div>
-        <p className="text-base text-text-2100">
-          <p className="text-base font-medium max-lg:text-sm">
-            {formatAmount(
-              formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
-              {
-                notation: 'compact',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              },
-            )}{' '}
-            {event.vault.token.symbol}
-          </p>
-          {/*  */}
-        </p>
+        <p className="text-base text-text-2100">{renderAmount()}</p>
       </div>
       <div className="ml-auto space-y-1">
         <div className="flex items-center gap-[0.38rem]">

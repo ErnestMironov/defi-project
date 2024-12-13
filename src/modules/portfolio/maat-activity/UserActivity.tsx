@@ -3,6 +3,7 @@ import type { Event } from '@api/maat-finance/types'
 import { usePortfolioTransactions } from '@api/maat-finance/usePortfolioTransactions'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { cn } from '@utils/cn'
+import { parseUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -18,6 +19,8 @@ export const UserActivity = (props: UserActivityProperties) => {
   const { data, isLoading, error } = usePortfolioTransactions(address as Address, {})
   const { transactions } = useTransactionStore()
 
+  const DEFAULT_DECIMALS = 6
+
   const pendingTransactions = transactions.map(
     (tx) =>
       ({
@@ -29,19 +32,18 @@ export const UserActivity = (props: UserActivityProperties) => {
             : tx.status,
         hash: tx.transactionHash,
         action_type: tx.txType?.toUpperCase(),
-        amount: Number(tx.inputValue),
-        vault: {
-          token: {
-            symbol: tx.vault,
-            decimals: tx.mtToken?.decimals || 6,
-          },
-        },
+        amount: tx.inputValue ? Number(tx.inputValue) : 0,
+        vault: tx.vault,
         creation_time: tx.timestamp?.toString(),
         src_chain_id: tx.mtToken?.chainData?.chainId,
         intention_id: tx.transactionHash,
         dst_chain_id: tx.mtToken?.chainData?.chainId,
-        volume: Number(tx.inputValue),
-      }) as Event,
+        volume: Number(
+          parseUnits(tx.inputValue || '0', tx.mtToken?.decimals || DEFAULT_DECIMALS),
+        ),
+        depositAsset: tx.depositAsset,
+        mtToken: tx.mtToken,
+      }) as unknown as Event,
   )
 
   const filteredByStatusData = data?.reduce(
@@ -55,11 +57,6 @@ export const UserActivity = (props: UserActivityProperties) => {
     },
     { completed: [], pending: [] } as { [key: string]: Event[] },
   )
-
-  const allPendingTransactions = [
-    ...pendingTransactions,
-    ...(filteredByStatusData?.pending || []),
-  ].sort((a, b) => Number(b.creation_time) - Number(a.creation_time))
 
   if (isLoading || error)
     return (
@@ -76,23 +73,34 @@ export const UserActivity = (props: UserActivityProperties) => {
 
   return (
     <div {...rest} className={cn(className)}>
-      {(!!filteredByStatusData?.pending.length || pendingTransactions.length > 0) && (
+      {pendingTransactions.length > 0 && (
         <>
           <div className={cn('space-y-6 mt-5 overflow-y-auto -mr-2 pr-2 px-6')}>
-            {allPendingTransactions.map((event, i) => (
+            {pendingTransactions.map((tx, i) => (
+              <UserTransactionItem key={i} event={tx} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {(filteredByStatusData?.pending?.length || 0) > 0 && (
+        <>
+          <div className={cn('space-y-6 mt-5 overflow-y-auto -mr-2 pr-2 px-6')}>
+            {filteredByStatusData?.pending.map((event, i) => (
               <UserTransactionItem key={i} event={event} />
             ))}
           </div>
         </>
       )}
-      {!!filteredByStatusData?.completed.length && (
+
+      {!!filteredByStatusData?.completed?.length && (
         <>
           <div
             className={cn(
-              'space-y-6 mt-5 mb-5 overflow-y-auto -mr-2 pr-2 user-activity  px-6 max-md:px-3 max-md:-mr-0',
+              'space-y-6 mt-5 mb-5 overflow-y-auto -mr-2 pr-2 user-activity px-6 max-md:px-3 max-md:-mr-0',
             )}
           >
-            {filteredByStatusData?.completed.map((event, i) => (
+            {filteredByStatusData.completed.map((event, i) => (
               <UserTransactionItem key={i} event={event} />
             ))}
           </div>
