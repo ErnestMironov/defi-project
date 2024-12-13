@@ -38,7 +38,7 @@ export const PortfolioValueTooltipDesktop = () => {
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger>
-          <div className="w-5 rounded border border-stroke-100 px-[0.4375rem] py-0.5 text-center text-[0.6875rem] leading-4 text-text-100">
+          <div className="flex w-5 items-center justify-center rounded border border-stroke-100 px-[0.4375rem] py-[0.12rem] text-center font-aeonik text-[0.6875rem] leading-4 text-text-100">
             ?
           </div>
         </TooltipTrigger>
