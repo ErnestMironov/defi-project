@@ -14,7 +14,7 @@ interface UserTokensProperties extends ComponentProps<'div'> {}
 export const UserTokens = (props: UserTokensProperties) => {
   const { className, ...rest } = props
   const { address } = useAccount()
-  const { formattedData, isLoading } = useFormattedVaultData(address)
+  const { formattedData } = useFormattedVaultData(address)
   const { tokens } = useAllAssets([])
   const hasDeposits = formattedData.some((item) => +formatAmount(item.balance) > 0)
   const hasWalletTokens = tokens && tokens.length > 0
