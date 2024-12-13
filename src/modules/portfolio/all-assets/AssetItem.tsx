@@ -28,13 +28,13 @@ export const AssetItem = ({ token }: AssetItemProperties) => {
         <p className="text-text text-base max-lg:max-w-[8.5rem] ">
           {`${token.balance_usd} ${token.contract_ticker_symbol}`}
         </p>
-        <p className="text-sm text-text-270">
+        <p className="text-sm text-text-80100">
           {chainData?.TokenIcon ? <chainData.TokenIcon /> : null}
         </p>
       </div>
       <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
         <p className="text-base text-text-100 ">
-          <span className="text-text-270">$</span>
+          <span className="text-text-80100">$</span>
           {token.balance_usd}
         </p>
       </div>
@@ -44,7 +44,7 @@ export const AssetItem = ({ token }: AssetItemProperties) => {
 
 export const AssetItemSkeleton = () => {
   return (
-    <div className="mt-2 flex w-full cursor-pointer items-center px-6 max-lg:items-start">
+    <div className="mt-2 flex w-full cursor-pointer items-center px-6 max-lg:items-start max-md:px-3">
       <div className="relative flex size-10 items-center justify-center ">
         <Skeleton className="size-full rounded-full" />
         <Skeleton className="absolute bottom-0 right-0 size-[0.8em]" />

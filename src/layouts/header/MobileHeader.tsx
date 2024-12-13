@@ -15,9 +15,12 @@ import { useHideHeaderStore } from '@store/useHideHeaderStore'
 import { cn } from '@utils/cn'
 import clsx from 'clsx'
 import { type ComponentProps, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
+import PortfolioButton from './components/PortfolioButton'
+import { PortfolioModal } from './components/PortfolioModal'
 import { MobileSidebarMenu } from './HeaderMenu'
+import { usePortfolioModalState } from './hooks/UsePortfolioModalState'
 
 interface MobileHeaderProperties extends ComponentProps<'div'> {}
 
@@ -35,10 +38,21 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
       unlock()
     }
   }, [opened, lock, unlock])
-
+  const { isOpen, handlePortfolioClose, handlePortfolioOpen } = usePortfolioModalState()
   const { theme } = useTheme()
   const { pathname } = useLocation()
   const customBgPage = [ROUTES.PORTFOLIO, ROUTES.DEPOSIT].includes(pathname as never)
+  const navigate = useNavigate()
+
+  const isMobile = window.innerWidth <= 768
+
+  const handlePortfolioClick = () => {
+    if (isMobile) {
+      handlePortfolioOpen()
+    } else {
+      navigate(ROUTES.PORTFOLIO)
+    }
+  }
 
   return (
     <header
@@ -64,6 +78,20 @@ export const MobileHeader = (props: MobileHeaderProperties) => {
         >
           {opened ? <Close /> : <Burger />}
         </div>
+        <PortfolioButton
+          onClick={handlePortfolioClick}
+          isOpen={isOpen}
+          balance={0}
+          openConnectModal={openConnectModal}
+        />
+        {isMobile && (
+          <PortfolioModal
+            isOpen={isOpen}
+            onClose={handlePortfolioClose}
+            className="!fixed !inset-0 !m-0 !h-dvh !w-full !max-w-none overflow-auto !rounded-none !bg-bg !p-4"
+            isMobile
+          />
+        )}
       </div>
       <div
         className={cn(

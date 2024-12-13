@@ -15,7 +15,7 @@ export const StatusLabel = ({ status, className, ...rest }: StatusLabelPropertie
   return (
     <span
       className={cn(
-        'ml-2 p-1 px-2 rounded-xl flex items-center gap-2',
+        'ml-2 p-1 px-2 rounded-xl flex items-center gap-2 max-lg:text-sm',
         STATUS_CLASSES[status.replace(' ', '') as keyof typeof STATUS_CLASSES],
         className,
       )}
