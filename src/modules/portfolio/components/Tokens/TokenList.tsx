@@ -50,7 +50,7 @@ const GroupedTokenItem = ({
       <div
         className={cn(
           'flex items-center justify-between px-6 gap-2 cursor-pointer max-md:px-3',
-          isOpen && 'border-b pb-4',
+          isOpen && 'border-b border-stroke-100 pb-4',
         )}
         onClick={toggleOpen}
       >

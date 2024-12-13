@@ -135,24 +135,26 @@ export const ChainsList = ({
   )
 
   return (
-    <div className={cn(`px-1 pb-1 ${className}`)}>
+    <>
       <YieldPotential potentialUsdProfit={potentialUsdProfit} className="max-md:hidden" />
       <YieldPotentialMobile
         potentialUsdProfit={potentialUsdProfit}
         className="hidden max-md:flex"
       />
-      <div className={cn(' py-4 flex flex-col gap-4  rounded-xl ')}>
-        {Object.values(groupedByChain).map(
-          ({ chainId, totalUsdValue, tokens: chainTokens }, i) => (
-            <ChainItem
-              key={i}
-              chainId={chainId}
-              totalUsdValue={totalUsdValue}
-              tokens={chainTokens}
-            />
-          ),
-        )}
+      <div className={cn(`px-1 pb-1 ${className}`)}>
+        <div className={cn(' py-4 flex flex-col gap-4  rounded-xl ')}>
+          {Object.values(groupedByChain).map(
+            ({ chainId, totalUsdValue, tokens: chainTokens }, i) => (
+              <ChainItem
+                key={i}
+                chainId={chainId}
+                totalUsdValue={totalUsdValue}
+                tokens={chainTokens}
+              />
+            ),
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
