@@ -120,6 +120,9 @@ export interface SelectedAssetState {
   setNetworkSwitchStatus: (status: STEP_STATUS) => void
   setApprovalStatus: (status: STEP_STATUS) => void
   setTransactionStatus: (status: STEP_STATUS) => void
+
+  withdrawToAnotherChain: boolean
+  setWithdrawToAnotherChain: (value: boolean) => void
 }
 
 export const useTxStore = create<SelectedAssetState>()(
@@ -262,6 +265,7 @@ export const useTxStore = create<SelectedAssetState>()(
           isTxZAP: false,
           intermediateError: null,
           transactionError: null,
+          withdrawToAnotherChain: false,
         }),
 
       brakeBalance: false,
@@ -279,6 +283,9 @@ export const useTxStore = create<SelectedAssetState>()(
       setNetworkSwitchStatus: (status) => set({ networkSwitchStatus: status }),
       setApprovalStatus: (status) => set({ approvalStatus: status }),
       setTransactionStatus: (status) => set({ transactionStatus: status }),
+
+      withdrawToAnotherChain: false,
+      setWithdrawToAnotherChain: (value) => set({ withdrawToAnotherChain: value }),
     }),
     {
       name: 'TxStore',

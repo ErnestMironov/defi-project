@@ -59,17 +59,20 @@ export const formatTokenBalance = (
   balance: string | bigint | null,
   decimals: number,
 ): string => {
-  if (balance == null) {
+  if (balance == null || balance === '') {
     return '0'
   }
 
-  const balanceString = typeof balance === 'bigint' ? balance.toString() : balance
-  const bigBalance = new BigNumber(balanceString).shiftedBy(-decimals)
-  let formattedBalance = bigBalance.toFixed(5, BigNumber.ROUND_DOWN)
-
-  formattedBalance = formattedBalance.replace(/\.?0+$/, '')
-
-  return formattedBalance
+  try {
+    const balanceString = typeof balance === 'bigint' ? balance.toString() : balance
+    const bigBalance = new BigNumber(balanceString).shiftedBy(-decimals)
+    let formattedBalance = bigBalance.toFixed(5, BigNumber.ROUND_DOWN)
+    formattedBalance = formattedBalance.replace(/\.?0+$/, '')
+    return formattedBalance
+  } catch (error) {
+    console.error('Error formatting token balance:', error)
+    return '0'
+  }
 }
 
 export const formatNumberWithCommas = (value: string | number): string => {

@@ -1,46 +1,19 @@
-import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
-import { Switch } from '@components/ui/switch'
 import type { ChainType } from '@constants/chains.ts'
 import { cn } from '@utils/cn'
 import { formatAmount, formatValueWithPrecision } from '@utils/formatValue.ts'
-import type { HTMLAttributes, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput'
+import { InputWrapper } from '../components/InputWrapper'
+import { SwappableInputs } from '../deposit/components/SwappableInputs'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork'
-
-interface InputWrapperProperties extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
-  validationError: string
-  title?: string
-}
-
-export const InputWrapper = ({
-  children,
-  validationError,
-  title,
-  className,
-}: InputWrapperProperties) => {
-  return (
-    <div
-      className={cn(
-        'rounded-2xl bg-input-default p-6 max-lg:px-3 flex flex-col gap-3',
-        validationError && 'bg-input-error',
-        className,
-      )}
-    >
-      {title && <h3 className="text-[1.125rem] leading-[120%] text-gray-100">{title}</h3>}
-      {children}
-    </div>
-  )
-}
 
 export const WithdrawInput = () => {
   const { isConnected } = useAccount()
@@ -51,11 +24,10 @@ export const WithdrawInput = () => {
     setWithdrawAmount,
     setCurrentModal,
     inputValueInUSD,
+    withdrawToAnotherChain,
     setInputValueInUSD,
     setWithdrawToNetwork,
   } = useTxStore()
-
-  const [withdrawToAnotherChain, setWithdrawToAnotherChain] = useState(false)
 
   const [validationError, setValidationError] = useState('')
 
@@ -115,53 +87,46 @@ export const WithdrawInput = () => {
 
   const prettyMaxBalance = formatValueWithPrecision(maxBalance, 5)
 
+  const assetData = mtToken
+    ? {
+        ...mtToken,
+        balance: BigInt(mtToken.balance),
+        contract_decimals: mtToken.decimals,
+        contract_ticker_symbol: mtToken.symbol,
+      }
+    : undefined
+
   return (
-    <div>
-      <InputWrapper
-        title={mtToken ? 'You withdraw' : undefined}
-        validationError={validationError}
-      >
-        <div className="flex w-full items-center justify-between gap-2">
-          {mtToken ? (
-            <AmountInput
-              value={inputValue}
-              error={validationError}
-              decimals={6}
-              onChange={handleInputChange}
-              disabled={!isConnected || !mtToken}
-            />
-          ) : (
-            <p className="text-md text-gray-100 max-lg:text-sm">
-              Select the desired asset...
-            </p>
-          )}
-
-          {isConnected ? (
-            <SelectWithdrawAssetModal />
-          ) : (
-            <SelectWithoutWalletPlaceholder />
-          )}
+    <div
+      className={cn(
+        'bg-input-default dark:bg-input-active py-6 px-8 max-lg:px-3 border-y border-stroke-100',
+        validationError && 'bg-input-error',
+      )}
+    >
+      <span className="font-aeonik text-[0.875rem] font-medium leading-6 text-text-2100 opacity-50">
+        You withdraw
+      </span>
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <SwappableInputs
+            tokenValue={inputValue}
+            usdValue={inputValueInUSD}
+            onTokenValueChange={(value) => handleInputChange(value)}
+            onUsdValueChange={(value) => handleInputChange(value)}
+            error={validationError}
+            asset={assetData}
+            onMaxClick={() => handleInputChange(prettyMaxBalance)}
+            rightElement={
+              isConnected ? (
+                <SelectWithdrawAssetModal />
+              ) : (
+                <SelectWithoutWalletPlaceholder />
+              )
+            }
+          />
         </div>
-        {mtToken ? (
-          <div className="flex w-full items-center justify-between">
-            <DollarInput disabled value={inputValueInUSD} error={!!validationError} />
-
-            <div className="flex items-center">
-              <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
-              <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {prettyMaxBalance}
-              </p>
-              <button
-                type="button"
-                className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                onClick={() => maxBalance && handleInputChange(prettyMaxBalance)}
-              >
-                Max
-              </button>
-            </div>
-          </div>
-        ) : null}
-      </InputWrapper>
+      </div>
+      {validationError && <p className="mt-3 text-lg text-red-100">{validationError}</p>}
 
       {mtToken && withdrawToAnotherChain && (
         <InputWrapper
@@ -188,19 +153,6 @@ export const WithdrawInput = () => {
       {validationError && (
         <p className="mt-3 text-lg text-red-100 max-lg:text-xs">{validationError}</p>
       )}
-
-      {mtToken && (
-        <div className="mt-3 flex items-start justify-between self-stretch rounded-2xl border border-stroke-100 p-6">
-          <span className="leading-[120%] text-text-80 lg:text-[1.1875rem]">
-            Withdraw to another chain
-          </span>
-          <Switch
-            checked={withdrawToAnotherChain}
-            onCheckedChange={setWithdrawToAnotherChain}
-          />
-        </div>
-      )}
-
       {isConnected && (
         <Button
           size="lg"
