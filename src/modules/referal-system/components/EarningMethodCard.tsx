@@ -16,7 +16,7 @@ export default function EarningMethodCard({
   return (
     <div
       className={cn(
-        'bg-cards-widget rounded-3xl shadow-widget-gradient font-aeonik p-4 h-[6.875rem] h-auto ',
+        'bg-cards-widget rounded-3xl shadow-widget-gradient font-aeonik p-4 h-[6.875rem] h-auto max-md:bg-transparent',
         className,
       )}
       {...props}

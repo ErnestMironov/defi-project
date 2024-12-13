@@ -4,7 +4,7 @@
 
 :root {
   /* COLORS */
-  --bg: #f7f6f9;
+  --bg: #f3f3f5;
   --cards: #ffffff;
   --cards-hover: #f1f0f9;
   --cards-widget: #ffffff80;
@@ -26,7 +26,7 @@
   --green-80: #79dec2cc;
   --input-active: #6160ff0a;
   --input-additional: #ffffff;
-  --input-default: #6160ff0a;
+  --input-default: #f9f9fb;
   --input-error: #ff40570d;
   --light-blue-100: #a6c1ff;
   --light-blue-15: #a6c1ff26;
@@ -46,10 +46,11 @@
   --red-5: #ff40570d;
   --stroke-100: #deddec;
   --stroke-element: #e6e8f0;
+  --text-5: #8585a90d;
   --text-50: #32394980;
   --text-80: #323949cc;
   --text-90: #323949e5;
-  --text-dark: #0e1118;
+  --text-dark: 14 17 24;
   --violet-100: #8763f3;
   --violet-15: #8763f326;
   --violet-30: #8763f34d;
@@ -57,18 +58,14 @@
   --violet-80: #8763f3cc;
   --orange-100: #ff964b;
   --orange-15: #ff964b26;
-
-  /* SHADOWS */
-  --shadow: 0 3px 1px 0 rgba(135 99 243 / 0.12);
-  --shadow-hover: 0px 4px 1px 0px rgba(135, 99, 243, 0.12);
-  --dark-shadow: 0 2px 1px 0 rgba(214 200 255 / 0.22);
-  --dark-shadow-hover: 0 4px 1px 0 rgba(214 200 255 / 0.22);
+  --text-2100: 133 133 169;
+  --text-3100: 133 133 169;
 }
 
 .dark {
   /* Collection 1 */
   /* Dark */ /* colors */
-  --bg: #23242c;
+  --bg: #1e1e24;
   --cards: #302e45;
   --cards-hover: #2f2e39;
   --cards-widget: #3a3945;
@@ -110,12 +107,14 @@
   --text-50: #ffffff80;
   --text-80: #ffffffcc;
   --text-90: #ffffffe5;
-  --text-dark: #fff;
+  --text-dark: 255 255 255;
   --violet-100: #8763f3;
   --violet-15: #8763f326;
   --violet-30: #8763f34d;
   --violet-50: #8763f380;
   --violet-80: #8763f3cc;
+  --text-2100: 133 133 169;
+  --text-3100: 255 255 255;
 }
 
 // ! V2 vars. NEED TO REPLACE ALL TOP COLORS WITH THAT FRESH NEW COLORS
@@ -133,7 +132,7 @@
   --green-150: #79dec280;
   --green-180: #79dec2cc;
   --input-active: #8585a90d;
-  --input-default: #deddec1a;
+  --input-default: #f9f9fb;
   --input-error: #f9f5f80d;
   --main-100: #6160ff;
   --main-15: #6160ff26;
@@ -152,16 +151,16 @@
   --text-1100: #323949;
   --text-170: #ffffffb2;
   --text-100: #0e1118;
-  --text-2100: #8585a9;
+  --text-2100: 133 133 169;
   --text-260: #8585a999;
   --text-270: #8585a9b2;
   --text-20: #0e111833;
-  --text-3100: #8585a9;
   --text-30: #8585a94d;
   --text-30100: #0e11184d;
   --text-4100: #eea91e;
   --text-4030: #30303066;
   --text-50: #8585a980;
+  --text-60: #8585a999;
   --text-5070: #8585a980;
   --text-80100: #8585a9cc;
   --violet-100: #8763f3;
@@ -188,7 +187,7 @@
   --green-150: #79dec280;
   --green-180: #79dec2cc;
   --input-active: #8585a90d;
-  --input-default: #8585a90d;
+  --input-default: #f9f9fb;
   --input-error: #ff40570d;
   --main-100: #6160ff;
   --main-15: #6160ff26;
@@ -207,7 +206,7 @@
   --text-1100: #ffffff;
   --text-170: #8585a9b2;
   --text-100: #ffffff;
-  --text-2100: #8585a9;
+  --text-2100: 133 133 169;
   --text-260: #8585a999;
   --text-270: #8585a9b2;
   --text-20: #8585a933;
@@ -228,6 +227,23 @@
     0px 6px 15px 0px rgba(0, 0, 0, 0.04);
   --shadow-test-2: 0px 6px 66px 0px rgba(0, 0, 0, 0.06),
     0px 6px 9px 0px rgba(0, 0, 0, 0.04);
-  --widget-gradient: 0px 6px 66px 0px rgba(0, 0, 0, 0.06),
-    0px 6px 9px 0px rgba(0, 0, 0, 0.04);
+}
+
+.gradient-border-animated {
+  position: relative;
+  background: #ffffff;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    background: linear-gradient(180deg, #6160ff 0%, #8585a900 100%);
+    background-size: 200% 100%;
+    border-radius: 1.6rem;
+  }
+}
+
+.dark .gradient-border-animated {
+  background: #232329;
 }

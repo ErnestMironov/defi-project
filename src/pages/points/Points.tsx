@@ -56,9 +56,9 @@ export const Points = (_props: PointsProperties) => {
   const validCodes = referralCodes.filter((referralCode) => referralCode.is_valid)
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 bg-bg">
       <InfoBlock className="" />
-      <div className="mt-12 grid grid-cols-4 gap-4">
+      <div className="mt-12 grid grid-cols-4 gap-4 max-md:grid-cols-1 max-md:gap-6 max-md:rounded-3xl max-md:bg-cards-widget max-md:p-6">
         {EARNING_METHODS.map((earningMethod) => (
           <EarningMethodCard earningMethod={earningMethod} />
         ))}

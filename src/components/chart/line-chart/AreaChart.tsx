@@ -79,7 +79,7 @@ export const AreaChart = (props: AreaChartComponentProperties) => {
             className="text-[0.8125rem] [&_text]:fill-gray-100"
             minTickGap={40}
             tickCount={10}
-            interval="preserveStartEnd"
+            interval="preserveEnd"
           />
           <YAxis
             axisLine={false}
@@ -97,9 +97,6 @@ export const AreaChart = (props: AreaChartComponentProperties) => {
                     formatter={tooltipFormatter}
                     data={payload.map((item) => ({
                       timestamp: payload[0].payload.timestamp,
-                      symbol: 'USDT',
-                      chain: 'BASE',
-                      protocol: 'Beefy',
                       color: item.color || '',
                       value: item.value,
                     }))}

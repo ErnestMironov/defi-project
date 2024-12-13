@@ -1,7 +1,6 @@
 import type { Strategy } from '@api/maat-finance/types'
 import CopyIcon from '@assets/icons/copy-icon.svg'
 import OptionsDots from '@assets/icons/options-dots.svg'
-import ShareIcon from '@assets/icons/share.svg'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { useClipboard } from '@hooks/common/useClipboard'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
@@ -49,15 +48,6 @@ export const StrategyRowOptions = (props: StrategyRowOptionsProperties) => {
           className="flex items-center gap-2"
         >
           <CopyIcon className="size-4" /> Copy Strategy ID
-        </button>
-        <button
-          onClick={() => {
-            setIsOpen(false)
-          }}
-          type="button"
-          className="flex items-center gap-2"
-        >
-          <ShareIcon className="size-4" /> Share Link
         </button>
       </PopoverContent>
     </Popover>

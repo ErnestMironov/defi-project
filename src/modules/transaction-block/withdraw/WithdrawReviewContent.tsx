@@ -31,7 +31,6 @@ export const WithdrawReviewContent = ({
     withdrawToNetwork,
     setIntermediateError,
     setCurrentStep,
-    setCurrentModal,
   } = useTxStore()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -94,21 +93,6 @@ export const WithdrawReviewContent = ({
   })
 
   const withdrawStatus = useTransactionStatus(currentWithdrawStatus)
-
-  // Add this function to check if any status is pending
-  const isAnyStatusPending = (): boolean => {
-    return [switchStatus, approveStatus, withdrawStatus].includes('pending')
-  }
-
-  useEffect(() => {
-    if (withdrawStatus === 'success') {
-      setCurrentModal('done')
-    }
-
-    if (withdrawStatus === 'error') {
-      setCurrentModal('error')
-    }
-  }, [setCurrentModal, withdrawStatus])
 
   useEffect(() => {
     if (approveError || withdrawError || switchStatus === 'error') {
@@ -196,45 +180,52 @@ export const WithdrawReviewContent = ({
       case true: {
         return (
           <TxReviewInfo
-            playAnimation={isAnyStatusPending()}
-            items={[
-              {
-                label: 'Withdraw',
-                value: amount,
-                usdValue: withdrawAmountInUSD,
-                tokenData: {
-                  symbol: mtToken?.stable ?? '',
-                  network: withdrawFromNetwork ?? 1,
-                },
+            recipient={{ label: 'Recipient', value: 'recipient_address_here' }}
+            chain={withdrawFromNetwork ?? 1}
+            withdraw={{
+              label: 'Withdraw',
+              value: amount,
+              usdValue: withdrawAmountInUSD,
+              token: {
+                symbol: mtToken?.stable ?? '',
+                network: withdrawFromNetwork ?? 1,
               },
-              {
-                label: 'Receive',
-                value: amount,
-                usdValue: withdrawAmountInUSD,
-                tokenData: {
-                  symbol: mtToken?.stable ?? '',
-                  network: withdrawToNetwork ?? 1,
-                },
+            }}
+            receive={{
+              label: 'Receive',
+              value: amount,
+              usdValue: withdrawAmountInUSD,
+              token: {
+                symbol: mtToken?.stable ?? '',
+                network: withdrawToNetwork ?? 1,
               },
-            ]}
+            }}
           />
         )
       }
       case false: {
         return (
           <TxReviewInfo
-            playAnimation={isAnyStatusPending()}
-            items={[
-              {
-                label: 'Withdraw',
-                value: amount,
-                usdValue: withdrawAmountInUSD,
-                tokenData: {
-                  symbol: mtToken?.stable ?? '',
-                  network: withdrawFromNetwork ?? 1,
-                },
+            recipient={{ label: 'Recipient', value: 'recipient_address_here' }}
+            chain={withdrawFromNetwork ?? 1}
+            withdraw={{
+              label: 'Withdraw',
+              value: amount,
+              usdValue: withdrawAmountInUSD,
+              token: {
+                symbol: mtToken?.stable ?? '',
+                network: withdrawFromNetwork ?? 1,
               },
-            ]}
+            }}
+            receive={{
+              label: 'Receive',
+              value: amount,
+              usdValue: withdrawAmountInUSD,
+              token: {
+                symbol: mtToken?.stable ?? '',
+                network: withdrawFromNetwork ?? 1,
+              },
+            }}
           />
         )
       }

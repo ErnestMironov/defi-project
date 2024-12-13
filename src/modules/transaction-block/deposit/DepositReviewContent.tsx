@@ -2,15 +2,8 @@ import { USDC_TOKENS } from '@constants/usdc'
 import { USDT_TOKENS } from '@constants/usdt'
 import { SupportedChainsByVault, Tokens } from '@constants/vaults'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
-import {
-  parseFloatLocale,
-  replaceCommasWithDots,
-  trimTrailingZeros,
-} from '@utils/formatValue'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 
-import { TxReviewInfo } from '../components/TxReviewInfo'
-import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { CrossChainSwap } from './deposit-wizards/CrossChainSwap'
 import { NativeCrossChainSwap } from './deposit-wizards/NativeCrossChainSwap'
@@ -26,20 +19,13 @@ export const DepositReviewContent = ({
   const {
     depositAsset: asset,
     vault,
-    inputValue: amount,
-    inputValueInUSD,
     depositFromNetwork,
     depositToNetwork,
-    depositTotalAmount,
-    depositTotalInUSD,
-    animationStatus,
-    setCurrentModal,
   } = useTxStore()
 
   const chainData = useTokenAsset(asset?.chain_id)
-  const inputValue = parseFloatLocale(amount, 8) as string
 
-  const depositFlow = useMemo(() => {
+  return useMemo(() => {
     if (!asset || !chainData) {
       return null
     }
@@ -54,9 +40,9 @@ export const DepositReviewContent = ({
     try {
       if (isCrossChain || !isSupportedChain) {
         return isNativeToken ? (
-          <NativeCrossChainSwap allStepsCompleted={allStepsCompleted} />
+          <NativeCrossChainSwap _allStepsCompleted={allStepsCompleted} />
         ) : (
-          <CrossChainSwap allStepsCompleted={allStepsCompleted} />
+          <CrossChainSwap _allStepsCompleted={allStepsCompleted} />
         )
       }
 
@@ -66,58 +52,16 @@ export const DepositReviewContent = ({
         tokenList.find((token) => token.chainId === asset.chain_id)?.address.toLowerCase()
 
       if (isMatchingToken) {
-        return <SimpleDeposit allStepsCompleted={allStepsCompleted} />
+        return <SimpleDeposit _allStepsCompleted={allStepsCompleted} />
       }
 
       if (isNativeToken) {
-        return <NativeOnchainSwap allStepsCompleted={allStepsCompleted} />
+        return <NativeOnchainSwap _allStepsCompleted={allStepsCompleted} />
       }
 
-      return <OnchainSwap allStepsCompleted={allStepsCompleted} />
+      return <OnchainSwap _allStepsCompleted={allStepsCompleted} />
     } catch {
       return null
     }
   }, [asset, chainData, vault, allStepsCompleted, depositFromNetwork, depositToNetwork])
-
-  const depositStatus = useTransactionStatus('idle')
-
-  useEffect(() => {
-    if (depositStatus === 'success') {
-      setCurrentModal('done')
-    }
-
-    if (depositStatus === 'error') {
-      setCurrentModal('error')
-    }
-  }, [setCurrentModal, depositStatus])
-
-  return (
-    <>
-      <TxReviewInfo
-        playAnimation={animationStatus === 'playing'}
-        items={[
-          {
-            label: 'You input',
-            value: replaceCommasWithDots(trimTrailingZeros(inputValue)),
-            usdValue: inputValueInUSD,
-            tokenData: {
-              symbol: asset?.contract_ticker_symbol ?? '',
-              network: depositFromNetwork ?? 1,
-              maxDigits: asset?.contract_decimals && asset?.contract_decimals > 6 ? 4 : 2,
-            },
-          },
-          {
-            label: 'You will deposit ',
-            value: depositTotalAmount,
-            usdValue: depositTotalInUSD,
-            tokenData: {
-              symbol: vault ?? '',
-              network: depositToNetwork ?? 1,
-            },
-          },
-        ]}
-      />
-      {depositFlow}
-    </>
-  )
 }

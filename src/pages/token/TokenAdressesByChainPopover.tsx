@@ -1,5 +1,5 @@
 import type { VaultType } from '@api/maat-finance/types'
-import Chevron from '@assets/icons/arrow-down.svg'
+import Chevron from '@assets/icons/arrow-up.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'

@@ -59,7 +59,7 @@ export const StrategiesDesktop: React.FC<StrategiesDesktopProperties> = (props) 
           onSortChange={onSortChange}
         />
       </BaseContainer>
-      {data && (
+      {data && data.items?.length > 0 && (
         <Pagination
           className="my-4"
           currentPage={data.page}

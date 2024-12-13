@@ -2,6 +2,7 @@ import Link from '@assets/icons/link.svg'
 import { CopyButton } from '@components/copy/CopyButton'
 import { cn } from '@utils/cn'
 
+import { SpecialQuests } from './SpecialQuests'
 import UserPoints from './UserPoints'
 
 interface ReferalLinksProperties extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,7 +15,7 @@ export default function ReferalLinks({
   ...props
 }: ReferalLinksProperties) {
   return (
-    <div className={cn(className, 'w-full')} {...props}>
+    <div className={cn(className, 'w-full flex flex-col gap-4')} {...props}>
       <div className="flex w-full flex-col rounded-3xl border border-stroke-100 bg-cards-widget">
         <div className="flex w-full justify-between border-b border-stroke-100 px-6 py-3">
           <div className="flex items-center gap-1.5 ">
@@ -45,6 +46,7 @@ export default function ReferalLinks({
           ))}
         </div>
       </div>
+      <SpecialQuests />
     </div>
   )
 }

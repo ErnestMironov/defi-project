@@ -45,7 +45,13 @@ const ChainItem = ({
       >
         <div className="flex items-center justify-center gap-5">
           <div className="flex items-center justify-center gap-1">
-            <TokenIconComponent symbol={chainId} className="size-7 rounded-full" />
+            <TokenIconComponent
+              symbol={chainId}
+              className="size-7 rounded-full"
+              tokenLogoFallback={
+                CHAIN_NAMES_BY_ID[chainId as keyof typeof CHAIN_NAMES_BY_ID]
+              }
+            />
             <span className="text-base font-medium">{chainName}</span>
             <span className={`ml-2 transition-transform ${isOpen ? 'rotate-90' : ''}`}>
               <ArrowDown className="rotate-90" />
@@ -61,12 +67,13 @@ const ChainItem = ({
           {tokens.map((token) => (
             <div
               key={token.contract_ticker_symbol}
-              className="flex items-center justify-between py-4"
+              className="flex select-none items-center justify-between py-4"
             >
               <div className="flex items-center">
                 <TokenIconComponent
                   symbol={token.contract_ticker_symbol}
-                  className="size-12"
+                  className="size-12 rounded-full"
+                  tokenLogoFallback={token.logo_url}
                 />
 
                 <div className="ml-2 flex flex-col">
@@ -78,6 +85,9 @@ const ChainItem = ({
                     <TokenIconComponent
                       symbol={chainId}
                       className="size-4 rounded-full"
+                      tokenLogoFallback={
+                        CHAIN_NAMES_BY_ID[chainId as keyof typeof CHAIN_NAMES_BY_ID]
+                      }
                     />
                     <span className="text-sm text-text-2100">{chainName}</span>
                   </div>

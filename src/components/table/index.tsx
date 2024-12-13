@@ -109,7 +109,7 @@ interface TableComponent
 const EmptyState = forwardRef<HTMLTableRowElement, HTMLAttributes<HTMLTableRowElement>>(
   ({ children, ...rest }, reference) => {
     return (
-      <Table.Row ref={reference} {...rest}>
+      <Table.Row ref={reference} {...rest} className="pointer-events-none">
         <Table.Cell colSpan={100} className="h-40 text-center text-gray-500">
           {children}
         </Table.Cell>
@@ -125,7 +125,7 @@ export const Table = forwardRef<
 >(({ className, children, ...rest }, reference) => (
   <table
     ref={reference}
-    className={cn('w-full overflow-hidden text-sm/[1.5rem] font-medium', className)}
+    className={cn('w-full overflow-hidden text-base font-medium', className)}
     {...rest}
   >
     {children}

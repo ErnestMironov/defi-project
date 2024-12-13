@@ -52,7 +52,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
             )}
           </div>
         ) : (
-          <div className="h-14 w-full rounded-lg border border-stroke-100 bg-[url('/src/assets/icons/dashes.svg')] dark:bg-[url('/src/assets/icons/dashes-dark.svg')] bg-cover bg-center bg-repeat" />
+          <div className="h-14 w-[10.625rem] rounded-lg border border-stroke-100 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center bg-repeat dark:bg-[url('/src/assets/icons/dashes-dark.svg')]" />
         )}
       </Table.Cell>
       <Table.Cell>

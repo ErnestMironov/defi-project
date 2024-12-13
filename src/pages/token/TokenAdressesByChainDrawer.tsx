@@ -1,5 +1,5 @@
 import type { VaultType } from '@api/maat-finance/types'
-import ArrowDown from '@assets/icons/arrow-down.svg'
+import ArrowDown from '@assets/icons/arrow-up.svg'
 import Check from '@assets/icons/check.svg'
 import X from '@assets/icons/close.svg'
 import { CopyButton } from '@components/copy/CopyButton'

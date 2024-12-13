@@ -1,4 +1,4 @@
-import ChevronDown from '@assets/icons/arrow-down.svg'
+import ChevronDown from '@assets/icons/arrow-up.svg'
 import Check from '@assets/icons/check.svg'
 import { Drawer, DrawerContent, DrawerTrigger } from '@components/ui/drawer'
 import { cn } from '@utils/cn'

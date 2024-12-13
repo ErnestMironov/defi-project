@@ -1,8 +1,11 @@
 import type { Action } from '@api/maat-finance/types'
 import { Skeleton } from '@components/ui/skeleton'
 import type { LAST_EVENT_ACTION } from '@constants/action-type'
+import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
+import { LabelValueContainer } from './LabelValueContainer'
+import { TransactionInfoHeaderSkeleton } from './transaction-info-header/TransactionInfoHeader'
 import { Bridge } from './transaction-type/Bridge'
 import { Deposit } from './transaction-type/Deposit'
 import { DepositToStrategy } from './transaction-type/DepositToStrategy'
@@ -11,6 +14,7 @@ import { Swap } from './transaction-type/Swap'
 import { WithdrawFromStrategy } from './transaction-type/WithdrawFromStrategy'
 import { WithdrawFulfillment } from './transaction-type/WithdrawFulfillment'
 import { WithdrawRequest } from './transaction-type/WithdrawRequest'
+import { TransactionInfoContainer } from './TransactionInfoContainer'
 
 interface TransactionInfoProperties extends ComponentProps<'div'> {
   type?: LAST_EVENT_ACTION
@@ -23,25 +27,7 @@ export const TransactionInfo = (props: TransactionInfoProperties) => {
   const { className, type, data, withoutRelated, isLoading, ...rest } = props
 
   if (isLoading) {
-    return (
-      <div className={className} {...rest}>
-        <div className="flex items-center justify-between gap-3">
-          <Skeleton className="h-8 w-60 bg-stroke-100 dark:bg-stroke-100" />
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-6 w-20 bg-stroke-100 dark:bg-stroke-100" />
-            <Skeleton className="h-6 w-20 bg-stroke-100 dark:bg-stroke-100" />
-          </div>
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-3 max-lg:grid-cols-1">
-          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
-          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
-          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
-          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
-          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100" />
-          <Skeleton className="h-16 w-full bg-stroke-100 dark:bg-stroke-100 max-lg:hidden" />
-        </div>
-      </div>
-    )
+    return <TransactionInfoSkeleton />
   }
 
   if (type === 'DEPOSIT') {
@@ -120,4 +106,44 @@ export const TransactionInfo = (props: TransactionInfoProperties) => {
     )
   }
   return <></>
+}
+
+const TransactionInfoSkeleton = (props: ComponentProps<'div'>) => {
+  const { className, ...rest } = props
+  return (
+    <TransactionInfoContainer className={className} {...rest}>
+      <TransactionInfoHeaderSkeleton />
+      <div
+        className={cn(
+          'grid grid-cols-6 max-lg:grid-cols-1 max-lg:gap-[0.38rem]',
+          '*:col-span-3 border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
+        )}
+      >
+        <LabelValueContainer>
+          <Skeleton className="h-[1.8rem] w-40" />
+          <Skeleton className="h-[1.8rem] w-40" />
+        </LabelValueContainer>
+        <LabelValueContainer>
+          <Skeleton className="h-[1.8rem] w-40" />
+          <Skeleton className="h-[1.8rem] w-40" />
+        </LabelValueContainer>
+        <LabelValueContainer>
+          <Skeleton className="h-[1.8rem] w-40" />
+          <Skeleton className="h-[1.8rem] w-40" />
+        </LabelValueContainer>
+        <LabelValueContainer>
+          <Skeleton className="h-[1.8rem] w-40" />
+          <Skeleton className="h-[1.8rem] w-40" />
+        </LabelValueContainer>
+        <LabelValueContainer>
+          <Skeleton className="h-[1.8rem] w-40" />
+          <Skeleton className="h-[1.8rem] w-40" />
+        </LabelValueContainer>
+        <LabelValueContainer>
+          <Skeleton className="h-[1.8rem] w-40" />
+          <Skeleton className="h-[1.8rem] w-40" />
+        </LabelValueContainer>
+      </div>
+    </TransactionInfoContainer>
+  )
 }

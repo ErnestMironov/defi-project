@@ -1,18 +1,12 @@
 import { useGetSwapRoute } from '@api/lifi/hooks/useGetSwapRoute'
-import { ShadowBox } from '@components/box/ShadowBox'
-import { Button } from '@components/ui/button'
 import { TX_TYPE } from '@constants/txTypes'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { useAppKit } from '@reown/appkit/react'
 import clsx from 'clsx'
 import { type ComponentProps } from 'react'
-import { useAccount } from 'wagmi'
 
 import { TVLDisplay } from './components/TVLDisplay'
 import { DepositInput } from './deposit/DepositInput'
 import { useSetDepositDetails } from './deposit/hooks/useSetDepositDetails'
-import { DoneModal } from './DoneModal'
-import { FailModal } from './FailModal'
 import { useTxStore } from './store/useTxStore'
 import { TxTypeSwitcher } from './TxTypeSwither'
 import { WithdrawInput } from './withdraw/WithdrawInput'
@@ -28,37 +22,20 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
   useGetSwapRoute()
   useSetDepositDetails()
 
-  const { open: openConnectModal } = useAppKit()
-
-  const { isConnected } = useAccount()
-
   return (
-    <>
-      <ShadowBox
-        className={clsx(
-          'flex w-full flex-col px-6 py-8 max-lg:gap-6 max-lg:p-4',
-          className,
-        )}
-        {...rest}
-      >
-        <div className="flex max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:mb-10 lg:items-center lg:justify-between">
-          <TxTypeSwitcher />
-          {!isBelowDesktop && <TVLDisplay />}
-        </div>
-        {txType === TX_TYPE.DEPOSIT && <DepositInput />}
-        {txType === TX_TYPE.WITHDRAW && <WithdrawInput />}
-        {!isConnected && (
-          <Button
-            className="w-full lg:mt-10"
-            size="lg"
-            onClick={() => openConnectModal()}
-          >
-            Connect wallet
-          </Button>
-        )}
-      </ShadowBox>
-      <FailModal />
-      <DoneModal />
-    </>
+    <div
+      className={clsx(
+        'gradient-border-animated relative flex w-full flex-col rounded-3xl pt-4 shadow-block max-lg:gap-6 max-lg:p-4',
+        className,
+      )}
+      {...rest}
+    >
+      <div className="mb-4 flex px-4 max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:items-center lg:justify-between">
+        <TxTypeSwitcher />
+        {!isBelowDesktop && <TVLDisplay />}
+      </div>
+      {txType === TX_TYPE.DEPOSIT && <DepositInput />}
+      {txType === TX_TYPE.WITHDRAW && <WithdrawInput />}
+    </div>
   )
 }

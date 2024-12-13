@@ -1,4 +1,5 @@
 import CloseIcon from '@assets/icons/modal-close.svg'
+import { ShadowBox } from '@components/box/ShadowBox'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { cn } from '@utils/cn'
 import * as React from 'react'
@@ -43,12 +44,12 @@ const DialogContent = React.forwardRef<
   }
 >(({ className, children, showCloseButton = true, onClose, ...props }, reference) => (
   <DialogPortal>
-    <DialogOverlay />
+    <DialogOverlay className="bg-transparent bg-blend-overlay backdrop-blur-[15px]" />
     <DialogPrimitive.Content
       ref={reference}
       aria-describedby=""
       className={cn(
-        'select-none fixed left-[50%] top-[50%] z-50 grid w-full max-w-[34.75rem] max-lg:max-w-full translate-x-[-50%] translate-y-[-50%] bg-cards py-8 px-6 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state:closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-[1rem] max-h-[95%] ',
+        'select-none fixed left-[50%] top-[50%] z-50 w-full max-w-[34.75rem] max-lg:max-w-full translate-x-[-50%] translate-y-[-50%] bg-cards-widget duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state:closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] rounded-[1.5rem] max-h-[95%] outline-none',
         className,
       )}
       {...props}
@@ -56,10 +57,12 @@ const DialogContent = React.forwardRef<
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close
-          className="absolute right-0 top-0 flex size-12 translate-y-[calc(-100%-.37rem)] cursor-pointer items-center justify-center rounded-full bg-[rgba(255,_255,_255,_0.30)]"
+          className="absolute right-0 top-0 size-auto translate-y-[calc(-100%-.62rem)] cursor-pointer select-none items-center justify-center p-0 outline-none"
           onClick={onClose}
         >
-          <CloseIcon className="w-4" />
+          <ShadowBox className="flex size-12 items-center justify-center rounded-2xl bg-cards-widget ">
+            <CloseIcon className="w-4" />
+          </ShadowBox>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Content>

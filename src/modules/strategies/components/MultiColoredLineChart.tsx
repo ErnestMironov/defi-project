@@ -94,7 +94,7 @@ export const MultiColoredLineChart = (props: AreaChartComponentProperties) => {
             className="text-[0.8125rem] [&_text]:fill-gray-100"
             minTickGap={40}
             tickCount={10}
-            interval="preserveStartEnd"
+            interval="preserveEnd"
           />
           <YAxis
             axisLine={false}
