@@ -1,10 +1,10 @@
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
-import { formatAmount, formatUsdValue } from '@utils/formatValue'
+import { formatUsdValue } from '@utils/formatValue'
 import { type ComponentProps } from 'react'
 
 interface SeparatedUsdValueProperties extends ComponentProps<'div'> {
-  value: string | number | undefined
+  value: number
   loading: boolean
 }
 
@@ -15,6 +15,8 @@ export const SeparatedUsdValue = ({
   ...rest
 }: SeparatedUsdValueProperties) => {
   const [integerPart, decimalPart] = formatUsdValue(value)?.split('.') ?? []
+  const MIN_VALUE = 0.001
+  const isHaveDeposit = value > MIN_VALUE
   const renderBody = () => {
     if (loading) return <Skeleton className="h-[2.8rem] w-28" />
     return (
@@ -22,7 +24,7 @@ export const SeparatedUsdValue = ({
         <span className="text-2.5xl text-text-80100">{integerPart?.charAt(0)}</span>
         <span
           className={cn(
-            +formatAmount(value as number) > 0 ? 'text-text-2100' : 'text-text-80100',
+            isHaveDeposit ? 'text-text-1100' : 'text-text-80100',
             'text-2.5xl',
           )}
         >
