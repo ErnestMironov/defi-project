@@ -39,7 +39,7 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
           {users.length === 0 ? (
             <div className="text-text-200 p-4 text-center">No users found</div>
           ) : (
-            users.map((user: User, index: number) => (
+            users.map((user: User) => (
               <div
                 key={user.info.userId}
                 className="my-1 gap-1 border-stroke-100 px-1 last:border-b-0"

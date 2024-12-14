@@ -1,26 +1,15 @@
 import TermsIcon from '@assets/icons/terms.svg'
-import TimerIcon from '@assets/icons/timer-icon.svg'
 import { cn } from '@utils/cn'
 
-import QuestIcon from '../assets/quests.svg'
+import QuestMacls from '../assets/quests-macls.svg'
 
 interface SpecialQuestsProperties extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const SpecialQuests = ({ className, ...rest }: SpecialQuestsProperties) => {
-  const quests = [
-    {
-      title: 'Take Da AKSHON',
-      description: 'Deposit 100$+ in USDT and receive 1,000 Stars',
-      icon: QuestIcon,
-      time: '1d · 15h · 54m',
-      status: 'active',
-    },
-  ]
-
   return (
     <div
       className={cn(
-        'w-full bg-cards-widget rounded-xl border border-stroke-100 font-aeonik text-text-100',
+        'w-full bg-cards-widget rounded-xl border shadow-test-2 border-stroke-100 font-aeonik text-text-100',
         className,
       )}
       {...rest}
@@ -34,8 +23,8 @@ export const SpecialQuests = ({ className, ...rest }: SpecialQuestsProperties) =
         <p className={cn('text-sm text-text-100')}>Special quests</p>
       </div>
 
-      <div className="flex flex-col">
-        {quests.map((quest) => (
+      <div className="flex flex-col items-center px-4 py-8">
+        {/* {quests.map((quest) => (
           <div className="flex items-center gap-4  px-4 py-3">
             <div className="flex flex-1 items-center justify-between">
               <div className="flex flex-row items-center gap-4">
@@ -54,7 +43,9 @@ export const SpecialQuests = ({ className, ...rest }: SpecialQuestsProperties) =
               </div>
             </div>
           </div>
-        ))}
+        ))} */}
+        <QuestMacls className="mb-4" />
+        <p className="text-[1.125rem] text-text-2100">MAAT is cooking, stay updated.</p>
       </div>
     </div>
   )
