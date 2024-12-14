@@ -4,27 +4,31 @@ import { Dialog, DialogTrigger } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
 import type { ChainType } from '@constants/chains'
-import type { HTMLAttributes } from 'react'
+import type { TokensByChain } from '@hooks/tokens/useTokensList'
+import type { HTMLAttributes, ReactNode } from 'react'
 import { useState } from 'react'
 
 import { ResponsiveDialogContent } from '../deposit/components/ResponsiveDialogContent'
 import { SelectChainTrigger } from '../deposit/components/SelectChainTrigger'
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 
-interface UniversalSelectModalProperties<T, U> {
-  selectedItem: U | null
-  onChange: (item: U) => void
-  items: T[]
-  isLoading: boolean
-  renderTrigger: (selectedItem: U | null) => React.ReactNode
-  renderItem: (item: T, onChange: (item: U) => void) => React.ReactNode
-  // New optional props for filtering
+interface UniversalSelectModalProperties<T, R = T> {
+  selectedItem?: T
+  items: TokensByChain<T>
+  isLoading?: boolean
   filterByNetwork?: boolean
   filterBySearch?: boolean
-  filterItems?: (items: T[], searchValue: string, network: ChainType | null) => T[]
+  filterItems: (
+    items: TokensByChain<T>,
+    searchValue: string,
+    network: ChainType | null,
+  ) => T[]
+  renderTrigger: (selectedItem?: T) => ReactNode
+  renderItem: (item: T, onChange: (value: R) => void) => ReactNode
+  onChange: (value: R) => void
 }
 
-export function UniversalSelectModal<T, U>({
+export function UniversalSelectModal<T, R = T>({
   selectedItem,
   items,
   isLoading,
@@ -34,18 +38,20 @@ export function UniversalSelectModal<T, U>({
   filterByNetwork = false,
   filterBySearch = false,
   filterItems,
-}: UniversalSelectModalProperties<T, U> &
+}: UniversalSelectModalProperties<T, R> &
   Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>) {
   const [opened, setOpened] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [network, setNetwork] = useState<ChainType | null>(null)
 
-  const handleChange = (item: U) => {
+  const handleChange = (item: R) => {
     onChange(item)
     setOpened(false)
   }
 
-  const filteredItems = filterItems ? filterItems(items, searchValue, network) : items
+  const filteredItems = filterItems
+    ? filterItems(items, searchValue, network)
+    : ([] as T[])
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>

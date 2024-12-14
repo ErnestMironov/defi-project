@@ -5,39 +5,39 @@ import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import { useTokensBalance } from '@api/tokens-balance/use-tokens-balance'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
+import type { ChainType } from '@constants/chains'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import type { ChainType } from '@lifi/sdk'
+import { useTokensList } from '@hooks/tokens/useTokensList'
 import { cn } from '@utils/cn'
 import { useAccount } from 'wagmi'
 
 import { UniversalSelectModal } from '../withdraw/UniversalSelectModal'
 import { TokensListItem } from './components/TokensListItem'
 import { useAssetSelection } from './hooks/useAssetSelection'
-import { useTokensList } from './hooks/useTokensList'
 
 export const SelectDepositAsset = () => {
   const { isBelowDesktop } = useDeviceWidth()
   const { address } = useAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
   const { asset, handleAssetChange } = useAssetSelection()
-  const tokensList = useTokensList
+  const tokensList = useTokensList<ITokenData>
 
   console.log('Raw userTokens:', userTokens)
 
   const filterTokens = (
     items: Record<string, ITokenData[]>,
     searchValue: string,
-    network: ChainType | null,
+    network: ChainType,
   ) => tokensList(items, network, searchValue)
 
   return (
-    <UniversalSelectModal
-      selectedItem={asset}
-      items={userTokens || {}}
+    <UniversalSelectModal<ITokenData>
+      selectedItem={asset as ITokenData | undefined}
+      items={(userTokens as any) || {}}
       isLoading={isLoading}
       filterByNetwork
       filterBySearch
-      filterItems={filterTokens}
+      filterItems={filterTokens as any}
       renderTrigger={(selectedItem) => (
         <ChoiceBox
           value={selectedItem?.contract_ticker_symbol || 'Select asset'}

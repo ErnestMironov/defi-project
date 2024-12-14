@@ -2,19 +2,18 @@
 
 import type { TokenShares } from '@api/contracts/useGetUserShares'
 import { useUserShares } from '@api/contracts/useGetUserShares'
-import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import CheckedIcon from '@assets/icons/check.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
+import { useTokensList } from '@hooks/tokens/useTokensList'
 import { cn } from '@utils/cn'
 import { formatAmount, formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
-import { useTokensList } from '../deposit/hooks/useTokensList'
 import { useTxStore } from '../store/useTxStore'
 import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
@@ -106,29 +105,39 @@ export const SelectWithdrawAssetModal = () => {
       )
   }, [shares])
 
-  const onChange = (_asset: UseGetMTokenInfoReturn) => {
-    console.log('🚀 ~ onChange ~ _asset:', _asset)
+  const onChange = (_asset: UseGetMTokenInfoReturn | null) => {
+    if (!_asset) return
     setMToken(_asset)
     if (_asset?.chainId) {
       _switchChain({
-        chainId: _asset?.chainId,
+        chainId: _asset.chainId,
       })
-      setWithdrawToNetwork(_asset?.chainId as any)
-      setWithdrawFromNetwork(_asset?.chainId as any)
+      setWithdrawToNetwork(_asset.chainId as any)
+      setWithdrawFromNetwork(_asset.chainId as any)
     }
   }
 
-  const tokensList = useTokensList
+  const tokensList = useTokensList<TokenShares>
 
   const filterTokens = (
-    items: Record<string, ITokenData[]>,
+    items: TokenShares[] | Record<string, TokenShares[]>,
     searchValue: string,
     network: ChainType | null,
-  ) => tokensList(items, network, searchValue)
+  ) => {
+    if (Array.isArray(items) && !network) {
+      return tokensList({ all: items }, null, searchValue)
+    }
+
+    if (!Array.isArray(items)) {
+      return tokensList(items, network, searchValue)
+    }
+
+    return []
+  }
 
   return (
-    <UniversalSelectModal<TokenShares, UseGetMTokenInfoReturn>
-      selectedItem={mtToken}
+    <UniversalSelectModal<TokenShares, UseGetMTokenInfoReturn | null>
+      selectedItem={mtToken as TokenShares | undefined}
       items={balances}
       filterBySearch
       filterByNetwork
