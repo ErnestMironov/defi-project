@@ -2,13 +2,19 @@
 
 import type { TokenShares } from '@api/contracts/useGetUserShares'
 import { useUserShares } from '@api/contracts/useGetUserShares'
+import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
+import CheckedIcon from '@assets/icons/check.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
+import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
+import type { ChainType } from '@constants/chains'
+import { cn } from '@utils/cn'
 import { formatAmount, formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
+import { useTokensList } from '../deposit/hooks/useTokensList'
 import { useTxStore } from '../store/useTxStore'
 import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
@@ -17,43 +23,57 @@ import { UniversalSelectModal } from './UniversalSelectModal'
 const WithdrawAssetItem = ({
   token,
   onChange,
+  selected,
 }: {
   token: TokenShares
   onChange: (token: UseGetMTokenInfoReturn) => void
+  selected: boolean
 }) => {
   const tokenData = useGetMTokenInfo(token)
+
+  const formattedBalance = useMemo(() => {
+    if (!token?.stableBalance || !token?.decimals) return '0'
+    try {
+      return formatUnits(BigInt(token.stableBalance), token.decimals)
+    } catch {
+      return '0'
+    }
+  }, [token?.stableBalance, token?.decimals])
 
   return (
     <button
       type="button"
       onClick={() => onChange({ ...token, ...tokenData })}
-      className="flex w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+      className="flex w-full cursor-pointer items-center justify-between rounded-xl px-5 py-4 hover:bg-input-active max-lg:items-start"
     >
-      <TokenWithNetwork
-        className="size-8"
-        symbol={token.stable}
-        network={token.chainId}
-      />
-      <div className="ml-3 flex flex-col items-start text-[1.25rem]/[1.75rem]">
-        {token.stable.toUpperCase()}
-        <span className="font-[Arial] text-[0.9375rem] font-normal not-italic leading-none text-gray-80">
-          {tokenData.chainData?.name}
-        </span>
+      <div className="flex items-center gap-[0.67rem]">
+        <TokenIconComponent className="size-9" symbol={token?.stable} />
+        <div className="flex flex-col items-start gap-[0.13rem] max-lg:items-start max-lg:text-left">
+          <p className="text-base/[1.5rem] text-text-1100">
+            {formatAmount(formattedBalance, {
+              maximumFractionDigits: 2,
+            })}{' '}
+            {token?.stable?.toUpperCase() || ''}
+          </p>
+          <div className="flex items-center gap-[0.22rem]">
+            <TokenIconComponent
+              symbol={tokenData?.chainData?.chainId}
+              className="size-4 overflow-hidden rounded-md"
+            />
+            <p className="text-[0.875rem]/[1rem] text-text-2100/60">
+              {tokenData?.chainData?.name}
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="ml-auto flex flex-col items-end gap-1">
-        <p className="text-base text-text">
-          {formatAmount(formatUnits(BigInt(token.stableBalance), token?.decimals), {
-            maximumFractionDigits: 2,
-          })}{' '}
-          {token.stable.toUpperCase()}
-        </p>
-        <p className="text-semi-base font-bold text-gray-80">
-          $
-          {formatAmountValue(
-            formatUnits(BigInt(token.stableBalance), token?.decimals),
-            2,
-          )}{' '}
-        </p>
+      <div className="flex items-center justify-end gap-2">
+        <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
+          <p className="text-medium text-base text-text-1100">
+            <span className="text-text-270">$</span>
+            {formatAmountValue(formattedBalance, 2)}{' '}
+          </p>
+        </div>
+        {selected && <CheckedIcon className="size-4" />}
       </div>
     </button>
   )
@@ -69,11 +89,21 @@ export const SelectWithdrawAssetModal = () => {
   const shares = data?.shares
 
   const balances = useMemo(() => {
-    if (!shares) return []
+    if (!shares) return {}
 
-    return [...shares]
+    return shares
       .filter((token) => token.balance > 999_999)
-      .sort((a, b) => Number(b.balance) - Number(a.balance))
+      .reduce(
+        (accumulator, token) => {
+          const chainId = token.chainId.toString()
+          if (!accumulator[chainId]) {
+            accumulator[chainId] = []
+          }
+          accumulator[chainId].push(token)
+          return accumulator
+        },
+        {} as Record<string, TokenShares[]>,
+      )
   }, [shares])
 
   const onChange = (_asset: UseGetMTokenInfoReturn) => {
@@ -88,19 +118,31 @@ export const SelectWithdrawAssetModal = () => {
     }
   }
 
+  const tokensList = useTokensList
+
+  const filterTokens = (
+    items: Record<string, ITokenData[]>,
+    searchValue: string,
+    network: ChainType | null,
+  ) => tokensList(items, network, searchValue)
+
   return (
     <UniversalSelectModal<TokenShares, UseGetMTokenInfoReturn>
-      title="Select asset"
       selectedItem={mtToken}
       items={balances}
+      filterBySearch
+      filterByNetwork
       isLoading={isUserSharesLoading}
+      filterItems={filterTokens}
       renderTrigger={(selectedItem) => (
         <ChoiceBox
           value={selectedItem?.stable?.toUpperCase() || 'Select asset'}
-          className="min-w-[10.5rem]"
+          className={cn(selectedItem?.stable, !selectedItem && 'px-3 py-5')}
           icon={
             <TokenWithNetwork
-              className="size-[2.14288rem] max-lg:size-[1.125rem]"
+              classNames={{
+                token: 'rounded-full overflow-hidden size-9',
+              }}
               symbol={selectedItem?.stable}
               network={selectedItem?.chainId}
             />
@@ -111,6 +153,10 @@ export const SelectWithdrawAssetModal = () => {
         <WithdrawAssetItem
           key={token?.chainId}
           token={token}
+          selected={
+            String(mtToken?.chainId) + String(mtToken?.stable) ===
+            String(token?.chainId) + String(token?.stable)
+          }
           onChange={(value) => {
             console.log('🚀 ~ onChange ~ value:', value)
             console.log('🚀 ~ onChange ~ onItemChange:', onItemChange)

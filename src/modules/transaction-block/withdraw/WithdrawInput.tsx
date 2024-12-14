@@ -103,7 +103,7 @@ export const WithdrawInput = () => {
         validationError && 'bg-input-error',
       )}
     >
-      <span className="font-aeonik text-[0.875rem] font-medium leading-6 text-text-2100 opacity-50">
+      <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
         You withdraw
       </span>
       <div className="flex items-center justify-between gap-2">

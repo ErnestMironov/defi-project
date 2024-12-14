@@ -14,7 +14,7 @@ const searchTokens = (tokens: ITokenData[], searchValue: string) => {
   )
 }
 
-type TokensByChain = Record<string, ITokenData[]>
+export type TokensByChain = Record<string, ITokenData[]>
 
 export const useTokensList = (
   userTokens: TokensByChain | undefined,
@@ -32,7 +32,7 @@ export const useTokensList = (
       return sortTokensByUSDBalance(filteredChainTokens)
     }
 
-    const allTokens = Object.values(userTokens).flat() as ITokenData[]
+    const allTokens = Object.values(userTokens).flat()
     const filteredAllTokens = searchValue
       ? searchTokens(allTokens, searchValue)
       : allTokens

@@ -148,7 +148,7 @@ export const DepositInput = () => {
           error && 'bg-input-error',
         )}
       >
-        <span className="font-aeonik text-[0.875rem] font-medium leading-6 text-text-2100 opacity-50">
+        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
           You deposit
         </span>
         <div className="flex items-center justify-between gap-2">
@@ -179,7 +179,7 @@ export const DepositInput = () => {
           error && 'bg-input-error',
         )}
       >
-        <span className="text-[0.875rem] font-medium leading-6 text-text-2100 opacity-50">
+        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
           You stake
         </span>
         <div className="flex w-full items-center justify-between gap-2">

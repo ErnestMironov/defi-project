@@ -1,4 +1,6 @@
 import { useGetSwapRoute } from '@api/lifi/hooks/useGetSwapRoute'
+import CrossChainIcon from '@assets/icons/crosschain.svg'
+import { ShadowBox } from '@components/box/ShadowBox'
 import { Switch } from '@components/ui/switch'
 import { TX_TYPE } from '@constants/txTypes'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
@@ -37,15 +39,18 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
         {txType === TX_TYPE.DEPOSIT ? (
           <TVLDisplay />
         ) : (
-          <div className="mt-3 flex items-start justify-between self-stretch rounded-2xl border border-stroke-100 p-6">
-            <span className="leading-[120%] text-text-80 lg:text-[1.1875rem]">
-              Cross-Chain
-            </span>
+          <ShadowBox className="flex items-center justify-between gap-[1.7rem] rounded-xl border-DEFAULT border-solid border-[var(--stroke-100,#E6E8F0)] px-4 py-3">
+            <div className="flex items-center gap-2">
+              <CrossChainIcon className="size-4" />
+              <span className="text-[0.875rem] font-medium leading-4 text-text-100">
+                Cross-Chain
+              </span>
+            </div>
             <Switch
               checked={withdrawToAnotherChain}
               onCheckedChange={setWithdrawToAnotherChain}
             />
-          </div>
+          </ShadowBox>
         )}
       </div>
       {txType === TX_TYPE.DEPOSIT && <DepositInput />}
