@@ -1,7 +1,8 @@
+import type { UserRewards } from '@api/maat-finance/types'
 import Asterisk from '@assets/icons/asterisk.svg'
 
 interface BonusMultiplierProperties extends React.HTMLAttributes<HTMLDivElement> {
-  multiplier: number
+  multiplier: UserRewards['currentRewardMultiplier']
 }
 
 export default function BonusMultiplier({
@@ -10,12 +11,12 @@ export default function BonusMultiplier({
 }: BonusMultiplierProperties) {
   return (
     <div
-      className="flex items-center gap-1 rounded-md  bg-[#8585A90D] p-1 px-2"
+      className="flex items-center gap-1 rounded-md  bg-[#8585A91F] p-1 px-2 max-md:pl-[0.38rem] max-md:text-[0.8125rem]"
       {...props}
     >
       <Asterisk />
       <p className="text-sm font-medium text-text-2100">Multiplier</p>
-      <p className="text-sm font-medium">X{multiplier}</p>
+      <p className="text-sm font-medium">x{multiplier}</p>
     </div>
   )
 }

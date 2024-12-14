@@ -16,13 +16,14 @@ export default function EarningMethodCard({
   return (
     <div
       className={cn(
-        'bg-cards-widget rounded-3xl shadow-widget-gradient font-aeonik p-4 h-[6.875rem] h-auto max-md:bg-transparent',
+        'bg-cards-widget rounded-3xl shadow-test-2 font-aeonik p-4 h-[6.875rem] h-auto max-md:bg-transparent max-md:p-0 max-md:shadow-none',
         className,
       )}
       {...props}
     >
       <div className="align-start flex  w-[13.75rem] gap-4">
-        <RevardsIcon className="mt-0.5 size-6 rounded-full bg-violet-15" />
+        <RevardsIcon className="mt-0.5 size-7 rounded-full bg-violet-15" />
+
         <div className="">
           <h3 className=" text-lg font-medium leading-6 text-text-100">
             {earningMethod.title}

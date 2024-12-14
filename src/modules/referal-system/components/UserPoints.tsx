@@ -1,7 +1,7 @@
 import StartBold from '@assets/icons/start-bold.svg'
 
 interface UserPointsProperties extends React.HTMLAttributes<HTMLDivElement> {
-  value: number
+  value: number | undefined
 }
 
 export default function UserPoints({ value, ...props }: UserPointsProperties) {
