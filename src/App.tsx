@@ -2,7 +2,6 @@
 import { LIfiProvider } from '@configs/LIfiProvider'
 import { queryClient } from '@configs/r-query'
 import { Web3ModalProvider } from '@configs/Web3ModalProvider'
-import { PendingTransactions } from '@modules/pending-transactions/PendingTransactions'
 import { ThemeProvider } from '@modules/theme/ThemeProvider'
 import { TxReviewModal } from '@modules/transaction-block/TxReviewModal'
 import { router } from '@routes/router.config'
@@ -18,7 +17,6 @@ function App() {
           <QueryClientProvider client={queryClient}>
             <LIfiProvider>
               <RouterProvider router={router} />
-              <PendingTransactions />
               <TxReviewModal />
             </LIfiProvider>
           </QueryClientProvider>

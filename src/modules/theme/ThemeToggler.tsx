@@ -28,9 +28,9 @@ export function ThemeToggler(props: ThemeToggleProperties) {
   return (
     <div
       className={cn(
-        'relative flex items-center w-auto h-auto rounded-xl p-1 gap-2',
+        'relative flex items-center w-auto h-auto rounded-xl border border-stroke-100 p-1 gap-2 bg-misc-card',
         'transition-colors',
-        theme === 'light' ? 'border-stroke-element border' : 'border-transparent',
+
         className,
       )}
     >
@@ -38,13 +38,13 @@ export function ThemeToggler(props: ThemeToggleProperties) {
         className={cn(
           'absolute top-1 left-1 z-0 rounded-[12px]',
           'bg-main-100',
-          'transition-all duration-300 ease-out',
+          'transition-all duration-300 ease-out hover:cursor-none',
         )}
         initial={false}
         animate={{
           x: theme === 'light' ? '0%' : '140%',
           width: '35%',
-          height: '85%',
+          height: '82%',
         }}
         transition={{
           type: 'spring',
@@ -60,14 +60,14 @@ export function ThemeToggler(props: ThemeToggleProperties) {
           variant="container"
           onClick={handleSetLightTheme}
           className={cn(
-            'flex justify-center items-center w-auto h-auto rounded-[12px]',
+            'flex justify-center items-center w-auto h-auto rounded-[12px] hover:bg-main-100',
             theme === 'light' ? 'bg-main-100' : 'bg-transparent',
           )}
         >
           <SunV1Svg
             className={cn(
               theme === 'light' ? 'fill-white' : 'fill-gray-400 [&_path]:stroke-gray-400',
-              'size-6',
+              'size-4',
             )}
           />
         </Button>
@@ -86,7 +86,7 @@ export function ThemeToggler(props: ThemeToggleProperties) {
           <MoonV1Svg
             className={cn(
               theme === 'dark' ? 'fill-white [&_path]:stroke-white' : '',
-              'size-6',
+              'size-4',
             )}
           />
         </Button>

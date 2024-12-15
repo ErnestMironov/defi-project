@@ -22,7 +22,7 @@ export const TokensListItem = ({
         <TokenIconComponent
           symbol={token.contract_ticker_symbol}
           tokenLogoFallback={token.logo_url}
-          className="size-[2.66669rem] overflow-hidden rounded-full border-none"
+          className="size-[2.66669rem] overflow-hidden rounded-full"
         />
 
         <div className="flex flex-col items-start gap-[0.13rem] max-lg:items-start max-lg:text-left">

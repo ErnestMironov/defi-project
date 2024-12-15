@@ -110,7 +110,7 @@ export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) 
             </div>
           </div>
           {/* deposit/withdraw/buy */}
-          <ActionButtons className="mt-6" value={portfolioValue} />
+          <ActionButtons className="mt-6" value={portfolioValue} onClose={() => {}} />
           {/* tokens/activity */}
           <UserActivityTabs className="mt-8" value={portfolioValue} />
         </div>

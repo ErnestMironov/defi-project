@@ -13,14 +13,17 @@ export const RefillWalletTooltip = (props: RefillWalletTooltipProperties) => {
       {...rest}
     >
       <div className="text-center">
-        <p className="text-md font-medium text-text-100">
+        <p className="text-md font-medium text-text-100 max-md:text-base">
           Seems like you have just started
         </p>
-        <p className="mb-4 text-semi-base text-text-2100">
+        <p className="mb-4 text-semi-base text-text-2100 max-md:text-[0.8125rem]">
           Buy your favourite coins with ease and start earning yield with MAAT
         </p>
-        <Button variant="default" className="px-5 py-4 text-base font-normal normal-case">
-          <Add className="mr-2 size-7" />
+        <Button
+          variant="default"
+          className="px-5 py-4 text-base font-normal normal-case max-md:text-[0.8125rem]"
+        >
+          <Add className="mr-2 size-7 max-md:size-4" />
           Buy crypto
         </Button>
       </div>

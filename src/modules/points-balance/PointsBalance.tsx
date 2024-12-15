@@ -1,4 +1,5 @@
 import { useGetUserPoints } from '@api/maat-finance/useGetUserPoints'
+import DoubleArrow from '@assets/icons/double-arrow.svg'
 import PointIcon from '@assets/icons/point-icon.svg'
 import { cn } from '@utils/cn'
 import type { Address } from 'viem'
@@ -11,15 +12,23 @@ export const PointsBalance = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        'relative z-10 flex items-center justify-center rounded-[12.5rem] bg-cards-widget px-6 py-4 text-[1.25rem] leading-none tracking-[-0.0125rem] text-gray-80 dark:bg-[rgba(153,_152,_184,_0.10)]',
+        'flex h-[3rem]  rounded-[1rem] bg-white border border-stroke-100 dark:bg-cards-widget dark:border-stroke-40100',
         className,
       )}
     >
-      Your balance:
-      <span className="ml-1 mr-[.38rem] text-main-100 dark:text-white">
-        {userPoints?.totalRewards}
-      </span>
-      <PointIcon className="relative -top-0.5 size-6" />
+      <div className="flex items-center justify-center gap-1.5 rounded-l-2xl border-r border-stroke-40100 px-4 py-3 ">
+        <PointIcon className="size-4 text-[#7B61FF]" />
+        <span className="text-sm font-medium leading-[1.5625rem] text-main-100">
+          {userPoints?.totalRewards || 0}
+        </span>
+      </div>
+
+      <button
+        className="flex items-center justify-center rounded-r-2xl bg-white px-3 transition-colors dark:border-stroke-40100 dark:bg-cards-widget"
+        type="button"
+      >
+        <DoubleArrow className="size-4" />
+      </button>
     </div>
   )
 }
