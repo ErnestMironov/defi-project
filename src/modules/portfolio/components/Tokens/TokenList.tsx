@@ -113,10 +113,10 @@ const GroupedTokenItem = ({
               key={token.contract_ticker_symbol}
               className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-light-blue-15 max-md:px-3"
             >
-              <div className="flex  items-center gap-1">
+              <div className="flex  items-center gap-2">
                 <TokenIconComponent
                   symbol={token.contract_ticker_symbol}
-                  className="size-12 rounded-full max-lg:size-10"
+                  className="size-12 overflow-hidden rounded-full max-lg:size-10"
                   tokenLogoFallback={token.logo_url}
                 />
                 <div className="flex flex-col">
@@ -129,7 +129,7 @@ const GroupedTokenItem = ({
                   <span className="flex gap-0.5 text-sm text-text-2100">
                     <TokenIconComponent
                       symbol={token.chain_id}
-                      className="size-4 rounded-full"
+                      className="size-4 overflow-hidden rounded-full"
                       tokenLogoFallback={token.logo_url}
                     />
                     {CHAIN_NAMES_BY_ID[token.chain_id as keyof typeof CHAIN_NAMES_BY_ID]}
