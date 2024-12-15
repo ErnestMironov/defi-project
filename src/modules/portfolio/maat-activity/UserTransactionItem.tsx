@@ -34,13 +34,14 @@ export const STATUS_MAP = {
 
 const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props) => {
   const { event } = props
+  const isMobile = window.matchMedia('(max-width: 768px)').matches
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger className="rounded-xl border p-2 text-gray-700 hover:bg-gray-200">
         <MoreOptionsIcon className="size-full" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
-        className="mr-2 mt-4 w-[15.5rem] rounded-xl border border-stroke-40100 bg-cards p-2 shadow-test-2"
+        className="mr-2 mt-4 w-[15.75rem] gap-1 rounded-xl border border-stroke-100 bg-cards p-1 shadow-test-2"
         side="left"
         align="end"
       >
@@ -48,16 +49,17 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
           <Link
             to={`${ROUTES.TRANSACTIONS}/${event.hash}`}
             className="flex w-full items-center gap-4"
+            target={isMobile ? '_blank' : '_self'}
           >
             <TransactionDetails className="size-5" />
-            <p className="text-base text-text-1100">Transaction Details</p>
+            <p className="text-sm text-text-1100">Transaction Details</p>
           </Link>
         </DropdownMenu.Item>
         <DropdownMenu.Item className="cursor-pointer rounded-xl p-4 hover:bg-light-blue-15">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <LinkIcon className="size-5" />
-              <p className="ml-1 text-base">Etherscan</p>
+              <p className="ml-1 text-sm">Etherscan</p>
             </div>
             <ScanLink chainId={event.src_chain_id} txHash={event.hash} className="ml-1" />
           </div>
@@ -69,6 +71,8 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
 
 export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const { event, className, ...rest } = props
+
+  console.log(event)
 
   const renderIcon = () => {
     switch (event.action_type) {
@@ -109,12 +113,44 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   }
 
   const formatTransactionAction = (action: string) => {
+    if (!action) return null
+
     const words = action.split(' ')
+
     return (
       <>
         <span className="text-text-1100">{words[0]}</span>
-        <span className="text-text-260">{` ${words.slice(1).join(' ')}`}</span>
+        <span className="text-text-60">{` ${words.slice(1).join(' ')}`}</span>
       </>
+    )
+  }
+
+  const renderAmount = () => {
+    if (typeof event.vault === 'string') {
+      return (
+        <p className="text-base font-medium max-lg:text-sm">
+          {formatAmount(event.amount ?? 0, {
+            notation: 'compact',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}{' '}
+          {event.vault}
+        </p>
+      )
+    }
+
+    return (
+      <p className="text-base font-medium max-lg:text-sm">
+        {formatAmount(
+          formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
+          {
+            notation: 'compact',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          },
+        )}{' '}
+        {event.vault.token.symbol}
+      </p>
     )
   }
 
@@ -122,19 +158,22 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
     <div className={cn('flex items-center', className)} {...rest}>
       <div
         className={cn(
-          'relative flex size-14 items-center justify-center rounded-xl bg-main-15',
+          'relative flex size-14 items-center justify-center rounded-xl bg-main-15 max-lg:size-10',
           event.action_type === 'DEPOSIT' && 'bg-red-15',
         )}
       >
         <div
-          className={cn('size-10', event.status === 'failed' && '[&_path]:fill-red-50')}
+          className={cn(
+            'size-10 max-lg:p-1 max-lg:flex max-lg:items-center max-lg:justify-center',
+            event.status === 'failed' && '[&_path]:fill-red-50',
+          )}
         >
           {renderIcon()}
         </div>
       </div>
       <div className="ml-3 space-y-1">
         <div className="flex items-center">
-          <p className=" text-[1.25rem]/[1.5rem] font-medium leading-4 ">
+          <p className=" text-[1.25rem]/[1.5rem] font-medium leading-4 max-lg:text-sm">
             {formatTransactionAction(
               LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO[
                 event.action_type as keyof typeof LAST_EVENT_ACTION_TYPE_FOR_PORTFOLIO
@@ -142,26 +181,15 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
             )}
           </p>
         </div>
-        <p className="text-base text-text-2100">
-          <p className="text-base font-medium">
-            {formatAmount(
-              formatUnits(BigInt(event.amount ?? 0), event.vault.token.decimals),
-              {
-                notation: 'compact',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              },
-            )}{' '}
-            {event.vault.token.symbol}
-          </p>
-          {/*  */}
-        </p>
+        <p className="text-base text-text-2100">{renderAmount()}</p>
       </div>
       <div className="ml-auto space-y-1">
         <div className="flex items-center gap-[0.38rem]">
-          <span className="text-sm text-gray-100">
-            {getShortFromNow(event.creation_time)}
-          </span>
+          {event.status !== 'in progress' && (
+            <span className="text-sm text-text-2100">
+              {getShortFromNow(event.creation_time)}
+            </span>
+          )}
           <StatusLabel status={event.status} />
           <DropdownMenuForPortfolio event={event} />
         </div>

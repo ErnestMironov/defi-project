@@ -175,7 +175,7 @@ export const Sidebar: FC = () => {
           </div>
 
           {/* deposit/withdraw/buy and UserActivityTabs */}
-          <ActionButtons className="mt-6" value={portfolioValue} />
+          <ActionButtons className="mt-6" value={portfolioValue} onClose={handleClose} />
           <UserActivityTabs
             value={portfolioValue}
             className={cn(

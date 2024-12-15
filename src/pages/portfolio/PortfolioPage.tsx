@@ -1,14 +1,13 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
 import { usePortfolioYield } from '@api/maat-finance/usePortfolioYield'
-import Metamask from '@assets/icons/metamask.svg'
-import { CopyButton } from '@components/copy/CopyButton'
+import PortfolioButton from '@layouts/header/components/PortfolioButton'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
 import { PortfolioValueTooltip } from '@modules/portfolio/PortfolioValueTooltip'
+import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
-import { shortenAddress } from '@utils/transform'
 import { type ComponentProps, useEffect, useMemo } from 'react'
 import { type Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
@@ -53,10 +52,14 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
   return (
     <div className={cn('mt-8', className)} {...rest}>
       {/* wallet */}
-      <div className={cn('flex items-center', !address && 'hidden')}>
-        <Metamask className="size-5" />
-        <p className="text-text ml-3">{shortenAddress(address ?? '')}</p>
-        <CopyButton text={address as string} className="ml-2 size-5" />
+      <div className="flex h-auto w-full items-center justify-between">
+        <PortfolioButton
+          onClick={() => {}}
+          isOpen
+          openConnectModal={() => {}}
+          balance={portfolioValue}
+        />
+        <ThemeToggler />
       </div>
       {/* header */}
       <div className="mt-8 flex items-start max-lg:gap-8 lg:justify-between">
@@ -81,7 +84,7 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
         </div>
       </div>
       {/* deposit/withdraw/buy */}
-      <ActionButtons className="mt-6" value={portfolioValue} />
+      <ActionButtons className="mt-6" value={portfolioValue} onClose={() => {}} />
       {/* tokens/activity */}
       <UserActivityTabs className="mt-8" value={portfolioValue} />
     </div>
