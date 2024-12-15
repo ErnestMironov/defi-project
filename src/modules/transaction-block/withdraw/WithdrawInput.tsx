@@ -8,8 +8,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-import DollarInput from '../components/DollarInput'
-import { InputWrapper } from '../components/InputWrapper'
 import { SwappableInputs } from '../deposit/components/SwappableInputs'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
@@ -27,6 +25,7 @@ export const WithdrawInput = () => {
     inputValueInUSD,
     withdrawToAnotherChain,
     setInputValueInUSD,
+    setInputError,
     setWithdrawToNetwork,
   } = useTxStore()
 
@@ -57,7 +56,9 @@ export const WithdrawInput = () => {
 
   useEffect(() => {
     if (inputValueBN > balanceBN) {
-      return setValidationError('Exceeds balance')
+      setValidationError('Exceeds balance')
+      setInputError('Exceeds balance')
+      return
     }
 
     if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
@@ -65,6 +66,7 @@ export const WithdrawInput = () => {
     }
 
     setValidationError('')
+    setInputError(null)
   }, [inputValueBN, inputValueInUSD, balanceBN])
 
   useEffect(() => {
@@ -134,33 +136,29 @@ export const WithdrawInput = () => {
         {validationError && (
           <p className="mt-3 text-lg text-red-100">{validationError}</p>
         )}
-
-        {mtToken && withdrawToAnotherChain && (
-          <InputWrapper
-            title="You will receive "
-            className="mt-3"
-            validationError={validationError}
-          >
-            <div className="flex w-full items-center justify-between">
-              <AmountInput
-                value={inputValue}
-                error={validationError}
-                decimals={6}
-                disabled
-              />
-
-              <SelectWithdrawNetworkModal />
-            </div>
-            <div className="mt-3 flex w-full items-center justify-between">
-              <DollarInput disabled value={inputValueInUSD} error={!!validationError} />
-            </div>
-          </InputWrapper>
-        )}
-
-        {validationError && (
-          <p className="mt-3 text-lg text-red-100 max-lg:text-xs">{validationError}</p>
-        )}
       </div>
+      {mtToken && withdrawToAnotherChain && (
+        <div
+          className={cn(
+            'bg-white dark:bg-input-active py-6 px-8 max-lg:px-3',
+            validationError && 'bg-input-error',
+          )}
+        >
+          <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
+            You receive
+          </span>
+          <div className="flex w-full items-center justify-between">
+            <AmountInput
+              value={inputValue}
+              error={validationError}
+              decimals={6}
+              disabled
+            />
+
+            <SelectWithdrawNetworkModal />
+          </div>
+        </div>
+      )}
       <div className="flex flex-col items-center justify-center px-4 py-3">
         {isConnected ? (
           <Button

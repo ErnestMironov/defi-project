@@ -4,7 +4,6 @@ import { Dialog, DialogTrigger } from '@components/ui/dialog'
 import { ScrollArea } from '@components/ui/scroll-area'
 import { Skeleton } from '@components/ui/skeleton'
 import type { ChainType } from '@constants/chains'
-import type { TokensByChain } from '@hooks/tokens/useTokensList'
 import type { HTMLAttributes, ReactNode } from 'react'
 import { useState } from 'react'
 
@@ -12,20 +11,35 @@ import { ResponsiveDialogContent } from '../deposit/components/ResponsiveDialogC
 import { SelectChainTrigger } from '../deposit/components/SelectChainTrigger'
 import { SelectNetworkPopover } from '../SelectNetworkPopover'
 
+interface TokensByChain<T> {
+  [chain: string]: T[]
+}
+
 interface UniversalSelectModalProperties<T, R = T> {
   selectedItem?: T
-  items: TokensByChain<T>
+  items: TokensByChain<T> | T[]
   isLoading?: boolean
   filterByNetwork?: boolean
   filterBySearch?: boolean
   filterItems: (
-    items: TokensByChain<T>,
+    items: TokensByChain<T> | T[],
     searchValue: string,
     network: ChainType | null,
   ) => T[]
   renderTrigger: (selectedItem?: T) => ReactNode
   renderItem: (item: T, onChange: (value: R) => void) => ReactNode
   onChange: (value: R) => void
+}
+
+const renderItems = <T, R>(
+  items: TokensByChain<T> | T[],
+  renderItem: (item: T, onChange: (value: R) => void) => ReactNode,
+  handleChange: (item: R) => void,
+) => {
+  if (Array.isArray(items)) return items.map((item) => renderItem(item, handleChange))
+  return Object.values(items)
+    .flat()
+    .map((item) => renderItem(item, handleChange))
 }
 
 export function UniversalSelectModal<T, R = T>({
@@ -52,6 +66,8 @@ export function UniversalSelectModal<T, R = T>({
   const filteredItems = filterItems
     ? filterItems(items, searchValue, network)
     : ([] as T[])
+
+  console.log(filteredItems)
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
@@ -106,7 +122,11 @@ export function UniversalSelectModal<T, R = T>({
               </>
             )}
 
-            {filteredItems.map((item) => renderItem(item, handleChange))}
+            {renderItems(
+              filterByNetwork || filterBySearch ? filteredItems : items,
+              renderItem,
+              handleChange,
+            )}
 
             {filteredItems.length === 0 && searchValue && (
               <SystemMessage
