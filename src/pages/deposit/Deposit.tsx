@@ -1,4 +1,5 @@
 import BgLines from '@assets/vectors/bg-lines.svg'
+import BgLinesError from '@assets/vectors/bg-lines_error.svg'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
@@ -12,7 +13,7 @@ export const Deposit = () => {
   const { bestUSDCApy, bestUSDTApy, isLoading: isStrategiesLoading } = useVaultAPY()
   const { isBelowDesktop } = useDeviceWidth()
 
-  const { setVault } = useTxStore()
+  const { setVault, inputError } = useTxStore()
   const vaultSet = useRef(false)
 
   useEffect(() => {
@@ -37,7 +38,11 @@ export const Deposit = () => {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-between gap-10  pb-10">
       <div className="fixed inset-0 z-[-1] w-full bg-bg">
-        <BgLines className="w-full" />
+        {inputError ? (
+          <BgLinesError className="w-full" />
+        ) : (
+          <BgLines className="w-full" />
+        )}
       </div>
       <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
         {isBelowDesktop && <TVLDisplay />}

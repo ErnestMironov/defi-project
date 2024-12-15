@@ -61,6 +61,7 @@ export const DepositInput = () => {
     setCurrentModal,
     setInputValueInUSD,
     setVault,
+    setInputError,
   } = useTxStore()
 
   const { open: openConnectModal } = useAppKit()
@@ -111,10 +112,12 @@ export const DepositInput = () => {
 
     if (validationError) {
       setError(validationError)
+      setInputError(validationError)
       return
     }
 
     setError('')
+    setInputError(null)
   }, [asset, assetBalance, inputValue, inputValueInUSD])
 
   // Input handling
