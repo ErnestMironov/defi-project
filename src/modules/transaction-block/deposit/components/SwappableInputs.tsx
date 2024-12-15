@@ -30,6 +30,8 @@ interface SwappableInputsProperties {
   onMaxClick?: () => void
   /** Element to display on the right side */
   rightElement?: React.ReactNode
+  /** Token label */
+  tokenLabel?: string
 }
 
 const DECIMALS = 18
@@ -43,6 +45,7 @@ export const SwappableInputs = ({
   asset,
   onMaxClick,
   rightElement,
+  tokenLabel,
 }: SwappableInputsProperties) => {
   const { isSwapped, setIsSwapped } = useInputsMode()
 
@@ -85,7 +88,7 @@ export const SwappableInputs = ({
       className="text-[1rem]"
       wrapperClassName="!min-h-0 !h-[1.5rem]"
       onChange={onTokenValueChange}
-      after={asset.contract_ticker_symbol}
+      after={tokenLabel || asset.contract_ticker_symbol}
     />
   ) : (
     <DollarInput
@@ -103,7 +106,9 @@ export const SwappableInputs = ({
         <span className="ml-2 mr-[.19rem] text-text-2100">
           {formatTokenBalance(asset.balance, asset.contract_decimals)}
         </span>
-        <span className="text-text-260">{asset.contract_ticker_symbol}</span>
+        <span className="text-text-260">
+          {tokenLabel || asset.contract_ticker_symbol}
+        </span>
       </p>
       <ShadowBox
         className="cursor-pointer select-none rounded-md border border-stroke-100 bg-white px-[0.56rem] text-[0.875rem] font-medium leading-[1.5625rem] text-text-2100"
