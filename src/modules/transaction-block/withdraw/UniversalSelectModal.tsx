@@ -21,7 +21,7 @@ interface UniversalSelectModalProperties<T, R = T> {
   isLoading?: boolean
   filterByNetwork?: boolean
   filterBySearch?: boolean
-  filterItems: (
+  filterItems?: (
     items: TokensByChain<T> | T[],
     searchValue: string,
     network: ChainType | null,

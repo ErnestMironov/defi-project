@@ -53,9 +53,9 @@ export const SelectWithdrawNetworkModal = () => {
   }, [data, vault, isLoading])
 
   return (
-    <UniversalSelectModal<ChainType, ChainType | null>
+    <UniversalSelectModal<ChainType>
       title="Select network"
-      selectedItem={withdrawToNetwork}
+      selectedItem={withdrawToNetwork ?? undefined}
       items={chains as ChainType[]}
       isLoading={false}
       renderTrigger={() => (
