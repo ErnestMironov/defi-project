@@ -1,46 +1,20 @@
-import Wallet from '@assets/icons/wallet.svg'
 import { AmountInput } from '@components/amount-input/AmountInput'
 import { Button } from '@components/ui/button'
-import { Switch } from '@components/ui/switch'
 import type { ChainType } from '@constants/chains.ts'
+import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { formatAmount, formatValueWithPrecision } from '@utils/formatValue.ts'
-import type { HTMLAttributes, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import DollarInput from '../components/DollarInput'
+import { InputWrapper } from '../components/InputWrapper'
+import { SwappableInputs } from '../deposit/components/SwappableInputs'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork'
-
-interface InputWrapperProperties extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
-  validationError: string
-  title?: string
-}
-
-export const InputWrapper = ({
-  children,
-  validationError,
-  title,
-  className,
-}: InputWrapperProperties) => {
-  return (
-    <div
-      className={cn(
-        'rounded-2xl bg-input-default p-6 max-lg:px-3 flex flex-col gap-3',
-        validationError && 'bg-input-error',
-        className,
-      )}
-    >
-      {title && <h3 className="text-[1.125rem] leading-[120%] text-gray-100">{title}</h3>}
-      {children}
-    </div>
-  )
-}
 
 export const WithdrawInput = () => {
   const { isConnected } = useAccount()
@@ -51,13 +25,14 @@ export const WithdrawInput = () => {
     setWithdrawAmount,
     setCurrentModal,
     inputValueInUSD,
+    withdrawToAnotherChain,
     setInputValueInUSD,
     setWithdrawToNetwork,
   } = useTxStore()
 
-  const [withdrawToAnotherChain, setWithdrawToAnotherChain] = useState(false)
-
   const [validationError, setValidationError] = useState('')
+
+  const { open: openConnectModal } = useAppKit()
 
   const maxBalance = mtToken?.stableBalance
     ? formatUnits(BigInt(mtToken?.stableBalance), mtToken?.decimals ?? 6)
@@ -115,102 +90,97 @@ export const WithdrawInput = () => {
 
   const prettyMaxBalance = formatValueWithPrecision(maxBalance, 5)
 
+  const assetData = mtToken
+    ? {
+        ...mtToken,
+        balance: BigInt(mtToken.balance),
+        contract_decimals: mtToken.decimals,
+        contract_ticker_symbol: mtToken.symbol,
+      }
+    : undefined
+
   return (
     <div>
-      <InputWrapper
-        title={mtToken ? 'You withdraw' : undefined}
-        validationError={validationError}
+      <div
+        className={cn(
+          'bg-input-default dark:bg-input-active py-6 px-8 max-lg:px-3 border-y border-stroke-100',
+          validationError && 'bg-input-error',
+        )}
       >
-        <div className="flex w-full items-center justify-between gap-2">
-          {mtToken ? (
-            <AmountInput
-              value={inputValue}
+        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
+          You withdraw
+        </span>
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <SwappableInputs
+              tokenValue={inputValue}
+              usdValue={inputValueInUSD}
+              onTokenValueChange={(value) => handleInputChange(value)}
+              onUsdValueChange={(value) => handleInputChange(value)}
               error={validationError}
-              decimals={6}
-              onChange={handleInputChange}
-              disabled={!isConnected || !mtToken}
+              asset={assetData}
+              onMaxClick={() => handleInputChange(prettyMaxBalance)}
+              tokenLabel={assetData?.stable}
+              rightElement={
+                isConnected ? (
+                  <SelectWithdrawAssetModal />
+                ) : (
+                  <SelectWithoutWalletPlaceholder />
+                )
+              }
             />
-          ) : (
-            <p className="text-md text-gray-100 max-lg:text-sm">
-              Select the desired asset...
-            </p>
-          )}
-
-          {isConnected ? (
-            <SelectWithdrawAssetModal />
-          ) : (
-            <SelectWithoutWalletPlaceholder />
-          )}
+          </div>
         </div>
-        {mtToken ? (
-          <div className="flex w-full items-center justify-between">
-            <DollarInput disabled value={inputValueInUSD} error={!!validationError} />
+        {validationError && (
+          <p className="mt-3 text-lg text-red-100">{validationError}</p>
+        )}
 
-            <div className="flex items-center">
-              <Wallet className="size-[1.375rem] overflow-visible max-lg:size-3" />
-              <p className="ml-2 text-lg/[0] text-gray-100 max-lg:text-xs">
-                {prettyMaxBalance}
-              </p>
-              <button
-                type="button"
-                className="ml-[0.62rem] font-bold uppercase text-main-100 transition-colors hover:text-main-50 max-lg:text-xs"
-                onClick={() => maxBalance && handleInputChange(prettyMaxBalance)}
-              >
-                Max
-              </button>
+        {mtToken && withdrawToAnotherChain && (
+          <InputWrapper
+            title="You will receive "
+            className="mt-3"
+            validationError={validationError}
+          >
+            <div className="flex w-full items-center justify-between">
+              <AmountInput
+                value={inputValue}
+                error={validationError}
+                decimals={6}
+                disabled
+              />
+
+              <SelectWithdrawNetworkModal />
             </div>
-          </div>
-        ) : null}
-      </InputWrapper>
+            <div className="mt-3 flex w-full items-center justify-between">
+              <DollarInput disabled value={inputValueInUSD} error={!!validationError} />
+            </div>
+          </InputWrapper>
+        )}
 
-      {mtToken && withdrawToAnotherChain && (
-        <InputWrapper
-          title="You will receive "
-          className="mt-3"
-          validationError={validationError}
-        >
-          <div className="flex w-full items-center justify-between">
-            <AmountInput
-              value={inputValue}
-              error={validationError}
-              decimals={6}
-              disabled
-            />
-
-            <SelectWithdrawNetworkModal />
-          </div>
-          <div className="mt-3 flex w-full items-center justify-between">
-            <DollarInput disabled value={inputValueInUSD} error={!!validationError} />
-          </div>
-        </InputWrapper>
-      )}
-
-      {validationError && (
-        <p className="mt-3 text-lg text-red-100 max-lg:text-xs">{validationError}</p>
-      )}
-
-      {mtToken && (
-        <div className="mt-3 flex items-start justify-between self-stretch rounded-2xl border border-stroke-100 p-6">
-          <span className="leading-[120%] text-text-80 lg:text-[1.1875rem]">
-            Withdraw to another chain
-          </span>
-          <Switch
-            checked={withdrawToAnotherChain}
-            onCheckedChange={setWithdrawToAnotherChain}
-          />
-        </div>
-      )}
-
-      {isConnected && (
-        <Button
-          size="lg"
-          disabled={!inputValue || !!validationError}
-          className="mt-10 w-full max-lg:mt-6"
-          onClick={handleReview}
-        >
-          Withdraw
-        </Button>
-      )}
+        {validationError && (
+          <p className="mt-3 text-lg text-red-100 max-lg:text-xs">{validationError}</p>
+        )}
+      </div>
+      <div className="flex flex-col items-center justify-center px-4 py-3">
+        {isConnected ? (
+          <Button
+            size="lg"
+            disabled={!inputValue || !!validationError}
+            className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+            onClick={handleReview}
+          >
+            Withdraw
+          </Button>
+        ) : (
+          <Button
+            size="lg"
+            className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+            onClick={() => openConnectModal({ view: 'Connect' })}
+          >
+            Connect Wallet
+          </Button>
+        )}
+      </div>
     </div>
   )
 }

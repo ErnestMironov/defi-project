@@ -1,51 +1,55 @@
+import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import Check from '@assets/icons/check.svg'
-import { TokenIconComponent } from '@components/token-icon'
-import { useTokenAsset } from '@hooks/common/useTokenAsset'
-import { formatAmount, formatTokenBalance } from '@utils/formatValue'
-
-import type { TokensListItemProperties } from '../types'
+import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
+import { formatAmountValue, formatTokenBalance } from '@utils/formatValue'
 
 export const TokensListItem = ({
-  onChange,
   token,
+  onChange,
   selected,
-}: TokensListItemProperties) => {
-  const chainData = useTokenAsset(token.chain_id)
+}: {
+  token: ITokenData
+  onChange: (token: ITokenData) => void
+  selected: boolean
+}) => {
+  console.log('TokensListItem received token:', token)
+
+  if (!token) return null
 
   return (
     <button
       type="button"
       onClick={() => onChange(token)}
-      className="flex w-full cursor-pointer items-center justify-between rounded-xl px-5 py-4 hover:bg-input-active max-lg:items-start"
+      className="flex w-full cursor-pointer items-center justify-between rounded-xl px-5 py-4 hover:bg-input-active"
     >
       <div className="flex items-center gap-[0.67rem]">
-        <TokenIconComponent
-          symbol={token.contract_ticker_symbol}
-          tokenLogoFallback={token.logo_url}
-          className="size-[2.66669rem] overflow-hidden rounded-full"
+        <TokenWithNetwork
+          symbol={token?.contract_ticker_symbol}
+          network={token?.chain_id}
+          tokenLogoFallback={token?.logo_url}
+          classNames={{
+            token: 'rounded-full overflow-hidden size-9',
+          }}
         />
-
-        <div className="flex flex-col items-start gap-[0.13rem] max-lg:items-start max-lg:text-left">
+        <div className="flex flex-col items-start gap-[0.13rem]">
           <p className="text-base/[1.5rem] text-text-1100">
-            {formatAmount(formatTokenBalance(token?.balance, token?.contract_decimals), {
-              maximumFractionDigits: token.contract_decimals > 6 ? 6 : 2,
-            })}{' '}
-            {token.contract_ticker_symbol}
+            {formatTokenBalance(
+              token?.balance || '0',
+              token?.contract_decimals || 0,
+              token?.contract_decimals <= 6 ? 2 : 5,
+            )}{' '}
+            {token?.contract_ticker_symbol?.toUpperCase() || ''}
           </p>
-          <div className="flex items-center gap-[0.22rem]">
-            <TokenIconComponent
-              symbol={chainData?.name}
-              className="size-4 overflow-hidden rounded"
-            />
-            <p className="text-[0.875rem]/[1rem] text-text-2100/60">{chainData?.name}</p>
-          </div>
+          <p className="text-[0.875rem]/[1rem] text-text-2100/60">
+            {token?.contract_name || ''}
+          </p>
         </div>
       </div>
       <div className="flex items-center justify-end gap-2">
         <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
           <p className="text-medium text-base text-text-1100">
             <span className="text-text-270">$</span>
-            {token?.balance_usd}
+            {formatAmountValue(token?.balance_usd || '0', 2)}
           </p>
         </div>
         {selected && <Check className="size-4" />}
