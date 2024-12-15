@@ -3,7 +3,6 @@ import CrossChainIcon from '@assets/icons/crosschain.svg'
 import { ShadowBox } from '@components/box/ShadowBox'
 import { Switch } from '@components/ui/switch'
 import { TX_TYPE } from '@constants/txTypes'
-import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import clsx from 'clsx'
 import { type ComponentProps } from 'react'
 
@@ -18,10 +17,8 @@ interface DepositBlockProperties extends ComponentProps<'div'> {}
 
 export const TransactionBlock = (props: DepositBlockProperties) => {
   const { className, ...rest } = props
-  const { txType, withdrawToAnotherChain, setWithdrawToAnotherChain, mtToken } =
+  const { txType, withdrawToAnotherChain, setWithdrawToAnotherChain, inputError } =
     useTxStore()
-
-  const { isBelowDesktop } = useDeviceWidth()
 
   useGetSwapRoute()
   useSetDepositDetails()
@@ -29,7 +26,8 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
   return (
     <div
       className={clsx(
-        'gradient-border-animated relative flex w-full flex-col rounded-3xl pt-4 shadow-block max-lg:gap-6 max-lg:p-4',
+        'gradient-border relative flex w-full flex-col rounded-3xl pt-4 max-lg:gap-6 max-lg:p-4',
+        inputError && 'error',
         className,
       )}
       {...rest}

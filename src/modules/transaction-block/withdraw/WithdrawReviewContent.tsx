@@ -1,17 +1,14 @@
-import WithdrawIcon from '@assets/icons/withdraw.svg'
-import { TokenIconComponent } from '@components/token-icon'
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import BigNumber from 'bignumber.js'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { parseUnits } from 'viem'
+import { useAccount } from 'wagmi'
 
 import { TxReviewInfo } from '../components/TxReviewInfo'
-import { WizardDropDown } from '../components/WizardDropDown'
-import { WizardStep } from '../components/WizardStep'
 import { useApproveERC20 } from '../deposit/hooks/useApproveERC20'
 import { useSwitchToTokenChain } from '../deposit/hooks/useSwitchToTokenChain'
+import { useTransactionAnimation } from '../hooks/useTransactionAnimation'
 import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { getButtonContent } from '../utils/getButtonText'
@@ -33,9 +30,7 @@ export const WithdrawReviewContent = ({
     setCurrentStep,
   } = useTxStore()
 
-  const [isOpen, setIsOpen] = useState(false)
-
-  const { isBelowDesktop } = useDeviceWidth()
+  const { address } = useAccount()
 
   const inputValueInMtToken = useMemo(() => {
     const parsedAmount = parseUnits(amount, mtToken?.decimals ?? 6)
@@ -57,7 +52,6 @@ export const WithdrawReviewContent = ({
 
     return inputValueBN.multipliedBy(lpBalanceBN).div(balanceBN).toFixed(0)
   }, [amount, mtToken?.balance, mtToken?.decimals, mtToken?.stableBalance])
-  console.log('🚀 ~ inputValueInMtToken ~ inputValueInMtToken:', inputValueInMtToken)
 
   const { status: switchStatus, switchChain } = useSwitchToTokenChain({
     chainId: mtToken?.chainData?.chainId ?? 1,
@@ -101,7 +95,7 @@ export const WithdrawReviewContent = ({
       )
     }
   }, [approveError, withdrawError, switchStatus, setIntermediateError])
-  const ActionButton = useMemo(() => {
+  const ActionButton: React.FC<{ className?: string }> = ({ className = '' }) => {
     function handleTryAgain(callback: () => void) {
       setIntermediateError(null)
       callback()
@@ -114,7 +108,7 @@ export const WithdrawReviewContent = ({
             disabled={switchStatus === 'confirm_in_wallet'}
             size="lg"
             type="button"
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             onClick={() => handleTryAgain(switchChain)}
           >
             {getButtonContent(
@@ -134,7 +128,7 @@ export const WithdrawReviewContent = ({
             loading={approveStatus === 'pending'}
             size="lg"
             type="button"
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             disabled={approveStatus === 'confirm_in_wallet'}
             onClick={() => handleTryAgain(approve)}
           >
@@ -149,7 +143,7 @@ export const WithdrawReviewContent = ({
             size="lg"
             type="button"
             disabled={withdrawStatus === 'pending' || withdrawStatus === 'success'}
-            className="rounded-2xl max-lg:py-6"
+            className={className}
             onClick={() => handleTryAgain(withdraw)}
           >
             {getButtonContent(withdrawStatus, 'Withdraw')}
@@ -160,18 +154,7 @@ export const WithdrawReviewContent = ({
         throw new Error('unknown action type')
       }
     }
-  }, [
-    currentStep,
-    setIntermediateError,
-    switchStatus,
-    mtToken?.chainData?.chainId,
-    mtToken?.symbol,
-    switchChain,
-    approveStatus,
-    approve,
-    withdrawStatus,
-    withdraw,
-  ])
+  }
 
   const isCrossChain = withdrawFromNetwork !== withdrawToNetwork
 
@@ -180,7 +163,7 @@ export const WithdrawReviewContent = ({
       case true: {
         return (
           <TxReviewInfo
-            recipient={{ label: 'Recipient', value: 'recipient_address_here' }}
+            recipient={{ label: 'Recipient', value: address ?? '' }}
             chain={withdrawFromNetwork ?? 1}
             withdraw={{
               label: 'Withdraw',
@@ -206,7 +189,7 @@ export const WithdrawReviewContent = ({
       case false: {
         return (
           <TxReviewInfo
-            recipient={{ label: 'Recipient', value: 'recipient_address_here' }}
+            recipient={{ label: 'Recipient', value: address ?? '' }}
             chain={withdrawFromNetwork ?? 1}
             withdraw={{
               label: 'Withdraw',
@@ -235,48 +218,16 @@ export const WithdrawReviewContent = ({
     }
   }
 
+  const TransactionAnimation = useTransactionAnimation()
+
   return (
-    <div className="flex flex-col items-stretch gap-8">
-      <div className="flex flex-col items-stretch gap-8 lg:px-8">
-        <WithdrawInfo />
+    <>
+      <TransactionAnimation />
+      <WithdrawInfo />
 
-        {!isBelowDesktop && ActionButton}
+      <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">
+        <ActionButton className="w-full px-[1.875rem] py-4 text-base font-medium normal-case leading-6" />
       </div>
-
-      <div className="border-stroke-100 lg:border-t lg:px-8 lg:pt-7">
-        <WizardDropDown open={isOpen} setOpen={setIsOpen} activeStep={currentStep}>
-          <WizardStep
-            icon={
-              <TokenIconComponent width="2.625rem" symbol={mtToken?.chainData?.chainId} />
-            }
-            title={`Switch network to ${
-              CHAIN_NAMES_BY_ID[
-                mtToken?.chainData?.chainId as keyof typeof CHAIN_NAMES_BY_ID
-              ]
-            }`}
-            status={allStepsCompleted ? 'success' : switchStatus}
-            stepNumber={1}
-            maxStepNumber={3}
-          />
-          <WizardStep
-            icon={<TokenIconComponent symbol={mtToken?.stable} width="2rem" />}
-            title={`Approve ${mtToken?.stable.toUpperCase()} spending`}
-            status={allStepsCompleted ? 'success' : approveStatus}
-            stepNumber={2}
-            maxStepNumber={3}
-            isDDOpen={isOpen}
-          />
-          <WizardStep
-            icon={<WithdrawIcon className="size-[2.625rem]" />}
-            title={`Withdraw ${mtToken?.stable.toUpperCase()}`}
-            status={withdrawStatus}
-            stepNumber={3}
-            maxStepNumber={3}
-            isDDOpen={isOpen}
-          />
-        </WizardDropDown>
-      </div>
-      {isBelowDesktop && ActionButton}
-    </div>
+    </>
   )
 }
