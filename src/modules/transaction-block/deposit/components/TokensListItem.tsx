@@ -1,7 +1,7 @@
 import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import Check from '@assets/icons/check.svg'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
-import { formatAmount, formatAmountValue } from '@utils/formatValue'
+import { formatAmountValue, formatTokenBalance } from '@utils/formatValue'
 
 export const TokensListItem = ({
   token,
@@ -33,9 +33,11 @@ export const TokensListItem = ({
         />
         <div className="flex flex-col items-start gap-[0.13rem]">
           <p className="text-base/[1.5rem] text-text-1100">
-            {formatAmount(token?.balance || '0', {
-              maximumFractionDigits: 2,
-            })}{' '}
+            {formatTokenBalance(
+              token?.balance || '0',
+              token?.contract_decimals || 0,
+              token?.contract_decimals <= 6 ? 2 : 5,
+            )}{' '}
             {token?.contract_ticker_symbol?.toUpperCase() || ''}
           </p>
           <p className="text-[0.875rem]/[1rem] text-text-2100/60">

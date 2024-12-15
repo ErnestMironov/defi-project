@@ -90,19 +90,30 @@ export const SelectWithdrawAssetModal = () => {
   const balances = useMemo(() => {
     if (!shares) return {}
 
-    return shares
+    const uniqueTokens = shares
       .filter((token) => token.balance > 999_999)
-      .reduce(
-        (accumulator, token) => {
-          const chainId = token.chainId.toString()
-          if (!accumulator[chainId]) {
-            accumulator[chainId] = []
-          }
-          accumulator[chainId].push(token)
-          return accumulator
-        },
-        {} as Record<string, TokenShares[]>,
-      )
+      .reduce((map, token) => {
+        const key = `${token.chainId}-${token.address}`
+        const existing = map.get(key)
+
+        if (!existing || token.balance > existing.balance) {
+          map.set(key, token)
+        }
+
+        return map
+      }, new Map<string, TokenShares>())
+
+    return Array.from(uniqueTokens.values()).reduce(
+      (accumulator, token) => {
+        const chainId = token.chainId.toString()
+        if (!accumulator[chainId]) {
+          accumulator[chainId] = []
+        }
+        accumulator[chainId].push(token)
+        return accumulator
+      },
+      {} as Record<string, TokenShares[]>,
+    )
   }, [shares])
 
   const onChange = (_asset: UseGetMTokenInfoReturn | null) => {
@@ -160,15 +171,13 @@ export const SelectWithdrawAssetModal = () => {
       )}
       renderItem={(token, onItemChange) => (
         <WithdrawAssetItem
-          key={token?.chainId}
+          key={`${token?.chainId}-${token?.address}`}
           token={token}
           selected={
-            String(mtToken?.chainId) + String(mtToken?.stable) ===
-            String(token?.chainId) + String(token?.stable)
+            String(mtToken?.chainId) + String(mtToken?.address) ===
+            String(token?.chainId) + String(token?.address)
           }
           onChange={(value) => {
-            console.log('🚀 ~ onChange ~ value:', value)
-            console.log('🚀 ~ onChange ~ onItemChange:', onItemChange)
             onItemChange(value)
           }}
         />
