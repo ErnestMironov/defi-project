@@ -249,3 +249,58 @@ export type UserPointsResponse = {
   rewardsPerStaking: number
   rewardsPerActivity: number
 }
+
+export interface BenefitsDescription {
+  level: number
+  ref_codes: number
+  nft_bonus: null | string
+  other_benefits: null | string
+  incentives: null | string
+}
+
+export interface Benefits {
+  globalRewardMultiplier: number
+  rewardsPerActivity: number
+  currentRewardMultiplier: number
+  initialBonus: number
+  firstTimeStakeBonus: number
+  rewardsFromReferrals: number
+  benefitsDescription: BenefitsDescription
+}
+
+export interface UserRewards {
+  userId: `0x${string}`
+  totalPoints: number
+  rewardsPerStaking: number
+  currentRewardMultiplier: number
+  initialBonus: number
+  firstTimeStakeBonus: number
+  rewardsFromReferrals: number
+}
+
+export interface CurrentLevel {
+  name: string
+  description: string
+  level: number
+  benefits: Benefits
+}
+
+export interface NextLevel {
+  name: string
+  description: string
+  pointsToNextLevel: number
+  requirementsCompletedPercentage: number
+  nextLvlBenefits: Benefits
+}
+
+export interface UserBadgesInfo {
+  userRewards: UserRewards
+  currentLvl: CurrentLevel
+  nextLvl: NextLevel
+}
+
+export interface UserBadgesResponse {
+  currentLvl: CurrentLevel
+  userRewards: UserRewards
+  nextLvl: NextLevel
+}

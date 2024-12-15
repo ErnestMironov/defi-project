@@ -20,7 +20,7 @@ interface Item {
 
 function getUsersPoints({ page, size }: { page?: number; size?: number }) {
   return apiClient.get<GetUsersPointsResponse>(
-    `rewards/info/users?page=${page}&size=${size}`,
+    `rewards/rewards/leaderboard?sort_by_rewards=desc&page=${page}&page_size=${size}`,
   )
 }
 
