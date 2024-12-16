@@ -4,10 +4,10 @@ import { IncentivesHistory } from '@pages/strategies/transactions/IncentivesHist
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
-import { AdminTable } from './admin/AdminTable'
+import { AdminActions } from './admin/AdminActions'
 import { AdminActionMobileWithFilters } from './admin/mobile/AdminActionMobileWithFilters'
 import { ReportActionMobileWithFilters } from './reports/mobile/ReportActionMobileWithFilters'
-import { ReportsTable } from './reports/ReportsTable'
+import { ReportActions } from './reports/ReportActions'
 
 interface SystemActionsProperties extends ComponentProps<'div'> {}
 
@@ -16,7 +16,7 @@ export const SystemActions = (props: SystemActionsProperties) => {
   return (
     <section className={cn('', className)} {...rest}>
       <Tabs defaultValue="admin">
-        <TabsList className="w-full justify-start gap-5 rounded-none border-b border-stroke-100 px-8 *:mb-[-0.05rem] *:py-3 *:text-sm">
+        <TabsList className="w-full justify-start gap-5 rounded-none border-b border-stroke-100 px-8 *:mb-[-0.05rem] *:py-3 *:text-sm max-lg:gap-5 max-lg:px-4">
           <TabsTrigger value="admin" variant="underline">
             Admin
           </TabsTrigger>
@@ -27,14 +27,14 @@ export const SystemActions = (props: SystemActionsProperties) => {
             Reports
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="admin" >
-          <AdminTable />
+        <TabsContent value="admin">
+          <AdminActions />
         </TabsContent>
-        <TabsContent value="incentives" >
+        <TabsContent value="incentives">
           <IncentivesHistory />
         </TabsContent>
-        <TabsContent value="reports" >
-          <ReportsTable />
+        <TabsContent value="reports">
+          <ReportActions />
         </TabsContent>
       </Tabs>
     </section>

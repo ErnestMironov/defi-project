@@ -37,13 +37,13 @@ export const SORT_BY_APY: OptionType[] = [
 ]
 
 export const SORT_BY_AMOUNT: OptionType[] = [
-  { label: 'Highest Amount', value: 'Highest Amount' },
-  { label: 'Lowest Amount', value: 'Lowest Amount' },
+  { label: 'Highest Amount', value: 'Highest Amount', Icon: StairsUp },
+  { label: 'Lowest Amount', value: 'Lowest Amount', Icon: StairsDown },
 ]
 
 export const SORT_BY_DATE: OptionType[] = [
-  { label: 'Created earlier', value: 'Created earlier' },
-  { label: 'Created later', value: 'Created later' },
+  { label: 'Created earlier', value: 'Created earlier', Icon: StairsUp },
+  { label: 'Created later', value: 'Created later', Icon: StairsDown },
 ]
 
 export const SORT_BY_TVL: OptionType[] = [

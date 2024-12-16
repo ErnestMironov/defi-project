@@ -40,7 +40,7 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
       <TransactionInfoHeader title="Deposit to Strategy" tags={tags} action={data} />
       <div
         className={cn(
-          'grid grid-cols-6 max-lg:grid-cols-1 max-lg:gap-[0.38rem]',
+          'grid grid-cols-6 max-lg:grid-cols-2',
           'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
         )}
       >
@@ -49,7 +49,7 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
           chainId={data?.src_chain_id}
           className="col-span-3"
         />
-        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center" />
+        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center max-lg:hidden" />
         <TokenAmount
           value={formatUnits(
             BigInt(data?.amount ?? 0),
@@ -60,7 +60,7 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
             BigInt(data?.amount ?? 0),
             data?.strategy?.token?.decimals ?? 6,
           )}
-          className="col-span-3"
+          className="max-lg:order-last lg:col-span-3"
         />
         <Strategy
           symbols={[
@@ -68,10 +68,10 @@ export const DepositToStrategy = (props: DepositToStrategyProperties) => {
             CHAIN_NAMES_BY_ID[data?.src_chain_id as keyof typeof CHAIN_NAMES_BY_ID] ?? '',
             data?.strategy?.protocol ?? '',
           ]}
-          className="col-span-3"
+          className="col-span-3 max-lg:col-span-2"
         />
         <Chain value={chainData?.name} className="col-span-3" />
-        <Timestamp value={data?.creation_time} className="col-span-3" />
+        <Timestamp value={data?.creation_time} className="lg:col-span-3" />
       </div>
     </TransactionInfoContainer>
   )

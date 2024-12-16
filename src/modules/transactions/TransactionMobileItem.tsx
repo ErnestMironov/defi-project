@@ -1,11 +1,8 @@
 import type { Event } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
-import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
+import Dots from '@assets/icons/options-dots.svg'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { ACTION_TYPE } from '@constants/action-type'
-import { STATUS_COLOR } from '@constants/status-color'
 import { ROUTES } from '@routes/routes'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
@@ -15,6 +12,9 @@ import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { ActionTypeComponent } from './actions/ActionType'
+import { StatusChip } from './status/StatusChip'
+
 interface TransactionMobileItemProperties extends ComponentProps<'div'> {
   event: Event
 }
@@ -23,21 +23,17 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
   const { event } = props
   const navigate = useNavigate()
   return (
-    <div onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.hash}`)}>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
-        {ACTION_TYPE[event.action_type as keyof typeof ACTION_TYPE]}
-      </div>
-      <div className="mt-4 flex items-center gap-3 text-gray-100">
-        <span
-          className="capitalize"
-          style={{ color: STATUS_COLOR[event.status as keyof typeof STATUS_COLOR] }}
-        >
-          {event.status}
+    <div
+      className="px-4 py-3"
+      onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.hash}`)}
+    >
+      <div className="flex items-start justify-between">
+        <ActionTypeComponent tx={event} />
+        <span className="text-sm text-text-2100">
+          {getFromNow(dayjs(event.creation_time).toString())}
         </span>
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <span>{getFromNow(dayjs(event.creation_time).toString())}</span>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
         {event.amount && (
           <>
             <h6>Amount</h6>
@@ -58,25 +54,24 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
             </div>
           </>
         )}
-        <h6>Chain</h6>
+        <h6 className="w-fit">Chain</h6>
         {event.dst_chain_id ? (
           <div className="flex items-center gap-2">
-            <TokenIconComponent symbol={event.src_chain_id} className="size-6" />
+            <TokenIconComponent symbol={event.src_chain_id} />
             <Arrow />
-            <TokenIconComponent symbol={event.dst_chain_id} className="size-6" />
+            <TokenIconComponent symbol={event.dst_chain_id} />
           </div>
         ) : (
-          <IconWithLabelComponent symbol={event.src_chain_id} className="size-6" />
+          <IconWithLabelComponent symbol={event.src_chain_id} />
         )}
-        <h6>Tx Hash</h6>
+        <h6>Status</h6>
+        <StatusChip tx={event} />
+        <h6>From</h6>
         <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenAddress(event.hash)}</p>
-          <ScanLink
-            chainId={event.src_chain_id}
-            txHash={event.hash}
-            className="size-5 shrink-0"
-          />
-          <CopyButton text={event.hash} className="size-6 shrink-0" />
+          <p>{shortenAddress(event.txFrom)}</p>
+          <div className="flex items-center justify-center rounded-lg border border-stroke-100 p-[0.38rem]">
+            <Dots className="size-[0.8125rem] shrink-0" />
+          </div>
         </div>
       </div>
     </div>

@@ -1,22 +1,18 @@
 import type { IncentiveEvent } from '@api/maat-finance/types'
-import CheckSquare from '@assets/icons/check-square.svg'
 import CompounderIcon from '@assets/icons/compounder.svg'
-import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Skeleton } from '@components/ui/skeleton'
-import { INCENTIVE_ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 
 import { IncentiveRowOptions } from './EventRowOptions'
+import { IncentiveActionTypeComponent } from './IncentiveActionType'
 
 interface IncentiveRowProperties extends ComponentProps<'div'> {
   event: IncentiveEvent
@@ -49,27 +45,7 @@ export const IncentiveRow = (props: IncentiveRowProperties) => {
   return (
     <Table.Row className="group">
       <Table.Cell>
-        <div className="flex items-center gap-4">
-          <CheckSquare className="size-8 shrink-0" />
-          <div>
-            <p className="leading-4">
-              {
-                INCENTIVE_ACTION_TYPE[
-                  event.action_type as keyof typeof INCENTIVE_ACTION_TYPE
-                ]
-              }
-            </p>
-            <div className="flex items-center gap-[0.38rem]">
-              <p className="text-text-2100">{shortenAddress(event.hash)}</p>
-              <CopyButton text={event.hash} />
-              <ScanLink
-                chainId={event.src_chain_id}
-                txHash={event.hash}
-                className="size-4 shrink-0"
-              />
-            </div>
-          </div>
-        </div>
+        <IncentiveActionTypeComponent event={event} />
       </Table.Cell>
       <Table.Cell>{renderAmount()}</Table.Cell>
       <Table.Cell className="capitalize">

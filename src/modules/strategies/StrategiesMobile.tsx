@@ -128,10 +128,10 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
   return (
     <>
       <BaseContainer {...props} className={cn('overflow-hidden rounded-2xl', className)}>
-        <div className="flex items-center gap-2 border-b border-stroke-100 pr-4">
+        <div className="flex items-center gap-4 border-b border-stroke-100 pr-4">
           <div className="flex-1 border-r border-stroke-100">
             <SearchInput
-              placeholder="Address / ID "
+              placeholder="Address / ID"
               classNames={{
                 container: 'bg-input-default border-none py-[0.81rem] px-4',
                 input: 'mx-2',
@@ -164,13 +164,11 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
               <h6 className="mb-3 text-sm text-text-2100">Sorting</h6>
               <BaseContainer className="rounded-2xl p-1">
                 <MobileRadioSelect
-                  label=""
                   options={SORT_BY_APY}
                   value={selectedSort}
                   onChange={setSelectedSort}
                 />
                 <MobileRadioSelect
-                  label=""
                   options={SORT_BY_TVL}
                   value={selectedSort}
                   onChange={setSelectedSort}

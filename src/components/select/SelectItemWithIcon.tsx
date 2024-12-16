@@ -46,7 +46,7 @@ export const SelectStatusWithIcon = ({ status }: { status: string }) => {
           className="absolute inset-0 size-full rounded-md opacity-15"
           style={{ backgroundColor: _color }}
         />
-        {_status}
+        {_status === 'success' ? 'Completed' : _status}
       </div>
     )
   }

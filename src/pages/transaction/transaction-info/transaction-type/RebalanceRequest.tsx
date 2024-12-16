@@ -39,16 +39,16 @@ export const RebalanceRequest = (props: RebalanceRequestProperties) => {
       <TransactionInfoHeader title="Rebalance request" tags={tags} action={data} />
       <div
         className={cn(
-          'grid grid-cols-6 max-lg:grid-cols-1',
+          'grid grid-cols-6 max-lg:grid-cols-2',
           'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
         )}
       >
         <TransactionHash
           value={data?.hash}
-          className="col-span-3"
+          className="col-span-3 max-lg:hidden"
           chainId={data?.src_chain_id}
         />
-        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center" />
+        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center max-lg:hidden" />
         <TokenAmount
           value={formatUnits(
             BigInt(data?.amount ?? 0),
@@ -59,11 +59,17 @@ export const RebalanceRequest = (props: RebalanceRequestProperties) => {
             BigInt(data?.amount ?? 0),
             data?.vault?.token?.decimals ?? 6,
           )}
-          className="col-span-3"
+          className="lg:col-span-3"
         />
-        <Vault value={data?.vault?.token?.symbol ?? ''} className="col-span-3" />
-        <Chain value={chainData?.name ?? ''} className="col-span-3" />
-        <Timestamp value={data?.creation_time} className="col-span-3" />
+        <Vault
+          value={data?.vault?.token?.symbol ?? ''}
+          className="max-lg:order-first lg:col-span-3"
+        />
+        <Chain value={chainData?.name ?? ''} className="max-lg:hidden lg:col-span-3" />
+        <Timestamp
+          value={data?.creation_time}
+          className="max-lg:col-span-2 lg:col-span-3"
+        />
       </div>
     </TransactionInfoContainer>
   )

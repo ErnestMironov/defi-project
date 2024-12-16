@@ -5,7 +5,7 @@ import { Skeleton } from '@components/ui/skeleton'
 import { ACTION_TYPE } from '@constants/action-type'
 import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
-import type { ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 
 import BridgeIcon from './icons/bridge.svg'
 import DepositIcon from './icons/deposit.svg'
@@ -51,22 +51,27 @@ const getIcon = (actionType: Event['action_type']) => {
 
 interface ActionTypeProperties extends ComponentProps<'div'> {
   tx: Event | Action
+  withTxHash?: boolean
 }
 
-export const ActionType = (props: ActionTypeProperties) => {
-  const { className, tx, ...rest } = props
+export const ActionTypeComponent = (props: ActionTypeProperties) => {
+  const { className, tx, withTxHash = true, ...rest } = props
   const Icon = getIcon(tx.action_type) || DepositInStrategyIcon
-
   // Split the action type text into first word and rest
   const actionText = ACTION_TYPE[tx.action_type as keyof typeof ACTION_TYPE]
   const [firstWord, ...restWords] = actionText.split(' ')
 
   return (
-    <div className={cn('flex items-center gap-4', className)} {...rest}>
+    <div className={cn('flex items-center gap-4 max-lg:gap-2', className)} {...rest}>
       <Icon className="size-8 shrink-0" />
       <div>
         <div className="flex items-center gap-[0.38rem]">
-          <p className="text-base/[1.5rem] text-text-2100 first:text-text-1100">
+          <p
+            className={cn(
+              'text-base/[1.5rem] text-text-2100 first:text-text-1100 max-lg:text-sm',
+              !withTxHash && 'max-lg:text-base/[1.5rem]',
+            )}
+          >
             {firstWord}
             {restWords.map((word) => (
               <span className="ml-1 text-text-260" key={word}>
@@ -74,13 +79,18 @@ export const ActionType = (props: ActionTypeProperties) => {
               </span>
             ))}
           </p>
-          <ScanLink chainId={tx.src_chain_id} txHash={tx.hash} className="shrink-0" />
+          <ScanLink
+            chainId={tx.src_chain_id}
+            txHash={tx.hash}
+            className="shrink-0 max-lg:hidden"
+          />
         </div>
-
-        <p className="flex items-center gap-[0.38rem] text-sm text-text-260">
-          <span>{shortenAddress(tx.hash)}</span>
-          <CopyButton className="size-3.5" text={tx.hash} />
-        </p>
+        {withTxHash && (
+          <div className="flex items-center gap-[0.38rem] text-sm text-text-260">
+            <span>{shortenAddress(tx.hash)}</span>
+            <CopyButton className="size-3.5" text={tx.hash} />
+          </div>
+        )}
       </div>
     </div>
   )
@@ -89,13 +99,13 @@ export const ActionType = (props: ActionTypeProperties) => {
 export const ActionTypeSkeleton = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
   return (
-    <div className={cn('flex items-center gap-4', className)} {...rest}>
+    <div className={cn('flex items-center gap-4 max-lg:h-[3rem]', className)} {...rest}>
       <Skeleton className="size-8 shrink-0" />
       <div className="space-y-1">
         <div className="flex items-center gap-[0.38rem]">
-          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-4 w-40 max-lg:h-5 max-lg:w-32" />
         </div>
-        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-20 max-lg:hidden" />
       </div>
     </div>
   )

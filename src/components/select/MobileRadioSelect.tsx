@@ -7,7 +7,7 @@ import type { OptionType } from './Select'
 interface MobileRadioSelectProperties extends Omit<ComponentProps<'div'>, 'onChange'> {
   options: OptionType[]
   onChange: (option: OptionType) => void
-  label: string
+  label?: string
   value?: OptionType
 }
 

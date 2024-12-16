@@ -20,15 +20,10 @@ interface TransactionInfoProperties extends ComponentProps<'div'> {
   type?: LAST_EVENT_ACTION
   data?: Action
   withoutRelated?: boolean
-  isLoading?: boolean
 }
 
 export const TransactionInfo = (props: TransactionInfoProperties) => {
-  const { className, type, data, withoutRelated, isLoading, ...rest } = props
-
-  if (isLoading) {
-    return <TransactionInfoSkeleton />
-  }
+  const { className, type, data, withoutRelated, ...rest } = props
 
   if (type === 'DEPOSIT') {
     return (
@@ -108,41 +103,44 @@ export const TransactionInfo = (props: TransactionInfoProperties) => {
   return <></>
 }
 
-const TransactionInfoSkeleton = (props: ComponentProps<'div'>) => {
+export const TransactionInfoSkeletonDesktop = (props: ComponentProps<'div'>) => {
   const { className, ...rest } = props
   return (
     <TransactionInfoContainer className={className} {...rest}>
-      <TransactionInfoHeaderSkeleton />
+      <TransactionInfoHeaderSkeleton variant="desktop" />
       <div
         className={cn(
-          'grid grid-cols-6 max-lg:grid-cols-1 max-lg:gap-[0.38rem]',
+          'grid grid-cols-6',
           '*:col-span-3 border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
         )}
       >
-        <LabelValueContainer>
-          <Skeleton className="h-[1.8rem] w-40" />
-          <Skeleton className="h-[1.8rem] w-40" />
-        </LabelValueContainer>
-        <LabelValueContainer>
-          <Skeleton className="h-[1.8rem] w-40" />
-          <Skeleton className="h-[1.8rem] w-40" />
-        </LabelValueContainer>
-        <LabelValueContainer>
-          <Skeleton className="h-[1.8rem] w-40" />
-          <Skeleton className="h-[1.8rem] w-40" />
-        </LabelValueContainer>
-        <LabelValueContainer>
-          <Skeleton className="h-[1.8rem] w-40" />
-          <Skeleton className="h-[1.8rem] w-40" />
-        </LabelValueContainer>
-        <LabelValueContainer>
-          <Skeleton className="h-[1.8rem] w-40" />
-          <Skeleton className="h-[1.8rem] w-40" />
-        </LabelValueContainer>
-        <LabelValueContainer>
-          <Skeleton className="h-[1.8rem] w-40" />
-          <Skeleton className="h-[1.8rem] w-40" />
-        </LabelValueContainer>
+        {Array.from({ length: 6 }).map((_, index) => (
+          <LabelValueContainer key={index}>
+            <Skeleton className="h-[1.8rem] w-40" />
+            <Skeleton className="h-[1.8rem] w-40" />
+          </LabelValueContainer>
+        ))}
+      </div>
+    </TransactionInfoContainer>
+  )
+}
+export const TransactionInfoSkeletonMobile = (props: ComponentProps<'div'>) => {
+  const { className, ...rest } = props
+  return (
+    <TransactionInfoContainer className={className} {...rest}>
+      <TransactionInfoHeaderSkeleton variant="mobile" />
+      <div
+        className={cn(
+          'grid grid-cols-2',
+          'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
+        )}
+      >
+        {Array.from({ length: 3 }).map((_, index) => (
+          <LabelValueContainer key={index} className="[&>div]:last-of-type:w-40">
+            <Skeleton className="h-[1.4rem] w-24" />
+            <Skeleton className="h-[1.4rem] w-24" />
+          </LabelValueContainer>
+        ))}
       </div>
     </TransactionInfoContainer>
   )

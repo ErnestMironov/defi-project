@@ -7,7 +7,7 @@ export const TransactionInfoContainer = (props: ComponentProps<'div'>) => {
   return (
     <BaseContainer
       className={cn(
-        'divide-y divide-stroke-100 rounded-[1.75rem] max-lg:py-5 max-lg:px-4',
+        'divide-y divide-stroke-100 rounded-[1.75rem] max-lg:rounded-[1rem] overflow-hidden',
         className,
       )}
       {...rest}

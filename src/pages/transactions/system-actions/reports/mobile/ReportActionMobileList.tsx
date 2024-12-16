@@ -46,10 +46,7 @@ export const ReportActionMobileList = (props: ReportActionMobileListProperties) 
 
   return (
     <div
-      className={cn(
-        'rounded-3xl bg-cards px-5 py-6 [&>*:not(:first-child)]:pt-6 [&>*:not(:last-child)]:border-b [&>*:not(:last-child)]:border-gray-50 [&>*:not(:last-child)]:pb-6',
-        className,
-      )}
+      className={cn('[&>*:not(:last-child)]:border-b border-stroke-100', className)}
       {...rest}
     >
       {renderBody()}

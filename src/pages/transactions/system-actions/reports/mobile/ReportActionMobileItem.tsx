@@ -1,14 +1,13 @@
 import type { ReportType } from '@api/maat-finance/types'
-import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
+import Dots from '@assets/icons/options-dots.svg'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
+
+import { ReportActionType } from '../ReportActionType'
 
 interface ReportActionMobileItemProperties extends ComponentProps<'div'> {
   report: ReportType
@@ -17,33 +16,27 @@ interface ReportActionMobileItemProperties extends ComponentProps<'div'> {
 export const ReportActionMobileItem = (props: ReportActionMobileItemProperties) => {
   const { report } = props
   return (
-    <div>
-      <div className="flex items-center gap-3 text-gray-100">
-        <span>{SYSTEM_ADDRESSES[report.txFrom as keyof typeof SYSTEM_ADDRESSES]}</span>
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <span>{getFromNow(report.creation_time)}</span>
+    <div className="px-4 py-3">
+      <div className="flex items-start justify-between">
+        <ReportActionType report={report} />
+        <span className="text-sm text-text-2100">{getFromNow(report.creation_time)}</span>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
         <h6>Token</h6>
-        <IconWithLabelComponent symbol={report.vault.token.symbol} className="size-6" />
-        <h6>PPS</h6>
-        <p>
-          {formatAmount(formatUnits(BigInt(report.price_per_share), 8), {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 3,
-          })}
-        </p>
+        <IconWithLabelComponent symbol={report.vault.token.symbol} />
         <h6>Chain</h6>
-        <IconWithLabelComponent className="size-6" symbol={report.vault.chain_id} />
-        <h6>Tx Hash</h6>
-        <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenAddress(report.hash)}</p>
-          <ScanLink
-            chainId={report.vault.chain_id}
-            txHash={report.hash}
-            className="size-5 shrink-0"
-          />
-          <CopyButton text={report.hash} className="size-6 shrink-0" />
+        <IconWithLabelComponent symbol={report.vault.chain_id} />
+        <h6>PPS</h6>
+        <div className="flex items-center justify-end gap-2">
+          <p>
+            {formatAmount(formatUnits(BigInt(report.price_per_share), 8), {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 3,
+            })}
+          </p>
+          <div className="flex items-center justify-center rounded-lg border border-stroke-100 p-[0.38rem]">
+            <Dots className="size-[0.8125rem] shrink-0" />
+          </div>
         </div>
       </div>
     </div>

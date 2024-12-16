@@ -1,13 +1,11 @@
 /* eslint-disable sonarjs/no-small-switch */
 import type { IncentiveEvent } from '@api/maat-finance/types'
-import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
+import CompounderIcon from '@assets/icons/compounder.svg'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { INCENTIVE_ACTION_TYPE } from '@constants/action-type'
+import { IncentiveActionTypeComponent } from '@modules/transaction-history/incentives/IncentiveActionType'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
@@ -26,43 +24,38 @@ export const IncentiveMobileItem = (props: IncentiveMobileItemProperties) => {
     const token = incentive.token_in || incentive.token_out
     if (amount && token) {
       return (
-        <div className="flex items-center gap-2">
-          <span>
-            {formatAmount(formatUnits(BigInt(amount), token.decimals), {
-              notation: 'compact',
-              maximumFractionDigits: 4,
-            })}
-          </span>
-          <IconWithLabelComponent symbol={token.symbol} className="size-6" />
-        </div>
+        <>
+          <h6>Amount</h6>
+          <div className="flex items-center gap-2">
+            <span>
+              {formatAmount(formatUnits(BigInt(amount), token.decimals), {
+                notation: 'compact',
+                maximumFractionDigits: 4,
+              })}
+            </span>
+            <IconWithLabelComponent symbol={token.symbol} />
+          </div>
+        </>
       )
     }
-    return <div>-</div>
   }
+
   return (
-    <div>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
-        {INCENTIVE_ACTION_TYPE[incentive.action_type]}
+    <div className="px-4 py-3">
+      <div className="flex items-start justify-between">
+        <IncentiveActionTypeComponent event={incentive} />
+        <span className="text-sm text-text-2100">
+          {getFromNow(dayjs(incentive.creation_time).toString())}
+        </span>
       </div>
-      <div className="mt-4 flex items-center gap-3 text-gray-100">
-        <span>Vault</span>
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <span>{getFromNow(dayjs(incentive.creation_time).toString())}</span>
-      </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
-        <h6>Amount</h6>
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
         {renderAmount()}
         <h6>Chain</h6>
-        <IconWithLabelComponent symbol={chainId} className="size-6" />
-        <h6>Tx Hash</h6>
-        <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenAddress(incentive.hash)}</p>
-          <ScanLink
-            chainId={incentive.src_chain_id}
-            txHash={incentive.hash}
-            className="size-5 shrink-0"
-          />
-          <CopyButton text={incentive.hash} className="size-6 shrink-0" />
+        <IconWithLabelComponent symbol={chainId} />
+        <h6>From</h6>
+        <div className="flex items-center gap-2">
+          <CompounderIcon className="size-4" />
+          <p className="capitalize">{incentive.entity_initializer}</p>
         </div>
       </div>
     </div>

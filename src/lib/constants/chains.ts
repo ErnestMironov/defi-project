@@ -6,7 +6,7 @@ export const CHAIN_NAMES_BY_ID = {
   43_114: 'Avalanche',
   8453: 'Base',
   5000: 'Mantle',
-  56: 'Bsc',
+  56: 'Binance',
   1088: 'Metis',
   2222: 'Kava',
   8217: 'Klaytn',

@@ -45,7 +45,7 @@ export const Analytics = () => {
         <BaseContainer className="pb-1">
           {/* EVENT TABS */}
           <Tabs className="mt-3 divide-y divide-stroke-100" defaultValue="events">
-            <TabsList className="gap-5 px-8 *:mb-[-0.05rem] *:pb-3 *:text-sm">
+            <TabsList className="gap-5 px-8 *:mb-[-0.05rem] *:pb-3 *:text-sm max-lg:gap-5 max-lg:px-4">
               <TabsTrigger variant="underline" value="events">
                 Events
               </TabsTrigger>

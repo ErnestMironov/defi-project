@@ -1,4 +1,5 @@
 import type { Action } from '@api/maat-finance/types'
+import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
@@ -39,7 +40,7 @@ export const WithdrawFromStrategy = (props: WithdrawFromStrategyProperties) => {
       <TransactionInfoHeader title="Withdraw from Strategy" tags={tags} action={data} />
       <div
         className={cn(
-          'grid grid-cols-6 max-lg:grid-cols-1 max-lg:gap-[0.38rem]',
+          'grid grid-cols-6 max-lg:grid-cols-2',
           'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
         )}
       >
@@ -48,7 +49,7 @@ export const WithdrawFromStrategy = (props: WithdrawFromStrategyProperties) => {
           chainId={data?.src_chain_id}
           className="col-span-3"
         />
-        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center" />
+        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center max-lg:hidden" />
         <TokenAmount
           value={formatUnits(
             BigInt(data?.amount ?? 0),
@@ -59,11 +60,18 @@ export const WithdrawFromStrategy = (props: WithdrawFromStrategyProperties) => {
             BigInt(data?.amount ?? 0),
             data?.strategy?.token?.decimals ?? 6,
           )}
-          className="col-span-3"
+          className="max-lg:order-last lg:col-span-3"
         />
-        <Strategy symbols={['USDC', 'Arbitrum', 'Aave']} className="col-span-3" />
+        <Strategy
+          symbols={[
+            data?.strategy?.token?.symbol,
+            CHAIN_NAMES_BY_ID[data.strategy.chain_id as keyof typeof CHAIN_NAMES_BY_ID],
+            data.strategy.protocol,
+          ]}
+          className="col-span-2 lg:col-span-3"
+        />
         <Chain value={chainData?.name ?? ''} className="col-span-3" />
-        <Timestamp value={data?.creation_time} className="col-span-3" />
+        <Timestamp value={data?.creation_time} className="lg:col-span-3" />
       </div>
     </TransactionInfoContainer>
   )

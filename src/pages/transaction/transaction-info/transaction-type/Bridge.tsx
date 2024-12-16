@@ -40,7 +40,7 @@ export const Bridge = (props: BridgeProperties) => {
       <TransactionInfoHeader action={data} title="Bridge" tags={tags} />
       <div
         className={cn(
-          'grid grid-cols-6 max-lg:grid-cols-1 max-lg:gap-[0.38rem]',
+          'grid grid-cols-6 max-lg:grid-cols-2',
           'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
         )}
       >
@@ -49,7 +49,7 @@ export const Bridge = (props: BridgeProperties) => {
           chainId={data?.src_chain_id}
           className="col-span-3"
         />
-        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center" />
+        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center max-lg:hidden" />
         <SourceChain value={chainFromData?.name} className="col-span-3" />
         <DestinationChain value={chainToData?.name} className="col-span-3" />
         <TokenAmount
@@ -62,7 +62,7 @@ export const Bridge = (props: BridgeProperties) => {
             BigInt(data?.amount ?? 0),
             data?.vault?.token?.decimals ?? 6,
           )}
-          className="col-span-3"
+          className="max-lg:flex lg:col-span-3"
         />
         <Timestamp value={data?.creation_time} className="col-span-3" />
       </div>

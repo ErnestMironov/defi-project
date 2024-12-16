@@ -1,16 +1,15 @@
 import type { AdminEvent } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
-import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
-import { TokenIconComponent } from '@components/token-icon'
+import MaskIcon from '@assets/icons/mask.svg'
+import Dots from '@assets/icons/options-dots.svg'
+import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
-import { ADMIN_ACTION_TYPE } from '@constants/action-type'
-import { CHAIN_NAMES_BY_ID } from '@constants/chains'
-import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
+
+import { AdminActionTypeComponent } from '../AdminActionTypeComponent'
 
 interface AdminActionMobileItemProperties extends ComponentProps<'div'> {
   adminAction: AdminEvent
@@ -19,65 +18,38 @@ interface AdminActionMobileItemProperties extends ComponentProps<'div'> {
 export const AdminActionMobileItem = (props: AdminActionMobileItemProperties) => {
   const { adminAction } = props
   return (
-    <div>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
-        {SYSTEM_ADDRESSES[adminAction.txFrom as keyof typeof SYSTEM_ADDRESSES]}
-      </div>
-      <div className="mt-4 flex items-center gap-3 text-gray-100">
-        <span>
-          {ADMIN_ACTION_TYPE[adminAction.action_type as keyof typeof ADMIN_ACTION_TYPE]}
+    <div className="px-4 py-3">
+      <div className="flex items-start justify-between">
+        <AdminActionTypeComponent adminEvent={adminAction} />
+        <span className="text-sm text-text-2100">
+          {getFromNow(dayjs(adminAction.creation_time).toString())}
         </span>
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <span>{getFromNow(dayjs(adminAction.creation_time).toString())}</span>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
-        <h6>To</h6>
-        <div className="flex w-full items-center justify-end gap-2">
-          <p className="whitespace-nowrap">{shortenAddress(adminAction.to)}</p>
-          <ScanLink
-            chainId={adminAction.src_chain_id}
-            address={adminAction.to}
-            className="size-5 shrink-0"
-          />
-          <CopyButton text={adminAction.to} className="size-6 shrink-0" />
-        </div>
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
         <h6>Chain</h6>
         <div className="flex items-center gap-2">
           {adminAction.dst_chain_id &&
           adminAction.src_chain_id !== adminAction.dst_chain_id ? (
             <>
-              <TokenIconComponent
-                symbol={adminAction.src_chain_id}
-                className="size-8 gap-3"
-              />
+              <TokenIconComponent symbol={adminAction.src_chain_id} />
               <Arrow />
-              <TokenIconComponent
-                symbol={adminAction.dst_chain_id}
-                className="size-8 gap-3"
-              />
+              <TokenIconComponent symbol={adminAction.dst_chain_id} />
             </>
           ) : (
-            <div className="flex items-center gap-2">
-              <TokenIconComponent symbol={adminAction.src_chain_id} className="size-8" />
-              <p>
-                {
-                  CHAIN_NAMES_BY_ID[
-                    adminAction.src_chain_id as keyof typeof CHAIN_NAMES_BY_ID
-                  ]
-                }
-              </p>
-            </div>
+            <IconWithLabelComponent symbol={adminAction.src_chain_id} />
           )}
         </div>
-        <h6>Tx Hash</h6>
+        <h6>From</h6>
+        <div className="flex items-center gap-2">
+          <MaskIcon className="size-4 shrink-0" />
+          <span>MAAT Admin</span>
+        </div>
+        <h6>To</h6>
         <div className="flex w-full items-center justify-end gap-2">
-          <p>{shortenAddress(adminAction.hash)}</p>
-          <ScanLink
-            chainId={adminAction.src_chain_id}
-            txHash={adminAction.hash}
-            className="size-5 shrink-0"
-          />
-          <CopyButton text={adminAction.hash} className="size-6 shrink-0" />
+          <p className="whitespace-nowrap">{shortenAddress(adminAction.to)}</p>
+          <div className="flex items-center justify-center rounded-lg border border-stroke-100 p-[0.38rem]">
+            <Dots className="size-[0.8125rem] shrink-0" />
+          </div>
         </div>
       </div>
     </div>

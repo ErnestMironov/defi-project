@@ -1,8 +1,10 @@
 import type { ChainParameters, TokenParameters } from '@api/maat-finance/types'
 import type { IncentiveParameters } from '@api/maat-finance/useIncentives'
 import { useInfiniteIncentives } from '@api/maat-finance/useIncentives'
+import ActionIcon from '@assets/icons/action.svg'
+import AssetIcon from '@assets/icons/asset.svg'
+import ChainIcon from '@assets/icons/chain.svg'
 import Filter from '@assets/icons/filter.svg'
-import Sort from '@assets/icons/mobile-sort.svg'
 import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
@@ -11,7 +13,6 @@ import {
 import { MobileRadioSelect } from '@components/select/MobileRadioSelect'
 import type { OptionType } from '@components/select/Select'
 import { SearchInput } from '@components/text-input/SearchInput'
-import { Button } from '@components/ui/button'
 import { Loader } from '@components/ui/loader'
 import {
   SELECT_CHAINS,
@@ -20,6 +21,7 @@ import {
   SORT_BY_AMOUNT,
   SORT_BY_DATE,
 } from '@constants/select-constant'
+import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useMemo, useState } from 'react'
@@ -91,16 +93,21 @@ export const IncentiveMobileWithFilters = (
             value={selectedActions}
             options={SELECT_INCENTIVES_ACTIONS}
             onChange={setSelectedActions}
+            icon={<ActionIcon />}
+            placeholder="All Actions"
           />
         )
       }
       case 'tokens': {
         return (
           <MobileCheckboxSelect
+            className="[&_[cmdk-item]:first-child]:col-span-2"
             label="Tokens"
             value={selectedTokens}
             options={SELECT_TOKENS}
             onChange={setSelectedTokens}
+            icon={<AssetIcon />}
+            placeholder="All Tokens"
           />
         )
       }
@@ -111,7 +118,8 @@ export const IncentiveMobileWithFilters = (
             value={selectedChains}
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
-            // placeholder="All Chains"
+            icon={<ChainIcon />}
+            placeholder="All Chains"
           />
         )
       }
@@ -123,17 +131,19 @@ export const IncentiveMobileWithFilters = (
 
   return (
     <div {...props} className={cn('flex flex-col', className)}>
-      <div className="flex items-center gap-2">
-        <SearchInput
-          className="flex-1"
-          placeholder="Tx Hash"
-          classNames={{
-            container: 'bg-cards border-none rounded-[0.5rem] py-[0.81rem] px-3',
-            input: 'mx-2',
-          }}
-          value={search}
-          onValueChange={setSearch}
-        />
+      <div className="flex items-center gap-4 border-b border-stroke-100 pr-4">
+        <div className="flex-1 border-r border-stroke-100">
+          <SearchInput
+            className="flex-1"
+            placeholder="Tx Hash"
+            classNames={{
+              container: 'bg-input-default border-none py-[0.81rem] px-4',
+              input: 'mx-2',
+            }}
+            value={search}
+            onValueChange={setSearch}
+          />
+        </div>
         {/* Filters */}
         <MobileFiltersDrawer
           title="Filters"
@@ -151,52 +161,45 @@ export const IncentiveMobileWithFilters = (
             />
           }
         >
+          <div>
+            <h6 className="mb-3 text-sm text-text-2100">Sorting</h6>
+            <BaseContainer className="rounded-2xl p-1">
+              <MobileRadioSelect
+                options={SORT_BY_AMOUNT}
+                value={selectedSort}
+                onChange={setSelectedSort}
+              />
+              <MobileRadioSelect
+                options={SORT_BY_DATE}
+                value={selectedSort}
+                onChange={setSelectedSort}
+              />
+            </BaseContainer>
+          </div>
           {filters.map((filter) => renderFilters(filter))}
-        </MobileFiltersDrawer>
-        {/* Sort */}
-        <MobileFiltersDrawer
-          title="Sorting"
-          closeOnReset
-          resetFilters={() => {
-            setSelectedSort(undefined)
-          }}
-          trigger={<DrawerIconTrigger Icon={Sort} active={!!selectedSort} />}
-        >
-          <MobileRadioSelect
-            label="Amount"
-            options={SORT_BY_AMOUNT}
-            value={selectedSort}
-            onChange={setSelectedSort}
-          />
-          <MobileRadioSelect
-            label="Created"
-            options={SORT_BY_DATE}
-            value={selectedSort}
-            onChange={setSelectedSort}
-          />
         </MobileFiltersDrawer>
       </div>
       <IncentiveMobileList
-        className="mt-3"
         incentives={data}
         loading={isLoading || isPlaceholderData}
         error={error}
       />
-      {isFetchingNextPage && (
-        <div className="mt-6 flex h-8 w-full items-center justify-center">
-          <Loader />
-        </div>
-      )}
-      {hasNextPage && !isLoading && (
-        <Button
-          disabled={isFetchingNextPage}
-          onClick={() => fetchNextPage()}
-          className="mt-6 h-[3.185rem]"
-          size="lg"
-        >
-          View more
-        </Button>
-      )}
+      <div className="absolute inset-x-0 -bottom-10">
+        {isFetchingNextPage && (
+          <div className="flex h-8 w-full items-center justify-center">
+            <Loader />
+          </div>
+        )}
+        {hasNextPage && !isLoading && !isFetchingNextPage && (
+          <button
+            type="button"
+            onClick={() => fetchNextPage()}
+            className="mt-4 h-6 w-full text-sm text-text-50 underline"
+          >
+            See more
+          </button>
+        )}
+      </div>
     </div>
   )
 }
