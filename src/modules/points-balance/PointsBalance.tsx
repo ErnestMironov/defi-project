@@ -1,5 +1,5 @@
 import { useGetUserPoints } from '@api/maat-finance/useGetUserPoints'
-import DoubleArrow from '@assets/icons/double-arrow.svg'
+import PlusIcon from '@assets/icons/plus.svg'
 import PointIcon from '@assets/icons/point-icon.svg'
 import { cn } from '@utils/cn'
 import type { Address } from 'viem'
@@ -27,7 +27,7 @@ export const PointsBalance = ({ className }: { className?: string }) => {
         className="flex items-center justify-center rounded-r-2xl bg-white px-3 transition-colors dark:border-stroke-40100 dark:bg-cards-widget"
         type="button"
       >
-        <DoubleArrow className="size-4" />
+        <PlusIcon className="size-3" />
       </button>
     </div>
   )
