@@ -16,7 +16,7 @@ export default function BonusMultiplier({
     >
       <Asterisk />
       <p className="text-sm font-medium text-text-2100">Multiplier</p>
-      <p className="text-sm font-medium">x{multiplier}</p>
+      <p className="text-sm font-medium">x{multiplier.toFixed(1)}</p>
     </div>
   )
 }

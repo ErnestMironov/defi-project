@@ -12,7 +12,7 @@ export default function UserPoints({ value, ...props }: UserPointsProperties) {
     >
       <StartBold className="size-4" />
       <p className="text-sm font-medium text-main-100">
-        {value} / <span className="text-main-80">user</span>
+        {Math.floor(value ?? 0)} / <span className="text-main-80">user</span>
       </p>
     </div>
   )
