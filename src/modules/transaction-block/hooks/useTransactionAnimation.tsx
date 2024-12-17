@@ -12,31 +12,31 @@ export const useTransactionAnimation = () => {
     key: ComicsAnimationKey
     loop: boolean
   }>({
-    key: '1_Animation',
+    key: '1_animation',
     loop: true,
   })
 
   useEffect(() => {
     const getAnimationKey = (): { key: ComicsAnimationKey; loop: boolean } => {
-      if (approvalStatus === 'pending') return { key: '3_Animation', loop: true }
+      if (approvalStatus === 'pending') return { key: '3_animation', loop: true }
       if (transactionStatus === 'pending') {
-        return { key: '5_Animation', loop: true }
+        return { key: '5_animation', loop: true }
       }
 
       // handle errors
-      if (networkSwitchStatus === 'error') return { key: '1_Animation_mis', loop: false }
-      if (approvalStatus === 'error') return { key: '3_Animation_mis', loop: false }
+      if (networkSwitchStatus === 'error') return { key: '1_animation_mis', loop: false }
+      if (approvalStatus === 'error') return { key: '3_animation_mis', loop: false }
       if (transactionStatus === 'error') {
         return {
-          key: '5_Animation_mis',
+          key: '5_animation_mis',
           loop: false,
         }
       }
 
       const stepAnimations: Record<number, { key: ComicsAnimationKey; loop: boolean }> = {
-        1: { key: '1_Animation', loop: true },
-        2: { key: '2_Animation', loop: true },
-        3: { key: '4_Animation', loop: false },
+        1: { key: '1_animation', loop: true },
+        2: { key: '2_animation', loop: true },
+        3: { key: '4_animation', loop: false },
       }
 
       return stepAnimations[currentStep] || { key: '5_Animation', loop: true }
