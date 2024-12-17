@@ -24,14 +24,14 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
 
   return (
     <div
-      className={cn('flex flex-col gap-4 rounded-xl shadow-test-2', className)}
+      className={cn('flex flex-col gap-4 rounded-3xl shadow-test-2', className)}
       {...rest}
     >
-      <div className="rounded-xl bg-cards-widget">
+      <div className="rounded-3xl bg-cards-widget">
         <div className="border-b border-stroke-100 px-6">
           <div className="flex items-center gap-[0.38rem] py-3">
             <PersonIcon className="size-4" />
-            <p className="text-sm leading-6 text-text-100">Best Bruddas</p>
+            <p className="text-text text-sm leading-6">Best Bruddas</p>
           </div>
         </div>
 
@@ -42,7 +42,7 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
             users.map((user: User) => (
               <div
                 key={user.info.userId}
-                className="my-1 gap-1 border-stroke-100 px-1 last:border-b-0"
+                className="my-1 gap-1 border-stroke-100 px-1 last:border-b-0 max-md:last:pb-4"
               >
                 <div className="flex w-full flex-col rounded-lg border  border-stroke-100 ">
                   <div className="flex w-full items-center justify-between border-b border-stroke-100 px-4 py-2">
@@ -58,7 +58,7 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
                       <p>LVL</p>
                       <p className="text-text-1100">{user.badge.level}</p>
                     </div>
-                    <div className="flex items-center gap-[0.38rem] px-4 py-2 text-main-100">
+                    <div className="flex items-center gap-[0.38rem] px-4 py-2 text-[0.875rem] text-main-100">
                       <StartBold className="size-5" />
                       {Math.floor(user.info.totalPoints)}
                     </div>
@@ -69,10 +69,10 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
           )}
         </div>
 
-        <Table className="hidden rounded-b-xl bg-cards-widget md:table">
+        <Table className="hidden rounded-b-3xl bg-cards-widget shadow-test-2 md:table">
           <Table.Head>
-            <Table.Row>
-              <Table.HeadCell className="">#</Table.HeadCell>
+            <Table.Row className="text-sm">
+              <Table.HeadCell className="!text-text-60">#</Table.HeadCell>
               <Table.HeadCell className="py-5 pl-4 pr-3">Address</Table.HeadCell>
               <Table.HeadCell>LVL</Table.HeadCell>
               <Table.HeadCell>Collected</Table.HeadCell>
@@ -83,15 +83,15 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
               <Table.EmptyState>No users found</Table.EmptyState>
             ) : (
               users.map((user: User, index: number) => (
-                <Table.Row key={user.info.userId}>
-                  <Table.Cell className="w-[3.75rem] text-sm text-text-2100">
+                <Table.Row key={user.info.userId} className="text-sm">
+                  <Table.Cell className="w-[3.75rem] text-sm text-text-60">
                     #{index + 1}
                   </Table.Cell>
                   <Table.Cell className="flex items-center gap-[0.38rem]">
                     {shortenAddress(user.info.userId)}
                     <CopyButton text={user.info.userId} />
                   </Table.Cell>
-                  <Table.Cell>{user.badge.level}</Table.Cell>
+                  <Table.Cell className="text-sm">{user.badge.level}</Table.Cell>
                   <Table.Cell className="flex items-start gap-[0.38rem] text-main-100">
                     <StartBold className="size-5" />
                     {Math.floor(user.info.totalPoints)}

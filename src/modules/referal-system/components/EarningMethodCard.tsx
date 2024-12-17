@@ -25,7 +25,7 @@ export default function EarningMethodCard({
         <RevardsIcon className="mt-0.5 size-7 rounded-full bg-violet-15" />
 
         <div className="">
-          <h3 className=" text-lg font-medium leading-6 text-text-100">
+          <h3 className=" text-text text-lg font-medium leading-6">
             {earningMethod.title}
           </h3>
           <p className="text-sm font-medium leading-5 text-text-2100">

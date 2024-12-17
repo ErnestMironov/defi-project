@@ -1,7 +1,7 @@
 import TermsIcon from '@assets/icons/terms.svg'
 import { cn } from '@utils/cn'
 
-import QuestMacls from '../assets/quests-macls.svg'
+import QuestMuckles from '../assets/quests-macls.svg'
 
 interface SpecialQuestsProperties extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -9,7 +9,7 @@ export const SpecialQuests = ({ className, ...rest }: SpecialQuestsProperties) =
   return (
     <div
       className={cn(
-        'w-full bg-cards-widget rounded-xl border shadow-test-2 border-stroke-100 font-aeonik text-text-100',
+        'w-full bg-cards-widget rounded-[1.5rem] border shadow-test-2 border-stroke-100 font-aeonik text-text',
         className,
       )}
       {...rest}
@@ -20,7 +20,7 @@ export const SpecialQuests = ({ className, ...rest }: SpecialQuestsProperties) =
         )}
       >
         <TermsIcon className="size-4" />
-        <p className={cn('text-sm text-text-100')}>Special quests</p>
+        <p className={cn('text-sm text-text')}>Special quests</p>
       </div>
 
       <div className="flex flex-col items-center px-4 py-8">
@@ -44,7 +44,7 @@ export const SpecialQuests = ({ className, ...rest }: SpecialQuestsProperties) =
             </div>
           </div>
         ))} */}
-        <QuestMacls className="mb-4" />
+        <QuestMuckles className="mb-4 size-[12.75rem]" />
         <p className="text-[1.125rem] text-text-2100">MAAT is cooking, stay updated.</p>
       </div>
     </div>
