@@ -9,6 +9,7 @@ export const useTransactionStatus = (currentStatus: STEP_STATUS) => {
   const storedTransaction = transactions.find(
     (tx) => tx.transactionHash === transactionHash,
   )
+  console.log('🚀 ~ w12 useTransactionStatus ~ storedTransaction:', storedTransaction)
 
   if (storedTransaction) {
     return storedTransaction.status

@@ -56,6 +56,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
             loading={switchStatus === 'pending'}
             disabled={switchStatus === 'confirm_in_wallet'}
             className={className}
+            error={switchStatus === 'error'}
           >
             {getButtonContent(switchStatus, 'Switch to Arbitrum')}
           </Button>
@@ -71,6 +72,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
             onClick={swapAndDeposit}
             loading={swapAndDepositStatus === 'pending'}
             disabled={swapAndDepositStatus === 'confirm_in_wallet'}
+            error={swapAndDepositStatus === 'error'}
           >
             {getButtonContent(swapAndDepositStatus, 'Deposit')}
           </Button>

@@ -84,7 +84,7 @@ export const LottieAnimation: FC<LottieAnimationProperties> = ({
 
   return (
     <AnimatePresence>
-      <Lottie animationData={animationData} loop className={className} {...lottieProps} />
+      <Lottie className={className} animationData={animationData} loop {...lottieProps} />
     </AnimatePresence>
   )
 }
