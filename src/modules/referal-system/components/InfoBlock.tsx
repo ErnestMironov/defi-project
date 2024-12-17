@@ -23,7 +23,7 @@ export default function InfoBlock({ className, ...props }: InfoBlockProperties) 
   return (
     <div
       className={cn(
-        ' mt-16 rounded-lg bg-text-5 max-md:bg-transparent max-md:mt-0',
+        ' mt-[4.0625rem] rounded-[1.5rem] bg-text-5 max-md:bg-transparent max-md:mt-0',
         className,
       )}
       {...props}
