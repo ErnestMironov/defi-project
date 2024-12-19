@@ -15,6 +15,7 @@ type StrategiesMetricsParameters = {
 export type StrategyData = {
   strategy_id: string
   token: string
+  protocol: string
   chain: null
   apy: number | null
   tvl: number | null
@@ -55,6 +56,6 @@ export const useStrategiesMetrics = (
       const { data } = await getStrategiesMetrics(parameters)
       return data
     },
-    enabled: enabled && !!parameters.strategy_id?.length,
+    enabled /* && !!parameters.strategy_id?.length */,
   })
 }

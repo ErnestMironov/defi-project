@@ -7,14 +7,6 @@ import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
 
-const Info = () => {
-  return (
-    <div className="w-fit rounded border border-stroke-100 px-[0.44rem] py-[0.12rem] text-center text-[0.6875rem]/[1rem] text-text-1100">
-      <span>?</span>
-    </div>
-  )
-}
-
 export interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   color: string
   tokenName: string
@@ -110,7 +102,7 @@ const SkeletonTokenStatsContainer = (
   const { className, tokenName, loadingVolume, ...rest } = _props
   return (
     <BaseContainer className={cn('divide-y divide-stroke-100', className)} {...rest}>
-      <div className="flex items-center justify-between px-8 py-3 text-[0.875rem]/[1.5rem] font-medium">
+      <div className="flex items-center justify-between px-8 py-3 text-[0.875rem]/[1.5rem] font-medium max-lg:px-4">
         <div className="flex items-center gap-[0.38rem]">
           <TokenIconComponent symbol={tokenName} className="size-4" />
           {tokenName}
@@ -122,30 +114,30 @@ const SkeletonTokenStatsContainer = (
       <div
         className={cn(
           className,
-          'grid grid-cols-4 w-full *:p-8 [&_p]:text-2.5xl [&_h6]:text-sm [&_h6]:text-text-2100 *:space-y-[0.38rem]',
+          'grid grid-cols-4 max-lg:grid-cols-2 w-full *:p-8 max-lg:*:p-4 [&_p]:text-2.5xl max-lg:[&_p]:text-[1.25rem]/[1.5rem] max-lg:[&_h6]:text-[0.8125rem]/[1.5rem] [&_h6]:text-sm [&_h6]:text-text-2100 *:space-y-[0.38rem]',
         )}
         {...rest}
       >
         <div>
-          <Skeleton className="h-8 w-[9.1rem]" />
+          <Skeleton className="h-8 w-[9.1rem] max-lg:h-6" />
           <div className="flex items-center gap-[0.38rem]">
             <h6>Unique Users</h6>
           </div>
         </div>
         <div>
-          <Skeleton className="h-8 w-[9.1rem]" />
+          <Skeleton className="h-8 w-[9.1rem] max-lg:h-6" />
           <div className="flex items-center gap-[0.38rem]">
             <h6 className="uppercase">Apy</h6>
           </div>
         </div>
         <div>
-          <Skeleton className="h-8 w-[9.1rem]" />
+          <Skeleton className="h-8 w-[9.1rem] max-lg:h-6" />
           <div className="flex items-center gap-[0.38rem]">
             <h6 className="uppercase">tvl</h6>
           </div>
         </div>
         <div>
-          <Skeleton className="h-8 w-[9.1rem]" />
+          <Skeleton className="h-8 w-[9.1rem] max-lg:h-6" />
           <div className="flex items-center gap-[0.38rem]">
             <h6 className="whitespace-nowrap">Rebalancing volume</h6>
           </div>

@@ -10,6 +10,8 @@ import dayjs from 'dayjs'
 import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 
+import { ActionTypeSkeleton } from '../actions/ActionType'
+
 interface IncentiveMobileItemProperties extends ComponentProps<'div'> {
   incentive: IncentiveEvent
 }
@@ -66,22 +68,18 @@ export const SkeletonIncentiveMobileItem = (
   _props: Omit<IncentiveMobileItemProperties, 'incentive'>,
 ) => {
   return (
-    <div>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
-        <Skeleton className="h-[1em] w-16" />
+    <div className="px-4 py-3">
+      <div className="flex items-start justify-between">
+        <ActionTypeSkeleton />
+        <Skeleton className="h-4 w-16" />
       </div>
-      <div className="mt-4 flex items-center gap-3 text-gray-100">
-        <Skeleton className="h-[1.2em] w-16" />
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <Skeleton className="h-[1.2em] w-16" />
-      </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
         <h6>Amount</h6>
-        <Skeleton className="h-[1em] w-24" />
+        <Skeleton className="h-4 w-16" />
         <h6>Chain</h6>
-        <Skeleton className="h-[1em] w-24" />
-        <h6>Tx Hash</h6>
-        <Skeleton className="h-[1em] w-24" />
+        <Skeleton className="h-4 w-16" />
+        <h6>From</h6>
+        <Skeleton className="h-4 w-16" />
       </div>
     </div>
   )

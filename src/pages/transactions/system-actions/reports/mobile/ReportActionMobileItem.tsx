@@ -2,6 +2,7 @@ import type { ReportType } from '@api/maat-finance/types'
 import Dots from '@assets/icons/options-dots.svg'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import { ActionTypeSkeleton } from '@modules/transactions/actions/ActionType'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
 import type { ComponentProps } from 'react'
@@ -47,31 +48,18 @@ export const SkeletonReportActionMobileItem = (
   _props: Omit<ReportActionMobileItemProperties, 'report'>,
 ) => {
   return (
-    <div>
-      <div className="flex items-center gap-3 text-gray-100">
-        <Skeleton className="h-6 w-20 text-lg" />
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <Skeleton className="h-6 w-20 text-lg" />
+    <div className="px-4 py-3">
+      <div className="flex items-start justify-between">
+        <ActionTypeSkeleton />
+        <Skeleton className="h-4 w-16" />
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
         <h6>Token</h6>
-        <div className="flex items-center gap-3">
-          <Skeleton className="size-6 rounded-full" />
-          <Skeleton className="h-6 w-10" />
-        </div>
-        <h6>PPS</h6>
-        <Skeleton className="h-6 w-20 text-lg" />
+        <Skeleton className="h-4 w-16" />
         <h6>Chain</h6>
-        <div className="flex items-center gap-3">
-          <Skeleton className="size-6 rounded-full" />
-          <Skeleton className="h-6 w-10" />
-        </div>
-        <h6>Tx Hash</h6>
-        <div className="flex w-full items-center justify-end gap-2">
-          <Skeleton className="h-6 w-20 text-lg" />
-          <Skeleton className="size-6 shrink-0 rounded-full" />
-          <Skeleton className="size-6 shrink-0" />
-        </div>
+        <Skeleton className="h-4 w-16" />
+        <h6>PPS</h6>
+        <Skeleton className="h-4 w-16" />
       </div>
     </div>
   )

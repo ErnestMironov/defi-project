@@ -103,9 +103,9 @@ export const ActionTypeSkeleton = (props: ComponentProps<'div'>) => {
       <Skeleton className="size-8 shrink-0" />
       <div className="space-y-1">
         <div className="flex items-center gap-[0.38rem]">
-          <Skeleton className="h-4 w-40 max-lg:h-5 max-lg:w-32" />
+          <Skeleton className="h-4 w-32" />
         </div>
-        <Skeleton className="h-4 w-20 max-lg:hidden" />
+        <Skeleton className="h-4 w-20" />
       </div>
     </div>
   )

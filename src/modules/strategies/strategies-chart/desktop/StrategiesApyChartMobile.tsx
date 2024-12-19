@@ -65,7 +65,7 @@ export const StrategiesApyChartMobile = (props: StrategiesChartProperties) => {
       {...rest}
     >
       <MultiColoredLineChart
-        isLoading={isLoading || !!error}
+        isLoading={isLoading || !!error || isStrategiesLoading}
         className="h-60 w-full p-4"
         data={formattedStrategiesMetrics}
         frame="MAX"

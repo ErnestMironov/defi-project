@@ -30,17 +30,6 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
             <p>{shortenAddress(strategy.id)}</p>
             <h6 className="text-text-260">{strategy.protocol}</h6>
           </div>
-          {/* <div className="text-lg [&>*:not(:last-child)]:after:content-['_/_']">
-          <span>{strategy.token.symbol}</span>
-          <span>
-            {
-              CHAIN_NAMES_BY_ID[
-                Number(strategy.chain_id) as keyof typeof CHAIN_NAMES_BY_ID
-              ]
-            }
-          </span>
-          <span>{strategy.protocol}</span>
-        </div> */}
         </div>
         <p className="text-sm/[1rem]">
           <span className="text-text-2100">APY</span>{' '}

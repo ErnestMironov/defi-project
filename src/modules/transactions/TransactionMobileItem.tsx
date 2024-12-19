@@ -12,7 +12,7 @@ import { formatUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { ActionTypeComponent } from './actions/ActionType'
+import { ActionTypeComponent, ActionTypeSkeleton } from './actions/ActionType'
 import { StatusChip } from './status/StatusChip'
 
 interface TransactionMobileItemProperties extends ComponentProps<'div'> {
@@ -78,24 +78,20 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
   )
 }
 
-export const SkeletonTransactionMobileItem = (props: ComponentProps<'div'>) => {
+export const SkeletonTransactionMobileItem = (_props: ComponentProps<'div'>) => {
   return (
-    <div {...props}>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
-        <Skeleton className="h-6 w-20" />
+    <div className="px-4 py-3">
+      <div className="flex items-start justify-between">
+        <ActionTypeSkeleton />
+        <Skeleton className="h-4 w-16" />
       </div>
-      <div className="mt-4 flex items-center gap-3 text-gray-100">
-        <Skeleton className="h-6 w-20" />
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <Skeleton className="h-6 w-20" />
-      </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
-        <h6>Amount</h6>
-        <Skeleton className="h-6 w-20" />
-        <h6>Chain</h6>
-        <Skeleton className="h-6 w-20" />
-        <h6>Tx Hash</h6>
-        <Skeleton className="h-6 w-20" />
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
+        <h6 className="w-fit">Chain</h6>
+        <Skeleton className="h-4 w-16" />
+        <h6>Status</h6>
+        <Skeleton className="h-4 w-16" />
+        <h6>From</h6>
+        <Skeleton className="h-4 w-16" />
       </div>
     </div>
   )

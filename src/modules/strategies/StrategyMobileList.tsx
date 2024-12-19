@@ -58,21 +58,27 @@ const SkeletonStrategyMobileCard = (
   const { ...rest } = props
 
   return (
-    <div {...rest}>
-      <div className="flex items-center gap-3">
-        <Skeleton className="size-6 rounded-full" />
-        <Skeleton className="h-6 w-20 text-lg" />
-      </div>
-      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-[0.82rem] even:[&>*]:justify-self-end [&_h6]:text-base [&_h6]:leading-normal">
-        <h6>Chain | Protocol</h6>
-        <div className="flex items-center space-x-[-0.44rem]">
-          <Skeleton className="size-6 rounded-full" />
-          <Skeleton className="size-6 rounded-full" />
+    <div className="px-4 py-3" {...rest}>
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-2">
+          <Skeleton className="size-8 shrink-0" />
+          <div className="space-y-0.5 text-sm/[1rem]">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-16" />
+          </div>
         </div>
-        <h6>Projected APY</h6>
-        <Skeleton className="h-6 w-20 text-lg" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-2 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
+        <h6>Token</h6>
+        <Skeleton className="h-4 w-16" />
+        <h6>Chain</h6>
+        <Skeleton className="h-4 w-16" />
         <h6>TVL</h6>
-        <Skeleton className="h-6 w-20 text-lg" />
+        <Skeleton className="h-4 w-16" />
+        <h6>Address</h6>
+        <Skeleton className="h-4 w-16" />
       </div>
     </div>
   )

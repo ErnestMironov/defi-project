@@ -4,6 +4,7 @@ import MaskIcon from '@assets/icons/mask.svg'
 import Dots from '@assets/icons/options-dots.svg'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import { ActionTypeSkeleton } from '@modules/transactions/actions/ActionType'
 import { getFromNow } from '@utils/get-day-difference'
 import { shortenAddress } from '@utils/transform'
 import dayjs from 'dayjs'
@@ -60,34 +61,18 @@ export const SkeletonAdminActionMobileItem = (
   _props: Omit<AdminActionMobileItemProperties, 'adminAction'>,
 ) => {
   return (
-    <div>
-      <div className="w-fit rounded-lg bg-light-blue-15 px-4 py-2">
-        <Skeleton className="h-6 w-20" />
+    <div className="px-4 py-3">
+      <div className="flex items-start justify-between">
+        <ActionTypeSkeleton />
+        <Skeleton className="h-4 w-16" />
       </div>
-      <div className="mt-4 flex items-center gap-3 text-gray-100">
-        <Skeleton className="size-6 rounded-full" />
-        <div className="h-[1.0625rem] w-px bg-gray-50" />
-        <Skeleton className="h-6 w-20 text-lg" />
-      </div>
-      <div className="mt-4 grid grid-cols-2 gap-y-[0.82rem] text-base even:[&>*]:justify-self-end">
-        <h6>From</h6>
-        <div className="flex w-full items-center justify-end gap-2">
-          <Skeleton className="h-6 w-20 text-lg" />
-        </div>
-        <h6>To</h6>
-        <div className="flex w-full items-center justify-end gap-2">
-          <Skeleton className="h-6 w-20 text-lg" />
-        </div>
+      <div className="mt-4 grid w-full grid-cols-[1fr_0fr] justify-between gap-y-3 text-sm odd:[&>*]:text-text-2100 even:[&>*]:justify-self-end">
         <h6>Chain</h6>
-        <div className="flex items-center gap-2">
-          <Skeleton className="size-8 gap-3" />
-          <Arrow />
-          <Skeleton className="size-8 gap-3" />
-        </div>
-      </div>
-      <h6>Tx Hash</h6>
-      <div className="flex w-full items-center justify-end gap-2">
-        <Skeleton className="h-6 w-20 text-lg" />
+        <Skeleton className="h-4 w-16" />
+        <h6>From</h6>
+        <Skeleton className="h-4 w-16" />
+        <h6>To</h6>
+        <Skeleton className="h-4 w-16" />
       </div>
     </div>
   )

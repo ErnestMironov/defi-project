@@ -28,7 +28,7 @@ export const Analytics = () => {
     >
       <TabsList className="mb-6 max-lg:mb-4 max-lg:gap-6">
         {TABS.map((_tab) => (
-          <TabsTrigger variant="unstyled" className="capitalize" value={_tab}>
+          <TabsTrigger key={_tab} variant="unstyled" className="capitalize" value={_tab}>
             {_tab}
           </TabsTrigger>
         ))}
