@@ -7,7 +7,6 @@ import { formatUnits } from 'viem'
 import {
   Address,
   Chain,
-  Status,
   Timestamp,
   TokenAmount,
   TransactionHash,
@@ -42,17 +41,16 @@ export const WithdrawRequest = (props: WithdrawRequestProperties) => {
       <TransactionInfoHeader tags={tags} action={data} />
       <div
         className={cn(
-          'grid grid-cols-6 max-lg:grid-cols-1 max-lg:gap-[0.38rem]',
+          'grid grid-cols-6 max-lg:grid-cols-2',
           'border-t border-stroke-100 [&>*:nth-child(odd)]:border-r [&>*:nth-child(odd)]:border-stroke-100 [&>*]:border-b',
         )}
       >
         <TransactionHash
           value={data?.hash}
           chainId={data?.src_chain_id}
-          className="col-span-2"
+          className="col-span-3"
         />
-        <Address value={data?.to} chainId={data?.src_chain_id} className="col-span-2" />
-        <Status status={data?.status} className="col-span-2" />
+        <Address value={data?.to} chainId={data?.src_chain_id} className="col-span-3" />
         <TokenAmount
           value={formatUnits(
             BigInt(data?.amount ?? 0),
@@ -63,9 +61,12 @@ export const WithdrawRequest = (props: WithdrawRequestProperties) => {
             BigInt(data?.amount ?? 0),
             data?.vault?.token?.decimals ?? 6,
           )}
-          className="col-span-3"
+          className="lg:col-span-3"
         />
-        <Vault value={data?.vault?.token?.symbol} className="col-span-3" />
+        <Vault
+          value={data?.vault?.token?.symbol}
+          className="max-lg:order-first lg:col-span-3"
+        />
         <Chain value={chainData?.name} className="col-span-3" />
         <Timestamp value={data?.creation_time} className="col-span-3" />
       </div>

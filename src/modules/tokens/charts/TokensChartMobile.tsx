@@ -1,23 +1,23 @@
 import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
+import Chain from '@assets/icons/chain.svg'
 import Dot from '@assets/icons/dot.svg'
 import Filter from '@assets/icons/filter.svg'
+import Protocol from '@assets/icons/protocol.svg'
 import type { RechartDataType } from '@components/chart/line-chart/LineChart'
 import { LineChartComponent } from '@components/chart/line-chart/LineChart'
 import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
-import { ArrowLink } from '@components/link/ArrowLink'
-import { SectionTitle } from '@components/section/SectionTitle'
-import { DrawerMultiSelect } from '@components/select/DrawerMultiSelect'
+import { MobileCheckboxSelect } from '@components/select/MobileCheckboxSelect'
 import {
   DrawerIconTrigger,
   MobileFiltersDrawer,
 } from '@components/select/MobileFiltersDrawer'
 import type { OptionType } from '@components/select/Select'
-import { AnimatedTabs } from '@components/tab/AnimatedTabs'
 import { Skeleton } from '@components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { SELECT_CHAINS, SELECT_PROTOCOLS } from '@constants/select-constant'
-import { ROUTES } from '@routes/routes'
+import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 import { useMemo, useState } from 'react'
@@ -31,7 +31,6 @@ const chartData: { title: string; color: '#6160FF' | '#A6C1FF' }[] = [
 
 export const TokensChartMobile = (props: TokensChartProperties) => {
   const { className, ...rest } = props
-  const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
 
   const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
 
@@ -112,52 +111,15 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
     }
   }
   return (
-    <section className={cn(className, '')} {...rest}>
-      <div className="flex items-center justify-between">
-        <SectionTitle>Tokens</SectionTitle>
-        <ArrowLink to={ROUTES.TOKENS} />
-      </div>
-      <AnimatedTabs
-        className="mt-4"
-        classNames={{
-          tab: 'w-[6.25rem] text-base py-[0.72rem]',
-          container: 'p-1',
-        }}
-        activeTab={activeTab}
-        tabs={[
-          { id: 'apy', label: 'APY' },
-          { id: 'tvl', label: 'TVL' },
-        ]}
-        onTabChange={(tab) => setActiveTab(tab as 'apy' | 'tvl')}
-      />
-      <div className="mt-6 flex items-start">
-        <div className="flex flex-col justify-center gap-2">
-          {chartData.map((item) => {
-            return (
-              <button
-                type="button"
-                key={item.title}
-                className="flex items-center gap-[0.56rem]"
-              >
-                <Dot
-                  className={cn(
-                    getDotStyles(item.color),
-                    'max-lg:size-2 overflow-visible',
-                  )}
-                />
-                <span className="text-[0.75rem]/[0.9rem]">{item.title}</span>
-              </button>
-            )
-          })}
-        </div>
+    <BaseContainer className={cn(className, '')} {...rest}>
+      <div className="flex items-center gap-[0.38rem] p-3">
         <FramesSelect
-          className="ml-auto h-10 rounded-lg"
+          className="h-12 w-full *:flex-1"
           frame={currentFrame}
           frames={frames}
           onFrameChange={onFrameChange}
         />
         <MobileFiltersDrawer
-          className="ml-3"
           resetFilters={() => {
             setSelectedProtocols([])
             setSelectedChains([])
@@ -170,26 +132,59 @@ export const TokensChartMobile = (props: TokensChartProperties) => {
             />
           }
         >
-          <DrawerMultiSelect
-            options={SELECT_PROTOCOLS}
-            onChange={setSelectedProtocols}
-            value={selectedProtocols}
-            label="Protocol"
-            placeholder="All Protocols"
-          />
-          <DrawerMultiSelect
+          <MobileCheckboxSelect
             options={SELECT_CHAINS}
             onChange={setSelectedChains}
             value={selectedChains}
-            label="Chain"
+            label="Chains"
+            icon={<Chain />}
             placeholder="All Chains"
+          />
+          <MobileCheckboxSelect
+            options={SELECT_PROTOCOLS}
+            onChange={setSelectedProtocols}
+            value={selectedProtocols}
+            label="Protocols"
+            icon={<Protocol />}
+            placeholder="All Protocols"
           />
         </MobileFiltersDrawer>
       </div>
-      <div className="mt-6 h-[10.125rem]">
-        {activeTab === 'apy' && renderApyBody()}
-        {activeTab === 'tvl' && renderTvlBody()}
-      </div>
-    </section>
+      <Tabs defaultValue="apy">
+        <TabsList className="w-full justify-start rounded-none border-y border-stroke-100 px-4 *:py-3 max-lg:gap-5">
+          <TabsTrigger variant="underline" value="apy">
+            APY
+          </TabsTrigger>
+          <TabsTrigger variant="underline" value="tvl">
+            TVL
+          </TabsTrigger>
+          <div className="ml-auto flex items-center gap-3 text-text-2100">
+            {chartData.map((item) => {
+              return (
+                <button
+                  type="button"
+                  key={item.title}
+                  className="flex items-center gap-[0.56rem]"
+                >
+                  <Dot
+                    className={cn(
+                      getDotStyles(item.color),
+                      'max-lg:size-2 overflow-visible',
+                    )}
+                  />
+                  <span className="text-[0.8125rem]/[1.25rem]">{item.title}</span>
+                </button>
+              )
+            })}
+          </div>
+        </TabsList>
+        <TabsContent value="apy" className="h-60 p-2">
+          {renderApyBody()}
+        </TabsContent>
+        <TabsContent value="tvl" className="h-60 p-2">
+          {renderTvlBody()}
+        </TabsContent>
+      </Tabs>
+    </BaseContainer>
   )
 }

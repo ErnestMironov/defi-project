@@ -26,13 +26,13 @@ export const SearchInput = forwardRef(
         )}
         {...rest}
       >
-        <Search className="size-4 max-lg:size-3" />
+        <Search className="size-4" />
 
         <input
           ref={reference}
           type="text"
           className={cn(
-            'h-full py-3 bg-transparent align-middle text-sm/[1.5rem] max-lg:text-[0.75rem]/[0.9rem] placeholder:text-text-2100 focus:outline-none mx-3 grow',
+            'h-full py-3 bg-transparent align-middle text-sm/[1.5rem] placeholder:text-text-2100 focus:outline-none mx-3 grow',
             classNames?.input,
           )}
           onChange={(e) => onValueChange(e.target.value)}

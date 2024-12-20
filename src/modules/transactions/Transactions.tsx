@@ -14,14 +14,13 @@ import { TransactionsHistoryDesktop } from './TransactionsHistoryDesktop'
 import { TransactionsHistoryMobile } from './TransactionsHistoryMobile'
 
 export interface EventsProperties extends ComponentProps<'div'> {
-  withLink?: boolean
   parameters?: EventsParameters
 }
 
 export const Transactions = (props: EventsProperties) => {
   const { isBelowDesktop } = useDeviceWidth()
   if (isBelowDesktop) {
-    return <TransactionsHistoryMobile withLink {...props} />
+    return <TransactionsHistoryMobile {...props} />
   }
   return (
     <TransactionsHistoryDesktop

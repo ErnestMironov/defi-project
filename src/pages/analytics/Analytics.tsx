@@ -26,9 +26,9 @@ export const Analytics = () => {
       value={tab ?? 'tokens'}
       onValueChange={onValueChange}
     >
-      <TabsList>
+      <TabsList className="mb-6 max-lg:mb-4 max-lg:gap-6">
         {TABS.map((_tab) => (
-          <TabsTrigger variant="unstyled" className="capitalize" value={_tab}>
+          <TabsTrigger key={_tab} variant="unstyled" className="capitalize" value={_tab}>
             {_tab}
           </TabsTrigger>
         ))}
@@ -45,7 +45,7 @@ export const Analytics = () => {
         <BaseContainer className="pb-1">
           {/* EVENT TABS */}
           <Tabs className="mt-3 divide-y divide-stroke-100" defaultValue="events">
-            <TabsList className="gap-5 px-8 *:mb-[-0.05rem] *:pb-3 *:text-sm">
+            <TabsList className="gap-5 px-8 *:mb-[-0.05rem] *:pb-3 *:text-sm max-lg:gap-5 max-lg:px-4">
               <TabsTrigger variant="underline" value="events">
                 Events
               </TabsTrigger>
@@ -53,13 +53,13 @@ export const Analytics = () => {
                 System Actions
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="events" className="mt-0">
+            <TabsContent value="events">
               <Transactions
                 className="[&_tr:last-child:after]:rounded-b-[1.25rem]"
                 parameters={{ transaction_type: 'trigger' }}
               />
             </TabsContent>
-            <TabsContent value="actions" className="mt-0">
+            <TabsContent value="actions">
               <SystemActions />
             </TabsContent>
           </Tabs>

@@ -69,10 +69,10 @@ export const StrategyDesktop = (props: StrategyProperties) => {
                 TVL
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="apy" className="mt-0">
+            <TabsContent value="apy" >
               <StrategyApyChart className="h-60 px-8 pb-5" />
             </TabsContent>
-            <TabsContent value="tvl" className="mt-0">
+            <TabsContent value="tvl" >
               <StrategyTvlChart className="h-60 px-8 pb-5" />
             </TabsContent>
           </Tabs>

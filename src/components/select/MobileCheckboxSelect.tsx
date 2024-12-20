@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Checkbox } from '@components/ui/checkbox'
+import { Command, CommandGroup, CommandItem, CommandList } from '@components/ui/command'
+import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
 
@@ -10,31 +11,45 @@ interface CheckboxProperties extends Omit<ComponentProps<'div'>, 'onChange'> {
   onChange: (options: OptionType[]) => void
   label: string
   value: OptionType[]
+  icon?: React.ReactNode
+  placeholder?: string
 }
 
 export const MobileCheckboxSelect = (props: CheckboxProperties) => {
-  const { className, label, value, options, onChange } = props
+  const { className, label, value, options, onChange, icon, placeholder } = props
   return (
-    <div className={cn('flex flex-col items-start gap-2', className)}>
-      {label && <div className="text-gray-100">{label}</div>}
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-3.5">
-        {options.map((option, i) => (
-          <div key={`${option.value}-${i}`} className="flex items-center gap-2">
-            <Checkbox
-              id={option.value}
-              checked={value.some((v) => v.value === option.value)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  onChange([...value, option])
-                } else {
-                  onChange(value.filter((v) => v.value !== option.value))
-                }
-              }}
-            />
-            <label htmlFor={option.value}>{option.label}</label>
-          </div>
-        ))}
-      </div>
+    <div className={cn('flex flex-col items-start gap-3', className)}>
+      {label && <div className="text-sm text-text-2100">{label}</div>}
+      <BaseContainer className="w-full gap-1 rounded-2xl p-1">
+        <Command>
+          <CommandList>
+            <CommandGroup className="*:grid *:grid-cols-2">
+              <CommandItem data-select={value.length === 0} onSelect={() => onChange([])}>
+                <div className="inline-flex items-center gap-[0.38rem]">
+                  {icon}
+                  {placeholder}
+                </div>
+              </CommandItem>
+              {options.map((option) => (
+                <CommandItem
+                  data-select={value.some((v) => v.value === option.value)}
+                  key={option.value}
+                  value={option.value}
+                  onSelect={() => {
+                    if (value.some((v) => v.value === option.value)) {
+                      onChange(value.filter((v) => v.value !== option.value))
+                    } else {
+                      onChange([...value, option])
+                    }
+                  }}
+                >
+                  {option.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </BaseContainer>
     </div>
   )
 }

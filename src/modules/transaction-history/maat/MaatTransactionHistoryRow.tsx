@@ -2,7 +2,7 @@ import type { Event } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
 import { Table } from '@components/table'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
-import { ActionType } from '@modules/transactions/actions/ActionType'
+import { ActionTypeComponent } from '@modules/transactions/actions/ActionType'
 import { EventRowOptions } from '@modules/transactions/actions/EventRowOptions'
 import { StatusChip } from '@modules/transactions/status/StatusChip'
 import { ROUTES } from '@routes/routes'
@@ -26,7 +26,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
       onClick={() => navigate(`${ROUTES.TRANSACTIONS}/${event.hash}`)}
     >
       <Table.Cell>
-        <ActionType tx={event} />
+        <ActionTypeComponent tx={event} />
       </Table.Cell>
 
       <Table.Cell>

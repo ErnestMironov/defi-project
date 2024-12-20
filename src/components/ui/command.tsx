@@ -105,7 +105,7 @@ const CommandItem = React.forwardRef<
     ref={reference}
     className={cn(
       'group relative flex w-full p-3 cursor-pointer select-none rounded-[0.75rem] items-center justify-between gap-[0.38rem] text-sm outline-none',
-      'hover:bg-[#8585A914] data-[select=true]:bg-[#8585A914]',
+      'lg:hover:bg-[#8585A914] data-[select=true]:bg-[#8585A914]',
       className,
     )}
     {...props}

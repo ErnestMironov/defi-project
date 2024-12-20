@@ -1,20 +1,16 @@
 import type { ReportType } from '@api/maat-finance/types'
-import Rocket from '@assets/icons/rocket.svg'
-import { CopyButton } from '@components/copy/CopyButton'
-import { ScanLink } from '@components/scan-link/ScanLink'
 import { Table } from '@components/table'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Skeleton } from '@components/ui/skeleton'
-import { SYSTEM_ADDRESSES } from '@constants/system-addresses'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
-import { shortenAddress } from '@utils/transform'
 import type { ComponentProps } from 'react'
 import { formatUnits } from 'viem'
 
 import { ReportsRowOptions } from './EventRowOptions'
+import { ReportActionType } from './ReportActionType'
 
 interface IncentivesTableRowProperties extends ComponentProps<'tr'> {
   report: ReportType
@@ -25,23 +21,7 @@ export const ReportsTableRow = (props: IncentivesTableRowProperties) => {
   return (
     <Table.Row className={cn('group', className)} {...rest}>
       <Table.Cell>
-        <div className="flex items-center gap-4">
-          <Rocket className="size-8 shrink-0" />
-          <div>
-            <p className="text-base/[1.5rem]">
-              {SYSTEM_ADDRESSES[report.txFrom as keyof typeof SYSTEM_ADDRESSES]}
-            </p>
-            <div className="flex items-center gap-[0.38rem]">
-              <p className="text-text-2100">{shortenAddress(report.hash)}</p>
-              <CopyButton text={report.hash} />
-              <ScanLink
-                chainId={report.vault.chain_id}
-                txHash={report.hash}
-                className="size-4 shrink-0"
-              />
-            </div>
-          </div>
-        </div>
+        <ReportActionType report={report} />
       </Table.Cell>
       <Table.Cell>
         <div>

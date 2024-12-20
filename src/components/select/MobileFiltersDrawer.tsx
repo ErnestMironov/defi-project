@@ -1,11 +1,12 @@
+import Check from '@assets/icons/check-simple.svg'
 import X from '@assets/icons/close.svg'
+import Reset from '@assets/icons/reset.svg'
 import { Button } from '@components/ui/button'
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from '@components/ui/drawer'
 import { cn } from '@utils/cn'
@@ -33,26 +34,26 @@ export const DrawerIconTrigger = forwardRef(
         ref={reference}
         type="button"
         className={cn(
-          'flex size-10 items-center justify-center rounded-lg bg-cards',
+          'flex size-12 border shrink-0 border-stroke-100 rounded-[0.75rem] items-center justify-center bg-cards-widget shadow-test',
           className,
         )}
         {...rest}
       >
-        <Icon className={cn('size-6', active && '[&_path]:fill-light-blue-100')} />
+        <div
+          className={cn(
+            'rounded-[0.5rem] shrink-0 size-[2.5rem] flex items-center justify-center',
+            active && 'bg-main-100',
+          )}
+        >
+          <Icon className={cn('size-4', active && 'shrink-0 [&_path]:stroke-white')} />
+        </div>
       </button>
     )
   },
 )
 
 export const MobileFiltersDrawer = (props: MobileFiltersDrawerProperties) => {
-  const {
-    className,
-    children,
-    resetFilters,
-    trigger,
-    title,
-    closeOnReset = false,
-  } = props
+  const { className, children, resetFilters, trigger, closeOnReset = false } = props
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -67,42 +68,44 @@ export const MobileFiltersDrawer = (props: MobileFiltersDrawerProperties) => {
       <DrawerContent
         aria-describedby={undefined}
         position="bottom"
-        withDraggable={false}
-        className="inset-x-0 w-full items-center justify-center space-y-5 px-4 py-6"
+        className="inset-x-0 max-h-dvh w-full items-center justify-center space-y-5 pb-8 pt-4"
         onInteractOutside={(e) => {
           e.preventDefault()
           e.stopPropagation()
         }}
       >
-        <DrawerHeader className="flex w-full items-center justify-between">
-          <DrawerTitle className="text-lg font-bold text-text-90">{title}</DrawerTitle>
-          <DrawerClose>
-            <X className="size-6 [&_path]:stroke-gray-100" />
+        <DrawerHeader className="flex w-full items-center justify-between px-4">
+          <div className="flex w-full items-center gap-2">
+            <Button
+              className="space-x-[0.38rem]"
+              onClick={() => setIsOpen(false)}
+              variant="outline"
+              size="sm"
+            >
+              <Check className="size-4" />
+              <span>Apply</span>
+            </Button>
+            <Button
+              onClick={() => {
+                resetFilters()
+                if (closeOnReset) {
+                  setIsOpen(false)
+                }
+              }}
+              variant="outline"
+              size="sm"
+              className="space-x-[0.38rem]"
+            >
+              <Reset className="size-4" />
+              <span>Reset</span>
+            </Button>
+          </div>
+          <DrawerClose className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-stroke-100">
+            <X className="size-4 [&_path]:stroke-gray-100" />
           </DrawerClose>
         </DrawerHeader>
-        {children}
-        <div className="flex w-full items-center gap-2 *:flex-1">
-          <Button
-            onClick={() => {
-              resetFilters()
-              if (closeOnReset) {
-                setIsOpen(false)
-              }
-            }}
-            variant="outline-light"
-            size="lg"
-            className="py-4"
-          >
-            Reset
-          </Button>
-          <Button
-            onClick={() => setIsOpen(false)}
-            variant="light"
-            size="lg"
-            className="py-4 font-bold"
-          >
-            Apply
-          </Button>
+        <div className="h-[calc(100dvh-6rem)] space-y-3 overflow-y-auto px-4 pb-10">
+          {children}
         </div>
       </DrawerContent>
     </Drawer>

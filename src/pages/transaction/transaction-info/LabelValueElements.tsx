@@ -22,7 +22,7 @@ export const TransactionHash = (props: InfoPairElementsProperties) => {
   const { className, value, label, chainId, type = 'tx', ...rest } = props
   const { isBelowDesktop } = useDeviceWidth()
   return (
-    <LabelValueContainer className={className} {...rest}>
+    <LabelValueContainer className={cn(className, 'max-lg:hidden')} {...rest}>
       <div>{label || (isBelowDesktop ? 'Tx Hash' : 'Transaction Hash')}</div>
       <div className="flex items-center gap-1">
         <span className="">{shortenAddress(value ?? '')}</span>
@@ -78,20 +78,21 @@ export const TokenAmount = (
   if (isBelowDesktop) {
     return (
       <>
-        <LabelValueContainer className={className} {...rest}>
+        <LabelValueContainer className={cn('max-lg:hidden', className)} {...rest}>
           <div>{tokenLabel}</div>
           <IconWithLabelComponent symbol={symbol} className="[&_svg]:size-4" />
         </LabelValueContainer>
         <LabelValueContainer className={className} {...rest}>
           <div>{amountLabel}</div>
           <div className="flex items-center justify-end gap-[0.38rem] text-sm">
+            <TokenIconComponent symbol={symbol} className="size-4 lg:hidden" />
             <p>
               {formatAmount(value ?? '', {
                 notation: 'compact',
               })}
             </p>
             <p className="text-text-260 before:content-['('] after:content-[')']">
-              {formatUsdValue(usdValue)}
+              {formatUsdValue(usdValue, { notation: 'compact' })}
             </p>
           </div>
         </LabelValueContainer>
@@ -134,8 +135,8 @@ export const Vault = (props: InfoPairElementsProperties) => {
   return (
     <LabelValueContainer className={className} {...rest}>
       <div>{label}</div>
-      <div className="flex items-center gap-2 text-text-90">
-        <TokenIconComponent symbol={value} className="size-5" />
+      <div className="flex items-center gap-2 text-text-90 max-lg:gap-[0.38rem]">
+        <TokenIconComponent symbol={value} className="size-4" />
         <span>{value}</span>
         {label === 'Vault' && <span>Vault</span>}
       </div>
@@ -144,7 +145,14 @@ export const Vault = (props: InfoPairElementsProperties) => {
 }
 
 export const Chain = (props: InfoPairElementsProperties) => {
-  return <Vault {...props} label={props.label ?? 'Chain'} />
+  const { className, label = 'Chain', ...rest } = props
+  return (
+    <Vault
+      className={cn('max-lg:hidden', className)}
+      label={label ?? 'Chain'}
+      {...rest}
+    />
+  )
 }
 
 export const SourceChain = (props: InfoPairElementsProperties) => {
@@ -158,9 +166,9 @@ export const DestinationChain = (props: InfoPairElementsProperties) => {
 export const Timestamp = (props: InfoPairElementsProperties) => {
   const { className, label = 'Timestamp', value, ...rest } = props
   return (
-    <LabelValueContainer className={cn(className, 'max-lg:hidden')} {...rest}>
+    <LabelValueContainer className={cn(className, '')} {...rest}>
       <div>{label}</div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 max-lg:gap-[0.38rem]">
         {dayjs(value)
           .format('DD.MM.YYYY HH:mm:ss')
           .split(' ')

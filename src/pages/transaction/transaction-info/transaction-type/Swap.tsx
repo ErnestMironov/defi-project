@@ -49,7 +49,7 @@ export const Swap = (props: SwapProperties) => {
           chainId={data?.src_chain_id}
           className="col-span-3"
         />
-        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center" />
+        <div className="col-span-3 bg-[url('/src/assets/icons/dashes.svg')] bg-cover bg-center max-lg:hidden" />
         <TokenInAmount
           value={formatUnits(
             BigInt(data?.amount ?? 0),

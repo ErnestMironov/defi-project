@@ -64,7 +64,7 @@ const DrawerContent = React.forwardRef<
         {...props}
       >
         {withDraggable && (
-          <div className="mx-auto h-2 w-[100px] rounded-full bg-gray-50" />
+          <div className="mx-auto h-[0.3125rem] w-[2.8125rem] rounded-full bg-gray-50" />
         )}
         {children}
       </DrawerPrimitive.Content>

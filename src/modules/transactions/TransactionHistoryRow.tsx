@@ -16,7 +16,7 @@ import { formatUnits } from 'ethers'
 import { type ComponentProps, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { ActionType } from './actions/ActionType'
+import { ActionTypeComponent } from './actions/ActionType'
 import { EventRowOptions } from './actions/EventRowOptions'
 import { StatusChip } from './status/StatusChip'
 
@@ -37,7 +37,7 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
         // onClick={() => setOpen(true)}
       >
         <Table.Cell>
-          <ActionType tx={event} />
+          <ActionTypeComponent tx={event} />
         </Table.Cell>
         <Table.Cell>
           {event.amount ? (

@@ -27,13 +27,13 @@ export const TransactionHistory = (props: TransactionHistoryProperties) => {
             Incentives
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="maat" className="mt-0">
+        <TabsContent value="maat">
           <MaatTransactionsHistory
             filters={maatFilters}
             eventParameters={eventParameters}
           />
         </TabsContent>
-        <TabsContent value="incentives" className="mt-0">
+        <TabsContent value="incentives">
           <IncentivesHistory filters={incentivesFilters} />
         </TabsContent>
       </Tabs>

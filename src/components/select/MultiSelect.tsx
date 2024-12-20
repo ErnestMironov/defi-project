@@ -37,7 +37,7 @@ interface MultiSelectTriggerProperties
 const multiSelectVariants = cva('', {
   variants: {
     variant: {
-      default: 'rounded-xl border border-stroke-100 bg-cards-widget',
+      default: 'rounded-2xl border border-stroke-100 bg-cards-widget',
       /**
        * @description color2 is cards-widget
        */
@@ -148,7 +148,7 @@ export const MultiSelect = ({
         align={align}
         id={id}
         className={cn(
-          'w-[16.25rem] rounded-xl p-1 max-h-96 overflow-y-auto pointer-events-auto',
+          'w-[16.25rem] rounded-2xl p-1 max-h-96 overflow-y-auto pointer-events-auto',
           '[&_svg]:size-4 [&_*]:text-sm/[1rem] [&_*]:font-medium shadow-test-2',
           multiSelectVariants({ variant, size: null }),
           classNames?.content,
