@@ -62,12 +62,19 @@ export const WithdrawInput = () => {
     }
 
     if (+inputValueInUSD < 1 && +inputValueInUSD > 0) {
-      return setValidationError('Withdraw amount cannot be less than 1$')
+      setValidationError('Withdraw amount cannot be less than 1$')
+      return
+    }
+
+    if (+inputValue >= 1e15) {
+      setValidationError('Amount is too large')
+      setInputError('Amount is too large')
+      return
     }
 
     setValidationError('')
     setInputError(null)
-  }, [inputValueBN, inputValueInUSD, balanceBN])
+  }, [inputValueBN, inputValueInUSD, balanceBN, inputValue, setInputError])
 
   useEffect(() => {
     if (!withdrawToAnotherChain) {
@@ -80,13 +87,26 @@ export const WithdrawInput = () => {
   }
 
   const handleInputChange = (value: string) => {
-    setInputValue(value)
-    setWithdrawAmount(value)
+    const cleanValue = value.replaceAll(/[^\d.]/g, '')
+
+    const truncatedValue = cleanValue.slice(0, 18)
+
+    const parts = truncatedValue.split('.')
+    const formattedValue =
+      parts.length > 1 ? `${parts[0]}.${parts.slice(1).join('')}` : truncatedValue
+
+    setInputValue(formattedValue)
+    setWithdrawAmount(formattedValue)
+
+    const numberValue = Number(formattedValue)
     setInputValueInUSD(
-      formatAmount(value, {
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
-      }),
+      Number.isNaN(numberValue)
+        ? '0.00'
+        : formatAmount(formattedValue, {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+            useGrouping: true,
+          }),
     )
   }
 
@@ -116,7 +136,7 @@ export const WithdrawInput = () => {
           <div className="min-w-0 flex-1">
             <SwappableInputs
               tokenValue={inputValue}
-              usdValue={inputValueInUSD}
+              usdValue={inputValueInUSD || '0.00'}
               onTokenValueChange={(value) => handleInputChange(value)}
               onUsdValueChange={(value) => handleInputChange(value)}
               error={validationError}
