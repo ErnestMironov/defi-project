@@ -1,4 +1,5 @@
 import { useGetWithdrawChains } from '@api/maat-finance/useGetWithdrawChains'
+import CheckedIcon from '@assets/icons/check.svg'
 import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
@@ -15,10 +16,12 @@ const RenderNetworkItem = ({
   chain,
   onChange,
   token,
+  isSelected,
 }: {
   chain: ChainType
   onChange: (chain: ChainType) => void
   token: UseGetMTokenInfoReturn | null
+  isSelected: boolean
 }) => {
   return (
     <button
@@ -26,17 +29,23 @@ const RenderNetworkItem = ({
       onClick={() => onChange(chain)}
       className="flex w-full cursor-pointer items-center justify-between rounded-xl px-5 py-4 hover:bg-input-active max-lg:items-start"
     >
-      <TokenWithNetwork
-        symbol={token?.stable}
-        network={chain}
-        classNames={{ token: 'size-9' }}
-      />
-      <div className="flex flex-col items-start text-[1.25rem]/[1.75rem]">
-        {token?.stable?.toUpperCase()}
-        <span className="text-gray-80">
-          {CHAIN_NAMES_BY_ID[chain as keyof typeof CHAIN_NAMES_BY_ID] ?? 'Unknown Chain'}
-        </span>
+      <div className="flex items-center gap-2">
+        <TokenWithNetwork
+          symbol={token?.stable}
+          network={chain}
+          classNames={{ token: 'size-9' }}
+        />
+        <div className="flex flex-col items-start">
+          {token?.stable?.toUpperCase()}
+          <span className="text-[0.875rem] font-medium text-text-60">
+            {token?.stable?.toUpperCase()}
+          </span>
+        </div>
       </div>
+      <span className="flex items-center gap-2 leading-6">
+        {CHAIN_NAMES_BY_ID[chain as keyof typeof CHAIN_NAMES_BY_ID] ?? 'Unknown Chain'}
+        {isSelected && <CheckedIcon />}
+      </span>
     </button>
   )
 }
@@ -88,6 +97,7 @@ export const SelectWithdrawNetworkModal = () => {
           chain={chain}
           onChange={onItemChange}
           token={mtToken}
+          isSelected={withdrawToNetwork === chain}
         />
       )}
       onChange={setWithdrawToNetwork}
