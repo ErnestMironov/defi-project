@@ -242,7 +242,7 @@ export const useTxStore = create<SelectedAssetState>()(
       getFullState: (): Partial<SelectedAssetState> => {
         const fullState = useTxStore.getState()
         return Object.fromEntries(
-          Object.entries(fullState).filter(([_, value]) => typeof value !== 'function'),
+          Object.entries(fullState).filter(([key, value]) => typeof value !== 'function'),
         ) as Partial<SelectedAssetState>
       },
 

@@ -1,6 +1,6 @@
 import CollapseIcon from '@assets/icons/collapse.svg'
 import ExpandIcon from '@assets/icons/expand_2.svg'
-import { Dialog, DialogContent, DialogHeader } from '@components/ui/dialog'
+import { Dialog, DialogContent } from '@components/ui/dialog'
 import { cloneElement } from 'react'
 
 import { DepositReviewContent } from './deposit/DepositReviewContent'
@@ -61,14 +61,6 @@ export const TxReviewModal = () => {
           showCloseButton
         >
           <div className="overflow-hidden rounded-3xl bg-cards-widget">
-            <DialogHeader className="flex flex-row justify-between gap-4 lg:px-8">
-              {intermediateError && (
-                <div className="rounded-[12.5rem] bg-red-5 px-4 py-2 text-red-100">
-                  {intermediateError.split('.')[0]}
-                </div>
-              )}
-            </DialogHeader>
-
             {renderContent()}
             <button
               type="button"

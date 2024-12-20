@@ -1,31 +1,16 @@
 import type { TokenShares } from '@api/contracts/useGetUserShares'
 import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
 import type { ChainType } from '@constants/chains'
+import type { UseGetMTokenInfoReturn } from '@modules/transaction-block/withdraw/hooks/useGetMTokenInfo'
 import { useMemo } from 'react'
 
-// Common token fields
-interface BaseToken {
-  balance: string
-  balanceUsd: string
-}
-
 // Specific token fields for each type
-interface DepositToken extends BaseToken {
-  contract_name: string
-  contract_ticker_symbol: string
-  balance_usd: string
-  chain_id: number
-}
+export interface DepositToken extends ITokenData {}
 
-interface WithdrawToken extends BaseToken {
-  stable: string
-  stableBalance: string
-  decimals: number
-  chainId: number
-}
+export interface WithdrawToken extends UseGetMTokenInfoReturn {}
 
 // Define token type based on input type
-type TokenType<T> = T extends ITokenData
+export type TokenType<T> = T extends ITokenData
   ? DepositToken
   : T extends TokenShares
   ? WithdrawToken
@@ -33,7 +18,7 @@ type TokenType<T> = T extends ITokenData
 
 export type TokensByChain<T> = Record<string, T[]>
 
-const sortTokensByUSDBalance = <T extends ITokenData | TokenShares>(tokens: T[]) => {
+const sortTokensByUSDBalance = <T extends TokenType<any>>(tokens: T[]) => {
   return [...tokens].sort((a, b) => {
     const bValue = 'balance_usd' in b ? b.balance_usd : b.stableBalance
     const aValue = 'balance_usd' in a ? a.balance_usd : a.stableBalance
@@ -41,7 +26,7 @@ const sortTokensByUSDBalance = <T extends ITokenData | TokenShares>(tokens: T[])
   })
 }
 
-const searchTokens = <T extends ITokenData | TokenShares>(
+const searchTokens = <T extends TokenType<any>>(
   tokens: T[],
   searchValue: string,
 ): T[] => {
@@ -60,7 +45,7 @@ const searchTokens = <T extends ITokenData | TokenShares>(
   })
 }
 
-export const useTokensList = <T extends ITokenData | TokenShares>(
+export const useTokensList = <T extends TokenType<any>>(
   userTokens: TokensByChain<T> | undefined,
   chain: ChainType | null,
   searchValue: string,

@@ -3,8 +3,9 @@ import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import { useChainsList } from '@hooks/chains/useChainsList'
 import { cn } from '@utils/cn'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { useTxStore } from '../store/useTxStore'
 import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
@@ -19,7 +20,6 @@ const RenderNetworkItem = ({
   onChange: (chain: ChainType) => void
   token: UseGetMTokenInfoReturn | null
 }) => {
-  console.log('🚀 ~ chain:', chain)
   return (
     <button
       type="button"
@@ -43,20 +43,29 @@ const RenderNetworkItem = ({
 
 export const SelectWithdrawNetworkModal = () => {
   const { withdrawToNetwork, setWithdrawToNetwork, mtToken, vault } = useTxStore()
-
   const { data, isLoading } = useGetWithdrawChains()
+  const chainsList = useChainsList()
 
   const chains = useMemo(() => {
     if (!vault || isLoading) return []
-
     return data?.data[vault]
   }, [data, vault, isLoading])
+
+  const filterItems = useCallback(
+    (items: ChainType[] | Record<string, ChainType[]>, searchValue: string) => {
+      if (!Array.isArray(items)) return []
+      return chainsList(items, searchValue)
+    },
+    [chainsList],
+  )
 
   return (
     <UniversalSelectModal<ChainType>
       title="Select network"
       selectedItem={withdrawToNetwork ?? undefined}
       items={chains as ChainType[]}
+      filterItems={filterItems}
+      filterBySearch
       isLoading={false}
       renderTrigger={() => (
         <ChoiceBox
@@ -74,7 +83,12 @@ export const SelectWithdrawNetworkModal = () => {
         />
       )}
       renderItem={(chain, onItemChange) => (
-        <RenderNetworkItem chain={chain} onChange={onItemChange} token={mtToken} />
+        <RenderNetworkItem
+          key={chain}
+          chain={chain}
+          onChange={onItemChange}
+          token={mtToken}
+        />
       )}
       onChange={setWithdrawToNetwork}
     />

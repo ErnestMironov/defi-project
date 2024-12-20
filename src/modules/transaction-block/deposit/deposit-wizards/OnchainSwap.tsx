@@ -163,7 +163,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ()
   const TransactionAnimation = useTransactionAnimation()
 
   return (
-    <div className="flex flex-col items-stretch gap-6 lg:gap-8">
+    <>
       <TransactionAnimation />
       <TxReviewInfo
         recipient={{
@@ -182,9 +182,9 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ()
           usdValue: amount,
         }}
       />
-      <div className="flex w-full flex-col items-stretch px-8">
+      <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">
         <ActionButton className="w-full px-[1.875rem] py-4 text-base font-medium normal-case leading-6" />
       </div>
-    </div>
+    </>
   )
 }
