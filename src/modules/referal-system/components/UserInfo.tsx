@@ -7,11 +7,11 @@ import type { Address } from 'viem'
 import { useAccount } from 'wagmi'
 
 import BonusMultiplier from './BonusMultiplier'
+import { Incentives } from './Incentives'
 import LeaderBoard from './LeaderBoard'
+import { OtherBenefits } from './OtherBenefits'
 import ReferalLinks from './ReferalLinks'
-import StarPoint from './StarPoint'
 import UserNextLevel from './UserNextLevel'
-import UserPoints from './UserPoints'
 
 interface UserInfoProperties extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -19,15 +19,11 @@ export default function UserInfo({ className, ...props }: UserInfoProperties) {
   const { address } = useAccount()
   const account = useAccount()
   const { signature } = useLocalSignature()
-  const { data: badgesInfo, isLoading: isBadgesLoading } = useGetUserBadges(
-    '0x374d2b0B856ED9b9e74Ce804871cD7a6D229B6E4',
-  )
-  console.log(badgesInfo, isBadgesLoading, address)
+  const { data: badgesInfo } = useGetUserBadges(address as Address)
   const { addressInfo } = useGetAddressInfo({
     address: account.address as Address,
     signature: signature || '',
   })
-  console.log(addressInfo)
 
   return (
     <div className={cn('', className)} {...props}>
@@ -63,20 +59,27 @@ export default function UserInfo({ className, ...props }: UserInfoProperties) {
                           badgesInfo?.currentLvl?.benefits.globalRewardMultiplier ?? 0
                         }
                       />
-
-                      <UserPoints
-                        value={badgesInfo?.currentLvl.benefits.rewardsFromReferrals}
+                      <Incentives
+                        incentives={
+                          badgesInfo?.currentLvl.benefits.benefitsDescription
+                            .incentives ?? null
+                        }
                       />
-                      <StarPoint
-                        value={badgesInfo?.currentLvl.benefits.initialBonus ?? 0}
+                      <OtherBenefits
+                        otherBenefits={
+                          badgesInfo?.currentLvl.benefits.benefitsDescription
+                            .other_benefits ?? null
+                        }
                       />
                     </div>
                   </div>
                 </div>
+                {badgesInfo?.currentLvl.benefits.benefitsDescription.other_benefits}
 
                 <div className="mt-4 block w-full pl-32 pr-16 max-md:hidden max-md:w-full max-md:px-0 lg:mt-0">
                   <UserNextLevel
                     className="w-full "
+                    currentLevel={badgesInfo?.currentLvl}
                     nextLevel={badgesInfo?.nextLvl}
                     userRewards={badgesInfo?.userRewards}
                   />
@@ -86,6 +89,7 @@ export default function UserInfo({ className, ...props }: UserInfoProperties) {
             <div className="mt-4 hidden w-full pl-32 pr-16 max-md:block max-md:w-full max-md:px-0 lg:mt-0">
               <UserNextLevel
                 className="w-full "
+                currentLevel={badgesInfo?.currentLvl}
                 nextLevel={badgesInfo?.nextLvl}
                 userRewards={badgesInfo?.userRewards}
               />
@@ -97,7 +101,7 @@ export default function UserInfo({ className, ...props }: UserInfoProperties) {
           <ReferalLinks
             className="w-full lg:w-[33rem]"
             codes={addressInfo?.created_referral_codes.map((code) => code.code) ?? []}
-            points={badgesInfo?.userRewards?.rewardsFromReferrals ?? 0}
+            points={25 ?? 0}
           />
         </div>
       </div>

@@ -140,9 +140,14 @@ export const PortfolioModal = ({
                       <span className="font-medium">Portfolio Value</span>
                       <PortfolioValueTooltip />
                       {!isMobile && (
-                        <div className="flex items-center gap-[0.12rem]">
-                          <TriangleUpIcon className="size-4" />
-                          <span className="w-full text-sm font-medium text-green-11100">
+                        <div
+                          className={cn(
+                            'flex items-center gap-[0.12rem]',
+                            portfolioGrowth > 0 ? 'text-green-11100' : 'text-text-8100',
+                          )}
+                        >
+                          <TriangleUpIcon className="size-4 [&_path]:fill-current" />
+                          <span className="w-full text-sm font-medium">
                             (
                             {formatAmount(portfolioGrowth, {
                               minimumFractionDigits: 2,

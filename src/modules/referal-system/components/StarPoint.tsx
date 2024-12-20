@@ -7,7 +7,7 @@ interface StarPointProperties extends React.HTMLAttributes<HTMLDivElement> {
 export default function StarPoint({ value, ...props }: StarPointProperties) {
   return (
     <div
-      className="flex items-center justify-center gap-1 rounded-md  bg-main-15 p-1 px-2 text-sm"
+      className="flex w-full items-center justify-start gap-1 rounded-md  bg-main-15 p-1 px-2 text-sm"
       {...props}
     >
       <p className="text-sm font-medium text-main-100">+</p>
