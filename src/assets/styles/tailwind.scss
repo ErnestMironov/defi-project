@@ -229,7 +229,7 @@
 		0px 6px 9px 0px rgba(0, 0, 0, 0.04);
 }
 
-.gradient-border-animated {
+.gradient-border {
 	position: relative;
 	background: #ffffff;
 
@@ -239,11 +239,23 @@
 		inset: -2px;
 		z-index: -1;
 		background: linear-gradient(180deg, #6160ff 0%, #8585a900 100%);
+		box-shadow:
+			0px 6px 66px 0px rgba(97, 96, 255, 0.15),
+			0px 6px 9px 0px rgba(97, 96, 255, 0.04);
 		background-size: 200% 100%;
 		border-radius: 1.6rem;
 	}
+
+	&.error {
+		&::before {
+			background: linear-gradient(180deg, #ff4057 0%, #ff405700 100%);
+			box-shadow:
+				0px 6px 66px 0px rgba(255, 64, 87, 0.15),
+				0px 6px 9px 0px rgba(255, 64, 87, 0.04);
+		}
+	}
 }
 
-.dark .gradient-border-animated {
+.dark .gradient-border {
 	background: #232329;
 }

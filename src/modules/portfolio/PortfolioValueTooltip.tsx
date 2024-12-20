@@ -26,7 +26,7 @@ export const PortfolioValueTooltipMobile = () => {
       <PopoverTrigger>
         <TooltipIcon className="size-4" />
       </PopoverTrigger>
-      <PopoverContent sideOffset={10} className="rounded-xl p-4">
+      <PopoverContent sideOffset={10} className="z-[9999] mx-4 rounded-xl p-4">
         <p className="truncate">Total assets locked in MAAT Vaults</p>
       </PopoverContent>
     </Popover>
@@ -38,7 +38,9 @@ export const PortfolioValueTooltipDesktop = () => {
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger>
-          <TooltipIcon className="size-4" />
+          <div className="flex w-5 items-center justify-center rounded border border-stroke-100 px-[0.4375rem] py-[0.12rem] text-center font-aeonik text-[0.6875rem] leading-4 text-text-100">
+            ?
+          </div>
         </TooltipTrigger>
         <TooltipContent sideOffset={10} className="rounded-xl p-4">
           <p className="truncate">Total assets locked in MAAT Vaults</p>

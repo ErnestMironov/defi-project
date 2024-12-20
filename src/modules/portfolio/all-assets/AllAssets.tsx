@@ -32,18 +32,18 @@ const AssetsTabs = ({
   potentialUsdProfit: string
 }) => (
   <Tabs defaultValue="tokens" className="">
-    <TabsList className="w-full justify-start gap-4 border-b px-6">
+    <TabsList className="w-full justify-start gap-4 border-b border-stroke-100 px-6 max-md:px-4">
       <TabsTrigger
         variant="unstyled"
         value="tokens"
-        className="py-3 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100"
+        className="py-3  text-md text-text-2100 data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100 max-md:text-sm max-md:leading-6"
       >
         Tokens
       </TabsTrigger>
       <TabsTrigger
         value="chains"
         variant="unstyled"
-        className="py-3 text-md data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100"
+        className=" py-3 text-md  text-text-2100 data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100 max-md:text-sm max-md:leading-6"
       >
         Chains
       </TabsTrigger>

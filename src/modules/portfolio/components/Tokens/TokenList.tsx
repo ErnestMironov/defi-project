@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { formatUnits } from 'viem'
 
 import { YieldPotential } from '../YieldPotential'
+import { YieldPotentialMobile } from '../YieldPotentialMobile'
 import tokenGroups from './tokenGroups.json'
 
 interface GroupedTokenListWithExceptionsProperties extends ComponentProps<'div'> {
@@ -48,8 +49,8 @@ const GroupedTokenItem = ({
     >
       <div
         className={cn(
-          'flex items-center justify-between px-6 gap-2 cursor-pointer',
-          isOpen && 'border-b pb-4',
+          'flex items-center justify-between px-6 gap-2 cursor-pointer max-md:px-3',
+          isOpen && 'border-b border-stroke-100 pb-4',
         )}
         onClick={toggleOpen}
       >
@@ -57,8 +58,8 @@ const GroupedTokenItem = ({
           <TokenIconComponent
             symbol={tokenGroup[0].contract_ticker_symbol}
             className={cn(
-              'rounded-full transition-all duration-300',
-              isOpen ? 'size-7' : 'size-12',
+              'rounded-full transition-all duration-300 overflow-hidden',
+              isOpen ? 'size-7 max-md:size-[1.5rem]' : 'size-12 max-md:size-[2.5rem]',
             )}
             tokenLogoFallback={tokenGroup[0].logo_url}
           />
@@ -79,7 +80,10 @@ const GroupedTokenItem = ({
                     <TokenIconComponent
                       key={chainId}
                       symbol={chainId}
-                      className={cn('size-5 rounded-full', index !== 0 && '-ml-2')}
+                      className={cn(
+                        'size-5 rounded-full overflow-hidden',
+                        index !== 0 && '-ml-2',
+                      )}
                       tokenLogoFallback={tokenGroup[0].logo_url}
                     />
                   ))}
@@ -94,7 +98,7 @@ const GroupedTokenItem = ({
         </div>
         <div className="pr-2 text-right">
           <p className="font-medium">
-            <span className="text-text-50">{formatUsdValue(totalBalanceUsd)[0]}</span>
+            <span className="text-text-2100">{formatUsdValue(totalBalanceUsd)[0]}</span>
             <span className="text-text-1100">
               {formatUsdValue(totalBalanceUsd).slice(1)}
             </span>
@@ -107,12 +111,12 @@ const GroupedTokenItem = ({
           {tokenGroup.map((token) => (
             <div
               key={token.contract_ticker_symbol}
-              className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-light-blue-15"
+              className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-light-blue-15 max-md:px-3"
             >
-              <div className="flex  items-center gap-1">
+              <div className="flex  items-center gap-2">
                 <TokenIconComponent
                   symbol={token.contract_ticker_symbol}
-                  className="size-12 rounded-full"
+                  className="size-12 overflow-hidden rounded-full max-lg:size-10"
                   tokenLogoFallback={token.logo_url}
                 />
                 <div className="flex flex-col">
@@ -125,7 +129,7 @@ const GroupedTokenItem = ({
                   <span className="flex gap-0.5 text-sm text-text-2100">
                     <TokenIconComponent
                       symbol={token.chain_id}
-                      className="size-4 rounded-full"
+                      className="size-4 overflow-hidden rounded-full"
                       tokenLogoFallback={token.logo_url}
                     />
                     {CHAIN_NAMES_BY_ID[token.chain_id as keyof typeof CHAIN_NAMES_BY_ID]}
@@ -134,7 +138,7 @@ const GroupedTokenItem = ({
               </div>
               <div className="text-right">
                 <p className="text-base">
-                  <span className="text-text-50">$</span>
+                  <span className="text-text-2100">$</span>
                   {formatAmount(token.balance_usd)}
                 </p>
               </div>
@@ -167,9 +171,13 @@ export default function TokenList({
 
   return (
     <>
-      <YieldPotential potentialUsdProfit={potentialUsdProfit} />
+      <YieldPotential potentialUsdProfit={potentialUsdProfit} className="max-md:hidden" />
+      <YieldPotentialMobile
+        potentialUsdProfit={potentialUsdProfit}
+        className="hidden max-md:flex"
+      />
       <div className={cn('px-1 pb-1', className)}>
-        <div className="flex flex-col gap-4 rounded-xl py-4">
+        <div className="flex flex-col gap-4 rounded-xl py-4 text-base max-md:gap-0 max-md:text-sm">
           {Object.entries(groupedTokens).map(([groupName, tokenGroup]) => (
             <GroupedTokenItem
               key={groupName}

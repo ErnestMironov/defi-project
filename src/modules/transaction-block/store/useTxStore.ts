@@ -100,6 +100,8 @@ export interface SelectedAssetState {
   setIntermediateError: (error: string | null) => void
   transactionError: string | null
   setTransactionError: (error: string | null) => void
+  inputError: string | null
+  setInputError: (error: string | null) => void
 
   // Easter egg
   brakeBalance: boolean
@@ -120,119 +122,129 @@ export interface SelectedAssetState {
   setNetworkSwitchStatus: (status: STEP_STATUS) => void
   setApprovalStatus: (status: STEP_STATUS) => void
   setTransactionStatus: (status: STEP_STATUS) => void
+
+  withdrawToAnotherChain: boolean
+  setWithdrawToAnotherChain: (value: boolean) => void
 }
 
 export const useTxStore = create<SelectedAssetState>()(
   devtools(
     (set) => ({
+      // Transaction type and difficulty
+      txType: TX_TYPE.DEPOSIT,
+      setTxType: (by) => set({ txType: by, inputValue: '' }),
+      txDifficulty: 'on_chain',
+      setTxDifficulty: (value) => set({ txDifficulty: value }),
+      isTxZAP: false,
+      setIsTxZAP: (value) => set({ isTxZAP: value }),
+
+      // Asset and network information
+      depositAsset: null,
+      setDepositAsset: (by) => set({ depositAsset: convertBigIntToString(by) }),
+      depositFromNetwork: null,
+      setDepositFromNetwork: (by) => set({ depositFromNetwork: by }),
+      depositToNetwork: null,
+      setDepositToNetwork: (by) => set({ depositToNetwork: by }),
+      withdrawFromNetwork: null,
+      setWithdrawFromNetwork: (by) => set({ withdrawFromNetwork: by }),
+      withdrawToNetwork: null,
+      setWithdrawToNetwork: (by) => set({ withdrawToNetwork: by }),
+
+      // Vault information
+      vault: undefined,
+      setVault: (by) => set({ vault: by }),
+      vaultAddress: undefined,
+      setVaultAddress: (by) => set({ vaultAddress: by }),
+      vaultDepositTokenAddress: undefined,
+      setVaultDepositTokenAddress: (by) => set({ vaultDepositTokenAddress: by }),
+
+      // Withdraw Token information
+      mtToken: null,
+      setMToken: (by) => set({ mtToken: convertBigIntToString(by) }),
+
+      // Input values and amounts
       inputValue: '',
       setInputValue: (by) => set({ inputValue: by }),
       inputValueInUSD: '',
       setInputValueInUSD: (by) => set({ inputValueInUSD: by }),
-
       depositTotalInUSD: '',
       setDepositTotalInUSD: (by) => set({ depositTotalInUSD: by }),
-
-      // asset
-      depositAsset: null,
-      setDepositAsset: (by) => set({ depositAsset: convertBigIntToString(by) }),
-      // network
-      depositFromNetwork: null,
-      setDepositFromNetwork: (by) => set({ depositFromNetwork: by }),
-      // representation tokens chain
-      depositToNetwork: null,
-      setDepositToNetwork: (by) => set({ depositToNetwork: by }),
-
-      withdrawFromNetwork: null,
-      setWithdrawFromNetwork: (by) => set({ withdrawFromNetwork: by }),
-
-      withdrawToNetwork: null,
-      setWithdrawToNetwork: (by) => set({ withdrawToNetwork: by }),
-
-      vault: undefined,
-      setVault: (by) => set({ vault: by }),
-
-      vaultAddress: undefined,
-      setVaultAddress: (by) => set({ vaultAddress: by }),
-
-      vaultDepositTokenAddress: undefined,
-      setVaultDepositTokenAddress: (by) => set({ vaultDepositTokenAddress: by }),
-
-      collapseTxInfo: false,
-      setCollapseTxInfo: (value) => set({ collapseTxInfo: value }),
-
       depositTotalAmount: '',
       setDepositTotalAmount: (by) => set({ depositTotalAmount: by }),
-
-      // mtToken
-      mtToken: null,
-      setMToken: (by) => set({ mtToken: convertBigIntToString(by) }),
-      // tx type
-      txType: TX_TYPE.DEPOSIT,
-      setTxType: (by) => set({ txType: by, inputValue: '' }),
-
-      // modal
-      currentModal: null,
-      setCurrentModal: (by) => set({ currentModal: by }),
-
-      // Add these new properties
-      intermediateError: null,
-      setIntermediateError: (by) => set({ intermediateError: by }),
-      transactionError: null,
-      setTransactionError: (by) => set({ transactionError: by }),
-
-      // deposit amount
       depositAmount: '',
       setDepositAmount: (by) => set({ depositAmount: by }),
-
-      // withdraw amount
       withdrawAmount: '',
       setWithdrawAmount: (by) => set({ withdrawAmount: by }),
 
-      // arrival gas
-      arrivalGas: '',
-      setArrivalGas: (by) => set({ arrivalGas: by }),
-
+      // Modal and UI state
+      currentModal: null,
+      setCurrentModal: (by) => set({ currentModal: by }),
       currentStep: 1,
       setCurrentStep: (by) => set({ currentStep: by }),
-
       isTransactionCanBeCollapsed: false,
       setTransactionCanBeCollapsed: (value) =>
         set({ isTransactionCanBeCollapsed: value }),
+      collapseTxInfo: false,
+      setCollapseTxInfo: (value) => set({ collapseTxInfo: value }),
 
+      // Transaction-related information
       isTransactionFromStore: false,
       setTransactionFromStore: (value) => set({ isTransactionFromStore: value }),
-
       setTransactionData: (transaction: IPendingTransactionData) =>
         set((state) => ({
           ...state,
           ...transaction,
         })),
+      transactionHash: null,
+      setTransactionHash: (hash) => set({ transactionHash: hash }),
 
+      // Additional features
+      arrivalGas: '',
+      setArrivalGas: (by) => set({ arrivalGas: by }),
+
+      // LiFi route information
+      swapRoute: undefined,
+      setSwapRoute: (route) => set({ swapRoute: route }),
+
+      // Timer and animation
+      timerDuration: 120,
+      setTimerDuration: (duration) => set({ timerDuration: duration }),
+      animationStatus: 'idle',
+      setAnimationStatus: (status) => set({ animationStatus: status }),
+
+      // Error handling
+      intermediateError: null,
+      setIntermediateError: (by) => set({ intermediateError: by }),
+      transactionError: null,
+      setTransactionError: (by) => set({ transactionError: by }),
+      inputError: null,
+      setInputError: (error) => set({ inputError: error }),
+
+      // Easter egg
+      brakeBalance: false,
+      setBrakeBalance: (value) => set({ brakeBalance: value }),
+      scalesClickCount: 0,
+      setScalesClickCount: (value) => set({ scalesClickCount: value }),
+
+      // Transaction statuses
+      networkSwitchStatus: 'idle',
+      approvalStatus: 'idle',
+      transactionStatus: 'idle',
+      setNetworkSwitchStatus: (status) => set({ networkSwitchStatus: status }),
+      setApprovalStatus: (status) => set({ approvalStatus: status }),
+      setTransactionStatus: (status) => set({ transactionStatus: status }),
+
+      // Additional settings
+      withdrawToAnotherChain: false,
+      setWithdrawToAnotherChain: (value) => set({ withdrawToAnotherChain: value }),
+
+      // Utility functions
       getFullState: (): Partial<SelectedAssetState> => {
         const fullState = useTxStore.getState()
         return Object.fromEntries(
           Object.entries(fullState).filter(([_, value]) => typeof value !== 'function'),
         ) as Partial<SelectedAssetState>
       },
-
-      transactionHash: null,
-      setTransactionHash: (hash) => set({ transactionHash: hash }),
-
-      swapRoute: undefined,
-      setSwapRoute: (route) => set({ swapRoute: route }),
-
-      txDifficulty: 'on_chain',
-      setTxDifficulty: (value) => set({ txDifficulty: value }),
-
-      isTxZAP: false,
-      setIsTxZAP: (value) => set({ isTxZAP: value }),
-
-      timerDuration: 120,
-      setTimerDuration: (duration) => set({ timerDuration: duration }),
-
-      animationStatus: 'idle',
-      setAnimationStatus: (status) => set({ animationStatus: status }),
 
       resetStore: () =>
         set({
@@ -262,23 +274,8 @@ export const useTxStore = create<SelectedAssetState>()(
           isTxZAP: false,
           intermediateError: null,
           transactionError: null,
+          withdrawToAnotherChain: false,
         }),
-
-      brakeBalance: false,
-      setBrakeBalance: (value) => set({ brakeBalance: value }),
-
-      scalesClickCount: 0,
-      setScalesClickCount: (value) => set({ scalesClickCount: value }),
-
-      // Transaction statuses
-      networkSwitchStatus: 'idle',
-      approvalStatus: 'idle',
-      transactionStatus: 'idle',
-
-      // Actions
-      setNetworkSwitchStatus: (status) => set({ networkSwitchStatus: status }),
-      setApprovalStatus: (status) => set({ approvalStatus: status }),
-      setTransactionStatus: (status) => set({ transactionStatus: status }),
     }),
     {
       name: 'TxStore',

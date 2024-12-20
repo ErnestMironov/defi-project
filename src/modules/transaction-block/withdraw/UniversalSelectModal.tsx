@@ -1,76 +1,143 @@
-import InfoIcon from '@assets/icons/info-2.svg'
-import WarningIcon from '@assets/icons/warn.svg'
-import sorry from '@assets/images/sorry.png'
-import horus from '@assets/lottie/horus.json'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@components/ui/dialog'
-import Lottie from 'lottie-react'
-import type { HTMLAttributes } from 'react'
+import Search from '@assets/icons/search.svg'
+import { SystemMessage } from '@components/system-message'
+import { Dialog, DialogTrigger } from '@components/ui/dialog'
+import { ScrollArea } from '@components/ui/scroll-area'
+import { Skeleton } from '@components/ui/skeleton'
+import type { ChainType } from '@constants/chains'
+import type { HTMLAttributes, ReactNode } from 'react'
 import { useState } from 'react'
 
-interface UniversalSelectModalProperties<T, U> {
-  title: string
-  selectedItem: U | null
-  onChange: (item: U) => void
-  items: T[]
-  isLoading: boolean
-  renderTrigger: (selectedItem: U | null) => React.ReactNode
-  renderItem: (item: T, onChange: (item: U) => void) => React.ReactNode
+import { ResponsiveDialogContent } from '../deposit/components/ResponsiveDialogContent'
+import { SelectChainTrigger } from '../deposit/components/SelectChainTrigger'
+import { SelectNetworkPopover } from '../SelectNetworkPopover'
+
+interface TokensByChain<T> {
+  [chain: string]: T[]
 }
 
-export function UniversalSelectModal<T, U>({
-  title,
+interface UniversalSelectModalProperties<T, R = T> {
+  selectedItem?: T
+  items: TokensByChain<T> | T[]
+  isLoading?: boolean
+  filterByNetwork?: boolean
+  filterBySearch?: boolean
+  filterItems?: (
+    items: TokensByChain<T> | T[],
+    searchValue: string,
+    network: ChainType | null,
+  ) => T[]
+  renderTrigger: (selectedItem?: T) => ReactNode
+  renderItem: (item: T, onChange: (value: R) => void) => ReactNode
+  onChange: (value: R) => void
+}
+
+const renderItems = <T, R>(
+  items: TokensByChain<T> | T[],
+  renderItem: (item: T, onChange: (value: R) => void) => ReactNode,
+  handleChange: (item: R) => void,
+) => {
+  if (Array.isArray(items)) return items.map((item) => renderItem(item, handleChange))
+  return Object.values(items)
+    .flat()
+    .map((item) => renderItem(item, handleChange))
+}
+
+export function UniversalSelectModal<T, R = T>({
   selectedItem,
   items,
   isLoading,
   renderTrigger,
   renderItem,
   onChange,
-}: UniversalSelectModalProperties<T, U> &
+  filterByNetwork = false,
+  filterBySearch = false,
+  filterItems,
+}: UniversalSelectModalProperties<T, R> &
   Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>) {
   const [opened, setOpened] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const [network, setNetwork] = useState<ChainType | null>(null)
 
-  const handleChange = (item: U) => {
-    console.log('🚀 ~ handleChange ~ item:', item)
-    onChange(item as U)
+  const handleChange = (item: R) => {
+    onChange(item)
     setOpened(false)
   }
+
+  const filteredItems = filterItems
+    ? filterItems(items, searchValue, network)
+    : ([] as T[])
+
+  console.log(filteredItems)
 
   return (
     <Dialog open={opened} onOpenChange={() => setOpened(!opened)}>
       <DialogTrigger>{renderTrigger(selectedItem)}</DialogTrigger>
-      <DialogContent className="gap-6 text-text max-lg:max-w-[90%]">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
-        <div className="max-h-[60vh] space-y-2 overflow-auto">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center gap-2">
-              <Lottie className="w-60" animationData={horus} loop />
-              <div className="flex items-center justify-center gap-2 self-stretch rounded-2xl bg-[rgba(97,_96,_255,_0.05)] px-6 py-4 text-[1.25rem] leading-[150%]">
-                <InfoIcon className="size-8" />
-                We are looking for your positions onchain...
-              </div>
-            </div>
-          ) : (
-            items.map((item) => renderItem(item, handleChange))
-          )}
-          {items.length === 0 && !isLoading && (
-            <div className="flex flex-col items-center justify-center gap-2">
-              <img src={sorry} alt="sorry" className="w-60" />
-              <div className="flex items-center justify-center gap-2 self-stretch rounded-2xl bg-orange-15 px-6 py-4 text-[1.25rem] leading-[150%]">
-                <WarningIcon className="size-8" />
-                Looks like you haven&apos;t staked anything yet!
-              </div>
-            </div>
-          )}
-        </div>
-      </DialogContent>
+
+      <ResponsiveDialogContent
+        className="max-w-[31.25rem] border border-stroke-100"
+        opened={opened}
+        setOpened={setOpened}
+      >
+        {(filterBySearch || filterByNetwork) && (
+          <div className="relative flex w-full items-stretch gap-2 px-6 py-4 max-lg:max-w-full">
+            {filterBySearch && (
+              <label
+                htmlFor="search-input"
+                className="flex grow items-center gap-2 rounded-xl bg-input-default px-6 py-4"
+              >
+                <span className="sr-only">Search tokens</span>
+                <Search />
+                <input
+                  id="search-input"
+                  name="search-input"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  type="text"
+                  className="max-w-full bg-transparent text-lg placeholder:text-gray-100 focus:outline-none max-lg:max-w-24"
+                  placeholder="Search"
+                />
+              </label>
+            )}
+            {filterByNetwork && (
+              <SelectNetworkPopover
+                chain={network}
+                onChange={setNetwork}
+                trigger={<SelectChainTrigger chain={network} />}
+                showAllNetworksOption
+              />
+            )}
+          </div>
+        )}
+
+        <ScrollArea className="h-[19.5rem] overscroll-none px-1 max-lg:h-auto max-lg:grow">
+          <div className="space-y-1">
+            {isLoading && (
+              <>
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    className="flex h-[4.5rem] w-full cursor-pointer items-center rounded-xl border border-stroke-100 px-4 py-3 hover:bg-input-default"
+                  />
+                ))}
+              </>
+            )}
+
+            {renderItems(
+              filterByNetwork || filterBySearch ? filteredItems : items,
+              renderItem,
+              handleChange,
+            )}
+
+            {filteredItems.length === 0 && searchValue && (
+              <SystemMessage
+                className="mx-5"
+                variant="error"
+                message="Whoops...This token was not found"
+              />
+            )}
+          </div>
+        </ScrollArea>
+      </ResponsiveDialogContent>
     </Dialog>
   )
 }
