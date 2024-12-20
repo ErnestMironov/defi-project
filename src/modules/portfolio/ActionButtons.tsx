@@ -1,7 +1,7 @@
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import Add from './assets/icons/add.svg'
 import Deposit from './assets/icons/deposit.svg'
@@ -17,13 +17,14 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
   const { setTxType } = useTxStore()
   const MIN_VALUE = 0.001
   const isHaveDeposit = value > MIN_VALUE
-
+  const navigate = useNavigate()
   const handleClick = (type: 'deposit' | 'withdraw') => (e: React.MouseEvent) => {
     e.preventDefault()
     setTxType(type)
     if (window.matchMedia('(max-width: 768px)').matches) {
       onClose?.()
     }
+    navigate('/')
   }
 
   return (
@@ -56,9 +57,10 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
         </Link>
       )}
       <Link
-        to="/"
-        onClick={handleClick('deposit')}
-        className="flex flex-col justify-start gap-3 rounded-xl bg-light-blue-15 p-4 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold"
+        to="##"
+        onClick={() => {}}
+        className="flex cursor-auto flex-col justify-start gap-3 rounded-xl bg-light-blue-15 p-4 normal-case text-main-100 opacity-50 max-lg:gap-[0.38rem] lg:font-bold"
+        aria-disabled
       >
         <Add className="size-6 max-lg:size-7" />
         <span className="text-sm font-medium leading-4 max-lg:text-sm">Buy crypto</span>

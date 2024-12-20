@@ -59,7 +59,7 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <LinkIcon className="size-5" />
-              <p className="ml-1 text-sm">Etherscan</p>
+              <p className="ml-1 text-sm">View on scanner</p>
             </div>
             <ScanLink chainId={event.src_chain_id} txHash={event.hash} className="ml-1" />
           </div>

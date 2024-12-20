@@ -73,7 +73,9 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
           <Table.Head>
             <Table.Row className="text-sm">
               <Table.HeadCell className="!text-text-60">#</Table.HeadCell>
-              <Table.HeadCell className="py-5 pl-4 pr-3">Address</Table.HeadCell>
+              <Table.HeadCell className="w-[41.5rem] py-5 pl-4 pr-3">
+                Address
+              </Table.HeadCell>
               <Table.HeadCell>LVL</Table.HeadCell>
               <Table.HeadCell>Collected</Table.HeadCell>
             </Table.Row>
@@ -87,8 +89,10 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
                   <Table.Cell className="w-[3.75rem] text-sm text-text-60">
                     #{index + 1}
                   </Table.Cell>
-                  <Table.Cell className="flex items-center gap-[0.38rem]">
-                    {shortenAddress(user.info.userId)}
+                  <Table.Cell className="flex w-[41.5rem] items-center">
+                    <span className="w-full max-w-[6.5rem]">
+                      {shortenAddress(user.info.userId)}
+                    </span>
                     <CopyButton text={user.info.userId} />
                   </Table.Cell>
                   <Table.Cell className="text-sm">{user.badge.level}</Table.Cell>

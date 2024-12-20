@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { useState } from 'react'
 
 import { UserActivity } from './UserActivity'
 import { UserTokens } from './UserTokens'
@@ -12,10 +11,9 @@ interface UserActivityTabsProperties extends ComponentProps<'div'> {
 
 export const UserActivityTabs = (props: UserActivityTabsProperties) => {
   const { className, value, ...rest } = props
-  const [activeTab, setActiveTab] = useState('tokens')
   return (
     <div className={cn('flex flex-col gap-4', className)} {...rest}>
-      <Tabs defaultValue="tokens" className="" onValueChange={setActiveTab}>
+      <Tabs defaultValue="tokens" className="">
         <TabsList className=" flex w-full justify-between border-b  border-stroke-100 px-6 max-md:px-4">
           <div className="flex gap-4">
             <TabsTrigger
@@ -35,7 +33,6 @@ export const UserActivityTabs = (props: UserActivityTabsProperties) => {
               Activity
             </TabsTrigger>
           </div>
-          {activeTab === 'activity' && <a href="##">See all</a>}
         </TabsList>
         <TabsContent value="tokens">
           <UserTokens />

@@ -29,7 +29,7 @@ export const Points = (_props: PointsProperties) => {
   useCheckRegistration()
 
   return (
-    <div className="flex flex-col gap-6 max-md:gap-[0.88rem]">
+    <div className="flex flex-col gap-6 max-md:mt-4 max-md:gap-[0.88rem]">
       <InfoBlock className="" />
       <div className="mt-12 grid grid-cols-4 gap-4 max-md:mt-0 max-md:grid-cols-1 max-md:gap-6 max-md:rounded-3xl max-md:bg-cards-widget max-md:p-6">
         {EARNING_METHODS.map((earningMethod) => (

@@ -1,7 +1,7 @@
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
-interface StatusLabelProperties extends ComponentProps<'span'> {
+interface StatusLabelProperties extends ComponentProps<'div'> {
   status: 'success' | 'in progress' | 'failed'
 }
 
@@ -13,9 +13,9 @@ const STATUS_CLASSES = {
 
 export const StatusLabel = ({ status, className, ...rest }: StatusLabelProperties) => {
   return (
-    <span
+    <div
       className={cn(
-        'ml-2 p-1 px-2 rounded-xl flex items-center gap-2 max-lg:text-sm',
+        'ml-2 p-1 w-[4.875rem] px-2 text-center rounded-xl flex items-center justify-center gap-2 max-lg:text-sm',
         STATUS_CLASSES[status.replace(' ', '') as keyof typeof STATUS_CLASSES],
         className,
       )}
@@ -26,6 +26,6 @@ export const StatusLabel = ({ status, className, ...rest }: StatusLabelPropertie
       ) : (
         status.charAt(0).toUpperCase() + status.slice(1)
       )}
-    </span>
+    </div>
   )
 }

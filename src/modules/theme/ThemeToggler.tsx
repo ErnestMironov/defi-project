@@ -36,7 +36,7 @@ export function ThemeToggler(props: ThemeToggleProperties) {
     >
       <motion.div
         className={cn(
-          'absolute top-1 left-1 z-0 rounded-[12px]',
+          'absolute top-1 left-1 z-0 rounded-[0.5rem]',
           'bg-main-100',
           'transition-all duration-300 ease-out hover:cursor-none',
         )}
@@ -60,7 +60,7 @@ export function ThemeToggler(props: ThemeToggleProperties) {
           variant="container"
           onClick={handleSetLightTheme}
           className={cn(
-            'flex justify-center items-center w-auto h-auto rounded-[12px] hover:bg-main-100',
+            'flex justify-center items-center w-auto h-auto rounded-[0.5rem] hover:bg-main-100',
             theme === 'light' ? 'bg-main-100' : 'bg-transparent',
           )}
         >
@@ -79,7 +79,7 @@ export function ThemeToggler(props: ThemeToggleProperties) {
           variant="container"
           onClick={handleSetDarkTheme}
           className={cn(
-            'flex justify-center items-center w-auto h-auto rounded-[12px]',
+            'flex justify-center items-center w-auto h-auto rounded-[0.5rem]',
             theme === 'dark' ? '!bg-main-100' : 'bg-transparent',
           )}
         >
