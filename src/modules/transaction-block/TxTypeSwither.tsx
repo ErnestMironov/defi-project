@@ -15,13 +15,21 @@ const TABS = [
     value: TX_TYPE.DEPOSIT,
     label: 'Deposit',
     icon: (isActive: boolean) =>
-      isActive ? <DepositIconActive /> : <DepositIconInactive />,
+      isActive ? (
+        <DepositIconActive className="size-4 max-lg:size-6" />
+      ) : (
+        <DepositIconInactive className="size-4 max-lg:size-6" />
+      ),
   },
   {
     value: TX_TYPE.WITHDRAW,
     label: 'Withdraw',
     icon: (isActive: boolean) =>
-      isActive ? <WithdrawIconActive /> : <WithdrawIconInactive />,
+      isActive ? (
+        <WithdrawIconActive className="size-4 max-lg:size-6" />
+      ) : (
+        <WithdrawIconInactive className="size-4 max-lg:size-6" />
+      ),
   },
 ]
 
@@ -95,7 +103,7 @@ export const TxTypeSwitcher: FC = () => {
             ref={(el) => (tabsReference.current[index] = el)}
             onClick={() => setTxType(tab.value)}
             className={clsx(
-              'relative z-10 flex items-center px-4 py-3 text-sm font-medium transition-colors',
+              'relative z-10 flex items-center px-4 py-3 text-sm font-medium transition-colors max-lg:px-3 max-lg:py-2',
               txType === tab.value ? 'text-white' : 'text-[#8585A9]',
             )}
           >

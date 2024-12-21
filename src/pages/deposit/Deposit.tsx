@@ -1,8 +1,6 @@
 import BgLines from '@assets/vectors/bg-lines.svg'
 import BgLinesError from '@assets/vectors/bg-lines_error.svg'
-import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useVaultAPY } from '@hooks/useVaultAPY'
-import { TVLDisplay } from '@modules/transaction-block/components/TVLDisplay'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { TransactionBlock } from '@modules/transaction-block/TransactionBlock'
 import { useEffect, useRef } from 'react'
@@ -11,7 +9,6 @@ export const Deposit = () => {
   // useCheckRegistration()
 
   const { bestUSDCApy, bestUSDTApy, isLoading: isStrategiesLoading } = useVaultAPY()
-  const { isBelowDesktop } = useDeviceWidth()
 
   const { setVault, inputError } = useTxStore()
   const vaultSet = useRef(false)
@@ -37,7 +34,7 @@ export const Deposit = () => {
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-between gap-10  pb-10">
-      <div className="fixed inset-0 z-[-1] w-full bg-bg">
+      <div className="fixed inset-0 z-[-1] w-full bg-bg max-lg:hidden">
         {inputError ? (
           <BgLinesError className="w-full" />
         ) : (
@@ -45,7 +42,6 @@ export const Deposit = () => {
         )}
       </div>
       <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
-        {isBelowDesktop && <TVLDisplay />}
         <TransactionBlock />
       </div>
       <div className="grid w-full translate-y-full justify-between gap-4 pb-10 max-lg:mt-20 lg:grid-cols-[1fr,2fr,1fr]">

@@ -53,7 +53,7 @@ export const SwappableInputs = ({
   if (!asset) {
     return (
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[1.5rem] font-medium leading-[3.25rem] tracking-[-0.015rem] text-text-20">
+        <p className="text-[1.5rem] font-medium leading-[3.25rem] tracking-[-0.015rem] text-text-20 max-lg:text-[1rem]">
           Select the desired asset
         </p>
         {rightElement}

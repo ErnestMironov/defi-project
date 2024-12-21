@@ -26,13 +26,13 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
   return (
     <div
       className={clsx(
-        'gradient-border relative flex w-full flex-col rounded-3xl pt-4 max-lg:gap-6 max-lg:p-4',
+        'gradient-border relative flex w-full flex-col rounded-3xl pt-4 max-lg:pt-2',
         inputError && 'error',
         className,
       )}
       {...rest}
     >
-      <div className="mb-4 flex px-4 max-lg:flex-col max-lg:items-end max-lg:gap-6 lg:items-center lg:justify-between">
+      <div className="mb-4 flex items-center justify-between px-4 max-lg:mb-2">
         <TxTypeSwitcher />
         {txType === TX_TYPE.DEPOSIT ? (
           <TVLDisplay />
