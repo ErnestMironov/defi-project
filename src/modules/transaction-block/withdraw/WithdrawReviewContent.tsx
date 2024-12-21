@@ -14,11 +14,7 @@ import { useTxStore } from '../store/useTxStore'
 import { getButtonContent } from '../utils/getButtonText'
 import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
 
-export const WithdrawReviewContent = ({
-  allStepsCompleted,
-}: {
-  allStepsCompleted?: boolean
-}) => {
+export const WithdrawReviewContent = () => {
   const {
     inputValue: amount,
     withdrawAmount: withdrawAmountInUSD,

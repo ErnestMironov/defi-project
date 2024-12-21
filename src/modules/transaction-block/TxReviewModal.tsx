@@ -17,7 +17,6 @@ export const TxReviewModal = () => {
     isTransactionCanBeCollapsed,
     txType,
     resetStore,
-    intermediateError,
     setIntermediateError,
     isTransactionFromStore,
     setBrakeBalance,
