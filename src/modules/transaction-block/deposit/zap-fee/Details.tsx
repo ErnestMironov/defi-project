@@ -1,5 +1,9 @@
 import Lightning from '@assets/icons/green-lightning.svg'
-import { Dialog, DialogContent, DialogTitle } from '@components/ui/dialog'
+import {
+  AdaptiveModal,
+  AdaptiveModalContent,
+  AdaptiveModalTitle,
+} from '@modules/adaptive-modal'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import type { HTMLAttributes } from 'react'
 import React from 'react'
@@ -33,15 +37,18 @@ interface DetailsProperties {
 const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChange }) => {
   const { txDifficulty } = useTxStore()
   return (
-    <Dialog open={open} onOpenChange={() => onOpenChange(false)}>
-      <DialogContent showCloseButton className="max-w-[38.75rem] gap-8 rounded-[2rem]">
-        <DialogTitle className="flex justify-between px-8 py-6 text-center text-base normal-case text-text-3100">
+    <AdaptiveModal open={open} onOpenChange={onOpenChange}>
+      <AdaptiveModalContent
+        showCloseButton
+        className="max-w-[38.75rem] gap-8 rounded-[2rem] max-lg:max-w-full max-lg:rounded-b-none max-lg:rounded-t-3xl"
+      >
+        <AdaptiveModalTitle className="flex justify-between px-8 py-6 text-center text-base normal-case text-text-3100">
           <div className="flex items-center gap-1 text-gray-100 max-lg:text-[0.8125rem] ">
             <Lightning className="h-[0.83356rem] w-[0.75031rem]" />
             <span>Fees</span>
           </div>
           <span>($5.12 / 0.05 ETH)</span>
-        </DialogTitle>
+        </AdaptiveModalTitle>
 
         <div className="flex flex-col gap-4 bg-[rgba(222,_221,_236,_0.10)] px-12 py-6 text-text-3100">
           <h3 className="text-base font-[500]">Summary</h3>
@@ -66,8 +73,8 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChan
         </div>
 
         {txDifficulty === 'cross_chain' && <NetworkSelector disabled={false} />}
-      </DialogContent>
-    </Dialog>
+      </AdaptiveModalContent>
+    </AdaptiveModal>
   )
 }
 
