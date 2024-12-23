@@ -33,9 +33,7 @@ export const ChoiceBox = ({
         (symbol && (
           <TokenIconComponent symbol={symbol} className="size-9 max-lg:size-8" />
         ))}
-      <div className="whitespace-nowrap max-lg:text-[0.8125rem] max-lg:leading-4">
-        {value}
-      </div>
+      <div className="whitespace-nowrap leading-4 max-lg:text-[0.8125rem]">{value}</div>
       {!disabled && (
         <ArrowUp
           className={cn(

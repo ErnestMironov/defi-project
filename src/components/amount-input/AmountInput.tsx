@@ -103,6 +103,7 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
             id={id}
             {...rest}
             type="text"
+            inputMode="decimal"
             placeholder={DEFAULT_PLACEHOLDER}
             style={{ width: `${inputWidth}px` }}
             className={cn(

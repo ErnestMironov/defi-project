@@ -129,7 +129,10 @@ export const SelectWithdrawAssetModal = () => {
       renderTrigger={(selectedItem) => (
         <ChoiceBox
           value={selectedItem?.stable?.toUpperCase() || 'Select asset'}
-          className={cn(selectedItem?.stable, !selectedItem && 'px-3 py-5')}
+          className={cn(
+            selectedItem?.stable,
+            !selectedItem && 'px-4 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
+          )}
           icon={
             <TokenWithNetwork
               classNames={{

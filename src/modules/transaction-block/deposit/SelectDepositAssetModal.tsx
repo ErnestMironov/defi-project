@@ -46,7 +46,7 @@ export const SelectDepositAsset = () => {
         <ChoiceBox
           value={choiceBoxValue}
           className={cn(
-            !selectedItem && 'px-3 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
+            !selectedItem && 'px-4 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
           )}
           icon={
             selectedItem?.contract_ticker_symbol && (
