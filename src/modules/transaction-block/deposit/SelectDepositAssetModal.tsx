@@ -22,13 +22,17 @@ export const SelectDepositAsset = () => {
   const { asset, handleAssetChange } = useAssetSelection()
   const tokensList = useTokensList<ITokenData>
 
-  console.log('Raw userTokens:', userTokens)
-
   const filterTokens = (
     items: Record<string, ITokenData[]>,
     searchValue: string,
     network: ChainType,
   ) => tokensList(items, network, searchValue)
+
+  const choiceBoxValue = asset?.contract_ticker_symbol
+    ? isBelowDesktop
+      ? ''
+      : asset?.contract_ticker_symbol
+    : 'Select asset'
 
   return (
     <UniversalSelectModal<ITokenData>
@@ -40,10 +44,9 @@ export const SelectDepositAsset = () => {
       filterItems={filterTokens as any}
       renderTrigger={(selectedItem) => (
         <ChoiceBox
-          value={selectedItem?.contract_ticker_symbol || 'Select asset'}
+          value={choiceBoxValue}
           className={cn(
-            selectedItem?.contract_ticker_symbol,
-            !selectedItem && 'px-3 py-5',
+            !selectedItem && 'px-4 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
           )}
           icon={
             selectedItem?.contract_ticker_symbol && (
@@ -53,9 +56,8 @@ export const SelectDepositAsset = () => {
                 tokenLogoFallback={selectedItem.logo_url}
                 position="bottom-right"
                 classNames={{
-                  token: 'rounded-full overflow-hidden',
+                  token: 'rounded-full overflow-hidden size-[2.25rem] max-lg:size-[2rem]',
                 }}
-                width={isBelowDesktop ? '1.25rem' : '2.14288rem'}
               />
             )
           }

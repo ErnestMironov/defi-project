@@ -1,6 +1,7 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
+import { useTransactionStatusChecker } from '@modules/pending-transactions/useTransactionStatusTracker'
 import { PointsBalance } from '@modules/points-balance/PointsBalance'
 import { ROUTES } from '@routes/routes'
 import clsx from 'clsx'
@@ -18,6 +19,8 @@ import { Sidebar } from './Sidebar'
 interface HeaderProperties extends ComponentProps<'div'> {}
 
 export const Header = ({ className, ...rest }: HeaderProperties) => {
+  useTransactionStatusChecker()
+
   const { isBelowDesktop } = useDeviceWidth()
   const account = useAccount()
   const { isOpen, handlePortfolioClose, handlePortfolioOpen } = usePortfolioModalState()

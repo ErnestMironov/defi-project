@@ -61,6 +61,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
             onClick={switchToAssetChain}
             loading={switchToAssetChainStatus === 'pending'}
             disabled={switchToAssetChainStatus === 'confirm_in_wallet'}
+            error={switchToAssetChainStatus === 'error'}
           >
             {getButtonContent(
               switchToAssetChainStatus,
@@ -78,6 +79,7 @@ export const NativeCrossChainSwap: React.FunctionComponent<
             onClick={swapAndDeposit}
             loading={swapAndDepositStatus === 'pending'}
             disabled={swapAndDepositStatus === 'confirm_in_wallet'}
+            error={swapAndDepositStatus === 'error'}
           >
             {getButtonContent(swapAndDepositStatus, 'Deposit')}
           </Button>

@@ -18,7 +18,7 @@ export const TabContent: FC<TabContentProperties> = ({ icon, label, isActive }) 
           animate={{ width: 'auto', opacity: 1 }}
           exit={{ width: 0, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="relative top-[.05rem] ml-2 overflow-hidden whitespace-nowrap"
+          className="relative top-[.05rem] ml-2 overflow-hidden whitespace-nowrap text-[0.875rem] max-lg:text-[0.75rem]"
         >
           {label}
         </motion.span>

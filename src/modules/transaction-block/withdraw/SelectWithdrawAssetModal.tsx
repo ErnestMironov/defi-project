@@ -7,7 +7,9 @@ import { ChoiceBox } from '@components/box/ChoiceBox'
 import { TokenIconComponent } from '@components/token-icon'
 import { TokenWithNetwork } from '@components/token-icon/TokenWithNetwork'
 import type { ChainType } from '@constants/chains'
+import type { WithdrawToken } from '@hooks/tokens/useTokensList'
 import { useTokensList } from '@hooks/tokens/useTokensList'
+import { useUniqueTokens } from '@hooks/tokens/useUniqueTokens'
 import { cn } from '@utils/cn'
 import { formatAmount, formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
@@ -15,7 +17,6 @@ import { formatUnits } from 'viem'
 import { useAccount, useSwitchChain } from 'wagmi'
 
 import { useTxStore } from '../store/useTxStore'
-import type { UseGetMTokenInfoReturn } from './hooks/useGetMTokenInfo'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
 import { UniversalSelectModal } from './UniversalSelectModal'
 
@@ -25,7 +26,7 @@ const WithdrawAssetItem = ({
   selected,
 }: {
   token: TokenShares
-  onChange: (token: UseGetMTokenInfoReturn) => void
+  onChange: (token: WithdrawToken) => void
   selected: boolean
 }) => {
   const tokenData = useGetMTokenInfo(token)
@@ -42,7 +43,7 @@ const WithdrawAssetItem = ({
   return (
     <button
       type="button"
-      onClick={() => onChange({ ...token, ...tokenData })}
+      onClick={() => onChange(tokenData)}
       className="flex w-full cursor-pointer items-center justify-between rounded-xl px-5 py-4 hover:bg-input-active max-lg:items-start"
     >
       <div className="flex items-center gap-[0.67rem]">
@@ -85,53 +86,24 @@ export const SelectWithdrawAssetModal = () => {
   const { address } = useAccount()
 
   const { data, isLoading: isUserSharesLoading } = useUserShares(address)
-  const shares = data?.shares
+  const balances = useUniqueTokens(data?.shares)
 
-  const balances = useMemo(() => {
-    if (!shares) return {}
-
-    const uniqueTokens = shares
-      .filter((token) => token.balance > 999_999)
-      .reduce((map, token) => {
-        const key = `${token.chainId}-${token.address}`
-        const existing = map.get(key)
-
-        if (!existing || token.balance > existing.balance) {
-          map.set(key, token)
-        }
-
-        return map
-      }, new Map<string, TokenShares>())
-
-    return Array.from(uniqueTokens.values()).reduce(
-      (accumulator, token) => {
-        const chainId = token.chainId.toString()
-        if (!accumulator[chainId]) {
-          accumulator[chainId] = []
-        }
-        accumulator[chainId].push(token)
-        return accumulator
-      },
-      {} as Record<string, TokenShares[]>,
-    )
-  }, [shares])
-
-  const onChange = (_asset: UseGetMTokenInfoReturn | null) => {
+  const onChange = (_asset: WithdrawToken | null) => {
     if (!_asset) return
     setMToken(_asset)
     if (_asset?.chainId) {
       _switchChain({
         chainId: _asset.chainId,
       })
-      setWithdrawToNetwork(_asset.chainId as any)
-      setWithdrawFromNetwork(_asset.chainId as any)
+      setWithdrawToNetwork(_asset.chainId as ChainType)
+      setWithdrawFromNetwork(_asset.chainId as ChainType)
     }
   }
 
-  const tokensList = useTokensList<TokenShares>
+  const tokensList = useTokensList<WithdrawToken>
 
   const filterTokens = (
-    items: TokenShares[] | Record<string, TokenShares[]>,
+    items: WithdrawToken[] | Record<string, WithdrawToken[]>,
     searchValue: string,
     network: ChainType | null,
   ) => {
@@ -147,8 +119,8 @@ export const SelectWithdrawAssetModal = () => {
   }
 
   return (
-    <UniversalSelectModal<TokenShares, UseGetMTokenInfoReturn | null>
-      selectedItem={mtToken as TokenShares | undefined}
+    <UniversalSelectModal<WithdrawToken>
+      selectedItem={mtToken as WithdrawToken | undefined}
       items={balances}
       filterBySearch
       filterByNetwork
@@ -157,7 +129,10 @@ export const SelectWithdrawAssetModal = () => {
       renderTrigger={(selectedItem) => (
         <ChoiceBox
           value={selectedItem?.stable?.toUpperCase() || 'Select asset'}
-          className={cn(selectedItem?.stable, !selectedItem && 'px-3 py-5')}
+          className={cn(
+            selectedItem?.stable,
+            !selectedItem && 'px-4 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
+          )}
           icon={
             <TokenWithNetwork
               classNames={{
@@ -177,9 +152,7 @@ export const SelectWithdrawAssetModal = () => {
             String(mtToken?.chainId) + String(mtToken?.address) ===
             String(token?.chainId) + String(token?.address)
           }
-          onChange={(value) => {
-            onItemChange(value)
-          }}
+          onChange={onItemChange}
         />
       )}
       onChange={onChange}

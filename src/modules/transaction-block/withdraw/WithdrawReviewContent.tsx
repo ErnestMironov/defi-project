@@ -14,11 +14,7 @@ import { useTxStore } from '../store/useTxStore'
 import { getButtonContent } from '../utils/getButtonText'
 import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
 
-export const WithdrawReviewContent = ({
-  allStepsCompleted,
-}: {
-  allStepsCompleted?: boolean
-}) => {
+export const WithdrawReviewContent = () => {
   const {
     inputValue: amount,
     withdrawAmount: withdrawAmountInUSD,
@@ -28,6 +24,9 @@ export const WithdrawReviewContent = ({
     withdrawToNetwork,
     setIntermediateError,
     setCurrentStep,
+    setNetworkSwitchStatus,
+    setApprovalStatus,
+    setTransactionStatus,
   } = useTxStore()
 
   const { address } = useAccount()
@@ -108,6 +107,7 @@ export const WithdrawReviewContent = ({
             disabled={switchStatus === 'confirm_in_wallet'}
             size="lg"
             type="button"
+            error={switchStatus === 'error'}
             className={className}
             onClick={() => handleTryAgain(switchChain)}
           >
@@ -130,6 +130,7 @@ export const WithdrawReviewContent = ({
             type="button"
             className={className}
             disabled={approveStatus === 'confirm_in_wallet'}
+            error={approveStatus === 'error'}
             onClick={() => handleTryAgain(approve)}
           >
             {getButtonContent(approveStatus, `Approve ${mtToken?.symbol}`)}
@@ -144,6 +145,7 @@ export const WithdrawReviewContent = ({
             type="button"
             disabled={withdrawStatus === 'pending' || withdrawStatus === 'success'}
             className={className}
+            error={withdrawStatus === 'error'}
             onClick={() => handleTryAgain(withdraw)}
           >
             {getButtonContent(withdrawStatus, 'Withdraw')}
@@ -219,6 +221,19 @@ export const WithdrawReviewContent = ({
   }
 
   const TransactionAnimation = useTransactionAnimation()
+
+  useEffect(() => {
+    setNetworkSwitchStatus(switchStatus)
+    setApprovalStatus(approveStatus)
+    setTransactionStatus(withdrawStatus)
+  }, [
+    withdrawStatus,
+    approveStatus,
+    switchStatus,
+    setNetworkSwitchStatus,
+    setApprovalStatus,
+    setTransactionStatus,
+  ])
 
   return (
     <>

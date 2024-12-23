@@ -1,7 +1,4 @@
-import type { ITokenData } from '@api/tokens-balance/use-tokens-balance'
-import type { TokenShares } from '@api/contracts/useGetUserShares'
-import type { ChainType } from '@constants/chains'
-
+// Types for token normalization
 export interface NormalizedToken {
   id: string
   name: string
@@ -17,4 +14,4 @@ export type TokensByChain = Record<string, NormalizedToken[]>
 export interface TokensAdapter<T> {
   normalize: (data: T) => NormalizedToken
   normalizeByChain: (data: Record<string, T[]>) => TokensByChain
-} 
+}

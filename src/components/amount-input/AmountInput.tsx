@@ -1,6 +1,6 @@
 import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useId, useRef, useState } from 'react'
 
 const DEFAULT_DECIMALS = 18
 const DEFAULT_PLACEHOLDER = '0.00'
@@ -74,16 +74,18 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
 
     const baseInputClasses = cn(
       'placeholder:text-text-20',
-      'text-[2.625rem]',
+      'text-[2.625rem] max-lg:text-[2.25rem]',
       'bg-transparent',
       'font-medium',
       'leading-[3.25rem]',
       'tracking-[-0.02625rem]',
     )
 
+    const id = useId()
+
     return (
       <div className={cn('relative size-full min-h-10', wrapperClassName)}>
-        <div className="flex items-center">
+        <label htmlFor={id} className="flex items-center">
           {/* Hidden element for measuring input width */}
           <span
             ref={measureReference}
@@ -98,8 +100,10 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
 
           {/* Actual input element */}
           <input
+            id={id}
             {...rest}
             type="text"
+            inputMode="decimal"
             placeholder={DEFAULT_PLACEHOLDER}
             style={{ width: `${inputWidth}px` }}
             className={cn(
@@ -115,9 +119,11 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
 
           {/* Optional suffix */}
           {after && (
-            <span className="ml-[0.2rem] text-[1rem] text-[#A5A5A5]">{after}</span>
+            <span className="ml-[0.2rem] text-[1rem] text-[#A5A5A5] max-lg:text-[0.8125rem]">
+              {after}
+            </span>
           )}
-        </div>
+        </label>
       </div>
     )
   },

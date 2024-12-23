@@ -1,16 +1,15 @@
+import { ShadowBox } from '@components/box/ShadowBox'
 import { useAppKit } from '@reown/appkit/react'
 
 export const SelectWithoutWalletPlaceholder = () => {
   const { open: openConnectModal } = useAppKit()
 
   return (
-    <button
-      className="min-w-max rounded-[3rem] bg-cards px-7 py-4 text-[1.1875rem] leading-none shadow-shadow transition-all ease-in-out hover:shadow-shadow--hover dark:shadow-dark-shadow dark:hover:shadow-dark-shadow--hover"
-      type="button"
-      aria-label="Connect wallet"
+    <ShadowBox
+      className="cursor-pointer rounded-[62.4375rem] px-6 py-5 transition-shadow max-lg:gap-1 max-lg:px-5 max-lg:py-4"
       onClick={() => openConnectModal()}
     >
-      Connect wallet
-    </button>
+      <span>Connect wallet</span>
+    </ShadowBox>
   )
 }

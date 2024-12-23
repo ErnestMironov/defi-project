@@ -84,6 +84,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           <Button
             loading={switchStatus === 'pending'}
             disabled={switchStatus === 'confirm_in_wallet'}
+            error={switchStatus === 'error'}
             type="button"
             onClick={switchChain}
             className={className}
@@ -105,6 +106,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
             loading={approveStatus === 'pending'}
             type="button"
             disabled={approveStatus === 'confirm_in_wallet'}
+            error={approveStatus === 'error'}
             onClick={approve}
             className={className}
           >

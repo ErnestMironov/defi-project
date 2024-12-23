@@ -12,19 +12,19 @@ export const VaultSelection = () => {
   const USDT = useTokenAsset('USDT')
 
   return (
-    <div className="my-4 flex w-full items-center justify-between gap-4 px-4">
+    <div className="my-4 flex w-full items-center justify-between gap-4 px-4 max-lg:gap-[0.38rem]">
       <VaultInfoBox
         active={vault === 'USDC'}
         onClick={() => setVault('USDC')}
-        icon={USDC?.TokenIcon && <USDC.TokenIcon className="size-8" />}
+        icon={USDC?.TokenIcon && <USDC.TokenIcon className="size-8 max-lg:size-6" />}
         vaultName="USDC"
         apy={`${Math.trunc(bestUSDCApy)}%`}
       />
-      <div className="h-6 w-px bg-stroke-element" />
+      <div className="h-6 w-px bg-stroke-element max-lg:hidden" />
       <VaultInfoBox
         active={vault === 'USDT'}
         onClick={() => setVault('USDT')}
-        icon={USDT?.TokenIcon && <USDT.TokenIcon className="size-8" />}
+        icon={USDT?.TokenIcon && <USDT.TokenIcon className="size-8 max-lg:size-6" />}
         vaultName="USDT"
         apy={`${Math.trunc(bestUSDTApy)}%`}
       />

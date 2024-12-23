@@ -38,7 +38,7 @@ export const ConnectWallet = ({ btnProps, className }: IConnectWalletProperties)
           <span className="normal-case">{shortenAddress(address)}</span>
         </>
       ) : (
-        <span>CONNECT WALLET</span>
+        <span>CONNECT</span>
       )}
     </Button>
   )

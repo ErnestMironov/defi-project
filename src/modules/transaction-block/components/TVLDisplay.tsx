@@ -21,7 +21,7 @@ export const TVLDisplay: React.FC<TVLDisplayProperties> = ({ className }) => {
   return (
     <div
       className={cn(
-        'flex items-center gap-[0.37rem] font-medium text-base text-text-2100 leading-[120%]',
+        'flex items-center gap-[0.37rem] font-medium text-base text-text-2100 leading-[120%] max-lg:text-[0.9375rem]',
         className,
       )}
     >
@@ -30,7 +30,7 @@ export const TVLDisplay: React.FC<TVLDisplayProperties> = ({ className }) => {
         <Skeleton className="h-6 w-20" />
       ) : (
         <span>
-          ${' '}
+          $
           {formatAmount(totalTvl, {
             maximumFractionDigits: 2,
             currency: 'USD',

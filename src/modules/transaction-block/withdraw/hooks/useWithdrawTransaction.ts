@@ -65,6 +65,10 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
           setTxDifficulty('on_chain')
           const txState = getFullState()
           const txStateWithStringBigInt = convertBigIntToString(txState)
+          console.log(
+            '🚀 ~ w12 onSuccess: ~ txStateWithStringBigInt:',
+            txStateWithStringBigInt,
+          )
           addTransaction({
             ...txStateWithStringBigInt,
             status: 'pending',
@@ -73,6 +77,7 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
           setTransactionCanBeCollapsed(true)
         },
         onError: (e) => {
+          console.log('🚀 ~ w12 onError: ~ e:', e)
           console.error(e.message)
           setStatus('error')
         },
