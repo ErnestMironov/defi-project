@@ -74,7 +74,7 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
 
     const baseInputClasses = cn(
       'placeholder:text-text-20',
-      'text-[2.625rem]',
+      'text-[2.625rem] max-lg:text-[2.25rem]',
       'bg-transparent',
       'font-medium',
       'leading-[3.25rem]',
@@ -118,7 +118,9 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
 
           {/* Optional suffix */}
           {after && (
-            <span className="ml-[0.2rem] text-[1rem] text-[#A5A5A5]">{after}</span>
+            <span className="ml-[0.2rem] text-[1rem] text-[#A5A5A5] max-lg:text-[0.8125rem]">
+              {after}
+            </span>
           )}
         </label>
       </div>

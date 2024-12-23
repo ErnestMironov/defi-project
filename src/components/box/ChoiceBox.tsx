@@ -24,16 +24,16 @@ export const ChoiceBox = ({
   return (
     <ShadowBox
       className={cn(
-        'inline-flex cursor-pointer items-center justify-between gap-2 max-lg:gap-1 rounded-[62.4375rem] py-[0.62rem] px-[0.75rem] max-lg:py-[1rem] max-lg:px-[1.25rem] transition-shadow',
+        'inline-flex cursor-pointer items-center justify-between gap-2 max-lg:gap-1 rounded-[62.4375rem] py-[0.62rem] px-[0.75rem] max-lg:py-[.37rem] max-lg:px-[.75rem] transition-shadow',
         className,
         disabled && 'cursor-default',
       )}
     >
       {icon ||
         (symbol && (
-          <TokenIconComponent symbol={symbol} className="size-8 max-lg:size-5" />
+          <TokenIconComponent symbol={symbol} className="size-9 max-lg:size-8" />
         ))}
-      <div className="whitespace-nowrap leading-none max-lg:text-[0.8125rem] max-lg:leading-4">
+      <div className="whitespace-nowrap max-lg:text-[0.8125rem] max-lg:leading-4">
         {value}
       </div>
       {!disabled && (

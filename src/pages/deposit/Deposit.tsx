@@ -41,7 +41,7 @@ export const Deposit = () => {
           <BgLines className="w-full" />
         )}
       </div>
-      <div className="pointer-events-auto mt-10 flex flex-col gap-6 max-lg:mt-8 max-lg:gap-4 lg:w-[38.75rem]">
+      <div className="pointer-events-auto mt-10 flex w-full max-w-[38rem] flex-col gap-6 max-lg:mt-8 max-lg:max-w-[600px] max-lg:gap-4">
         <TransactionBlock />
       </div>
       <div className="grid w-full translate-y-full justify-between gap-4 pb-10 max-lg:mt-20 lg:grid-cols-[1fr,2fr,1fr]">

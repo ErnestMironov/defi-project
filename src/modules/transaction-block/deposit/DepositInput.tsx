@@ -94,7 +94,7 @@ export const DepositInput = () => {
       {/* Deposit Input Section */}
       <div
         className={cn(
-          'bg-input-default dark:bg-input-active py-6 max-lg:py-4 px-8 max-lg:px-4 border-y border-stroke-100 max-lg:border-b-0',
+          'bg-input-default dark:bg-input-active py-6 max-lg:p-4 px-8 border-y border-stroke-100',
           error && 'bg-input-error',
         )}
       >
@@ -125,11 +125,11 @@ export const DepositInput = () => {
       {/* Deposit Details Section */}
       <div
         className={cn(
-          'flex w-full flex-col items-start justify-between py-6 px-8 max-lg:mt-2 max-lg:px-3 border border-stroke-100',
+          'flex w-full flex-col items-start justify-between max-lg:p-4  py-6 px-8 max-lg:mt-2 border-y border-stroke-100 max-lg:border-b-0',
           error && 'bg-input-error',
         )}
       >
-        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
+        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50 max-lg:text-[0.75rem]">
           You stake
         </span>
         <div className="flex w-full items-center justify-between gap-2">
@@ -146,7 +146,7 @@ export const DepositInput = () => {
               />
             )
           ) : (
-            <p className="text-[1.5rem] font-medium leading-[3.25rem] tracking-[-0.015rem] text-text-20">
+            <p className="text-[1.5rem] font-medium leading-[3.25rem] tracking-[-0.015rem] text-text-20 max-lg:text-[1rem]">
               Select the desired vault
             </p>
           )}

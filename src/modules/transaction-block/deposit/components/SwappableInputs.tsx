@@ -67,14 +67,13 @@ export const SwappableInputs = ({
       value={usdValue}
       onValueChange={onUsdValueChange}
       error={!!error}
-      inputClassName="text-[2.625rem]"
+      inputClassName="text-[2.625rem] max-lg:text-[2.25rem]"
     />
   ) : (
     <AmountInput
       value={tokenValue}
       error={error}
       decimals={DECIMALS}
-      className="text-[2.625rem]"
       onChange={onTokenValueChange}
     />
   )
@@ -85,7 +84,7 @@ export const SwappableInputs = ({
       value={tokenValue}
       error={error}
       decimals={DECIMALS}
-      className="text-[1rem]"
+      className="text-[1rem] max-lg:text-[0.8125rem]"
       wrapperClassName="!min-h-0 !h-[1.5rem]"
       onChange={onTokenValueChange}
       after={tokenLabel || asset.contract_ticker_symbol}
@@ -95,14 +94,16 @@ export const SwappableInputs = ({
       value={usdValue}
       onValueChange={onUsdValueChange}
       error={!!error}
-      inputClassName="text-[1rem]"
+      inputClassName="text-[1rem] max-lg:text-[0.8125rem]"
     />
   )
 
   // Render balance information
   const balanceInfo = (
-    <div className="flex items-center gap-3">
-      <p className={cn('flex items-center', error && '[&>span]:text-red-100')}>
+    <div className="flex items-center gap-1">
+      <p
+        className={cn('flex items-center gap-[.19rem]', error && '[&>span]:text-red-100')}
+      >
         <span className="ml-2 mr-[.19rem] text-text-2100">
           {formatTokenBalance(asset.balance, asset.contract_decimals)}
         </span>
