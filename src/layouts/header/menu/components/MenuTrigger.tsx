@@ -1,5 +1,6 @@
 import Logo from '@assets/icons/menu/logo.svg'
-import { ChevronsUpDown } from 'lucide-react'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { ChevronsLeft, ChevronsUpDown } from 'lucide-react'
 
 export const MenuTrigger = ({
   isOpen,
@@ -8,6 +9,8 @@ export const MenuTrigger = ({
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
 }) => {
+  const { isBelowDesktop } = useDeviceWidth()
+
   return (
     <button
       type="button"
@@ -17,6 +20,9 @@ export const MenuTrigger = ({
       <Logo className="w-16" />
       {!isOpen && (
         <ChevronsUpDown className="size-4 text-[#30303066] dark:text-[#8585A9]" />
+      )}
+      {isBelowDesktop && isOpen && (
+        <ChevronsLeft className="size-4 text-[#30303066] dark:text-[#8585A9]" />
       )}
     </button>
   )
