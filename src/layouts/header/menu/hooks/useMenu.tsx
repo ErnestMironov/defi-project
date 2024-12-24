@@ -21,6 +21,7 @@ export interface IMenuItem {
   linkType?: 'internal' | 'external'
   visibility?: MenuVisibility
   iconClassName?: string
+  callback?: () => void
 }
 
 export const useMenu = () => {

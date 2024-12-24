@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import type { IMenuItem } from '../hooks/useMenu'
 
 export const NavLinkMenuItem = (props: IMenuItem) => {
-  const { href, label, icon: Icon } = props
+  const { href, label, icon: Icon, callback } = props
   return (
     <NavLink
       to={href}
@@ -17,6 +17,7 @@ export const NavLinkMenuItem = (props: IMenuItem) => {
           },
         )
       }
+      onClick={callback}
     >
       {Icon && (
         <Icon className="size-4 [&_path]:stroke-[#8585A9] group-hover:[&_path]:stroke-main-100" />

@@ -49,7 +49,11 @@ export const Menu = () => {
   const { isBelowDesktop } = useDeviceWidth()
   const [isOpen, setIsOpen] = useState(false)
 
-  const menuArray = isBelowDesktop ? <MobileMenu /> : <DesktopMenu />
+  const menuArray = isBelowDesktop ? (
+    <MobileMenu />
+  ) : (
+    <DesktopMenu callback={() => setIsOpen(false)} />
+  )
   return (
     <div className="relative z-50 size-12">
       <motion.nav
