@@ -209,7 +209,7 @@ module.exports = {
         'test': 'var(--shadow-test)',
         'test-2': 'var(--shadow-test-2)',
         'block': '0px 6px 66px 0px rgba(97, 96, 255, 0.15), 0px 6px 9px 0px rgba(97, 96, 255, 0.04)',
-        'button': "box-shadow: 0px 6px 66px 0px rgba(0, 0, 0, 0.03), 0px 6px 9px 0px rgba(0, 0, 0, 0.02);"
+        'button': "box-shadow: 0px 6px 66px 0px rgba(0, 0, 0, 0.03), 0px 6px 9px 0px rgba(0, 0, 0, 0.02);",
       },
       keyframes: {
         "accordion-down": {

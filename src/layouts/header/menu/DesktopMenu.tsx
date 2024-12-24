@@ -1,6 +1,7 @@
 import { Socials } from '@components/socials/Socials'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronsLeft } from 'lucide-react'
+import { useState } from 'react'
 
 import { LinkMenuItem } from './components/LinkMenuItem'
 import { MenuTrigger } from './components/MenuTrigger'
@@ -50,13 +51,9 @@ const contentVariants = {
   },
 }
 
-interface DesktopMenuProperties {
-  isOpen: boolean
-  setIsOpen: (value: boolean) => void
-}
-
-export const DesktopMenu = ({ isOpen, setIsOpen }: DesktopMenuProperties) => {
+export const DesktopMenu = () => {
   const menu = useDesktopMenuArray()
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <motion.nav
