@@ -1,4 +1,5 @@
 import { Socials } from '@components/socials/Socials'
+import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
@@ -107,7 +108,7 @@ export const MobileMenu = () => {
                 animate="open"
                 exit="closed"
               >
-                <ul className="flex flex-col items-stretch gap-3">
+                <ul className="flex flex-col items-stretch gap-8">
                   {menu.map((menuItem) => {
                     if (menuItem.linkType === 'external') {
                       return (
@@ -127,7 +128,10 @@ export const MobileMenu = () => {
                     )
                   })}
                 </ul>
-                <Socials />
+                <div className="flex flex-col items-stretch gap-12">
+                  <ThemeToggler className="self-start" />
+                  <Socials />
+                </div>
               </motion.div>
             </motion.nav>
           </>
