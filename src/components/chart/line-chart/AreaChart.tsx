@@ -99,11 +99,11 @@ export const AreaChart = (props: AreaChartComponentProperties) => {
                       timestamp: payload[0].payload.timestamp,
                       color: item.color || '',
                       value: item.value,
+                      dataType: item.payload.name,
                     }))}
                   />
                 )
               }
-
               return null
             }}
           />

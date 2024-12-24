@@ -116,15 +116,18 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           content={({ active, payload, coordinate }) => {
             if (active && payload && payload.length > 0 && coordinate) {
               const value1 = {
-                color: '#6160FF',
+                color: '#79DEC2',
                 value: payload[0].payload.uv,
-
+                dataType: 'USDC' as const,
                 timestamp: payload[0].payload.timestamp,
+                icon: 'USDC',
               }
               const value2 = {
                 color: '#A6C1FF',
                 value: payload[0].payload.pv,
+                dataType: 'USDT' as const,
                 timestamp: payload[0].payload.timestamp,
+                icon: 'USDT',
               }
               const tooltipData = [value1, value2]
               if (value1.value < value2.value) {

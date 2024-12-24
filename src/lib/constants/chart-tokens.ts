@@ -1,4 +1,4 @@
 export const CHART_TOKENS = [
-  { title: 'USDC', color: '#6160FF' },
-  { title: 'USDT', color: '#A6C1FF' },
+  { title: 'USDC', color: '#79DEC2' },
+  { title: 'USDT', color: '#6160FF' },
 ] as const

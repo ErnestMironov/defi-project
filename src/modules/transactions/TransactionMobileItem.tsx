@@ -1,8 +1,8 @@
-import type { Event } from '@api/maat-finance/types'
+import type { Event, IncentiveEvent } from '@api/maat-finance/types'
 import Arrow from '@assets/icons/arrow.svg'
-import Dots from '@assets/icons/options-dots.svg'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import { IncentiveRowOptions } from '@modules/transaction-history/incentives/EventRowOptions'
 import { ROUTES } from '@routes/routes'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
@@ -48,7 +48,7 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
               </span>
               <TokenIconComponent
                 symbol={event.vault.token.symbol}
-                className="ml-2 size-6"
+                className="ml-2 size-4"
               />
               <span className="ml-[0.38rem]">{event.vault.token.symbol}</span>
             </div>
@@ -67,11 +67,12 @@ export const TransactionMobileItem = (props: TransactionMobileItemProperties) =>
         <h6>Status</h6>
         <StatusChip tx={event} />
         <h6>From</h6>
-        <div className="flex w-full items-center justify-end gap-2">
+        <div className="flex w-full items-center justify-center gap-2">
           <p>{shortenAddress(event.txFrom)}</p>
-          <div className="flex items-center justify-center rounded-lg border border-stroke-100 p-[0.38rem]">
-            <Dots className="size-[0.8125rem] shrink-0" />
-          </div>
+          <IncentiveRowOptions
+            event={event as unknown as IncentiveEvent}
+            className="size-6 rounded-lg p-[0.38rem]"
+          />
         </div>
       </div>
     </div>

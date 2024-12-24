@@ -22,7 +22,7 @@ export const StrategyTooltipComponent = (props: StrategyTooltipComponentProperti
   return (
     <div
       className={cn(
-        'p-4 bg-cards rounded-[1.25rem] min-w-[13rem] shadow-md text-base text-text-80',
+        'p-4 bg-cards-widget rounded-[1.25rem] min-w-[13rem] shadow-md text-base text-text-80',
         className,
       )}
       {...rest}

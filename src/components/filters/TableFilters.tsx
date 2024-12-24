@@ -60,7 +60,7 @@ export const TableFilters = (props: TableFiltersProperties) => {
     >
       {searchFilter && (
         <SearchInput
-          className="grow border-r border-stroke-100 bg-input-default px-6"
+          className="grow border-r border-stroke-100 bg-cards-widget px-6"
           classNames={{ input: 'py-6' }}
           value={searchFilter.value}
           onValueChange={(value: string) =>
