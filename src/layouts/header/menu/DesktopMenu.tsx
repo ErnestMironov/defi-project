@@ -6,20 +6,12 @@ export const DesktopMenu = () => {
   const menu = useDesktopMenuArray()
 
   return (
-    <ul className="flex items-center gap-10">
+    <ul className="flex flex-col items-stretch gap-1">
       {menu.map((menuItem) => {
         if (menuItem.linkType === 'external') {
           return <LinkMenuItem key={menuItem.href} {...menuItem} />
         }
-        return (
-          <NavLinkMenuItem
-            key={menuItem.href}
-            {...menuItem}
-            classNames={{
-              active: 'no-underline',
-            }}
-          />
-        )
+        return <NavLinkMenuItem key={menuItem.href} {...menuItem} />
       })}
     </ul>
   )
