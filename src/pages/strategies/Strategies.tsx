@@ -1,5 +1,4 @@
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { Footer } from '@layouts/footer/Footer'
 import { Strategies } from '@modules/strategies/Strategies'
 import { StrategiesCharts } from '@modules/strategies/strategies-chart/desktop/StrategiesCharts'
 import { StrategiesChartMobile } from '@modules/strategies/strategies-chart/mobile/StrategiesChartMobile'
@@ -30,7 +29,6 @@ const StrategiesDesktop = (props: StrategiesProperties) => {
       <StrategiesCharts />
       <Strategies className="mt-[6.25rem]" />
       <Transactions className="mt-[6.25rem]" />
-      <Footer className="mt-[7.5rem] max-lg:mt-[4.5rem]" />
     </div>
   )
 }
@@ -43,7 +41,6 @@ const StrategiesMobilePage = (props: StrategiesProperties) => {
       <StrategiesChartMobile />
       <Strategies className="mt-14" withLink={false} />
       <Transactions className="mt-16" />
-      <Footer className="mt-[4.5rem]" />
     </div>
   )
 }

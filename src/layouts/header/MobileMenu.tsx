@@ -19,7 +19,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import PortfolioButton from './components/PortfolioButton'
 import { PortfolioModal } from './components/PortfolioModal'
-import { MobileSidebarMenu } from './HeaderMenu'
+import { MobileSidebarMenu } from './DesktopMenu'
 import { usePortfolioModalState } from './hooks/UsePortfolioModalState'
 
 interface MobileHeaderProperties extends ComponentProps<'div'> {}

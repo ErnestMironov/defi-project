@@ -8,7 +8,6 @@ import {
   SELECT_STATUSES,
 } from '@constants/select-constant'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { Footer } from '@layouts/footer/Footer'
 import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
@@ -69,10 +68,10 @@ export const StrategyDesktop = (props: StrategyProperties) => {
                 TVL
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="apy" >
+            <TabsContent value="apy">
               <StrategyApyChart className="h-60 px-8 pb-5" />
             </TabsContent>
-            <TabsContent value="tvl" >
+            <TabsContent value="tvl">
               <StrategyTvlChart className="h-60 px-8 pb-5" />
             </TabsContent>
           </Tabs>
@@ -120,7 +119,6 @@ const StrategyMobile = (props: StrategyProperties) => {
       <StrategyInfoMobile />
       <TokenChartMobile />
       <StrategyTransactions params={{ strategy_ids: [id as string] }} />
-      <Footer className="mt-[5.5rem]" />
     </div>
   )
 }
