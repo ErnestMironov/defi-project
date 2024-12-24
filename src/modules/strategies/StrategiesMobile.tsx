@@ -133,7 +133,7 @@ export const StrategiesMobile: React.FC<StrategiesMobileProperties> = (props) =>
             <SearchInput
               placeholder="Address / ID"
               classNames={{
-                container: 'bg-input-default border-none py-[0.81rem] px-4',
+                container: 'bg-cards-widget border-none py-[0.81rem] px-4',
                 input: 'mx-2',
               }}
               value={search}

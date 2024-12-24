@@ -34,7 +34,7 @@ export const DrawerIconTrigger = forwardRef(
         ref={reference}
         type="button"
         className={cn(
-          'flex size-12 border shrink-0 border-stroke-100 rounded-[0.75rem] items-center justify-center bg-cards-widget shadow-test',
+          'flex size-12 border shrink-0 border-stroke-100 rounded-[0.75rem] items-center justify-center bg-cards-widget',
           className,
         )}
         {...rest}
@@ -42,7 +42,7 @@ export const DrawerIconTrigger = forwardRef(
         <div
           className={cn(
             'rounded-[0.5rem] shrink-0 size-[2.5rem] flex items-center justify-center',
-            active && 'bg-main-100',
+            active && 'bg-cards-widget',
           )}
         >
           <Icon className={cn('size-4', active && 'shrink-0 [&_path]:stroke-white')} />

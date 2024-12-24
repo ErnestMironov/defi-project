@@ -4,6 +4,7 @@ import OptionsDots from '@assets/icons/options-dots.svg'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { useClipboard } from '@hooks/common/useClipboard'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
+import { cn } from '@utils/cn'
 import { type ComponentProps, useState } from 'react'
 
 interface StrategyRowOptionsProperties extends ComponentProps<'div'> {
@@ -11,7 +12,7 @@ interface StrategyRowOptionsProperties extends ComponentProps<'div'> {
 }
 
 export const StrategyRowOptions = (props: StrategyRowOptionsProperties) => {
-  const { strategy } = props
+  const { strategy, className } = props
   const [isOpen, setIsOpen] = useState(false)
   const { copyWithToast } = useClipboard()
   return (
@@ -35,7 +36,7 @@ export const StrategyRowOptions = (props: StrategyRowOptionsProperties) => {
             setIsOpen(false)
           }}
           type="button"
-          className="flex items-center gap-2"
+          className={cn('flex items-center gap-2', className)}
         >
           <CopyIcon className="size-4" /> Copy Address
         </button>

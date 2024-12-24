@@ -24,9 +24,9 @@ import { useMemo, useState } from 'react'
 
 interface TokensChartProperties extends ComponentProps<'div'> {}
 
-const chartData: { title: string; color: '#6160FF' | '#A6C1FF' }[] = [
-  { title: 'USDC', color: '#6160FF' },
-  { title: 'USDT', color: '#A6C1FF' },
+const chartData: { title: string; color: '#79DEC2' | '#6160FF' }[] = [
+  { title: 'USDC', color: '#79DEC2' },
+  { title: 'USDT', color: '#6160FF' },
 ]
 
 export const TokensChartMobile = (props: TokensChartProperties) => {

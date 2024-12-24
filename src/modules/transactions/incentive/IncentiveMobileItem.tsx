@@ -3,6 +3,7 @@ import type { IncentiveEvent } from '@api/maat-finance/types'
 import CompounderIcon from '@assets/icons/compounder.svg'
 import { IconWithLabelComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import { IncentiveRowOptions } from '@modules/transaction-history/incentives/EventRowOptions'
 import { IncentiveActionTypeComponent } from '@modules/transaction-history/incentives/IncentiveActionType'
 import { formatAmount } from '@utils/formatValue'
 import { getFromNow } from '@utils/get-day-difference'
@@ -58,6 +59,12 @@ export const IncentiveMobileItem = (props: IncentiveMobileItemProperties) => {
         <div className="flex items-center gap-2">
           <CompounderIcon className="size-4" />
           <p className="capitalize">{incentive.entity_initializer}</p>
+          <div className="flex justify-end">
+            <IncentiveRowOptions
+              event={incentive}
+              className="size-6 rounded-lg p-[0.38rem]"
+            />
+          </div>
         </div>
       </div>
     </div>

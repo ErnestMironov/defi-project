@@ -22,7 +22,6 @@ import { StrategyInfoDesktop } from './StrategyInfoDesktop'
 import { StrategyInfoMobile } from './StrategyInfoMobile'
 import { StrategyTransactions } from './StrategyTransactions'
 import { StrategyTvlChart } from './StrategyTvlChart'
-import { TokenChartMobile } from './TokenChartMobile'
 
 interface StrategyProperties extends ComponentProps<'div'> {}
 
@@ -69,10 +68,10 @@ export const StrategyDesktop = (props: StrategyProperties) => {
                 TVL
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="apy" >
+            <TabsContent value="apy">
               <StrategyApyChart className="h-60 px-8 pb-5" />
             </TabsContent>
-            <TabsContent value="tvl" >
+            <TabsContent value="tvl">
               <StrategyTvlChart className="h-60 px-8 pb-5" />
             </TabsContent>
           </Tabs>
@@ -116,9 +115,7 @@ const StrategyMobile = (props: StrategyProperties) => {
   const { id } = useParams()
   return (
     <div className={cn('mt-6', className)} {...rest}>
-      <StrategyHeader />
       <StrategyInfoMobile />
-      <TokenChartMobile />
       <StrategyTransactions params={{ strategy_ids: [id as string] }} />
       <Footer className="mt-[5.5rem]" />
     </div>
