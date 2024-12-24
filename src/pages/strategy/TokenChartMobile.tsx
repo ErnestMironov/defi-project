@@ -1,15 +1,14 @@
+import type { Token } from '@api/maat-finance/types'
 import { useStrategiesMetrics } from '@api/maat-finance/useStrategiesMetrics'
 import Dot from '@assets/icons/dot.svg'
 import { AreaChart } from '@components/chart/line-chart/AreaChart'
-import { getDotStyles } from '@components/chart/line-chart/utils/chart-helpers'
 import { FramesSelect } from '@components/frames-select/FramesSelect'
 import { useFrameSelect } from '@components/frames-select/useFrameSelect'
-import { AnimatedTabs } from '@components/tab/AnimatedTabs'
 import { Skeleton } from '@components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { cn } from '@utils/cn'
-import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
 export type RechartDataType = {
@@ -18,12 +17,12 @@ export type RechartDataType = {
   value: number | null
 }
 
-interface TokenChartProperties extends ComponentProps<'div'> {}
+interface TokenChartProperties extends ComponentProps<'div'> {
+  token: Token
+}
 
 export const TokenChartMobile = (props: TokenChartProperties) => {
-  const { className, ...rest } = props
-  const [activeTab, setActiveTab] = useState<'apy' | 'tvl'>('apy')
-
+  const { className, token, ...rest } = props
   const { currentFrame, frames, onFrameChange, currentTimestamp } = useFrameSelect()
 
   const { id } = useParams()
@@ -63,6 +62,8 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
       }
     }, [apyData, id])
 
+  console.log(formattedData)
+
   const renderApyBody = () => {
     switch (true) {
       case isLoading:
@@ -87,63 +88,43 @@ export const TokenChartMobile = (props: TokenChartProperties) => {
     }
   }
 
-  const renderDotValue = () => {
-    switch (true) {
-      case isLoading:
-      case isError: {
-        return <Skeleton className="h-5 w-16 rounded-3xl" />
-      }
-      default: {
-        return (
-          <span className="text-text text-[0.75rem]/[0.9rem] font-bold">
-            {activeTab === 'apy'
-              ? formatPercentValue(formattedData.apy.at(-1)?.value ?? 0)
-              : formatUsdValue(formattedData.tvl.at(-1)?.value ?? 0, {
-                  notation: 'compact',
-                })}
-          </span>
-        )
-      }
-    }
-  }
-
   return (
-    <section className={cn('mt-[2.5rem]', className, '')} {...rest}>
-      <AnimatedTabs
-        className="mt-4"
-        classNames={{
-          tab: 'w-[6.25rem] text-base py-[0.72rem]',
-          container: 'p-1',
-        }}
-        activeTab={activeTab}
-        tabs={[
-          { id: 'apy', label: 'APY' },
-          { id: 'tvl', label: 'TVL' },
-        ]}
-        onTabChange={(tab) => setActiveTab(tab as 'apy' | 'tvl')}
-      />
-      <div className="mt-6 flex items-center">
-        <div className="flex flex-col justify-center gap-2">
-          <div className="flex items-center gap-2">
-            <Dot
-              className={cn(
-                getDotStyles(activeTab === 'apy' ? '#6160FF' : '#A6C1FF'),
-                'max-lg:size-2 overflow-visible',
-              )}
-            />
-            {renderDotValue()}
-          </div>
-        </div>
+    <section className={cn('bg-cards-widget rounded-b-3xl', className, '')} {...rest}>
+      <div className="p-3">
         <FramesSelect
-          className="ml-auto h-10 rounded-lg"
+          className="h-12 w-full *:flex-1"
           frame={currentFrame}
           frames={frames}
           onFrameChange={onFrameChange}
         />
       </div>
-      <div className="mt-6 h-[10.125rem]">
-        {activeTab === 'apy' && renderApyBody()}
-        {activeTab === 'tvl' && renderTvlBody()}
+
+      <Tabs defaultValue="apy">
+        <TabsList className="w-full justify-start rounded-none border-y border-stroke-100 px-4 *:py-3 max-lg:gap-5">
+          <TabsTrigger variant="underline" value="apy">
+            APY
+          </TabsTrigger>
+          <TabsTrigger variant="underline" value="tvl">
+            TVL
+          </TabsTrigger>
+
+          <div className="ml-auto flex items-center gap-3 text-text-2100" />
+          <div className="flex items-center gap-[0.38rem]">
+            <Dot className={cn('size-[0.375rem] overflow-visible')} />
+            <span className="text-sm text-text-2100">{token.symbol}</span>
+          </div>
+        </TabsList>
+        <TabsContent value="apy" className="h-60 p-2">
+          {renderApyBody()}
+        </TabsContent>
+        <TabsContent value="tvl" className="h-60 p-2">
+          {renderTvlBody()}
+        </TabsContent>
+      </Tabs>
+      <div className="mt-6 flex items-center">
+        <div className="flex flex-col justify-center gap-2">
+          <div className="flex items-center gap-2" />
+        </div>
       </div>
     </section>
   )

@@ -1,6 +1,5 @@
 import type { IncentiveEvent } from '@api/maat-finance/types'
 import CheckSquare from '@assets/icons/check-square.svg'
-import { CopyButton } from '@components/copy/CopyButton'
 import { ScanLink } from '@components/scan-link/ScanLink'
 import { INCENTIVE_ACTION_TYPE } from '@constants/action-type'
 import { shortenAddress } from '@utils/transform'
@@ -34,7 +33,6 @@ export const IncentiveActionTypeComponent = (
 
         <div className="flex items-center gap-[0.38rem]">
           <p className="text-text-260">{shortenAddress(event.hash)}</p>
-          <CopyButton text={event.hash} />
         </div>
       </div>
     </div>

@@ -1,18 +1,20 @@
-import type { IncentiveEvent } from '@api/maat-finance/types'
+import type { Strategy } from '@api/maat-finance/types'
 import CopyIcon from '@assets/icons/copy-icon.svg'
 import { TableRowOptionsTrigger } from '@components/triggers/TableRowOptionsTrigger'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { useClipboard } from '@hooks/common/useClipboard'
 import { type ComponentProps, useState } from 'react'
 
-interface IncentiveRowOptionsProperties extends ComponentProps<'div'> {
-  event: IncentiveEvent
+interface StrategyInfoRowOptionsProperties extends ComponentProps<'div'> {
+  strategy: Strategy
+  id: string
 }
 
-export const IncentiveRowOptions = (props: IncentiveRowOptionsProperties) => {
-  const { event, className } = props
+export const StrategyInfoRowOptions = (props: StrategyInfoRowOptionsProperties) => {
+  const { strategy, id, className } = props
   const [isOpen, setIsOpen] = useState(false)
   const { copyWithToast } = useClipboard()
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger
@@ -31,7 +33,7 @@ export const IncentiveRowOptions = (props: IncentiveRowOptionsProperties) => {
       >
         <button
           onClick={() => {
-            copyWithToast(event.txFrom)
+            copyWithToast(strategy?.info?.protocol?.link)
             setIsOpen(false)
           }}
           type="button"
@@ -41,13 +43,13 @@ export const IncentiveRowOptions = (props: IncentiveRowOptionsProperties) => {
         </button>
         <button
           onClick={() => {
-            copyWithToast(event.hash)
+            copyWithToast(id)
             setIsOpen(false)
           }}
           type="button"
           className="flex items-center gap-2"
         >
-          <CopyIcon className="size-4" /> Copy Event Hash
+          <CopyIcon className="size-4" /> Copy Strategy ID
         </button>
       </PopoverContent>
     </Popover>

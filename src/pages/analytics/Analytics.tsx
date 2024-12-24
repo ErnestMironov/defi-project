@@ -21,7 +21,7 @@ export const Analytics = () => {
 
   return (
     <Tabs
-      className="mb-40 mt-16"
+      className="mb-40 mt-8"
       defaultValue="tokens"
       value={tab ?? 'tokens'}
       onValueChange={onValueChange}

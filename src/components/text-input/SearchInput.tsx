@@ -32,7 +32,7 @@ export const SearchInput = forwardRef(
           ref={reference}
           type="text"
           className={cn(
-            'h-full py-3 bg-transparent align-middle text-sm/[1.5rem] placeholder:text-text-2100 focus:outline-none mx-3 grow',
+            'h-full py-3 bg-cards-widget align-middle text-sm/[1.5rem] placeholder:text-text-2100 focus:outline-none mx-3 grow',
             classNames?.input,
           )}
           onChange={(e) => onValueChange(e.target.value)}

@@ -172,79 +172,85 @@ export const TransactionsMobileWithFilters = (
   }
 
   return (
-    <div {...props} className={cn('flex flex-col', className)}>
-      <div className="flex items-center gap-4 border-b border-stroke-100 pr-4">
-        <div className="flex-1 border-r border-stroke-100">
-          <SearchInput
-            className="flex-1"
-            placeholder="Tx Hash"
-            classNames={{
-              container: 'bg-input-default border-none py-[0.81rem] px-4',
-              input: 'mx-2',
-            }}
-            value={search}
-            onValueChange={setSearch}
-          />
-        </div>
-        <MobileFiltersDrawer
-          title="Filters"
-          resetFilters={() => {
-            setSelectedActions([])
-            setSelectedStatuses([])
-            setSelectedChains([])
-          }}
-          trigger={
-            <DrawerIconTrigger
-              Icon={Filter}
-              active={
-                selectedActions.concat(selectedStatuses).concat(selectedChains).length > 0
-              }
+    <>
+      <div
+        {...props}
+        className={cn('flex flex-col bg-cards-widget  rounded-b-3xl', className)}
+      >
+        <div className=" flex items-center gap-4  border-b border-stroke-100 pr-4">
+          <div className="flex-1 border-r border-stroke-100">
+            <SearchInput
+              className="flex-1"
+              placeholder="Tx Hash"
+              classNames={{
+                container: 'rounded-tl-3xl  py-[0.81rem] px-4 ',
+                input: 'mx-2',
+              }}
+              value={search}
+              onValueChange={setSearch}
             />
-          }
-        >
-          {/* Sort */}
-          <div>
-            <h6 className="mb-3 text-sm text-text-2100">Sorting</h6>
-            <BaseContainer className="rounded-2xl p-1">
-              <MobileRadioSelect
-                options={SORT_BY_AMOUNT}
-                value={selectedSort}
-                onChange={setSelectedSort}
-              />
-              <MobileRadioSelect
-                options={SORT_BY_DATE}
-                value={selectedSort}
-                onChange={setSelectedSort}
-              />
-            </BaseContainer>
           </div>
-          {/* Filters */}
-          {filters.map((filter) => (
-            <Fragment key={filter}>{renderFilters(filter)}</Fragment>
-          ))}
-        </MobileFiltersDrawer>
-      </div>
-      <TransactionsMobileList
-        events={data}
-        loading={isLoading || isPlaceholderData}
-        error={error}
-      />
-      <div className="absolute inset-x-0 -bottom-10">
-        {isFetchingNextPage && (
-          <div className="flex h-8 w-full items-center justify-center">
-            <Loader />
-          </div>
-        )}
-        {hasNextPage && !isLoading && !isFetchingNextPage && (
-          <button
-            type="button"
-            onClick={() => fetchNextPage()}
-            className="mt-4 h-6 w-full text-sm text-text-50 underline"
+          <MobileFiltersDrawer
+            title="Filters"
+            resetFilters={() => {
+              setSelectedActions([])
+              setSelectedStatuses([])
+              setSelectedChains([])
+            }}
+            trigger={
+              <DrawerIconTrigger
+                Icon={Filter}
+                active={
+                  selectedActions.concat(selectedStatuses).concat(selectedChains).length >
+                  0
+                }
+              />
+            }
           >
-            See more
-          </button>
-        )}
+            {/* Sort */}
+            <div>
+              <h6 className="mb-3 text-sm text-text-2100">Sorting</h6>
+              <BaseContainer className="rounded-2xl p-1">
+                <MobileRadioSelect
+                  options={SORT_BY_AMOUNT}
+                  value={selectedSort}
+                  onChange={setSelectedSort}
+                />
+                <MobileRadioSelect
+                  options={SORT_BY_DATE}
+                  value={selectedSort}
+                  onChange={setSelectedSort}
+                />
+              </BaseContainer>
+            </div>
+            {/* Filters */}
+            {filters.map((filter) => (
+              <Fragment key={filter}>{renderFilters(filter)}</Fragment>
+            ))}
+          </MobileFiltersDrawer>
+        </div>
+        <TransactionsMobileList
+          events={data}
+          loading={isLoading || isPlaceholderData}
+          error={error}
+        />
+        <div className="absolute inset-x-0 -bottom-10">
+          {isFetchingNextPage && (
+            <div className="flex h-8 w-full items-center justify-center">
+              <Loader />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      {hasNextPage && !isLoading && !isFetchingNextPage && (
+        <button
+          type="button"
+          onClick={() => fetchNextPage()}
+          className="mt-2 h-6 w-full text-sm text-text-50 underline"
+        >
+          See more
+        </button>
+      )}
+    </>
   )
 }
