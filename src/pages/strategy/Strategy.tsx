@@ -8,7 +8,6 @@ import {
   SELECT_STATUSES,
 } from '@constants/select-constant'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { Footer } from '@layouts/footer/Footer'
 import { TransactionHistory } from '@modules/transaction-history/TransactionHistory'
 import { BaseContainer } from '@pages/analytics/components/BaseContainer'
 import { cn } from '@utils/cn'
@@ -117,7 +116,6 @@ const StrategyMobile = (props: StrategyProperties) => {
     <div className={cn('mt-6', className)} {...rest}>
       <StrategyInfoMobile />
       <StrategyTransactions params={{ strategy_ids: [id as string] }} />
-      <Footer className="mt-[5.5rem]" />
     </div>
   )
 }

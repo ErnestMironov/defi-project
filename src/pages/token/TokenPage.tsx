@@ -3,7 +3,6 @@ import { useVaults } from '@api/maat-finance/useVaults'
 import { Skeleton } from '@components/ui/skeleton'
 import { TOKEN_INFO } from '@constants/token-info'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
-import { Footer } from '@layouts/footer/Footer'
 import { TokenStatsContainer } from '@modules/token-overview/TokenStatsContainer'
 import { Transactions } from '@modules/transactions/Transactions'
 import { TransactionsHistoryMobile } from '@modules/transactions/TransactionsHistoryMobile'
@@ -89,7 +88,6 @@ export const TokenDesktopPage = (props: TokensProperties) => {
         className="mt-[6.25rem] max-lg:mt-14"
         parameters={{ token: [symbol as 'USDT' | 'USDC'] }}
       />
-      <Footer className="mt-[7.5rem]" />
     </div>
   )
 }
@@ -107,7 +105,6 @@ const TokensMobilePage = (props: ComponentProps<'div'>) => {
         className="mt-16"
         parameters={{ token: [symbol as 'USDT' | 'USDC'] }}
       />
-      <Footer className="mt-[5.5rem]" />
     </div>
   )
 }
