@@ -1,5 +1,6 @@
 import Copy from '@assets/icons/copy-icon.svg'
 import Link from '@assets/icons/link.svg'
+import { useTheme } from '@modules/theme/ThemeProvider'
 import { cn } from '@utils/cn'
 import { toast } from 'react-hot-toast'
 
@@ -17,9 +18,16 @@ export default function ReferalLinks({
   points,
   ...props
 }: ReferalLinksProperties) {
+  const { theme } = useTheme()
+
   const handleCopy = (code: string) => {
     navigator.clipboard.writeText(code).then(() => {
-      toast.success('Copied!')
+      toast.success('Copied!', {
+        style: {
+          background: theme === 'dark' ? '#232329' : 'white',
+          color: theme === 'dark' ? 'white' : 'black',
+        },
+      })
     })
   }
 
