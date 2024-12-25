@@ -1,5 +1,4 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
-import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
 import { useTransactionStatusChecker } from '@modules/pending-transactions/useTransactionStatusTracker'
 import { PointsBalance } from '@modules/points-balance/PointsBalance'
@@ -13,15 +12,13 @@ import { useAccount } from 'wagmi'
 import PortfolioButton from './components/PortfolioButton'
 import { PortfolioModal } from './components/PortfolioModal'
 import { usePortfolioModalState } from './hooks/UsePortfolioModalState'
-import { MobileHeader } from './MobileHeader'
-import { Sidebar } from './Sidebar'
+import { Menu } from './menu/Menu'
 
 interface HeaderProperties extends ComponentProps<'div'> {}
 
 export const Header = ({ className, ...rest }: HeaderProperties) => {
   useTransactionStatusChecker()
 
-  const { isBelowDesktop } = useDeviceWidth()
   const account = useAccount()
   const { isOpen, handlePortfolioClose, handlePortfolioOpen } = usePortfolioModalState()
   const { data: userShares } = useUserShares(account.address)
@@ -30,17 +27,13 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
       accumulator + Number(formatUnits(value.balance, value.decimals)),
     0,
   )
-  if (isBelowDesktop) {
-    return <MobileHeader className={className} {...rest} />
-  }
   return (
     <header
       {...rest}
       className={clsx('flex w-full items-center justify-between', className)}
     >
-      <div className="h-16">
-        <Sidebar />
-      </div>
+      <Menu />
+      {/* ---------------------- PORTFOLIO --------------------- */}
       {account.address ? (
         <div className="flex items-center gap-2 rounded-[1.375rem] bg-transparent">
           <Link to={ROUTES.POINTS}>
