@@ -53,7 +53,7 @@ export default function UserNextLevel({
           <span className="text-main-100">
             {Math.round(userRewards?.totalPoints ?? 0)}
           </span>
-          <span className="text-main-50">/ {pointsNeededForNextLevel}</span>
+          <span className="text-main-80">/ {pointsNeededForNextLevel}</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export default function UserNextLevel({
           <p className="text-2xl text-text-5070 max-md:text-[1rem]">Next</p>
         </div>
 
-        <div className="max-md:flex-start flex items-center gap-2 max-md:grid max-md:flex-wrap max-md:items-start max-md:justify-start">
+        <div className="max-md:flex-start flex items-center gap-2 max-md:grid max-md:grid-cols-1 max-md:flex-wrap max-md:items-start max-md:justify-start">
           <div className="grid grid-cols-3 items-center gap-2 max-md:grid-cols-2">
             <div className="rounded-md bg-violet-15 px-2 py-1 text-sm max-md:flex max-md:items-center max-md:justify-center">
               <p className="text-sm text-violet-100">
@@ -94,7 +94,7 @@ export default function UserNextLevel({
               <span className="text-main-100">
                 {Math.round(userRewards?.totalPoints ?? 0)}
               </span>
-              <span className="text-main-50">/ {pointsNeededForNextLevel}</span>
+              <span className="text-main-80">/ {pointsNeededForNextLevel}</span>
             </div>
           </div>
         </div>
