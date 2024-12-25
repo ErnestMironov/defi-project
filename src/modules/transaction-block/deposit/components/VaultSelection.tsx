@@ -20,7 +20,7 @@ export const VaultSelection = () => {
         vaultName="USDC"
         apy={`${Math.trunc(bestUSDCApy)}%`}
       />
-      <div className="h-6 w-px bg-stroke-element max-lg:hidden" />
+      <div className="bg-stroke-current h-6 w-px max-lg:hidden" />
       <VaultInfoBox
         active={vault === 'USDT'}
         onClick={() => setVault('USDT')}
