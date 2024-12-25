@@ -69,10 +69,14 @@ export default function UserNextLevel({
                 LVL {nextLevel?.nextLvlBenefits?.benefitsDescription?.level}
               </p>
             </div>
-            <BonusMultiplier
-              multiplier={nextLevel?.nextLvlBenefits?.globalRewardMultiplier ?? 0}
-            />
 
+            <div className="hidden h-auto items-center gap-1 rounded-[6.1875rem] border border-stroke-100 bg-[#8585A90D] px-2 py-1 text-sm max-md:flex max-md:py-1">
+              <StartBold className="size-4" />
+              <span className="text-main-100">
+                {Math.round(userRewards?.totalPoints ?? 0)}
+              </span>
+              <span className="text-main-80">/ {pointsNeededForNextLevel}</span>
+            </div>
             <StarPoint
               value={Math.round(
                 (nextLevel?.nextLvlBenefits?.rewardsPerActivity ?? 0) -
@@ -89,13 +93,10 @@ export default function UserNextLevel({
                 nextLevel?.nextLvlBenefits?.benefitsDescription.ref_codes ?? null
               }
             />
-            <div className="hidden h-auto items-center gap-1 rounded-[6.1875rem] border border-stroke-100 bg-[#8585A90D] px-2 py-1 text-sm max-md:flex max-md:py-1">
-              <StartBold className="size-4" />
-              <span className="text-main-100">
-                {Math.round(userRewards?.totalPoints ?? 0)}
-              </span>
-              <span className="text-main-80">/ {pointsNeededForNextLevel}</span>
-            </div>
+
+            <BonusMultiplier
+              multiplier={nextLevel?.nextLvlBenefits?.globalRewardMultiplier ?? 0}
+            />
           </div>
         </div>
       </div>
