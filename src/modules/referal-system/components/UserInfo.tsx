@@ -33,12 +33,12 @@ export default function UserInfo({ className, ...props }: UserInfoProperties) {
             <div className="flex w-full flex-col rounded-3xl bg-cards-widget font-montreal max-md:bg-transparent">
               <div className="flex flex-col items-center rounded-3xl shadow-test-2  max-md:p-0 lg:flex-row">
                 <div className="flex w-full flex-col items-center max-md:w-full max-md:items-start max-md:gap-6 max-md:rounded-3xl max-md:bg-cards-widget  max-md:p-6 lg:flex-row">
-                  <div className="p-6 max-md:p-0">
+                  <div className="p-6  max-md:mx-auto max-md:p-0">
                     <UserAvatar className=" h-auto w-[12.375rem] rounded-full bg-violet-100 max-md:w-full lg:w-[12.375rem]" />
                   </div>
 
                   <div className="py-6 max-md:rounded-3xl max-md:py-0">
-                    <div className="flex flex-col items-center gap-2 text-xl font-medium max-md:flex-row max-md:items-start lg:flex-row lg:text-[2.625rem]">
+                    <div className="flex flex-col items-center gap-2 text-xl font-medium max-md:flex-row lg:flex-row lg:text-[2.625rem]">
                       <span className="text-violet-100 max-md:text-[2rem]">
                         {badgesInfo?.currentLvl?.name}
                       </span>
@@ -101,7 +101,7 @@ export default function UserInfo({ className, ...props }: UserInfoProperties) {
           <ReferalLinks
             className="w-full lg:w-[33rem]"
             codes={addressInfo?.created_referral_codes.map((code) => code.code) ?? []}
-            points={25 ?? 0}
+            points={100 ?? 0}
           />
         </div>
       </div>
