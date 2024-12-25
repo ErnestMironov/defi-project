@@ -32,7 +32,7 @@ export const PortfolioModal = ({
 }: PortfolioModalProperties) => {
   const { address } = useAccount()
   const { yield: yieldData, isLoadingYield } = usePortfolioData()
-  console.log('yieldData', yieldData)
+
   const { data: userShares, isLoading: isUserSharesLoading } = useUserShares(address)
   const { open: openConnectModal } = useAppKit()
   const portfolioValue = useMemo(() => {
@@ -55,10 +55,10 @@ export const PortfolioModal = ({
   const portfolioGrowth = useMemo(() => {
     if (portfolioValue < 0.001 || totalYield < 0.001) return 0
 
-    const initialValue = portfolioValue - totalYield
+    const initialValue = (portfolioValue + totalYield) * 100
     console.log('🚀 ~ portfolioGrowth ~ initialValue:', initialValue)
 
-    return (totalYield / initialValue) * 100
+    return initialValue / portfolioValue - 100
   }, [portfolioValue, totalYield])
 
   const handleClickOutside = () => {
