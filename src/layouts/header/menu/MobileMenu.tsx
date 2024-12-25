@@ -1,4 +1,5 @@
 import { Socials } from '@components/socials/Socials'
+import { useClickOutside } from '@hooks/useClickOutside'
 import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
@@ -70,7 +71,7 @@ const contentVariants = {
 export const MobileMenu = () => {
   const menu = useMobileMenuArray()
   const [isOpen, setIsOpen] = useState(false)
-
+  const menuReference = useClickOutside(() => setIsOpen(false))
   useEffect(() => {
     document.documentElement.style.overflowY = isOpen ? 'hidden' : 'auto'
   }, [isOpen])
@@ -87,6 +88,7 @@ export const MobileMenu = () => {
         {isOpen && (
           <>
             <motion.div
+              ref={menuReference}
               className="fixed left-0 top-0 z-10 h-screen w-screen bg-[rgba(35,35,41,0.50)] bg-blend-overlay backdrop-blur-[25px]"
               variants={overlayVariants}
               initial="closed"
