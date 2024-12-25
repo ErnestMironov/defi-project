@@ -183,7 +183,7 @@ export const TransactionsMobileWithFilters = (
               className="flex-1"
               placeholder="Tx Hash"
               classNames={{
-                container: 'rounded-tl-3xl  py-[0.81rem] px-4 ',
+                container: 'rounded-tl-3xl  py-[0.81rem] px-4',
                 input: 'mx-2',
               }}
               value={search}
@@ -206,6 +206,7 @@ export const TransactionsMobileWithFilters = (
                 }
               />
             }
+            className="shadow-test"
           >
             {/* Sort */}
             <div>
@@ -246,7 +247,7 @@ export const TransactionsMobileWithFilters = (
         <button
           type="button"
           onClick={() => fetchNextPage()}
-          className="mt-2 h-6 w-full text-sm text-text-50 underline"
+          className="my-2 h-6 w-full text-sm text-text-50 underline"
         >
           See more
         </button>
