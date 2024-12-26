@@ -20,14 +20,14 @@ import { WithdrawPointsBurn } from './WithdrawPointsBurn'
 export const WithdrawInput = () => {
   const { isConnected, address } = useAccount()
   const {
-    inputValue,
-    setInputValue,
+    withdrawInputValue: inputValue,
+    setWithdrawInputValue: setInputValue,
     mtToken,
     setWithdrawAmount,
     setCurrentModal,
-    inputValueInUSD,
+    withdrawInputValueInUSD: inputValueInUSD,
     withdrawToAnotherChain,
-    setInputValueInUSD,
+    setWithdrawInputValueInUSD: setInputValueInUSD,
     setInputError,
     setWithdrawToNetwork,
   } = useTxStore()
@@ -104,9 +104,15 @@ export const WithdrawInput = () => {
 
     setInputValue(formattedValue)
     setWithdrawAmount(formattedValue)
+
+    if (!formattedValue) {
+      setInputValueInUSD('')
+      return
+    }
+
     const formattedValueInUSD = formatAmount(formattedValue, {
       maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
+      minimumFractionDigits: formattedValue.includes('.') ? 2 : 0,
       useGrouping: true,
     })
 
