@@ -311,3 +311,7 @@ export interface CurrentStakersCountResponse {
   }
   total_users: number
 }
+
+export interface BurnedPointsResponse {
+  totalPoints: number
+}
