@@ -86,11 +86,11 @@ export const PortfolioModal = ({
         {isOpen && (
           <motion.div
             ref={sidebarReference}
-            className="fixed right-0 top-0 z-[100] mt-4 flex max-md:mr-0 max-md:mt-0 max-md:w-full  max-md:p-4 md:mr-4"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
-            transition={{ duration: 0.3 }}
+            className="fixed right-0 top-0 z-[100] mt-4 flex max-md:mr-0 max-md:mt-0 max-md:w-full max-md:p-4 md:mr-4"
+            initial={{ opacity: 0, x: 50, scale: 1 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 50, scale: 1 }}
+            transition={{ duration: 0.2, ease: 'easeInOut', delay: 0.1 }}
           >
             <div className="relative mr-3 flex items-start pt-2 max-md:mr-0">
               {!isMobile && (
