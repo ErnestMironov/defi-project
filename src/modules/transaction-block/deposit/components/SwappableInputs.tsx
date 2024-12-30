@@ -112,7 +112,7 @@ export const SwappableInputs = ({
         </span>
       </p>
       <ShadowBox
-        className="cursor-pointer select-none rounded-md border border-stroke-100 bg-white px-[0.56rem] text-[0.875rem] font-medium leading-[1.5625rem] text-text-2100"
+        className="cursor-pointer select-none rounded-md border border-stroke-100 bg-white px-[0.56rem] text-[0.875rem] font-medium leading-[1.5625rem] text-text-2100 dark:bg-[#2D2D36]"
         onClick={onMaxClick}
       >
         Max
@@ -123,7 +123,7 @@ export const SwappableInputs = ({
   return (
     <div className="flex flex-col gap-3">
       {/* Primary input with right element */}
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex h-12 items-center justify-between gap-2">
         <div className="min-w-0 flex-1">{primaryInput}</div>
         {rightElement}
       </div>
@@ -134,7 +134,7 @@ export const SwappableInputs = ({
           <button
             type="button"
             onClick={() => setIsSwapped(!isSwapped)}
-            className="flex size-6 min-w-6 items-center justify-center rounded border border-stroke-100 bg-[#FFF] [box-shadow:0px_2px_1px_0px_rgba(214,_200,_255,_0.22)]"
+            className="flex size-6 min-w-6 items-center justify-center rounded border border-stroke-100 bg-[#FFF] [box-shadow:0px_2px_1px_0px_rgba(214,_200,_255,_0.22)] dark:bg-[#2D2D36] dark:shadow-none"
           >
             <SwitchIcon className="size-3.5" />
           </button>
