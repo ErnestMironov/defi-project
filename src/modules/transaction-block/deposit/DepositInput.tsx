@@ -174,7 +174,9 @@ export const DepositInput = () => {
           onModalOpen={() => setCurrentModal('review')}
         />
       </div>
-      <ZapFee />
+      <ZapFee
+        className={cn((error && inputValue) || inputValueInUSD ? 'block' : 'hidden')}
+      />
     </div>
   )
 }
