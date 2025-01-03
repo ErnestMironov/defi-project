@@ -20,7 +20,7 @@ export const VaultTokenItem = (props: VaultTokenItemProperties) => {
           {formatAmount(balance, { maximumFractionDigits: 2 })} {symbol}
         </p>
         <p className="flex gap-[.38rem] text-text-2100">
-          ${formatAmount(rate * Number(balance), { maximumFractionDigits: 3 })}
+          ${formatAmount(rate * Number(balance), { maximumFractionDigits: 2 })}
         </p>
       </div>
       <div className="ml-auto text-base font-medium  text-text-1100 max-md:text-sm">
