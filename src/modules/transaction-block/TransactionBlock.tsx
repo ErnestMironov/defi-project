@@ -7,6 +7,7 @@ import { Dialog, DialogContent } from '@components/ui/dialog'
 import { Switch } from '@components/ui/switch'
 import { TX_TYPE } from '@constants/txTypes'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import { cn } from '@utils/cn'
 import clsx from 'clsx'
 import { type ComponentProps, useCallback, useState } from 'react'
 
@@ -22,14 +23,18 @@ interface DepositBlockProperties extends ComponentProps<'div'> {}
 
 export const TransactionBlock = (props: DepositBlockProperties) => {
   const { className, ...rest } = props
-  const { txType, withdrawToAnotherChain, setWithdrawToAnotherChain, inputError } =
-    useTxStore()
+  const {
+    txType,
+    withdrawToAnotherChain,
+    setWithdrawToAnotherChain,
+    inputError,
+    mtToken,
+  } = useTxStore()
   const { isBelowDesktop } = useDeviceWidth()
   useGetSwapRoute()
   useSetDepositDetails()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-
   const handleOpenCrossChainDialog = useCallback(() => {
     setIsDialogOpen(true)
   }, [])
@@ -52,7 +57,10 @@ export const TransactionBlock = (props: DepositBlockProperties) => {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-2xl border-stroke-100 p-3 shadow-test"
+              className={cn(
+                'rounded-2xl border-stroke-100 p-3 shadow-test',
+                mtToken === null ? 'hidden' : 'block',
+              )}
               onClick={handleOpenCrossChainDialog}
             >
               <SettingsIcon className="size-4" />

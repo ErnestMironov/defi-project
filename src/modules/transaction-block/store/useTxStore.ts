@@ -249,7 +249,7 @@ export const useTxStore = create<SelectedAssetState>()(
       setTransactionStatus: (status) => set({ transactionStatus: status }),
 
       // Additional settings
-      withdrawToAnotherChain: true,
+      withdrawToAnotherChain: false,
       setWithdrawToAnotherChain: (value) => set({ withdrawToAnotherChain: value }),
 
       // Utility functions
