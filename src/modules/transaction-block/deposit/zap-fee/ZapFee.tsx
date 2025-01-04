@@ -1,3 +1,4 @@
+import { useGetSwapRoute } from '@api/lifi/hooks/useGetSwapRoute'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { useHideHeaderStore } from '@store/useHideHeaderStore'
 import type { HTMLAttributes } from 'react'
@@ -13,6 +14,7 @@ const ZapFee: React.FC<ZapFeeProperties> = ({ className }) => {
   const [open, setOpen] = React.useState(false)
   const { setHidden: setIsHeaderHidden } = useHideHeaderStore()
   const { swapRoute } = useTxStore()
+  const { isPending: isRouteLoading } = useGetSwapRoute()
 
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen)
@@ -28,6 +30,7 @@ const ZapFee: React.FC<ZapFeeProperties> = ({ className }) => {
         open={open}
         onOpenChange={handleOpenChange}
         summaryAndFees={summaryAndFees}
+        isLoading={isRouteLoading}
       />
     </div>
   )
