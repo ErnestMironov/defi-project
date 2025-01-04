@@ -1,5 +1,4 @@
 import { useGetUsersPoints } from '@api/maat-finance/useGetUsersPoints'
-import MoreOptions from '@assets/icons/more-options.svg'
 import PersonIcon from '@assets/icons/person-icon.svg'
 import StartBold from '@assets/icons/start-bold.svg'
 import { CopyButton } from '@components/copy/CopyButton'
@@ -48,8 +47,10 @@ export default function LeaderBoard({ className, ...rest }: LeaderBoardPropertie
                   <div className="flex w-full items-center justify-between border-b border-stroke-100 px-4 py-2">
                     <p className="text-sm text-text-2100">Address</p>
                     <div className="flex items-center gap-1 text-sm">
-                      {shortenAddress(user.info.userId)}
-                      <MoreOptions className="size-3" />
+                      <span className="w-full max-w-[6.5rem]">
+                        {shortenAddress(user.info.userId)}
+                      </span>
+                      <CopyButton text={user.info.userId} />
                     </div>
                   </div>
 

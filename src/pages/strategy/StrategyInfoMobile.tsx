@@ -1,5 +1,6 @@
 import type { Strategy, Token } from '@api/maat-finance/types'
 import { useStrategy } from '@api/maat-finance/useStrategy'
+import ArrowDown from '@assets/icons/arrow-down.svg'
 import ArrowBack from '@assets/icons/arrow-left.svg'
 import StrategyIcon from '@assets/icons/strategy-icon.svg'
 import { TokenIconComponent } from '@components/token-icon'
@@ -49,14 +50,14 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
         </div>
         <span>Back to Events</span>
       </button>
-      <div className="flex flex-col rounded-b-3xl shadow-test-2">
-        <div className="rounded-t-3xl  bg-cards-widget ">
-          <div className="flex items-center justify-between gap-2 p-4">
+      <div className="flex flex-col rounded-3xl shadow-test-2">
+        <div className="rounded-t-2xl bg-cards-widget ">
+          <div className="flex h-12 items-center justify-between gap-2 border-b border-stroke-100 px-4">
             <div className="flex items-center gap-1">
               <TokenIconComponent symbol={protocol} className="size-8 shrink-0" />
               <p className="text-sm leading-4 text-text-100">{protocol}</p>
             </div>
-            <div>
+            <div className="flex items-center gap-1">
               <button
                 className="text-sm text-text-2100"
                 onClick={() => setDescriptionVisible(!isDescriptionVisible)}
@@ -64,18 +65,24 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
               >
                 {isDescriptionVisible ? 'Show less' : 'Learn more'}
               </button>
+              <ArrowDown
+                className={cn(
+                  'size-3 rotate-180',
+                  isDescriptionVisible ? 'rotate-360' : '',
+                )}
+              />
             </div>
           </div>
-          <div className="px-4 pb-2">
-            <p className="text-sm text-text-2100">
+          <div className="px-4 pb-2 pt-3">
+            <p className="text-sm font-[400] text-text-2100">
               {isDescriptionVisible ? protocolDescription : halfDescription}
             </p>
           </div>
         </div>
-        <TokenChartMobile token={strategy?.token as Token} />
+        <TokenChartMobile token={strategy?.token as Token} className="rounded-b-2xl" />
       </div>
 
-      <div className="flex flex-col  gap-4 rounded-3xl bg-cards-widget py-3 shadow-test-2">
+      <div className="flex flex-col  gap-4 rounded-2xl bg-cards-widget py-3 shadow-test-2">
         <div className="flex flex-row justify-between">
           <div className="flex flex-row items-center gap-2 px-4">
             <TokenIconComponent symbol={protocol} className="size-8 shrink-0" />
@@ -94,14 +101,14 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
         </div>
         <div className="flex items-center justify-between px-4">
           <span className="text-text-2100">Token</span>
-          <div className="flex items-center justify-center gap-[0.38rem] text-text-100">
+          <div className="flex items-center justify-center gap-[0.38rem] text-sm leading-6 text-text-100">
             <TokenIconComponent symbol={strategy?.token.symbol} className="size-4" />
             <span>{strategy?.token.symbol}</span>
           </div>
         </div>
         <div className="flex items-center justify-between px-4">
           <span className="text-text-2100">Chain</span>
-          <div className="flex items-center justify-center gap-[0.38rem] text-text-100">
+          <div className="flex items-center justify-center gap-[0.38rem] text-sm leading-4 text-text-100">
             <TokenIconComponent symbol={strategy?.token.chain_id} className="size-4" />
             <span>
               {
@@ -114,10 +121,14 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
         </div>
         <div className="flex items-center justify-between px-4">
           <span className="text-text-2100">TVL</span>
-          <div className="flex items-center justify-center gap-[0.38rem] text-text-100">
-            {formatUsdValue(strategy?.tvl ?? 0, {
-              notation: 'compact',
-            })}
+          <div className="flex items-center justify-center text-sm leading-6 text-text-100">
+            <span className="text-text-60">$</span>
+            <span className="text-text-100">
+              {formatUsdValue(strategy?.tvl ?? 0, {
+                notation: 'standard',
+                style: 'decimal',
+              })}
+            </span>
           </div>
         </div>
       </div>
@@ -167,8 +178,8 @@ const StrategyInfoMobileSkeleton = (props: ComponentProps<'div'>) => {
           <Skeleton className="h-4 w-32" />
         </span>
       </button>
-      <div className="flex flex-col rounded-b-3xl shadow-test-2">
-        <div className="rounded-t-3xl bg-cards-widget">
+      <div className="flex flex-col rounded-b-2xl shadow-test-2">
+        <div className="rounded-t-2xl bg-cards-widget">
           <div className="flex items-center justify-between gap-2 p-4">
             <div className="flex items-center gap-1">
               <Skeleton className="size-8" />
@@ -184,7 +195,7 @@ const StrategyInfoMobileSkeleton = (props: ComponentProps<'div'>) => {
         </div>
         <Skeleton className="h-40 w-full" />
       </div>
-      <div className="flex flex-col gap-4 rounded-3xl bg-cards-widget py-3 shadow-test-2">
+      <div className="flex flex-col gap-4 rounded-2xl bg-cards-widget py-3 shadow-test-2">
         <div className="flex flex-row justify-between">
           <div className="flex flex-row items-center gap-2 px-4">
             <Skeleton className="size-8" />

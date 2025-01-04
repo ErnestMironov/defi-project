@@ -10,7 +10,7 @@ const Grey3DBox: React.FC<Grey3DBoxProperties> = (props) => {
     <div
       {...props}
       className={cn(
-        'flex items-center justify-between self-stretch rounded-2xl bg-input-default p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]',
+        'flex items-center justify-between self-stretch rounded-2xl bg-cards-widget p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)]',
         props.className,
       )}
     >

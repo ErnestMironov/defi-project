@@ -26,16 +26,26 @@ export const useFormattedVaultData = (address?: `0x${string}`) => {
     balances.forEach((token) => {
       if (formatted.some((t) => t.symbol === token.stable)) {
         const index = formatted.findIndex((t) => t.symbol === token.stable)
+
         formatted[index].balance = (
           Number(formatted[index].balance) +
           Number(formatUnits(token.balance, token.decimals))
         ).toString()
+
+        const normalizedPrice =
+          token.decimals === formatted[index].decimals
+            ? token.stableBalance
+            : token.stableBalance *
+              BigInt(10 ** (formatted[index].decimals - token.decimals))
+
+        formatted[index].price += normalizedPrice
       } else {
         formatted.push({
-          balance: formatUnits(token.balance, token.decimals),
-          decimals: token.decimals,
           symbol: token.stable,
+          price: formatUnits(token.balance, token.decimals),
           apy: token.stable === 'USDC' ? usdcApy : usdtApy,
+          balance: formatUnits(token.stableBalance, token.decimals),
+          decimals: token.decimals,
         })
       }
     })

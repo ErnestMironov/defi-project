@@ -60,8 +60,8 @@ export const StrategyRow: React.FC<StrategyRowProperties> = ({ strategy }) => {
         })}
       </Table.Cell>
       <Table.Cell className="">
-        <div className="flex w-full items-center">
-          <p className="min-w-24">{shortenAddress(strategy.address)}</p>
+        <div className="flex w-full items-center gap-1">
+          <p className="min-w-28">{shortenAddress(strategy.address)}</p>
           <CopyButton text={strategy.address} className="size-4 shrink-0" />
           <ScanLink
             chainId={strategy.chain_id}

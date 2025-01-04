@@ -1,4 +1,3 @@
-import { Button } from '@components/ui/button'
 import { useAppKitTheme } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { motion } from 'framer-motion'
@@ -15,30 +14,27 @@ export function ThemeToggler(props: ThemeToggleProperties) {
   const { setTheme, theme } = useTheme()
   const { setThemeMode } = useAppKitTheme()
 
-  const handleSetLightTheme = () => {
-    setTheme('light')
-    setThemeMode('light')
-  }
-
-  const handleSetDarkTheme = () => {
-    setTheme('dark')
-    setThemeMode('dark')
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+    setThemeMode(newTheme)
   }
 
   return (
-    <div
+    <button
+      onClick={toggleTheme}
       className={cn(
         'relative flex items-center w-auto h-auto rounded-xl border border-stroke-100 p-1 gap-2 bg-misc-card',
-        'transition-colors',
-
+        'transition-colors cursor-pointer',
         className,
       )}
+      type="button"
     >
       <motion.div
         className={cn(
           'absolute top-1 left-1 z-0 rounded-[0.5rem]',
           'bg-main-100',
-          'transition-all duration-300 ease-out hover:cursor-none',
+          'transition-all duration-300 ease-out pointer-events-none',
         )}
         initial={false}
         animate={{
@@ -54,43 +50,43 @@ export function ThemeToggler(props: ThemeToggleProperties) {
         }}
       />
 
-      <div className="relative z-10 flex w-1/2 items-center justify-center">
-        <Button
-          size="icon"
-          variant="container"
-          onClick={handleSetLightTheme}
-          className={cn(
-            'flex justify-center items-center w-auto h-auto rounded-[0.5rem] hover:bg-main-100',
-            theme === 'light' ? 'bg-main-100' : 'bg-transparent',
-          )}
-        >
-          <SunV1Svg
+      <div className="relative z-10 flex w-full items-center">
+        <div className="flex w-1/2 items-center justify-center">
+          <div
             className={cn(
-              theme === 'light' ? 'fill-white' : 'fill-gray-400 [&_path]:stroke-gray-400',
-              'size-4',
+              'flex justify-center items-center w-auto h-auto rounded-[0.5rem] hover:bg-main-100/10',
+              theme === 'light' ? 'bg-main-100' : 'bg-transparent',
+              'p-3',
             )}
-          />
-        </Button>
-      </div>
+          >
+            <SunV1Svg
+              className={cn(
+                theme === 'light'
+                  ? 'fill-white'
+                  : 'fill-gray-400 [&_path]:stroke-gray-400',
+                'size-4',
+              )}
+            />
+          </div>
+        </div>
 
-      <div className="relative z-10 flex w-1/2 items-center justify-center">
-        <Button
-          size="icon"
-          variant="container"
-          onClick={handleSetDarkTheme}
-          className={cn(
-            'flex justify-center items-center w-auto h-auto rounded-[0.5rem]',
-            theme === 'dark' ? '!bg-main-100' : 'bg-transparent',
-          )}
-        >
-          <MoonV1Svg
+        <div className="flex w-1/2 items-center justify-center">
+          <div
             className={cn(
-              theme === 'dark' ? 'fill-white [&_path]:stroke-white' : '',
-              'size-4',
+              'flex justify-center items-center w-auto h-auto rounded-[0.5rem] hover:bg-main-100/10',
+              theme === 'dark' ? '!bg-main-100' : 'bg-transparent',
+              'p-3',
             )}
-          />
-        </Button>
+          >
+            <MoonV1Svg
+              className={cn(
+                theme === 'dark' ? 'fill-white [&_path]:stroke-white' : '',
+                'size-4',
+              )}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+    </button>
   )
 }

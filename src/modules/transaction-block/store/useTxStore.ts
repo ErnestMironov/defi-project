@@ -55,6 +55,10 @@ export interface SelectedAssetState {
   setInputValue: (value: string) => void
   inputValueInUSD: string
   setInputValueInUSD: (value: string) => void
+  withdrawInputValue: string
+  setWithdrawInputValue: (value: string) => void
+  withdrawInputValueInUSD: string
+  setWithdrawInputValueInUSD: (value: string) => void
   depositTotalInUSD: string
   setDepositTotalInUSD: (value: string) => void
   depositTotalAmount: string
@@ -132,7 +136,13 @@ export const useTxStore = create<SelectedAssetState>()(
     (set) => ({
       // Transaction type and difficulty
       txType: TX_TYPE.DEPOSIT,
-      setTxType: (by) => set({ txType: by, inputValue: '' }),
+      setTxType: (by) => {
+        set((state) => ({
+          txType: by,
+          inputValueInUSD: state.inputValueInUSD,
+          withdrawInputValue: state.withdrawInputValue,
+        }))
+      },
       txDifficulty: 'on_chain',
       setTxDifficulty: (value) => set({ txDifficulty: value }),
       isTxZAP: false,
@@ -167,6 +177,10 @@ export const useTxStore = create<SelectedAssetState>()(
       setInputValue: (by) => set({ inputValue: by }),
       inputValueInUSD: '',
       setInputValueInUSD: (by) => set({ inputValueInUSD: by }),
+      withdrawInputValue: '',
+      setWithdrawInputValue: (by) => set({ withdrawInputValue: by }),
+      withdrawInputValueInUSD: '',
+      setWithdrawInputValueInUSD: (by) => set({ withdrawInputValueInUSD: by }),
       depositTotalInUSD: '',
       setDepositTotalInUSD: (by) => set({ depositTotalInUSD: by }),
       depositTotalAmount: '',

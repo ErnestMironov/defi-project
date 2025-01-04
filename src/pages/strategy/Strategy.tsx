@@ -115,7 +115,10 @@ const StrategyMobile = (props: StrategyProperties) => {
   return (
     <div className={cn('mt-6', className)} {...rest}>
       <StrategyInfoMobile />
-      <StrategyTransactions params={{ strategy_ids: [id as string] }} />
+      <StrategyTransactions
+        params={{ strategy_ids: [id as string] }}
+        className="rounded-t-2xl"
+      />
     </div>
   )
 }

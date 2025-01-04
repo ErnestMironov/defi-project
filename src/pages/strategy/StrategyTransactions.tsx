@@ -2,18 +2,20 @@ import type { EventsParameters } from '@api/maat-finance/useEvents'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { IncentiveMobileWithFilters } from '@modules/transactions/incentive/IncentiveMobileWithFilters'
 import { TransactionsMobileWithFilters } from '@modules/transactions/TransactionsMobileWithFilters'
+import { cn } from '@utils/cn'
 import type { ComponentProps } from 'react'
 
 interface StrategyTransactionsProperties extends ComponentProps<'div'> {
   params: EventsParameters
+  className?: string
 }
 
 export const StrategyTransactions = (props: StrategyTransactionsProperties) => {
-  const { params } = props
+  const { params, className } = props
   return (
-    <div className="rounded-t-3xl ">
+    <div className={cn('rounded-t-3xl', className)}>
       <Tabs defaultValue="maat" className="mt-4">
-        <TabsList className="w-full justify-start rounded-t-3xl border-y border-stroke-100 bg-cards-widget px-4 *:py-3 max-lg:gap-5">
+        <TabsList className="w-full justify-start rounded-t-2xl border-y border-stroke-100 bg-cards-widget px-4 *:py-3 max-lg:gap-5">
           <TabsTrigger value="maat" variant="underline">
             Maat Finance
           </TabsTrigger>
@@ -27,6 +29,7 @@ export const StrategyTransactions = (props: StrategyTransactionsProperties) => {
               transaction_type: 'maat',
               ...params,
             }}
+            className="rounded-b-2xl"
             filters={['actions', 'statuses']}
           />
         </TabsContent>

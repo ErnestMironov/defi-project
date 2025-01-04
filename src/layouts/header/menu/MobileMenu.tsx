@@ -1,7 +1,7 @@
 import { Socials } from '@components/socials/Socials'
 import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { LinkMenuItem } from './components/LinkMenuItem'
 import { MenuTrigger } from './components/MenuTrigger'
@@ -70,10 +70,6 @@ const contentVariants = {
 export const MobileMenu = () => {
   const menu = useMobileMenuArray()
   const [isOpen, setIsOpen] = useState(false)
-
-  useEffect(() => {
-    document.documentElement.style.overflowY = isOpen ? 'hidden' : 'auto'
-  }, [isOpen])
 
   return (
     <div>

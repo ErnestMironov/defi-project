@@ -1,6 +1,7 @@
 export interface TokenData {
-  balance: string
-  decimals: number
   symbol: string
+  balance: string
   apy: number
+  price: string
+  decimals: number
 }

@@ -45,7 +45,7 @@ export const DrawerIconTrigger = forwardRef(
             active && 'bg-cards-widget',
           )}
         >
-          <Icon className={cn('size-4', active && 'shrink-0 [&_path]:stroke-white')} />
+          <Icon className={cn('size-4', active && 'shrink-0 ')} />
         </div>
       </button>
     )

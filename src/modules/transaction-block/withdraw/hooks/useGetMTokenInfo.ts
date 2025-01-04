@@ -12,11 +12,11 @@ export interface IMToken {
 const TOKENS: Record<'USDT' | 'USDC', IMToken> = {
   USDT: {
     TokenIcon: Usdt,
-    symbol: 'mtUSDT',
+    symbol: 'mUSDT',
   },
   USDC: {
     TokenIcon: Usdc,
-    symbol: 'mtUSDC',
+    symbol: 'mUSDC',
   },
 }
 

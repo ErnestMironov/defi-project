@@ -1,3 +1,4 @@
+import { useCurrentStakersCount } from '@api/maat-finance/useCurrentStakersCount'
 import { useProtocolMetrics } from '@api/maat-finance/useProtocolMetrics'
 import { useRebalanceVolume } from '@api/maat-finance/useRebalanceVolume'
 import { cn } from '@utils/cn'
@@ -15,6 +16,8 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
     isLoading: isProtocolMetricsLoading,
     error: protocolMetricsError,
   } = useProtocolMetrics({})
+
+  const { data: stakersCount } = useCurrentStakersCount()
 
   const usdcApy = protocolMetrics?.history?.USDC?.apy
   const usdcTvl = protocolMetrics?.history?.USDC?.tvl
@@ -39,6 +42,7 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
         tvl={usdcTvl}
         rebalancingVolume={usdcVolume}
         tokenName="USDC"
+        stakersCount={stakersCount?.unique_users?.USDC}
       />
       <TokenStatsContainer
         loading={isProtocolMetricsLoading || !!protocolMetricsError}
@@ -48,6 +52,7 @@ export const TokenOverview = (props: TokenOverviewProperties) => {
         tvl={usdtTvl}
         rebalancingVolume={usdtVolume}
         tokenName="USDT"
+        stakersCount={stakersCount?.unique_users?.USDT}
       />
     </section>
   )

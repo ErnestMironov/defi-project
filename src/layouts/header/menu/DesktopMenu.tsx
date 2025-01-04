@@ -1,4 +1,5 @@
 import { Socials } from '@components/socials/Socials'
+import { useClickOutside } from '@hooks/useClickOutside'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronsLeft } from 'lucide-react'
 import { useState } from 'react'
@@ -54,9 +55,10 @@ const contentVariants = {
 export const DesktopMenu = () => {
   const menu = useDesktopMenuArray()
   const [isOpen, setIsOpen] = useState(false)
-
+  const menuReference = useClickOutside(() => setIsOpen(false))
   return (
     <motion.nav
+      ref={menuReference}
       className="dark:shadow-button absolute left-0 top-0 flex flex-col rounded-2xl border border-stroke-100 bg-white p-1 shadow-test-2 dark:bg-cards-widget"
       variants={menuVariants}
       initial="closed"
