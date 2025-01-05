@@ -2,169 +2,173 @@
 @import "./tailwind.scss";
 
 @media screen and (min-width: 1024px) {
-	body {
-		padding-right: var(--scrollbar-width);
-	}
+  body {
+    padding-right: var(--scrollbar-width);
+  }
 }
 
 svg {
-	overflow: visible;
+  overflow: visible;
 }
 
 @layer base {
-	html {
-		font-size: 0.83vw;
-		overflow-x: hidden;
+  html {
+    font-size: 0.83vw;
+    overflow-x: hidden;
 
-		@media (max-width: 1023px) {
-			font-size: 16px;
-		}
+    @media (max-width: 1023px) {
+      font-size: 16px;
+    }
 
-		@media (max-width: 425px) {
-			font-size: 3.75vw;
-		}
+    @media (max-width: 425px) {
+      font-size: 3.75vw;
+    }
 
-		@media screen and (min-width: 2000px) {
-			font-size: 18px;
-		}
+    @media screen and (min-width: 2000px) {
+      font-size: 18px;
+    }
 
-		body {
-			width: 100vw;
-			@apply font-montreal font-medium text-text-1100 bg-bg;
-			&.scroll-locked {
-				overflow: hidden !important;
-				touch-action: none;
-				-ms-touch-action: none;
-				position: fixed;
-			}
-		}
-	}
+    body {
+      width: 100vw;
+      @apply font-montreal font-medium text-text-1100 bg-bg;
+      &.scroll-locked {
+        overflow: hidden !important;
+        touch-action: none;
+        -ms-touch-action: none;
+        position: fixed;
+      }
+    }
+
+    body[data-scroll-locked] {
+      overflow: auto !important;
+    }
+  }
 }
 
 ::-webkit-scrollbar {
-	width: 0.7rem;
+  width: 0.7rem;
 }
 
 ::-webkit-scrollbar-track {
-	background: transparent;
-	margin: 0.5rem;
+  background: transparent;
+  margin: 0.5rem;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--gray-20);
-	border-radius: 25px;
-	border: 0.2rem solid transparent; // Add this line
-	background-clip: padding-box;
+  background: var(--gray-20);
+  border-radius: 25px;
+  border: 0.2rem solid transparent; // Add this line
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--gray-50);
-	border: 0.2rem solid transparent; // Add this line
-	background-clip: padding-box;
+  background: var(--gray-50);
+  border: 0.2rem solid transparent; // Add this line
+  background-clip: padding-box;
 }
 
 .link-d3 {
-	transition: stroke 0.3s ease;
-	stroke: gray;
+  transition: stroke 0.3s ease;
+  stroke: gray;
 }
 
 .link:hover {
-	animation: pulse 2s infinite;
-	stroke: red;
+  animation: pulse 2s infinite;
+  stroke: red;
 }
 
 @keyframes pulse {
-	0% {
-		stroke-opacity: 1;
-	}
-	50% {
-		stroke-opacity: 0.5;
-	}
-	100% {
-		stroke-opacity: 1;
-	}
+  0% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.5;
+  }
+  100% {
+    stroke-opacity: 1;
+  }
 }
 
 .hide-scrollbar {
-	&::-webkit-scrollbar {
-		display: none;
-	}
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @keyframes oscillate-smooth {
-	0% {
-		transform: skewX(0deg) skewY(0deg);
-	}
-	6.25% {
-		transform: skewX(2.5deg) skewY(0deg);
-	}
-	12.5% {
-		transform: skewX(5deg) skewY(0deg);
-	}
-	18.75% {
-		transform: skewX(5deg) skewY(2.5deg);
-	}
-	25% {
-		transform: skewX(5deg) skewY(5deg);
-	}
-	31.25% {
-		transform: skewX(2.5deg) skewY(5deg);
-	}
-	37.5% {
-		transform: skewX(0deg) skewY(5deg);
-	}
-	43.75% {
-		transform: skewX(-2.5deg) skewY(5deg);
-	}
-	50% {
-		transform: skewX(-5deg) skewY(5deg);
-	}
-	56.25% {
-		transform: skewX(-5deg) skewY(2.5deg);
-	}
-	62.5% {
-		transform: skewX(-5deg) skewY(0deg);
-	}
-	68.75% {
-		transform: skewX(-2.5deg) skewY(0deg);
-	}
-	75% {
-		transform: skewX(-2.5deg) skewY(-2.5deg);
-	}
-	81.25% {
-		transform: skewX(0deg) skewY(-2.5deg);
-	}
-	87.5% {
-		transform: skewX(2.5deg) skewY(-2.5deg);
-	}
-	93.75% {
-		transform: skewX(2.5deg) skewY(0deg);
-	}
-	100% {
-		transform: skewX(0deg) skewY(0deg);
-	}
+  0% {
+    transform: skewX(0deg) skewY(0deg);
+  }
+  6.25% {
+    transform: skewX(2.5deg) skewY(0deg);
+  }
+  12.5% {
+    transform: skewX(5deg) skewY(0deg);
+  }
+  18.75% {
+    transform: skewX(5deg) skewY(2.5deg);
+  }
+  25% {
+    transform: skewX(5deg) skewY(5deg);
+  }
+  31.25% {
+    transform: skewX(2.5deg) skewY(5deg);
+  }
+  37.5% {
+    transform: skewX(0deg) skewY(5deg);
+  }
+  43.75% {
+    transform: skewX(-2.5deg) skewY(5deg);
+  }
+  50% {
+    transform: skewX(-5deg) skewY(5deg);
+  }
+  56.25% {
+    transform: skewX(-5deg) skewY(2.5deg);
+  }
+  62.5% {
+    transform: skewX(-5deg) skewY(0deg);
+  }
+  68.75% {
+    transform: skewX(-2.5deg) skewY(0deg);
+  }
+  75% {
+    transform: skewX(-2.5deg) skewY(-2.5deg);
+  }
+  81.25% {
+    transform: skewX(0deg) skewY(-2.5deg);
+  }
+  87.5% {
+    transform: skewX(2.5deg) skewY(-2.5deg);
+  }
+  93.75% {
+    transform: skewX(2.5deg) skewY(0deg);
+  }
+  100% {
+    transform: skewX(0deg) skewY(0deg);
+  }
 }
 
 .animate-oscillate-smooth {
-	animation: oscillate-smooth 20s infinite linear;
+  animation: oscillate-smooth 20s infinite linear;
 }
 
 @keyframes spin-y {
-	0% {
-		transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
-	}
-	50% {
-		transform: rotateY(360deg) rotateX(0deg) rotateZ(0deg);
-	}
-	100% {
-		transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
-	}
+  0% {
+    transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
+  }
+  50% {
+    transform: rotateY(360deg) rotateX(0deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
+  }
 }
 
 .animate-spin-y {
-	animation: spin-y 4s infinite linear;
+  animation: spin-y 4s infinite linear;
 }
 
 .play_button {
-	display: none;
+  display: none;
 }

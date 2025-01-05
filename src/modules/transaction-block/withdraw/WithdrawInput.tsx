@@ -5,26 +5,29 @@ import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
 import { formatAmount, formatValueWithPrecision } from '@utils/formatValue.ts'
 import { useEffect, useMemo, useState } from 'react'
+import type { Address } from 'viem'
 import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { SwappableInputs } from '../deposit/components/SwappableInputs'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
+import { useGetBurnedPoints } from './hooks/useGetBurnedPoints'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork'
+import { WithdrawPointsBurn } from './WithdrawPointsBurn'
 
 export const WithdrawInput = () => {
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
   const {
-    inputValue,
-    setInputValue,
+    withdrawInputValue: inputValue,
+    setWithdrawInputValue: setInputValue,
     mtToken,
     setWithdrawAmount,
     setCurrentModal,
-    inputValueInUSD,
+    withdrawInputValueInUSD: inputValueInUSD,
     withdrawToAnotherChain,
-    setInputValueInUSD,
+    setWithdrawInputValueInUSD: setInputValueInUSD,
     setInputError,
     setWithdrawToNetwork,
   } = useTxStore()
@@ -86,9 +89,13 @@ export const WithdrawInput = () => {
     setCurrentModal('review')
   }
 
+  const { data: burnedPoints } = useGetBurnedPoints({
+    address: address as Address,
+    withdrawAmount: Number(inputValueInUSD || 0),
+  })
+
   const handleInputChange = (value: string) => {
     const cleanValue = value.replaceAll(/[^\d.]/g, '')
-
     const truncatedValue = cleanValue.slice(0, 18)
 
     const parts = truncatedValue.split('.')
@@ -98,15 +105,24 @@ export const WithdrawInput = () => {
     setInputValue(formattedValue)
     setWithdrawAmount(formattedValue)
 
+    if (!formattedValue) {
+      setInputValueInUSD('')
+      return
+    }
+
+    const formattedValueInUSD = formatAmount(formattedValue, {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: formattedValue.includes('.') ? 2 : 0,
+      useGrouping: true,
+    })
+
     const numberValue = Number(formattedValue)
     setInputValueInUSD(
       Number.isNaN(numberValue)
-        ? '0.00'
-        : formatAmount(formattedValue, {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-            useGrouping: true,
-          }),
+        ? ''
+        : formattedValueInUSD === 'N/A'
+        ? ''
+        : formattedValueInUSD,
     )
   }
 
@@ -121,6 +137,9 @@ export const WithdrawInput = () => {
       }
     : undefined
 
+  const disabledButtonState =
+    !inputValue || !!validationError || inputValueInUSD === undefined || inputValue === ''
+
   return (
     <div>
       <div
@@ -132,11 +151,11 @@ export const WithdrawInput = () => {
         <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
           You withdraw
         </span>
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 ">
           <div className="min-w-0 flex-1">
             <SwappableInputs
               tokenValue={inputValue}
-              usdValue={inputValueInUSD || '0.00'}
+              usdValue={inputValueInUSD}
               onTokenValueChange={(value) => handleInputChange(value)}
               onUsdValueChange={(value) => handleInputChange(value)}
               error={validationError}
@@ -153,6 +172,7 @@ export const WithdrawInput = () => {
             />
           </div>
         </div>
+
         {validationError && (
           <p className="mt-3 text-lg text-red-100">{validationError}</p>
         )}
@@ -179,25 +199,38 @@ export const WithdrawInput = () => {
           </div>
         </div>
       )}
-      <div className="flex flex-col items-center justify-center px-4 py-3">
-        {isConnected ? (
-          <Button
-            size="lg"
-            disabled={!inputValue || !!validationError}
-            className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
-            onClick={handleReview}
-          >
-            Withdraw
-          </Button>
-        ) : (
-          <Button
-            size="lg"
-            className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
-            onClick={() => openConnectModal({ view: 'Connect' })}
-          >
-            Connect Wallet
-          </Button>
+      <div className="flex flex-col items-center justify-center py-3">
+        {(Number(inputValue) > 0 || Number(inputValueInUSD) > 0) && !!validationError && (
+          <WithdrawPointsBurn
+            pointsBurned={
+              formatAmount(burnedPoints?.pointsToBurn || 0, {
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+              }) || '0'
+            }
+          />
         )}
+
+        <div className="flex w-full flex-col items-center justify-center px-4 py-3">
+          {isConnected ? (
+            <Button
+              size="lg"
+              disabled={disabledButtonState}
+              className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+              onClick={handleReview}
+            >
+              Withdraw
+            </Button>
+          ) : (
+            <Button
+              size="lg"
+              className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+              onClick={() => openConnectModal({ view: 'Connect' })}
+            >
+              Connect Wallet
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )

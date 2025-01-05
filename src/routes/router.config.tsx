@@ -8,6 +8,7 @@ import {
   ScrollRestoration,
 } from 'react-router-dom'
 
+import { ProtectedRoute } from './ProtectedRoute'
 import { ROUTES } from './routes'
 
 function Root() {
@@ -66,7 +67,11 @@ export const routes = createRoutesFromElements(
         lazy={async () => {
           const { Analytics } = await import('@pages/analytics/Analytics')
           return {
-            Component: Analytics,
+            Component: () => (
+              <ProtectedRoute>
+                <Analytics />
+              </ProtectedRoute>
+            ),
           }
         }}
       />
@@ -75,7 +80,11 @@ export const routes = createRoutesFromElements(
         lazy={async () => {
           const { PortfolioPage } = await import('@pages/portfolio/PortfolioPage')
           return {
-            Component: PortfolioPage,
+            Component: () => (
+              <ProtectedRoute>
+                <PortfolioPage />
+              </ProtectedRoute>
+            ),
           }
         }}
       />

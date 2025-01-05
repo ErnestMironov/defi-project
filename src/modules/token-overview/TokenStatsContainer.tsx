@@ -17,6 +17,7 @@ export interface TokenStatsContainerProperties extends ComponentProps<'div'> {
   error?: any
   loadingVolume?: boolean
   errorVolume?: any
+  stakersCount?: number
 }
 
 export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
@@ -28,6 +29,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
     tokenName,
     loading,
     loadingVolume,
+    stakersCount,
     ...rest
   } = props
 
@@ -48,7 +50,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
         {...rest}
       >
         <div>
-          <p>{formatAmount(12_567)}</p>
+          <p>{formatAmount(stakersCount ?? 0)}</p>
           <div className="flex items-center gap-[0.38rem]">
             <h6>Unique Users</h6>
           </div>

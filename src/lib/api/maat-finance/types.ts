@@ -304,3 +304,14 @@ export interface UserBadgesResponse {
   userRewards: UserRewards
   nextLvl: NextLevel
 }
+
+export interface CurrentStakersCountResponse {
+  unique_users: {
+    [key: string]: number
+  }
+  total_users: number
+}
+
+export interface BurnedPointsResponse {
+  totalPoints: number
+}

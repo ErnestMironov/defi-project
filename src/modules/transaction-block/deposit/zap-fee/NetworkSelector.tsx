@@ -78,7 +78,7 @@ export const NetworkSelector: React.FC<NetworkPopoverProperties> = ({ disabled }
           e.stopPropagation()
         }}
         sideOffset={8}
-        className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] dark:bg-cards"
+        className="pointer-events-auto flex w-[23.25rem] flex-col gap-5 rounded-3xl bg-[#F9F9FF] p-6 [box-shadow:0px_3px_1px_0px_rgba(135,_99,_243,_0.12)] dark:bg-cards-widget"
       >
         {filteredChains.map((chain) => (
           <NetworkItem

@@ -1,3 +1,4 @@
+// src/modules/portfolio/maat-activity/UserTokens.tsx
 import { useFormattedVaultData } from '@hooks/useFormattedVaultData'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
@@ -7,6 +8,7 @@ import { useAccount } from 'wagmi'
 import { AllAssets } from '../all-assets/AllAssets'
 import { NoDeposit } from '../all-assets/NoDeposit'
 import { useAllAssets } from '../all-assets/useAllAssets'
+import { useGetTokensRate } from './useGetTokensRate' // Не забудьте импортировать useGetTokensRate
 import { VaultTokenItem } from './VaultTokenItem'
 
 interface UserTokensProperties extends ComponentProps<'div'> {}
@@ -14,7 +16,13 @@ interface UserTokensProperties extends ComponentProps<'div'> {}
 export const UserTokens = (props: UserTokensProperties) => {
   const { className, ...rest } = props
   const { address } = useAccount()
-  const { formattedData } = useFormattedVaultData(address)
+  const { formattedData } = useFormattedVaultData(
+    '0x4887C799DD7Df7bafaD0C2De60f0577768e8Cd94',
+  )
+
+  const tokenNames = ['USDT', 'USDC']
+  const { data } = useGetTokensRate(tokenNames)
+  console.log(data)
   const { tokens } = useAllAssets([])
   const hasDeposits = formattedData.some((item) => +formatAmount(item.balance) > 0)
   const hasWalletTokens = tokens && tokens.length > 0
@@ -26,9 +34,18 @@ export const UserTokens = (props: UserTokensProperties) => {
     if (hasDeposits) {
       return formattedData
         .filter((item) => +formatAmount(item.balance) > 0)
-        .map((item, i) => (
-          <VaultTokenItem key={i} {...item} balance={formatAmount(item.balance)} />
-        ))
+        .map((item, i) => {
+          const tokenRate = data?.find((rate) => rate.coinKey === item.symbol)
+          return (
+            <VaultTokenItem
+              key={i}
+              {...item}
+              balance={formatAmount(item.balance)}
+              rate={tokenRate ? Number(tokenRate.priceUSD) : 0}
+              apy={item.apy}
+            />
+          )
+        })
     }
 
     return <NoDeposit />

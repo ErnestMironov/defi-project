@@ -1,33 +1,26 @@
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { cn } from '@utils/cn'
-import { formatAmount, formatPercentValue, formatUsdValue } from '@utils/formatValue'
+import { formatAmount, formatPercentValue } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
 
 import type { TokenData } from '../types'
 
-interface VaultTokenItemProperties extends ComponentProps<'div'>, TokenData {}
+interface VaultTokenItemProperties extends ComponentProps<'div'>, TokenData {
+  rate: number
+}
 
 export const VaultTokenItem = (props: VaultTokenItemProperties) => {
-  const { balance, symbol, apy, className, ...rest } = props
+  const { balance, symbol, apy, className, rate, ...rest } = props
   return (
     <div className={cn('flex items-center gap-2', className)} {...rest}>
       <TokenIconComponent symbol={symbol} className="size-12 max-md:size-10" />
       <div className="flex flex-col text-base max-md:text-sm">
         <p className=" font-medium text-text-1100">
-          {formatAmount(balance, {
-            notation: 'compact',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}{' '}
-          {symbol}
+          {formatAmount(balance, { maximumFractionDigits: 2 })} {symbol}
         </p>
         <p className="flex gap-[.38rem] text-text-2100">
-          {formatUsdValue(balance, {
-            notation: 'compact',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
+          ${formatAmount(rate * Number(balance), { maximumFractionDigits: 2 })}
         </p>
       </div>
       <div className="ml-auto text-base font-medium  text-text-1100 max-md:text-sm">

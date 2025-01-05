@@ -9,7 +9,7 @@ export const ShadowBox = (props: ShadowBoxProperties) => {
     <div
       {...props}
       className={cn(
-        'relative overflow-hidden rounded-3xl border border-[#E6E8F0] bg-cards shadow-test ',
+        'relative overflow-hidden rounded-3xl border border-stroke-100 bg-cards-widget shadow-test',
         className,
       )}
     >
