@@ -7,9 +7,7 @@ import { useAccount } from 'wagmi'
 
 export const PointsBalance = ({ className }: { className?: string }) => {
   const { address } = useAccount()
-  const { data: badgesInfo } = useGetUserBadges(
-    '0x5a3273e64d0C36379EC4a826DF2c9a3092683928' as Address,
-  )
+  const { data: badgesInfo } = useGetUserBadges(address as Address)
 
   return (
     <div
