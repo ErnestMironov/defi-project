@@ -1,0 +1,153 @@
+@startuml
+
+package "Strategies Page" {
+    component StrategiesPage {
+        component StrategiesOverview
+        component StrategiesList
+        component StrategyFilters
+    }
+
+    package "Overview" {
+        component TotalStrategies {
+            component ActiveStrategies
+            component PausedStrategies
+            component StrategyGrowth
+        }
+        component TotalTVL {
+            component TVLValue
+            component TVLChange
+            component TVLDistribution
+        }
+        component AverageAPY {
+            component APYValue
+            component APYRange
+            component APYTrend
+        }
+        component RiskDistribution {
+            component RiskPieChart
+            component RiskBreakdown
+            component RiskMetrics
+        }
+    }
+
+    package "List" {
+        component StrategyCard {
+            component StrategyHeader {
+                component StrategyName
+                component StrategyStatus
+                component StrategyNetwork
+                component StrategyRisk
+            }
+            component StrategyStats {
+                component TVLStats {
+                    component CurrentTVL
+                    component TVLChange
+                    component TVLChart
+                }
+                component APYStats {
+                    component CurrentAPY
+                    component APYHistory
+                    component APYChart
+                }
+                component PerformanceStats {
+                    component Returns
+                    component Volatility
+                    component SharpeRatio
+                }
+            }
+            component StrategyActions {
+                component InvestButton
+                component WithdrawButton
+                component DetailsButton
+                component ShareButton
+            }
+        }
+        component StrategyDetails {
+            component StrategyDescription {
+                component Overview
+                component Methodology
+                component Risks
+            }
+            component StrategyPerformance {
+                component HistoricalReturns
+                component ComparisonChart
+                component PerformanceMetrics
+            }
+            component StrategyRisks {
+                component RiskScore
+                component RiskFactors
+                component Mitigations
+            }
+            component StrategyComposition {
+                component AssetAllocation
+                component Protocols
+                component Rebalancing
+            }
+        }
+    }
+
+    package "Filters" {
+        component NetworkFilter {
+            component NetworkList
+            component NetworkSearch
+            component NetworkMultiSelect
+        }
+        component RiskFilter {
+            component RiskLevels
+            component RiskSlider
+            component RiskTags
+        }
+        component APYFilter {
+            component APYRange
+            component APYSlider
+            component APYSort
+        }
+        component TokenFilter {
+            component TokenList
+            component TokenSearch
+            component TokenMultiSelect
+        }
+        component SearchFilter {
+            component SearchInput
+            component SearchSuggestions
+            component SearchHistory
+        }
+    }
+
+    ' Dependencies
+    StrategiesPage --> StrategiesOverview
+    StrategiesPage --> StrategiesList
+    StrategiesPage --> StrategyFilters
+
+    StrategiesOverview --> TotalStrategies
+    StrategiesOverview --> TotalTVL
+    StrategiesOverview --> AverageAPY
+    StrategiesOverview --> RiskDistribution
+
+    StrategiesList --> StrategyCard
+    StrategyCard --> StrategyDetails
+
+    StrategyFilters --> NetworkFilter
+    StrategyFilters --> RiskFilter
+    StrategyFilters --> APYFilter
+    StrategyFilters --> TokenFilter
+    StrategyFilters --> SearchFilter
+
+    ' Data Flow
+    StrategiesList ..> "API" : fetchStrategies
+    StrategyDetails ..> "API" : fetchStrategyDetails
+    StrategyPerformance ..> "API" : fetchPerformanceData
+    RiskDistribution ..> "API" : fetchRiskData
+
+    ' State Management
+    StrategiesPage ..> "Store" : useStrategiesStore
+    StrategyCard ..> "Store" : useStrategyStore
+    StrategyFilters ..> "Store" : useFiltersStore
+
+    ' Hooks
+    StrategyStats ..> "Hooks" : useStrategyMetrics
+    StrategyActions ..> "Hooks" : useStrategyActions
+    StrategyPerformance ..> "Hooks" : usePerformanceData
+}
+
+@enduml 

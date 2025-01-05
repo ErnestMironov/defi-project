@@ -1,0 +1,81 @@
+@startuml
+
+package "Portfolio Module" as portfolio {
+    class PortfolioWalletDrawer {
+        -open: boolean
+        -portfolioValue: number
+        -totalYield: number
+        +render()
+    }
+
+    class UserActivityTabs {
+        +render()
+    }
+
+    class UserTokens {
+        -formattedData: TokenData[]
+        +render()
+    }
+
+    class UserActivity {
+        -transactions: Event[]
+        +render()
+    }
+
+    class AllAssets {
+        -chains: OptionType[]
+        -tokens: ITokenData[]
+        +render()
+    }
+
+    class AssetItem {
+        -token: ITokenData
+        +render()
+    }
+
+    class VaultTokenItem {
+        -balance: number
+        -symbol: string
+        -apy: number
+        +render()
+    }
+
+    class UserTransactionItem {
+        -event: Event
+        +render()
+    }
+
+    class useAllAssets {
+        -address: Address
+        -chains: OptionType[]
+        +tokens: ITokenData[]
+        +isLoading: boolean
+        +potentialUsdProfit: string
+    }
+
+    interface TokenData {
+        +balance: number
+        +symbol: string
+        +apy: number
+    }
+
+    interface Event {
+        +action_type: string
+        +status: string
+        +hash: string
+        +amount: string
+        +creation_time: string
+    }
+
+    ' Dependencies
+    PortfolioWalletDrawer --> UserActivityTabs
+    UserActivityTabs --> UserTokens
+    UserActivityTabs --> UserActivity
+    UserTokens --> AllAssets
+    UserTokens --> VaultTokenItem
+    AllAssets --> AssetItem
+    UserActivity --> UserTransactionItem
+    AllAssets ..> useAllAssets
+}
+
+@enduml 

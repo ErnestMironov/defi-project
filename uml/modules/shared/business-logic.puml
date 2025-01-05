@@ -1,0 +1,55 @@
+@startuml
+
+package "Business Logic" {
+    package "Hooks" {
+        package "Common" {
+            component useDeviceWidth
+            component useDebounce
+            component useLocalStorage
+            component useMediaQuery
+        }
+
+        package "Contract" {
+            component useContract
+            component useContractRead
+            component useContractWrite
+            component useContractEvent
+        }
+
+        package "Wallet" {
+            component useWallet
+            component useBalance
+            component useNetwork
+            component useAccount
+        }
+    }
+
+    package "API" {
+        component ApiClient
+        component ApiConfig
+        component ApiTypes
+        component ApiHooks
+    }
+
+    package "Store" {
+        component GlobalStore
+        component WalletStore
+        component ThemeStore
+        component SettingsStore
+    }
+
+    package "Utils" {
+        component Formatters
+        component Validators
+        component Constants
+        component Types
+    }
+}
+
+' Dependencies
+"Contract" ..> ApiClient
+"Wallet" ..> WalletStore
+ApiHooks ..> ApiClient
+GlobalStore ..> ApiClient
+
+@enduml 

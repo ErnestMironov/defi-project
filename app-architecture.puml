@@ -1,0 +1,72 @@
+@startuml
+
+!include modules/transaction-block.puml
+!include modules/portfolio.puml
+!include modules/tokens.puml
+!include modules/strategies.puml
+
+skinparam backgroundColor transparent
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+title Maat Frontend Architecture
+
+' Pages Layer
+package "Pages" {
+    package "Main Pages" {
+        [TransactionsPage]
+        [TokenPage]
+        [StrategyPage]
+        [PortfolioPage]
+        [AnalyticsPage]
+        [PointsPage]
+    }
+}
+
+' Shared Components Layer
+package "Shared" {
+    ' UI Components
+    package "UI Components" {
+        [Forms]
+        [Layout]
+        [UI]
+    }
+
+    ' Business Logic
+    package "Business Logic" {
+        package "Hooks" {
+            [CommonHooks]
+            [ContractHooks]
+            [WalletHooks]
+            [useAllAssets]
+        }
+
+        package "API" {
+            [ApiClient]
+            [Contracts]
+        }
+
+        package "Store" {
+            [GlobalStore]
+            [WalletStore]
+        }
+
+        package "Utils" {
+            [Formatters]
+            [Validators]
+        }
+    }
+}
+
+' Global Dependencies
+Pages --> $transaction_block
+Pages --> $portfolio
+Pages --> $tokens
+Pages --> $strategies
+
+Pages ..> "UI Components"
+Pages ..> "Business Logic"
+"UI Components" ..> "Business Logic"
+
+@enduml 

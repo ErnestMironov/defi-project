@@ -1,0 +1,45 @@
+@startuml
+
+package "Tokens Module" as tokens {
+    class TokenCharts {
+        -isBelowDesktop: boolean
+        +render()
+    }
+
+    class ApyTokensChartDesktop {
+        -selectedChain: OptionType[]
+        -selectedProtocol: OptionType[]
+        -currentFrame: string
+        +render()
+    }
+
+    class TvlTokensChartDesktop {
+        -selectedChain: OptionType[]
+        -selectedProtocol: OptionType[]
+        -currentFrame: string
+        +render()
+    }
+
+    class TokensChartMobile {
+        -activeTab: 'apy' | 'tvl'
+        -selectedProtocols: OptionType[]
+        -selectedChains: OptionType[]
+        +render()
+    }
+
+    interface ChartData {
+        +timestamp: number
+        +uv: number
+        +pv: number
+    }
+
+    ' Dependencies
+    TokenCharts --> ApyTokensChartDesktop
+    TokenCharts --> TvlTokensChartDesktop
+    TokenCharts --> TokensChartMobile
+    ApyTokensChartDesktop ..> ChartData
+    TvlTokensChartDesktop ..> ChartData
+    TokensChartMobile ..> ChartData
+}
+
+@enduml 

@@ -1,4 +1,5 @@
 import Lightning from '@assets/icons/green-lightning.svg'
+import { Skeleton } from '@components/ui/skeleton'
 import {
   AdaptiveModal,
   AdaptiveModalContent,
@@ -31,10 +32,16 @@ const Line: React.FC<
 interface DetailsProperties {
   open: boolean
   summaryAndFees: SummaryAndFees
+  isLoading: boolean
   onOpenChange: (open: boolean) => void
 }
 
-const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChange }) => {
+const Details: React.FC<DetailsProperties> = ({
+  open,
+  summaryAndFees,
+  onOpenChange,
+  isLoading,
+}) => {
   const { txDifficulty } = useTxStore()
   return (
     <AdaptiveModal open={open} onOpenChange={onOpenChange}>
@@ -47,7 +54,11 @@ const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChan
             <Lightning className="h-[0.83356rem] w-[0.75031rem]" />
             <span>Fees</span>
           </div>
-          <span>($5.12 / 0.05 ETH)</span>
+          {isLoading ? (
+            <Skeleton className="h-6 w-20" />
+          ) : (
+            <span>($5.12 / 0.05 ETH)</span>
+          )}
         </AdaptiveModalTitle>
 
         <div className="flex flex-col gap-4 bg-[rgba(222,_221,_236,_0.10)] px-12 py-6 text-text-3100">

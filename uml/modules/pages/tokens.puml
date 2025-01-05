@@ -1,0 +1,135 @@
+@startuml
+
+package "Tokens Page" {
+    component TokensPage {
+        component TokensOverview
+        component TokensList
+        component TokenCharts
+    }
+
+    package "Overview" {
+        component TotalTVL {
+            component TVLValue
+            component TVLChange
+            component TVLChart
+        }
+        component TotalAPY {
+            component APYValue
+            component APYChange
+            component APYChart
+        }
+        component NetworkDistribution {
+            component NetworkPieChart
+            component NetworkList
+            component NetworkStats
+        }
+    }
+
+    package "List" {
+        component TokenTable {
+            component TableHeader
+            component TablePagination
+            component TableSorting
+        }
+        component TokenRow {
+            component TokenIcon
+            component TokenName
+            component TokenNetwork
+            component TokenPrice
+            component TokenChange
+            component TokenVolume
+        }
+        component TokenDetails {
+            component TokenInfo {
+                component TokenDescription
+                component TokenLinks
+                component TokenMetrics
+            }
+            component TokenHistory {
+                component PriceHistory
+                component VolumeHistory
+                component LiquidityHistory
+            }
+            component TokenAnalytics {
+                component HoldersAnalytics
+                component TransactionsAnalytics
+                component LiquidityAnalytics
+            }
+        }
+        component TokenActions {
+            component DepositButton
+            component WithdrawButton
+            component SwapButton
+            component AddToWatchlist
+        }
+    }
+
+    package "Charts" {
+        component TVLChart {
+            component ChartCanvas
+            component ChartLegend
+            component ChartTooltip
+        }
+        component APYChart {
+            component ChartCanvas
+            component ChartLegend
+            component ChartTooltip
+        }
+        component ChartFilters {
+            component TimeframeFilter {
+                component Day
+                component Week
+                component Month
+                component Year
+                component Custom
+            }
+            component NetworkFilter {
+                component NetworkList
+                component NetworkSearch
+                component NetworkSelect
+            }
+            component ProtocolFilter {
+                component ProtocolList
+                component ProtocolSearch
+                component ProtocolSelect
+            }
+        }
+    }
+
+    ' Dependencies
+    TokensPage --> TokensOverview
+    TokensPage --> TokensList
+    TokensPage --> TokenCharts
+
+    TokensOverview --> TotalTVL
+    TokensOverview --> TotalAPY
+    TokensOverview --> NetworkDistribution
+
+    TokensList --> TokenTable
+    TokenTable --> TokenRow
+    TokenRow --> TokenDetails
+    TokenRow --> TokenActions
+
+    TokenCharts --> TVLChart
+    TokenCharts --> APYChart
+    TokenCharts --> ChartFilters
+
+    ' Data Flow
+    TokenTable ..> "API" : fetchTokens
+    TokenDetails ..> "API" : fetchTokenDetails
+    TVLChart ..> "API" : fetchTVLData
+    APYChart ..> "API" : fetchAPYData
+    NetworkDistribution ..> "API" : fetchNetworkData
+
+    ' State Management
+    TokensPage ..> "Store" : useTokensStore
+    TokenTable ..> "Store" : useTableStore
+    ChartFilters ..> "Store" : useFiltersStore
+
+    ' Hooks
+    TokenRow ..> "Hooks" : useTokenPrice
+    TokenDetails ..> "Hooks" : useTokenHistory
+    TokenActions ..> "Hooks" : useTokenActions
+}
+
+@enduml 

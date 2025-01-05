@@ -1,0 +1,44 @@
+@startuml
+
+package "Transactions Page" {
+    component TransactionsPage {
+        component TransactionHistory
+        component TransactionFilters
+        component TransactionStats
+    }
+
+    package "History" {
+        component TransactionList
+        component TransactionItem
+        component TransactionDetails
+    }
+
+    package "Filters" {
+        component DateFilter
+        component StatusFilter
+        component TypeFilter
+        component NetworkFilter
+    }
+
+    package "Stats" {
+        component TotalVolume
+        component SuccessRate
+        component AverageGas
+    }
+
+    ' Dependencies
+    TransactionsPage --> TransactionHistory
+    TransactionsPage --> TransactionFilters
+    TransactionsPage --> TransactionStats
+
+    TransactionHistory --> TransactionList
+    TransactionList --> TransactionItem
+    TransactionItem --> TransactionDetails
+
+    TransactionFilters --> DateFilter
+    TransactionFilters --> StatusFilter
+    TransactionFilters --> TypeFilter
+    TransactionFilters --> NetworkFilter
+}
+
+@enduml 

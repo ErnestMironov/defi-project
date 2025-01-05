@@ -3,7 +3,6 @@ import { useFormattedVaultData } from '@hooks/useFormattedVaultData'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps } from 'react'
-import { useAccount } from 'wagmi'
 
 import { AllAssets } from '../all-assets/AllAssets'
 import { NoDeposit } from '../all-assets/NoDeposit'
@@ -15,7 +14,6 @@ interface UserTokensProperties extends ComponentProps<'div'> {}
 
 export const UserTokens = (props: UserTokensProperties) => {
   const { className, ...rest } = props
-  const { address } = useAccount()
   const { formattedData } = useFormattedVaultData(
     '0x4887C799DD7Df7bafaD0C2De60f0577768e8Cd94',
   )
