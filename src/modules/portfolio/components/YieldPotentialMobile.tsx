@@ -17,7 +17,7 @@ export function YieldPotentialMobile({
         className,
       )}
     >
-      <p className="text-sm text-text-2100">You could earn</p>
+      <p className="text-sm text-text-2100">Your potential</p>
       <p className="text-sm text-text-2100">
         <span>$</span>
         <span className="text-text-100">

@@ -29,6 +29,9 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
     if (isOpen && !isMobile) {
       return shortenAddress(address ?? '')
     }
+    if (isMobile) {
+      return shortenAddress(address ?? '')
+    }
     return formatAmount(balance ?? 0)
   }, [isOpen, address, balance, isMobile])
 
@@ -42,18 +45,16 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          className="size-auto rounded-2xl border border-stroke-100 bg-white transition-colors dark:border-stroke-40100 dark:bg-cards-widget"
+          className="size-auto rounded-2xl border border-stroke-100 bg-white transition-colors dark:border-stroke-40100 dark:bg-cards-widget max-md:h-10 max-md:w-auto max-md:rounded-xl"
           onClick={
             !isMobile || !isOpen ? (isOpen ? openConnectModal : onClick) : undefined
           }
         >
           <div className="flex w-full">
-            <div className="flex flex-1 items-center justify-center gap-1 border-r border-stroke-40100 px-4 py-3 max-md:border-none">
-              <div className="size-6 rounded-[0.4375rem] border border-[#6160FF80] bg-text-50" />
-              <p className="truncate text-sm font-medium leading-6 text-text-100">
-                {(!isOpen || (isOpen && isMobile)) && (
-                  <span className="text-text-2100">$</span>
-                )}
+            <div className="max-md:py flex flex-1 items-center justify-center gap-1 border-r border-stroke-40100 px-4 py-3 max-md:border-none max-md:px-3 max-md:py-2">
+              <div className="size-6 rounded-[0.4375rem] border border-[#6160FF80] bg-text-50 max-md:size-4" />
+              <p className="truncate text-sm font-medium leading-6 text-text-100 max-md:text-[0.8125rem]">
+                {!isMobile && !isOpen && <span className="text-text-2100">$</span>}
                 {formattedBalance}
               </p>
             </div>

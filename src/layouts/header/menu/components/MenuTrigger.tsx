@@ -15,12 +15,12 @@ export const MenuTrigger = ({
   return (
     <button
       type="button"
-      className={cn('flex items-center gap-2 pr-2 max-lg:gap-1 max-lg:pr-1', {
+      className={cn('flex items-center gap-2 pr-1 max-lg:gap-1 max-lg:pr-1', {
         'max-lg:gap-2': isOpen,
       })}
       onClick={() => setIsOpen(!isOpen)}
     >
-      <Logo className="w-16 max-lg:w-[1.9375rem]" />
+      <Logo className="w-16 max-md:h-[1.9375rem] max-md:w-12" />
       {!isOpen && (
         <ChevronsUpDown className="size-4 text-[#30303066] dark:text-[#8585A9]" />
       )}

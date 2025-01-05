@@ -1,4 +1,5 @@
 import Lightning from '@assets/icons/green-lightning.svg'
+import { Skeleton } from '@components/ui/skeleton'
 import {
   AdaptiveModal,
   AdaptiveModalContent,
@@ -32,47 +33,63 @@ interface DetailsProperties {
   open: boolean
   summaryAndFees: SummaryAndFees
   onOpenChange: (open: boolean) => void
+  isLoading: boolean
 }
 
-const Details: React.FC<DetailsProperties> = ({ open, summaryAndFees, onOpenChange }) => {
+const Details: React.FC<DetailsProperties> = ({
+  open,
+  summaryAndFees,
+  onOpenChange,
+  isLoading,
+}) => {
   const { txDifficulty } = useTxStore()
+
   return (
     <AdaptiveModal open={open} onOpenChange={onOpenChange}>
       <AdaptiveModalContent
         showCloseButton
         className="max-w-[38.75rem] gap-8 rounded-[2rem] max-lg:max-w-full max-lg:rounded-b-none max-lg:rounded-t-3xl"
       >
-        <AdaptiveModalTitle className="flex justify-between px-8 py-6 text-center text-base normal-case text-text-3100">
-          <div className="flex items-center gap-1 text-gray-100 max-lg:text-[0.8125rem] ">
-            <Lightning className="h-[0.83356rem] w-[0.75031rem]" />
-            <span>Fees</span>
-          </div>
-          <span>($5.12 / 0.05 ETH)</span>
-        </AdaptiveModalTitle>
+        {isLoading ? (
+          <Skeleton className="h-[200px] w-full" />
+        ) : (
+          <>
+            <AdaptiveModalTitle className="flex justify-between px-8 py-6 text-center text-base normal-case text-text-3100">
+              <div className="flex items-center gap-1 text-gray-100 max-lg:text-[0.8125rem] ">
+                <Lightning className="h-[0.83356rem] w-[0.75031rem]" />
+                <span>Fees</span>
+              </div>
+              <span>
+                {' '}
+                (${summaryAndFees.total.usd} / {summaryAndFees.total.value})
+              </span>
+            </AdaptiveModalTitle>
 
-        <div className="flex flex-col gap-4 bg-[rgba(222,_221,_236,_0.10)] px-12 py-6 text-text-3100">
-          <h3 className="text-base font-[500]">Summary</h3>
-          <div className="flex flex-col gap-1">
-            <Line
-              title="Convert from"
-              value={summaryAndFees.convertFrom.value}
-              usd={summaryAndFees.convertFrom.usd}
-            />
-            <Line
-              title="Min receive"
-              value={summaryAndFees.minReceive.value}
-              usd={summaryAndFees.minReceive.usd}
-            />
-            <Line title="Exchange rate" value={summaryAndFees.exchangeRate} />
-            <Line
-              title="Total"
-              value={summaryAndFees.total.value}
-              usd={summaryAndFees.total.usd}
-            />
-          </div>
-        </div>
+            <div className="flex flex-col gap-4 bg-input-default px-12 py-6 text-text-3100 dark:bg-[#3E3E4D66] max-md:p-6">
+              <h3 className="text-base font-[500]">Summary</h3>
+              <div className="flex flex-col gap-1">
+                <Line
+                  title="Convert from"
+                  value={summaryAndFees.convertFrom.value}
+                  usd={summaryAndFees.convertFrom.usd}
+                />
+                <Line
+                  title="Min receive"
+                  value={summaryAndFees.minReceive.value}
+                  usd={summaryAndFees.minReceive.usd}
+                />
+                <Line title="Exchange rate" value={summaryAndFees.exchangeRate} />
+                <Line
+                  title="Total"
+                  value={summaryAndFees.total.value}
+                  usd={summaryAndFees.total.usd}
+                />
+              </div>
+            </div>
 
-        {txDifficulty === 'cross_chain' && <NetworkSelector disabled={false} />}
+            {txDifficulty === 'cross_chain' && <NetworkSelector disabled={false} />}
+          </>
+        )}
       </AdaptiveModalContent>
     </AdaptiveModal>
   )

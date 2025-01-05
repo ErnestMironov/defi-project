@@ -15,7 +15,7 @@ export const VaultTokenItem = (props: VaultTokenItemProperties) => {
   return (
     <div className={cn('flex items-center gap-2', className)} {...rest}>
       <TokenIconComponent symbol={symbol} className="size-12 max-md:size-10" />
-      <div className="flex flex-col text-base max-md:text-sm">
+      <div className="flex flex-col text-base leading-7 max-md:text-sm">
         <p className=" font-medium text-text-1100">
           {formatAmount(balance, { maximumFractionDigits: 2 })} {symbol}
         </p>

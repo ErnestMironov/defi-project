@@ -16,7 +16,7 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
   const { className, value, onClose, ...rest } = props
   const { setTxType } = useTxStore()
   const MIN_VALUE = 0.001
-  const isHaveDeposit = value > MIN_VALUE
+  const isHaveDeposit = true
   const navigate = useNavigate()
   const handleClick = (type: 'deposit' | 'withdraw') => (e: React.MouseEvent) => {
     e.preventDefault()
@@ -39,7 +39,7 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
       <Link
         to="/"
         onClick={handleClick('deposit')}
-        className="flex flex-col justify-start gap-3 rounded-xl bg-light-blue-15 p-4 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold"
+        className="flex flex-col justify-start gap-3 rounded-2xl bg-light-blue-15 p-4 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold"
       >
         <Deposit className="size-6" />
         <span className="text-sm font-medium leading-4 max-lg:text-sm">Deposit</span>
@@ -49,7 +49,7 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
           to="/"
           onClick={handleClick('withdraw')}
           className={cn(
-            'flex flex-col justify-start gap-3 rounded-xl bg-light-blue-15 p-4 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold',
+            'flex flex-col justify-start gap-3 rounded-2xl bg-light-blue-15 p-4 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold',
           )}
         >
           <Withdraw className="size-6" />
@@ -59,7 +59,7 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
       <Link
         to="##"
         onClick={() => {}}
-        className="flex cursor-auto flex-col justify-start gap-3 rounded-xl bg-light-blue-15 p-4 normal-case text-main-100 opacity-50 max-lg:gap-[0.38rem] lg:font-bold"
+        className="flex cursor-auto flex-col justify-start gap-3 rounded-2xl bg-light-blue-15 p-4 normal-case text-main-100 opacity-50 max-lg:gap-[0.38rem] lg:font-bold"
         aria-disabled
       >
         <Add className="size-6 max-lg:size-7" />

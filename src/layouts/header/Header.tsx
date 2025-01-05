@@ -1,4 +1,5 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
 import { useTransactionStatusChecker } from '@modules/pending-transactions/useTransactionStatusTracker'
 import { PointsBalance } from '@modules/points-balance/PointsBalance'
@@ -27,10 +28,11 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
       accumulator + Number(formatUnits(value.balance, value.decimals)),
     0,
   )
+  const { isMobile } = useDeviceWidth()
   return (
     <header
       {...rest}
-      className={clsx('flex w-full items-center justify-between', className)}
+      className={clsx('flex w-full items-center justify-between max-md:py-3', className)}
     >
       <Menu />
       {/* ---------------------- PORTFOLIO --------------------- */}
@@ -44,6 +46,7 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
             isOpen={isOpen}
             balance={balance ?? 0}
             openConnectModal={() => {}}
+            isMobile={isMobile}
           />
           <PortfolioModal isOpen={isOpen} onClose={handlePortfolioClose} />
         </div>
