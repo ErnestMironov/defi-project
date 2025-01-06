@@ -12,19 +12,19 @@ export const PointsBalance = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        'flex h-[3rem]  rounded-[1rem] bg-white border border-stroke-100 dark:bg-cards-widget dark:border-stroke-40100',
+        'flex h-[3rem] max-md:h-[2.5rem] max-md:w-auto  rounded-[1rem] max-md:rounded-[0.75rem] bg-white border border-stroke-100 dark:bg-cards-widget dark:border-stroke-40100',
         className,
       )}
     >
-      <div className="flex items-center justify-center gap-1.5 rounded-l-2xl border-r border-stroke-40100 px-4 py-3 ">
+      <div className="flex items-center justify-center gap-1.5 rounded-l-2xl border-r border-stroke-40100 px-4 py-3 max-md:px-3 max-md:py-2">
         <PointIcon className="size-4 text-[#7B61FF]" />
         <span className="text-sm font-medium leading-[1.5625rem] text-main-100">
-          {badgesInfo?.userRewards.totalPoints || 0}
+          {Math.round(badgesInfo?.userRewards.totalPoints || 0)}
         </span>
       </div>
 
       <button
-        className="flex items-center justify-center rounded-r-2xl bg-white px-3 transition-colors dark:border-stroke-40100 dark:bg-cards-widget"
+        className="flex items-center justify-center rounded-r-2xl bg-white px-3 transition-colors dark:border-stroke-40100 dark:bg-cards-widget max-md:px-2"
         type="button"
       >
         <PlusIcon className="size-3" />
