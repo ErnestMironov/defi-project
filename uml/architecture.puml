@@ -1,0 +1,45 @@
+@startuml
+
+' Включаем модули
+!include modules/transaction-block.puml
+!include modules/portfolio.puml
+!include modules/tokens.puml
+!include modules/strategies.puml
+!include modules/shared/ui.puml
+!include modules/shared/business-logic.puml
+!include modules/pages/transactions.puml
+!include modules/pages/portfolio.puml
+!include modules/pages/tokens.puml
+!include modules/pages/strategies.puml
+!include modules/pages/analytics.puml
+!include modules/pages/points.puml
+
+' Настройки стиля
+skinparam backgroundColor transparent
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+title Maat Frontend Architecture
+
+' Глобальные зависимости
+"Transactions Page" --> "Transaction Block Module"
+"Portfolio Page" --> "Portfolio Module"
+"Tokens Page" --> "Tokens Module"
+"Strategies Page" --> "Strategies Module"
+
+"Transactions Page" ..> "UI Components"
+"Portfolio Page" ..> "UI Components"
+"Tokens Page" ..> "UI Components"
+"Strategies Page" ..> "UI Components"
+"Analytics Page" ..> "UI Components"
+"Points Page" ..> "UI Components"
+
+"Transactions Page" ..> "Business Logic"
+"Portfolio Page" ..> "Business Logic"
+"Tokens Page" ..> "Business Logic"
+"Strategies Page" ..> "Business Logic"
+"Analytics Page" ..> "Business Logic"
+"Points Page" ..> "Business Logic"
+
+@enduml 

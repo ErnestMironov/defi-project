@@ -83,18 +83,31 @@ function configureSummary(route: LiFiStep, summaryAndFees: SummaryAndFees) {
   )
   convertFrom.usd = route.estimate.fromAmountUSD || '0'
 
+  const firstStep = route.includedSteps?.[0]
+
   minReceive.value = composeWithDecimalsAndSymbol(
-    route.estimate.toAmountMin,
+    firstStep?.estimate?.toAmountMin || '0',
     route.action.toToken.decimals,
     route.action.toToken.symbol,
   )
-  minReceive.usd = route.estimate.toAmountUSD || '0'
 
-  const tokenPrice = 12
+  const toAmount =
+    Number(firstStep?.estimate?.toAmountMin || 0) / 10 ** route.action.toToken.decimals
+  const toAmountUSD = (toAmount * Number(route.action.toToken.priceUSD)).toFixed(4)
+  minReceive.usd = toAmountUSD
 
-  summaryAndFees.exchangeRate = `${1} ${route.action.fromToken.symbol} = ${tokenPrice} ${
-    route.action.toToken.symbol
-  }`
+  if (route.action.fromToken.symbol === route.action.toToken.symbol) {
+    summaryAndFees.exchangeRate = `1 ${route.action.fromToken.symbol} = 1 ${route.action.toToken.symbol}`
+    return
+  }
+
+  const fromTokenPrice = Number(route.action.fromToken.priceUSD)
+  const toTokenPrice = Number(route.action.toToken.priceUSD)
+  const exchangeRate = fromTokenPrice / toTokenPrice
+
+  summaryAndFees.exchangeRate = `1 ${
+    route.action.fromToken.symbol
+  } = ${exchangeRate.toFixed(6)} ${route.action.toToken.symbol}`
 }
 
 function configureFeeBreakdown(route: LiFiStep, summaryAndFees: SummaryAndFees) {

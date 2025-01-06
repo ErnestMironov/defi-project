@@ -1,0 +1,60 @@
+@startuml
+
+package "Analytics Page" {
+    component AnalyticsPage {
+        component AnalyticsOverview
+        component AnalyticsCharts
+        component AnalyticsTables
+    }
+
+    package "Overview" {
+        component TotalVolume
+        component ActiveUsers
+        component TotalTransactions
+        component NetworkStats
+    }
+
+    package "Charts" {
+        component VolumeChart
+        component UsersChart
+        component TransactionsChart
+        component ChartFilters {
+            component TimeframeFilter
+            component MetricFilter
+            component NetworkFilter
+        }
+    }
+
+    package "Tables" {
+        component TopStrategies
+        component TopTokens
+        component TopUsers
+        component TableFilters {
+            component SortFilter
+            component PeriodFilter
+            component SearchFilter
+        }
+    }
+
+    ' Dependencies
+    AnalyticsPage --> AnalyticsOverview
+    AnalyticsPage --> AnalyticsCharts
+    AnalyticsPage --> AnalyticsTables
+
+    AnalyticsOverview --> TotalVolume
+    AnalyticsOverview --> ActiveUsers
+    AnalyticsOverview --> TotalTransactions
+    AnalyticsOverview --> NetworkStats
+
+    AnalyticsCharts --> VolumeChart
+    AnalyticsCharts --> UsersChart
+    AnalyticsCharts --> TransactionsChart
+    AnalyticsCharts --> ChartFilters
+
+    AnalyticsTables --> TopStrategies
+    AnalyticsTables --> TopTokens
+    AnalyticsTables --> TopUsers
+    AnalyticsTables --> TableFilters
+}
+
+@enduml 

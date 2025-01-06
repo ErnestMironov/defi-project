@@ -1,0 +1,48 @@
+@startuml
+
+package "Portfolio Page" {
+    component PortfolioPage {
+        component PortfolioOverview
+        component AssetsList
+        component ActivityFeed
+    }
+
+    package "Overview" {
+        component TotalBalance
+        component YieldStats
+        component PerformanceChart
+    }
+
+    package "Assets" {
+        component AssetList
+        component AssetCard
+        component AssetDetails
+        component AssetActions
+    }
+
+    package "Activity" {
+        component ActivityList
+        component ActivityItem
+        component ActivityFilters
+    }
+
+    ' Dependencies
+    PortfolioPage --> PortfolioOverview
+    PortfolioPage --> AssetsList
+    PortfolioPage --> ActivityFeed
+
+    PortfolioOverview --> TotalBalance
+    PortfolioOverview --> YieldStats
+    PortfolioOverview --> PerformanceChart
+
+    AssetsList --> AssetList
+    AssetList --> AssetCard
+    AssetCard --> AssetDetails
+    AssetCard --> AssetActions
+
+    ActivityFeed --> ActivityList
+    ActivityList --> ActivityItem
+    ActivityFeed --> ActivityFilters
+}
+
+@enduml 

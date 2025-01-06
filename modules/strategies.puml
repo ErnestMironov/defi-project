@@ -1,0 +1,16 @@
+@startuml
+
+package "Strategies Module" as strategies {
+    class StrategiesList {
+        +render()
+    }
+
+    class StrategyDetails {
+        +render()
+    }
+
+    ' Dependencies
+    StrategiesList --> StrategyDetails
+}
+
+@enduml 
