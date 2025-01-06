@@ -32,7 +32,7 @@ export const useClipboard = () => {
   const copyWithToast = (text: string) => {
     copy(text)
       .then(() => {
-        toast.success('Copied!')
+        toast.success('Copied!', { duration: 500 })
       })
       .catch(() => {
         toast.error('Failed to copy.')
