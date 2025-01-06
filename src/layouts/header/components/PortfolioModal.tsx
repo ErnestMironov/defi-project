@@ -56,7 +56,6 @@ export const PortfolioModal = ({
     if (portfolioValue < 0.001 || totalYield < 0.001) return 0
 
     const initialValue = (portfolioValue + totalYield) * 100
-    console.log('🚀 ~ portfolioGrowth ~ initialValue:', initialValue)
 
     return initialValue / portfolioValue - 100
   }, [portfolioValue, totalYield])
