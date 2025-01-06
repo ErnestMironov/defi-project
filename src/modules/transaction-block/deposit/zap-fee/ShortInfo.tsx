@@ -1,12 +1,23 @@
 import Lightning from '@assets/icons/green-lightning.svg'
+import { Skeleton } from '@components/ui/skeleton'
 import type { HTMLAttributes } from 'react'
 import React from 'react'
 
+import type { SummaryAndFees } from './summaryAndFees'
+
 type ShortInfoProperties = HTMLAttributes<HTMLDivElement> & {
   openHandler?: () => void
+  summaryAndFees: SummaryAndFees
+  isLoading: boolean
 }
 
-const ShortInfo: React.FC<ShortInfoProperties> = ({ openHandler, ...props }) => {
+const ShortInfo: React.FC<ShortInfoProperties> = ({
+  openHandler,
+  summaryAndFees,
+  isLoading,
+  ...props
+}) => {
+  console.log(isLoading)
   return (
     <div
       {...props}
@@ -17,7 +28,13 @@ const ShortInfo: React.FC<ShortInfoProperties> = ({ openHandler, ...props }) => 
         <Lightning className="size-4" />
         <span>Fees</span>
       </div>
-      <div className="flex items-center gap-3 text-text-2100/70">(?)</div>
+      {isLoading ? (
+        <Skeleton className="h-6 w-20" />
+      ) : (
+        <div className="flex items-center gap-3 text-text-2100/70">
+          {summaryAndFees.total.value} / ${summaryAndFees.total.usd}
+        </div>
+      )}
     </div>
   )
 }

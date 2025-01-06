@@ -2,6 +2,7 @@ import ArrowRight from '@assets/icons/arrow-right-short.svg'
 import CopyIcon from '@assets/icons/copy-icon.svg'
 import DoubleArrow from '@assets/icons/double-arrow.svg'
 import LogoutIcon from '@assets/icons/logout-icon.svg'
+import Avatar from '@assets/images/avatar.jpg'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { formatAmount } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
@@ -49,7 +50,9 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
         >
           <div className="flex w-full">
             <div className="flex flex-1 items-center justify-center gap-1 border-r border-stroke-40100 px-4 py-3 max-md:border-none">
-              <div className="size-6 rounded-[0.4375rem] border border-[#6160FF80] bg-text-50" />
+              <div className="size-6 rounded-[0.4375rem] border border-[#6160FF80] bg-text-50">
+                <img src={Avatar} alt="avatar" className="rounded-2xl" />
+              </div>
               <p className="truncate text-sm font-medium leading-6 text-text-100">
                 {(!isOpen || (isOpen && isMobile)) && (
                   <span className="text-text-2100">$</span>

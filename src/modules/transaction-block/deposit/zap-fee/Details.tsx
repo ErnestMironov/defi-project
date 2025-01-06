@@ -57,7 +57,9 @@ const Details: React.FC<DetailsProperties> = ({
           {isLoading ? (
             <Skeleton className="h-6 w-20" />
           ) : (
-            <span>($5.12 / 0.05 ETH)</span>
+            <span>
+              {summaryAndFees.total.value} / ${summaryAndFees.total.usd}
+            </span>
           )}
         </AdaptiveModalTitle>
 
