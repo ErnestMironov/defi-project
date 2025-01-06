@@ -7,7 +7,7 @@ import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransa
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { replaceCommasWithDots, trimTrailingZeros } from '@utils/formatValue'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { useApproveERC20 } from '../hooks/useApproveERC20'
@@ -16,15 +16,17 @@ import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
 export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = () => {
-  const [currentStep, setCurrentStep] = useState(1)
-
   const {
     depositAsset,
     vaultAddress,
+    vault,
     inputValue: amount,
     swapRoute,
     depositFromNetwork,
+    depositToNetwork,
     transactionHash,
+    currentStep,
+    setCurrentStep,
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
@@ -191,8 +193,8 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ()
           value: amount,
           usdValue: amount,
           token: {
-            symbol: depositAsset?.contract_ticker_symbol ?? '',
-            network: depositFromNetwork ?? 1,
+            symbol: vault ?? '',
+            network: depositToNetwork ?? 1,
           },
         }}
         success={{

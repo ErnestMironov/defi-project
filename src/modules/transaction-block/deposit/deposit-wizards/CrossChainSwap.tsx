@@ -20,6 +20,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     depositAsset,
     vaultAddress,
     depositFromNetwork,
+    depositToNetwork,
+    vault,
     inputValue: amount,
     inputValueInUSD,
     currentStep,
@@ -194,8 +196,8 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           value: amount,
           usdValue: inputValueInUSD,
           token: {
-            symbol: depositAsset?.contract_ticker_symbol ?? '',
-            network: depositFromNetwork ?? 1,
+            symbol: vault ?? '',
+            network: depositToNetwork ?? 1,
           },
         }}
         success={{

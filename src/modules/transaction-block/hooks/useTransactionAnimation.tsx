@@ -98,6 +98,8 @@ const TransactionAnimation = memo(() => {
   const { currentStep, networkSwitchStatus, approvalStatus, transactionStatus, txType } =
     useTxStore()
 
+  console.log('🚀 ~ TransactionAnimation ~ currentStep:', currentStep)
+
   const [currentAnimation, setCurrentAnimation] = useState<AnimationConfig>(
     TRANSACTION_ANIMATIONS.NETWORK_SWITCH_STEP(true),
   )
@@ -112,6 +114,7 @@ const TransactionAnimation = memo(() => {
     })
 
     const animation = TRANSACTION_ANIMATIONS[state](isDeposit)
+    console.log('🚀 ~ useEffect ~ animation:', animation)
     setCurrentAnimation(animation)
   }, [currentStep, networkSwitchStatus, approvalStatus, transactionStatus, txType])
 

@@ -20,6 +20,8 @@ export const NativeCrossChainSwap: React.FunctionComponent<
     depositAsset,
     vaultAddress,
     depositFromNetwork,
+    depositToNetwork,
+    vault,
     inputValue,
     inputValueInUSD,
     currentStep,
@@ -147,8 +149,8 @@ export const NativeCrossChainSwap: React.FunctionComponent<
           value: inputValue,
           usdValue: inputValueInUSD,
           token: {
-            symbol: depositAsset?.contract_ticker_symbol ?? '',
-            network: depositFromNetwork ?? 1,
+            symbol: vault ?? '',
+            network: depositToNetwork ?? 1,
           },
         }}
         success={{
