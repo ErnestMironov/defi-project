@@ -3,6 +3,7 @@ import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { ConnectWallet } from '@modules/connect-wallet/ConnectWallet'
 import { useTransactionStatusChecker } from '@modules/pending-transactions/useTransactionStatusTracker'
 import { PointsBalance } from '@modules/points-balance/PointsBalance'
+import { useAppKit } from '@reown/appkit/react'
 import { ROUTES } from '@routes/routes'
 import clsx from 'clsx'
 import { type ComponentProps } from 'react'
@@ -28,6 +29,9 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
       accumulator + Number(formatUnits(value.balance, value.decimals)),
     0,
   )
+
+  const { open: openConnectModal } = useAppKit()
+
   const { isMobile } = useDeviceWidth()
   return (
     <header
@@ -37,7 +41,7 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
       <Menu />
       {/* ---------------------- PORTFOLIO --------------------- */}
       {account.address ? (
-        <div className="flex items-center gap-2 rounded-[1.375rem] bg-transparent">
+        <div className="flex h-full items-center gap-2 rounded-[1.375rem] bg-transparent max-md:gap-[0.38rem]">
           <Link to={ROUTES.POINTS}>
             <PointsBalance />
           </Link>
@@ -45,8 +49,8 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
             onClick={() => handlePortfolioOpen()}
             isOpen={isOpen}
             balance={balance ?? 0}
-            openConnectModal={() => {}}
             isMobile={isMobile}
+            openConnectModal={() => openConnectModal()}
           />
           <PortfolioModal isOpen={isOpen} onClose={handlePortfolioClose} />
         </div>

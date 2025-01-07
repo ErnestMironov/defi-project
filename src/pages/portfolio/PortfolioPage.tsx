@@ -62,13 +62,13 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
   return (
     <div
       className={cn(
-        ' bg-cards-widget rounded-[1.5rem] border border-stroke-100 shadow-test-2 mt-4',
+        ' bg-cards-widget rounded-[1.5rem] border border-stroke-100 shadow-test-2 mt-4 mb-[3.25rem]',
         className,
       )}
       {...rest}
     >
-      <div className="grid grid-cols-4 gap-6 px-6 max-md:p-6">
-        <div className="col-span-2">
+      <div className="flex-start space-between flex flex-row gap-6 px-6 max-md:p-6">
+        <div className="">
           <SeparatedUsdValue
             loading={isUserSharesLoading}
             value={portfolioValue}
@@ -94,7 +94,7 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
             </div>
           </h6>
         </div>
-        <div className="col-span-2 col-start-3">
+        <div className="">
           <SeparatedUsdValue
             loading={isLoadingYield}
             value={totalYield}

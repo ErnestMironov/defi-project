@@ -23,6 +23,7 @@ interface PortfolioModalProperties extends React.HTMLAttributes<HTMLDivElement> 
   isOpen: boolean
   onClose: () => void
   isMobile?: boolean
+  openConnectModal?: () => void
 }
 
 export const PortfolioModal = ({

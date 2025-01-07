@@ -2,6 +2,7 @@ import ArrowRight from '@assets/icons/arrow-right-short.svg'
 import CopyIcon from '@assets/icons/copy-icon.svg'
 import DoubleArrow from '@assets/icons/double-arrow.svg'
 import LogoutIcon from '@assets/icons/logout-icon.svg'
+import Avatar from '@assets/images/avatar.jpg'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { formatAmount } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
@@ -11,20 +12,20 @@ import { useAccount } from 'wagmi'
 
 interface PortfolioButtonProperties extends React.HTMLAttributes<HTMLButtonElement> {
   isOpen: boolean
-  openConnectModal: () => void
   balance: number
   isMobile?: boolean
+  onClick: () => void
+  openConnectModal: () => void
 }
 
 const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
   onClick,
   isOpen,
-  openConnectModal = () => {},
   balance,
   isMobile = false,
+  openConnectModal,
 }) => {
   const { address } = useAccount()
-
   const formattedBalance = useMemo(() => {
     if (isOpen && !isMobile) {
       return shortenAddress(address ?? '')
@@ -40,19 +41,27 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
     toast.success('Address copied to clipboard')
   }
 
+  const handleClick = () => {
+    if (isMobile) {
+      openConnectModal()
+    } else {
+      onClick()
+    }
+  }
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
           className="size-auto rounded-2xl border border-stroke-100 bg-white transition-colors dark:border-stroke-40100 dark:bg-cards-widget max-md:h-10 max-md:w-auto max-md:rounded-xl"
-          onClick={
-            !isMobile || !isOpen ? (isOpen ? openConnectModal : onClick) : undefined
-          }
+          onClick={handleClick}
         >
           <div className="flex w-full">
             <div className="max-md:py flex flex-1 items-center justify-center gap-1 border-r border-stroke-40100 px-4 py-3 max-md:border-none max-md:px-3 max-md:py-2">
-              <div className="size-6 rounded-[0.4375rem] border border-[#6160FF80] bg-text-50 max-md:size-4" />
+              <div className="size-6 rounded-[0.4375rem] border border-[#6160FF80] bg-text-50 max-md:size-4">
+                <img src={Avatar} alt="avatar" className="size-full rounded-xl" />
+              </div>
               <p className="truncate text-sm font-medium leading-6 text-text-100 max-md:text-[0.8125rem]">
                 {!isMobile && !isOpen && <span className="text-text-2100">$</span>}
                 {formattedBalance}
@@ -91,7 +100,7 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
           </DropdownMenu.Item>
           <DropdownMenu.Item
             className="cursor-pointer rounded-lg px-3 py-4 outline-none hover:bg-gray-50"
-            onClick={openConnectModal}
+            onClick={() => openConnectModal()}
           >
             <div className="flex items-center gap-2">
               <LogoutIcon className="size-4" />
