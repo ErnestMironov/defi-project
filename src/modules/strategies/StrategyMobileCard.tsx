@@ -1,10 +1,12 @@
 import type { Strategy } from '@api/maat-finance/types'
-import Dots from '@assets/icons/options-dots.svg'
 import { IconWithLabelComponent, TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
+import { useClipboard } from '@hooks/common/useClipboard'
+import { StrategyInfoRowOptions } from '@pages/strategy/StrategyInfoRowOptions'
 import { ROUTES } from '@routes/routes'
 import { formatAmount, formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
+import { CopyIcon } from 'lucide-react'
 import { type ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -15,6 +17,22 @@ interface StrategyMobileCardProperties extends ComponentProps<'div'> {
 export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
   const { strategy, ...rest } = props
   const navigate = useNavigate()
+  const { copyWithToast } = useClipboard()
+
+  const options = [
+    {
+      icon: <CopyIcon className="size-4" />,
+      label: 'Copy Address',
+      onClick: () => copyWithToast(strategy.address),
+    },
+    {
+      icon: <CopyIcon className="size-4" />,
+      label: 'Copy Strategy ID',
+      onClick: () => copyWithToast(strategy.id),
+    },
+  ]
+
+  console.log(strategy)
   return (
     <div
       className="px-4 py-3"
@@ -52,9 +70,13 @@ export const StrategyMobileCard = (props: StrategyMobileCardProperties) => {
         </div>
         <h6>Address</h6>
         <div className="flex w-full items-center gap-2">
-          <p>{shortenAddress(strategy.address)}</p>
+          <p>{shortenAddress(strategy.id)}</p>
           <div className="flex items-center justify-center rounded-lg border border-stroke-100 p-[0.38rem]">
-            <Dots className="size-[0.8125rem] shrink-0" />
+            <StrategyInfoRowOptions
+              options={options}
+              id={strategy.id}
+              className="size-2 border-none"
+            />
           </div>
         </div>
       </div>

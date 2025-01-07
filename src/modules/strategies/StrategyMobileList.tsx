@@ -44,7 +44,10 @@ export const StrategyMobileList = (props: StrategyMobileListProperties) => {
 
   return (
     <div
-      className={cn('[&>*:not(:last-child)]:border-b border-stroke-100', className)}
+      className={cn(
+        '[&>*:not(:last-child)]:border-b [&>*:not(:last-child)]:border-stroke-100',
+        className,
+      )}
       {...rest}
     >
       {renderBody()}

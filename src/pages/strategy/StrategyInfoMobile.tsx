@@ -1,4 +1,4 @@
-import type { Strategy, Token } from '@api/maat-finance/types'
+import type { Token } from '@api/maat-finance/types'
 import { useStrategy } from '@api/maat-finance/useStrategy'
 import ArrowDown from '@assets/icons/arrow-down.svg'
 import ArrowBack from '@assets/icons/arrow-left.svg'
@@ -6,9 +6,11 @@ import StrategyIcon from '@assets/icons/strategy-icon.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Skeleton } from '@components/ui/skeleton'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import { useClipboard } from '@hooks/common/useClipboard'
 import { cn } from '@utils/cn'
 import { formatPercentValue, formatUsdValue } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
+import { CopyIcon } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -24,10 +26,23 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
   const navigate = useNavigate()
   const { data: strategy, isLoading, error } = useStrategy(id)
   const [isDescriptionVisible, setDescriptionVisible] = useState(false)
-
+  const { copyWithToast } = useClipboard()
   if (isLoading || error) {
     return <StrategyInfoMobileSkeleton />
   }
+
+  const options = [
+    {
+      icon: <CopyIcon className="size-4" />,
+      label: 'Copy Address',
+      onClick: () => copyWithToast(strategy?.address ?? ''),
+    },
+    {
+      icon: <CopyIcon className="size-4" />,
+      label: 'Copy Strategy ID',
+      onClick: () => copyWithToast(strategy?.id ?? ''),
+    },
+  ]
 
   const protocolDescription = strategy?.info?.protocol?.description || ''
   const strategyDescription = strategy?.info?.strategy_description
@@ -149,7 +164,7 @@ export const StrategyInfoMobile = (props: StrategyInfoProperties) => {
               <span className="text-sm ">{shortenAddress(id ?? '')}</span>
               <div className="flex items-center justify-end">
                 <StrategyInfoRowOptions
-                  strategy={strategy as Strategy}
+                  options={options}
                   id={id as string}
                   className="size-6 rounded-lg p-[0.38rem]"
                 />
