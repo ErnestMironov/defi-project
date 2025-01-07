@@ -1,0 +1,193 @@
+@startuml
+
+package "Transaction Block Module" as transaction_block {
+    package "Core" {
+        class TransactionBlock {
+            -className: string
+            +render()
+            __dependencies__
+            useGetSwapRoute()
+            useSetDepositDetails()
+            useTxStore()
+            useDeviceWidth()
+            useAppKit()
+            useAccount()
+        }
+
+        class TxTypeSwither {
+            +render()
+        }
+
+        class TxReviewModal {
+            +render()
+            __dependencies__
+            useTxStore()
+        }
+
+        class DoneModal {
+            +render()
+            __dependencies__
+            useTxStore()
+        }
+
+        class FailModal {
+            +render()
+            __dependencies__
+            useTxStore()
+        }
+    }
+
+    package "Store" {
+        class TxStore {
+            ' Transaction State
+            -txType: TxType
+            -txDifficulty: TxDifficulty
+            -isTxZAP: boolean
+
+            ' Asset Info
+            -depositAsset: ITokenData
+            -depositFromNetwork: DepositChainType
+            -depositToNetwork: ChainType
+            -withdrawFromNetwork: ChainType
+            -withdrawToNetwork: ChainType
+
+            ' Vault Info
+            -vault: Vault
+            -vaultAddress: Address
+            -vaultDepositTokenAddress: Address
+            -mtToken: MTokenInfo
+
+            ' Values
+            -inputValue: string
+            -inputValueInUSD: string
+            -depositTotalInUSD: string
+            -depositAmount: string
+            -withdrawAmount: string
+
+            ' UI State
+            -currentModal: ModalState
+            -currentStep: number
+            -isTransactionCanBeCollapsed: boolean
+            -animationStatus: string
+
+            ' Transaction Info
+            -transactionHash: string
+            -swapRoute: LiFiStep
+            -arrivalGas: string
+
+            ' Methods
+            +setTxType(type: TxType)
+            +setDepositAsset(asset: ITokenData)
+            +setVault(vault: Vault)
+            +setTransactionHash(hash: string)
+            +resetStore()
+        }
+
+        class PendingTransactionsStore {
+            -transactions: IPendingTransactionData[]
+            +addTransaction(transaction: IPendingTransactionData)
+            +updateTransaction(hash: string, status: STEP_STATUS)
+            +removeTransaction(hash: string)
+        }
+    }
+
+    package "Deposit Flow" {
+        class DepositInput {
+            +render()
+            __dependencies__
+            useTxStore()
+            useDepositTransaction()
+        }
+
+        class SelectDepositAssetModal {
+            +render()
+        }
+
+        class SelectVault {
+            +render()
+        }
+
+        class DepositReviewContent {
+            +render()
+        }
+
+        package "Deposit Wizards" {
+            [OnchainSwap]
+            [SimpleDeposit]
+        }
+
+        package "Deposit Hooks" {
+            [useDepositTransaction]
+            [useSetDepositDetails]
+            [useSwap]
+        }
+    }
+
+    package "Withdraw Flow" {
+        class WithdrawInput {
+            +render()
+            __dependencies__
+            useTxStore()
+            useWithdrawTransaction()
+        }
+
+        class SelectWithdrawAssetModal {
+            +render()
+        }
+
+        class SelectWithdrawNetwork {
+            +render()
+        }
+
+        class WithdrawReviewContent {
+            +render()
+        }
+
+        package "Withdraw Hooks" {
+            [useWithdrawTransaction]
+            [useVaultBalance]
+            [useGetMTokenInfo]
+        }
+    }
+
+    ' Interfaces
+    interface ITokenData {
+        +chain_id: number
+        +symbol: string
+        +address: Address
+        +balance: string
+        +quote: number
+    }
+
+    enum TxType {
+        DEPOSIT
+        WITHDRAW
+    }
+
+    enum ModalState {
+        REVIEW
+        DEPOSIT
+        WITHDRAW
+        DONE
+        ERROR
+    }
+}
+
+' Dependencies
+TransactionBlock --> TxStore: uses
+TransactionBlock --> DepositInput: renders
+TransactionBlock --> WithdrawInput: renders
+TransactionBlock --> DoneModal: renders
+TransactionBlock --> FailModal: renders
+
+DepositInput --> TxStore: uses
+WithdrawInput --> TxStore: uses
+TxReviewModal --> TxStore: uses
+DoneModal --> TxStore: uses
+FailModal --> TxStore: uses
+
+TxStore --> TxType: uses
+TxStore --> ModalState: uses
+TxStore --> ITokenData: uses
+
+@enduml 

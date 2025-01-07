@@ -1,0 +1,29 @@
+@startuml
+
+package "UI Components" {
+    package "Forms" {
+        component Input
+        component Select
+        component Button
+        component Checkbox
+        component RadioGroup
+    }
+
+    package "Layout" {
+        component Container
+        component Grid
+        component Stack
+        component Divider
+    }
+
+    package "UI" {
+        component Modal
+        component Tooltip
+        component Popover
+        component Drawer
+        component Tabs
+        component Card
+    }
+}
+
+@enduml 

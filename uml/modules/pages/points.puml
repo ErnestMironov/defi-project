@@ -1,0 +1,56 @@
+@startuml
+
+package "Points Page" {
+    component PointsPage {
+        component PointsOverview
+        component PointsHistory
+        component PointsLeaderboard
+    }
+
+    package "Overview" {
+        component TotalPoints
+        component PointsRate
+        component NextLevel
+        component Achievements
+    }
+
+    package "History" {
+        component PointsTransactions
+        component PointsFilters {
+            component DateFilter
+            component TypeFilter
+            component AmountFilter
+        }
+        component TransactionDetails
+    }
+
+    package "Leaderboard" {
+        component LeaderboardTable
+        component UserRank
+        component LeaderboardFilters {
+            component PeriodFilter
+            component NetworkFilter
+            component SearchFilter
+        }
+    }
+
+    ' Dependencies
+    PointsPage --> PointsOverview
+    PointsPage --> PointsHistory
+    PointsPage --> PointsLeaderboard
+
+    PointsOverview --> TotalPoints
+    PointsOverview --> PointsRate
+    PointsOverview --> NextLevel
+    PointsOverview --> Achievements
+
+    PointsHistory --> PointsTransactions
+    PointsHistory --> PointsFilters
+    PointsTransactions --> TransactionDetails
+
+    PointsLeaderboard --> LeaderboardTable
+    PointsLeaderboard --> UserRank
+    PointsLeaderboard --> LeaderboardFilters
+}
+
+@enduml 

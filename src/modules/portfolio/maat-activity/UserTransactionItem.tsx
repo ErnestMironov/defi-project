@@ -85,9 +85,7 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
   const renderIcon = () => {
     switch (event.action_type) {
       case 'DEPOSIT': {
-        return (
-          <DepositIcon className="size-full [&_path:first-child]:stroke-red-100 [&_path]:fill-red-100" />
-        )
+        return <DepositIcon className="size-full" />
       }
       case 'WITHDRAW':
       case 'WITHDRAW_REQUEST': {
@@ -166,8 +164,8 @@ export const UserTransactionItem = (props: UserTransactionItemProperties) => {
     <div className={cn('flex items-center', className)} {...rest}>
       <div
         className={cn(
-          'relative flex size-14 items-center justify-center rounded-xl bg-main-15 max-lg:size-10',
-          event.action_type === 'DEPOSIT' && 'bg-red-15',
+          'relative flex size-14 items-center justify-center rounded-xl bg-[#6160FF26] max-lg:size-10',
+          event.action_type === 'DEPOSIT' && 'bg-violet-15',
         )}
       >
         <div

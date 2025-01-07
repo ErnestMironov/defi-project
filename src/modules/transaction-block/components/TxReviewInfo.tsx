@@ -39,7 +39,7 @@ export const TxReviewInfo = ({
   const { collapseTxInfo } = useTxStore()
 
   const renderAmountBlock = (data: AmountData) => (
-    <div className="flex items-center justify-between px-6 py-3 text-[0.875rem] font-medium leading-6">
+    <div className="flex items-center justify-between px-6 py-3 text-[0.875rem] font-medium leading-6 max-md:px-4">
       <span className="text-text-2100">{data.label}</span>
       <div className="flex items-start gap-1.5">
         {data.token && (
@@ -79,7 +79,7 @@ export const TxReviewInfo = ({
     >
       <div className="flex w-full flex-col divide-y divide-stroke-100 border-y border-stroke-100">
         <div className="grid grid-cols-2 divide-x divide-stroke-100">
-          <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center justify-between px-6 py-3 max-md:px-4">
             <span className="text-text-2100">{recipient.label}</span>
             <div className="flex items-center gap-2">
               <span>{shortenAddress(recipient.value)}</span>
@@ -89,7 +89,7 @@ export const TxReviewInfo = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between px-6 py-3">
+          <div className="flex items-center justify-between px-6 py-3 max-md:px-4">
             <span className="text-text-2100">Chain</span>
             <div className="flex items-center gap-2">
               <TokenIconComponent

@@ -5,7 +5,6 @@ import { type FC, useEffect, useState } from 'react'
 
 // Define available animation keys
 export type ComicsAnimationKey =
-  // Regular animations
   | '1_animation'
   | '2_animation'
   | '3_animation'
@@ -14,7 +13,6 @@ export type ComicsAnimationKey =
   | '6_animation'
   | '7_animation'
   | '8_animation'
-  // Reverse animations
   | '1_animation_reverse'
   | '2_animation_reverse'
   | '3_animation_reverse'
@@ -22,13 +20,11 @@ export type ComicsAnimationKey =
   | '5_animation_reverse'
   | '6_animation_reverse'
   | '7_animation_reverse'
-  // Mis animations
   | '1_animation_mis'
   | '2_animation_mis'
   | '3_animation_mis'
   | '4_animation_mis'
   | '5_animation_mis'
-  // Reverse mis animations
   | '1_animation_reverse_mis'
   | '2_animation_reverse_mis'
   | '3_animation_reverse_mis'
@@ -41,13 +37,6 @@ type LottieAnimationProperties = {
   lottieProps?: Partial<Omit<LottieComponentProps, 'animationData' | 'className'>>
 }
 
-const getAnimationPath = (animationKey: string, isDarkTheme: boolean) => {
-  const themePath = isDarkTheme ? '/dark' : ''
-  const suffix = isDarkTheme ? '_dark' : ''
-
-  return `/src/assets/lottie/comics${themePath}/${animationKey}${suffix}.json`
-}
-
 export const LottieAnimation: FC<LottieAnimationProperties> = ({
   animationKey,
   className = 'w-full',
@@ -58,29 +47,32 @@ export const LottieAnimation: FC<LottieAnimationProperties> = ({
   const isDarkTheme = theme === 'dark'
 
   useEffect(() => {
-    console.log('getAnimationPath', getAnimationPath(animationKey, isDarkTheme))
-    import(getAnimationPath(animationKey, isDarkTheme))
-      .then((module) => {
-        setAnimationData(module.default)
-      })
-      .catch((error) => {
-        // If dark theme is not available, try to load light theme
-        console.warn('Dark theme is not available, trying to load light theme')
-        if (isDarkTheme) {
-          import(`/src/assets/lottie/comics/${animationKey}.json`)
-            .then((module) => {
-              setAnimationData(module.default)
-            })
-            .catch((error_) => {
-              console.error('Error loading animation data:', error_)
-            })
-        } else {
-          console.error('Error loading animation data:', error)
+    const basePath = '/comics'
+    const darkSuffix = isDarkTheme ? '_dark' : ''
+    const url = `${basePath}/${
+      isDarkTheme ? 'dark/' : ''
+    }${animationKey}${darkSuffix}.json`
+
+    fetch(url)
+      .then(async (res) => {
+        if (!res.ok) {
+          if (isDarkTheme) {
+            return fetch(`${basePath}/${animationKey}.json`)
+          }
+          throw new Error(`Error loading: ${res.statusText}`)
         }
+        return res
+      })
+      .then((res) => res.json())
+      .then((data) => setAnimationData(data))
+      .catch((error) => {
+        console.error('Error while loading the animation:', error)
       })
   }, [animationKey, isDarkTheme])
 
-  if (!animationData) return null
+  if (!animationData) {
+    return null
+  }
 
   return (
     <AnimatePresence>

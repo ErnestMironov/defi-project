@@ -13,19 +13,23 @@ interface ZapFeeProperties extends HTMLAttributes<HTMLDivElement> {}
 const ZapFee: React.FC<ZapFeeProperties> = ({ className }) => {
   const [open, setOpen] = React.useState(false)
   const { setHidden: setIsHeaderHidden } = useHideHeaderStore()
-  const { swapRoute } = useTxStore()
+  const { swapRoute, isTxZAP } = useTxStore()
   const { isPending: isRouteLoading } = useGetSwapRoute()
-
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen)
     setIsHeaderHidden(isOpen)
   }
 
   const summaryAndFees = getSummaryAndFees(swapRoute)
-
   return (
     <div className={className}>
-      <ShortInfo openHandler={() => handleOpenChange(true)} />
+      {isTxZAP ? (
+        <ShortInfo
+          openHandler={() => handleOpenChange(true)}
+          summaryAndFees={summaryAndFees}
+          isLoading={isRouteLoading}
+        />
+      ) : null}
       <Details
         open={open}
         onOpenChange={handleOpenChange}

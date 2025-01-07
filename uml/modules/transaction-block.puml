@@ -1,0 +1,75 @@
+@startuml
+
+package "Transaction Block Module" {
+    package "Core" {
+        component TransactionBlock
+        component TxTypeSwither
+        component TxReviewModal
+        component DoneModal
+        component FailModal
+    }
+
+    package "Store" {
+        component TxStore
+        component PendingTransactionsStore
+    }
+
+    package "Deposit Flow" {
+        component DepositInput
+        component SelectDepositAssetModal
+        component SelectVault
+        component DepositReviewContent
+
+        package "Deposit Wizards" {
+            component OnchainSwap
+            component SimpleDeposit
+        }
+
+        package "Deposit Hooks" {
+            component useDepositTransaction
+            component useSetDepositDetails
+            component useSwap
+        }
+    }
+
+    package "Withdraw Flow" {
+        component WithdrawInput
+        component SelectWithdrawAssetModal
+        component SelectWithdrawNetwork
+        component WithdrawReviewContent
+
+        package "Withdraw Hooks" {
+            component useWithdrawTransaction
+            component useVaultBalance
+            component useGetMTokenInfo
+        }
+    }
+
+    ' Dependencies
+    TransactionBlock --> TxStore
+    TransactionBlock --> DepositInput
+    TransactionBlock --> WithdrawInput
+    TransactionBlock --> DoneModal
+    TransactionBlock --> FailModal
+
+    DepositInput --> TxStore
+    WithdrawInput --> TxStore
+    TxReviewModal --> TxStore
+    DoneModal --> TxStore
+    FailModal --> TxStore
+
+    DepositInput --> SelectDepositAssetModal
+    DepositInput --> SelectVault
+    DepositInput --> useDepositTransaction
+    DepositInput --> useSetDepositDetails
+
+    WithdrawInput --> SelectWithdrawAssetModal
+    WithdrawInput --> SelectWithdrawNetwork
+    WithdrawInput --> useWithdrawTransaction
+    WithdrawInput --> useVaultBalance
+
+    OnchainSwap --> useSwap
+    SimpleDeposit --> useDepositTransaction
+}
+
+@enduml 

@@ -1,0 +1,17 @@
+@startuml
+
+package "Tokens Module" {
+    package "Charts" {
+        component TokenCharts
+        component ApyTokensChartDesktop
+        component TvlTokensChartDesktop
+        component TokensChartMobile
+    }
+
+    ' Dependencies
+    TokenCharts --> ApyTokensChartDesktop
+    TokenCharts --> TvlTokensChartDesktop
+    TokenCharts --> TokensChartMobile
+}
+
+@enduml 

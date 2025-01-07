@@ -32,6 +32,7 @@ const Line: React.FC<
 interface DetailsProperties {
   open: boolean
   summaryAndFees: SummaryAndFees
+  isLoading: boolean
   onOpenChange: (open: boolean) => void
   isLoading: boolean
 }

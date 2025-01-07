@@ -1,0 +1,36 @@
+@startuml
+
+package "Portfolio Module" {
+    package "Core" {
+        component PortfolioWalletDrawer
+        component UserActivityTabs
+        component UserTokens
+        component UserActivity
+    }
+
+    package "Assets" {
+        component AllAssets
+        component AssetItem
+        component VaultTokenItem
+    }
+
+    package "Transactions" {
+        component UserTransactionItem
+    }
+
+    package "Hooks" {
+        component useAllAssets
+    }
+
+    ' Dependencies
+    PortfolioWalletDrawer --> UserActivityTabs
+    UserActivityTabs --> UserTokens
+    UserActivityTabs --> UserActivity
+    UserTokens --> AllAssets
+    UserTokens --> VaultTokenItem
+    AllAssets --> AssetItem
+    UserActivity --> UserTransactionItem
+    AllAssets ..> useAllAssets
+}
+
+@enduml 

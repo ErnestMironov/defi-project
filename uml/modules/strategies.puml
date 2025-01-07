@@ -1,0 +1,13 @@
+@startuml
+
+package "Strategies Module" {
+    package "Core" {
+        component StrategiesList
+        component StrategyDetails
+    }
+
+    ' Dependencies
+    StrategiesList --> StrategyDetails
+}
+
+@enduml 
