@@ -23,6 +23,7 @@ interface PortfolioModalProperties extends React.HTMLAttributes<HTMLDivElement> 
   isOpen: boolean
   onClose: () => void
   isMobile?: boolean
+  openConnectModal?: () => void
 }
 
 export const PortfolioModal = ({
@@ -105,6 +106,7 @@ export const PortfolioModal = ({
             <div className="relative size-auto max-h-screen w-[30.125rem] overflow-y-auto rounded-3xl border border-stroke-100 bg-cards-widget pt-4 shadow-lg">
               <div className="flex h-auto w-full items-center justify-between  px-6 py-4">
                 <PortfolioButton
+                  context="modal"
                   onClick={onClose}
                   isOpen={isOpen}
                   openConnectModal={() => openConnectModal()}

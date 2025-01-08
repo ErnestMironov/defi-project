@@ -28,7 +28,7 @@ export const RebalanceRequest = (props: RebalanceRequestProperties) => {
     return <></>
   }
 
-  const tags: Tag[] = ['System']
+  const tags: Tag[] = ['Trigger']
 
   if (!withoutRelated) {
     tags.push('Reaction')

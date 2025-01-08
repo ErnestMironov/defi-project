@@ -1,21 +1,22 @@
 import { useUserShares } from '@api/contracts/useGetUserShares'
 import { usePortfolioYield } from '@api/maat-finance/usePortfolioYield'
-import PortfolioButton from '@layouts/header/components/PortfolioButton'
+import TriangleUpIcon from '@assets/icons/triangle-up.svg'
 import { ActionButtons } from '@modules/portfolio/ActionButtons'
 import { SeparatedUsdValue } from '@modules/portfolio/components/SeparatedUsdValue'
 import { UserActivityTabs } from '@modules/portfolio/maat-activity/UserActivityTabs'
-import { PortfolioValueTooltip } from '@modules/portfolio/PortfolioValueTooltip'
-import { ThemeToggler } from '@modules/theme/ThemeToggler'
 import { useAppKit } from '@reown/appkit/react'
 import { cn } from '@utils/cn'
+import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps, useEffect, useMemo } from 'react'
 import { type Address, formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-interface PortfolioPageProperties extends ComponentProps<'div'> {}
+interface PortfolioPageProperties extends ComponentProps<'div'> {
+  isMobile?: boolean
+}
 
 export const PortfolioPage = (props: PortfolioPageProperties) => {
-  const { className, ...rest } = props
+  const { className, isMobile, ...rest } = props
   const { address } = useAccount()
   const { open } = useAppKit()
   useEffect(() => {
@@ -49,44 +50,63 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
     return total > 0 ? total : 0
   }, [yieldData])
 
+  const portfolioGrowth = useMemo(() => {
+    if (portfolioValue < 0.001 || totalYield < 0.001) return 0
+
+    const initialValue = (portfolioValue + totalYield) * 100
+    console.log('🚀 ~ portfolioGrowth ~ initialValue:', initialValue)
+
+    return initialValue / portfolioValue - 100
+  }, [portfolioValue, totalYield])
+
   return (
-    <div className={cn('mt-8', className)} {...rest}>
-      {/* wallet */}
-      <div className="flex h-auto w-full items-center justify-between">
-        <PortfolioButton
-          onClick={() => {}}
-          isOpen
-          openConnectModal={() => {}}
-          balance={portfolioValue}
-        />
-        <ThemeToggler />
-      </div>
-      {/* header */}
-      <div className="mt-8 flex items-start max-lg:gap-8 lg:justify-between">
-        <div>
-          <h6 className="flex items-center gap-[0.38rem] text-gray-100">
-            <span>Portfolio Value</span>
-            <PortfolioValueTooltip />
-          </h6>
+    <div
+      className={cn(
+        ' bg-cards-widget rounded-[1.5rem] border border-stroke-100 shadow-test-2 mt-4 mb-[3.25rem]',
+        className,
+      )}
+      {...rest}
+    >
+      <div className="flex-start space-between flex flex-row gap-6 px-6 max-md:p-6">
+        <div className="">
           <SeparatedUsdValue
             loading={isUserSharesLoading}
             value={portfolioValue}
-            className="mt-2"
+            className={cn('mt-2', portfolioValue > 0 ? 'text-text' : 'text-gray-100')}
           />
+          <h6 className="flex items-center gap-[0.38rem] text-sm leading-6 text-text-2100">
+            <span className="font-medium">Portfolio Value</span>
+            <div
+              className={cn(
+                'flex items-center gap-[0.12rem]',
+                portfolioGrowth > 0 ? 'text-green-11100' : 'text-text-8100',
+              )}
+            >
+              <TriangleUpIcon className="size-4 [&_path]:fill-current" />
+              <span className="w-full text-sm font-medium">
+                (
+                {formatAmount(portfolioGrowth, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+                %)
+              </span>
+            </div>
+          </h6>
         </div>
-        <div>
-          <h6 className="truncate text-gray-100">Total yield generated</h6>
+        <div className="">
           <SeparatedUsdValue
             loading={isLoadingYield}
             value={totalYield}
-            className={cn('mt-2', totalYield > 0 ? 'text-green-100' : 'text-text')}
+            className={cn('mt-2')}
           />
+          <h6 className="truncate text-sm text-text-2100">Total yield generated</h6>
         </div>
       </div>
       {/* deposit/withdraw/buy */}
-      <ActionButtons className="mt-6" value={portfolioValue} onClose={() => {}} />
+      <ActionButtons className="px-4 pb-3" value={portfolioValue} onClose={() => {}} />
       {/* tokens/activity */}
-      <UserActivityTabs className="mt-8" value={portfolioValue} />
+      <UserActivityTabs className="" value={portfolioValue} />
     </div>
   )
 }

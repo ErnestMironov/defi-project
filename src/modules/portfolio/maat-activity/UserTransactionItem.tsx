@@ -42,14 +42,14 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
         <MoreOptionsIcon className="size-full" />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
-        className="mr-2 mt-4 w-[15.75rem] gap-1 rounded-xl border border-stroke-100 bg-cards-widget p-1 shadow-test-2"
+        className="mr-2  w-[15.75rem] gap-1 rounded-xl border border-stroke-100 bg-cards-widget p-1 shadow-test-2"
         side="left"
-        align="end"
+        align="start"
       >
-        <DropdownMenu.Item className="cursor-pointer rounded-xl bg-cards-widget p-4 hover:bg-light-blue-15">
+        <DropdownMenu.Item className="cursor-pointer rounded-xl bg-cards-widget px-3 py-4 hover:bg-light-blue-15">
           <Link
             to={`${ROUTES.TRANSACTIONS}/${event.hash}`}
-            className="flex w-full items-center gap-4"
+            className="flex w-full items-center gap-2"
             target={isMobile ? '_blank' : '_self'}
           >
             <TransactionDetails className="size-5" />
@@ -64,7 +64,7 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
             arrow={false}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <LinkIcon className="size-5" />
                 <p className="ml-1 text-sm">View on scanner</p>
               </div>

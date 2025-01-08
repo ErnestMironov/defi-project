@@ -72,9 +72,9 @@ export const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div>
+    <div className="max-md:py-[0.38rem]">
       {/* Trigger button layer */}
-      <div className="relative z-20 rounded-lg border border-stroke-100 bg-cards-widget p-1 shadow-test-2">
+      <div className="relative z-20 rounded-xl border border-stroke-100 bg-cards-widget p-1 shadow-test-2 max-md:h-10 max-md:w-auto">
         <MenuTrigger isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
 

@@ -43,8 +43,8 @@ const GroupedTokenItem = ({
   return (
     <div
       className={cn(
-        'relative rounded-xl pt-4 ',
-        isOpen ? 'border border-stroke-100 pb-1' : 'hover:bg-light-blue-15 pb-4',
+        'relative rounded-xl pt-4  mb-4',
+        isOpen ? 'border border-stroke-100 pb-1' : 'hover:bg-light-blue-15 pb-4 ',
       )}
     >
       <div
@@ -177,7 +177,7 @@ export default function TokenList({
         className="hidden max-md:flex"
       />
       <div className={cn('px-1 pb-1', className)}>
-        <div className="flex flex-col gap-4 rounded-xl py-4 text-base max-md:gap-0 max-md:text-sm">
+        <div className="flex flex-col gap-4 rounded-xl py-4 text-base max-md:gap-0 max-md:py-1 max-md:text-sm">
           {Object.entries(groupedTokens).map(([groupName, tokenGroup]) => (
             <GroupedTokenItem
               key={groupName}

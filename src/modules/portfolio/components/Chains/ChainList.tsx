@@ -40,7 +40,7 @@ const ChainItem = ({
       <div
         className={cn(
           'flex w-full cursor-pointer items-center justify-between px-6 gap-2 max-md:px-3',
-          isOpen ? 'border-b pb-4' : '',
+          isOpen ? 'border-b pb-4 border-stroke-100' : '',
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
