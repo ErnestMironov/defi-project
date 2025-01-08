@@ -1,5 +1,6 @@
 import { Button } from '@components/ui/button'
 import { CHAIN_NAMES_BY_ID } from '@constants/chains'
+import { SuccessButton } from '@modules/transaction-block/components/SuccessButton'
 import { TxReviewInfo } from '@modules/transaction-block/components/TxReviewInfo'
 import { useTransactionAnimation } from '@modules/transaction-block/hooks/useTransactionAnimation'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -29,6 +30,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
     setNetworkSwitchStatus,
     setApprovalStatus,
     setTransactionStatus,
+    transactionHash,
   } = useTxStore()
 
   const {
@@ -116,6 +118,9 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
       }
       case 3: {
         console.info('🚀 ~ SimpleDeposit ~ currentStep:', 'deposit')
+        if (depositStatus === 'success') {
+          return <SuccessButton className={className} />
+        }
         return (
           <Button
             loading={depositStatus === 'pending'}
@@ -175,8 +180,6 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
   ])
 
   useEffect(() => {
-    console.log('🚀 ~ useEffect ~ chainId:', chainId)
-    console.log('🚀 ~ useEffect ~ depositFromNetwork:', depositFromNetwork)
     if (chainId !== depositFromNetwork) {
       setCurrentStep(1)
     }
@@ -195,11 +198,24 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           label: 'You deposit',
           value: replaceCommasWithDots(trimTrailingZeros(amount)),
           usdValue: amount,
+          token: {
+            symbol: asset?.contract_ticker_symbol ?? '',
+            network: depositFromNetwork ?? 1,
+          },
         }}
         receive={{
           label: 'You stake',
           value: amount,
           usdValue: amount,
+          token: {
+            symbol: asset?.contract_ticker_symbol ?? '',
+            network: depositFromNetwork ?? 1,
+          },
+        }}
+        success={{
+          show: depositStatus === 'success',
+          type: 'deposit',
+          hash: transactionHash ?? '',
         }}
       />
       <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">

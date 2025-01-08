@@ -1,12 +1,13 @@
 import { Button } from '@components/ui/button'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
+import { SuccessButton } from '@modules/transaction-block/components/SuccessButton'
 import { TxReviewInfo } from '@modules/transaction-block/components/TxReviewInfo'
 import { useTransactionAnimation } from '@modules/transaction-block/hooks/useTransactionAnimation'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { getButtonContent } from '@modules/transaction-block/utils/getButtonText'
 import { replaceCommasWithDots, trimTrailingZeros } from '@utils/formatValue'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { type Address, parseUnits } from 'viem'
 
 import { useApproveERC20 } from '../hooks/useApproveERC20'
@@ -15,14 +16,17 @@ import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
 
 export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = () => {
-  const [currentStep, setCurrentStep] = useState(1)
-
   const {
     depositAsset,
     vaultAddress,
+    vault,
     inputValue: amount,
     swapRoute,
     depositFromNetwork,
+    depositToNetwork,
+    transactionHash,
+    currentStep,
+    setCurrentStep,
     setIntermediateError,
     setAnimationStatus,
   } = useTxStore()
@@ -105,6 +109,10 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ()
       }
       case 3: {
         console.info(' ~ OnChainDeposit ~ currentStep:', 'deposit')
+        if (swapAndDepositStatus === 'success') {
+          return <SuccessButton className={className} />
+        }
+
         return (
           <Button
             size="lg"
@@ -175,11 +183,24 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ()
           label: 'You deposit',
           value: replaceCommasWithDots(trimTrailingZeros(amount)),
           usdValue: amount,
+          token: {
+            symbol: depositAsset?.contract_ticker_symbol ?? '',
+            network: depositFromNetwork ?? 1,
+          },
         }}
         receive={{
           label: 'You will stake',
           value: amount,
           usdValue: amount,
+          token: {
+            symbol: vault ?? '',
+            network: depositToNetwork ?? 1,
+          },
+        }}
+        success={{
+          show: swapAndDepositStatus === 'success',
+          type: 'deposit',
+          hash: transactionHash ?? '',
         }}
       />
       <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">

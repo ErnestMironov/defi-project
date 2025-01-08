@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react'
 import { parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
+import { SuccessButton } from '../components/SuccessButton'
 import { TxReviewInfo } from '../components/TxReviewInfo'
 import { useApproveERC20 } from '../deposit/hooks/useApproveERC20'
 import { useSwitchToTokenChain } from '../deposit/hooks/useSwitchToTokenChain'
@@ -22,6 +23,7 @@ export const WithdrawReviewContent = () => {
     currentStep,
     withdrawFromNetwork,
     withdrawToNetwork,
+    transactionHash,
     setIntermediateError,
     setCurrentStep,
     setNetworkSwitchStatus,
@@ -96,12 +98,13 @@ export const WithdrawReviewContent = () => {
       )
     }
   }, [approveError, withdrawError, switchStatus, setIntermediateError])
-  const ActionButton: React.FC<{ className?: string }> = ({ className = '' }) => {
-    function handleTryAgain(callback: () => void) {
-      setIntermediateError(null)
-      callback()
-    }
 
+  function handleTryAgain(callback: () => void) {
+    setIntermediateError(null)
+    callback()
+  }
+
+  const ActionButton: React.FC<{ className?: string }> = ({ className = '' }) => {
     switch (currentStep) {
       case 1: {
         return (
@@ -140,12 +143,16 @@ export const WithdrawReviewContent = () => {
         )
       }
       case 3: {
+        if (withdrawStatus === 'success') {
+          return <SuccessButton className={className} />
+        }
+
         return (
           <Button
             loading={withdrawStatus === 'pending'}
             size="lg"
             type="button"
-            disabled={withdrawStatus === 'pending' || withdrawStatus === 'success'}
+            disabled={withdrawStatus === 'pending'}
             className={className}
             error={withdrawStatus === 'error'}
             onClick={() => handleTryAgain(withdraw)}
@@ -187,6 +194,11 @@ export const WithdrawReviewContent = () => {
                 network: withdrawToNetwork ?? 1,
               },
             }}
+            success={{
+              show: withdrawStatus === 'success',
+              type: 'withdraw',
+              hash: transactionHash ?? '',
+            }}
           />
         )
       }
@@ -212,6 +224,11 @@ export const WithdrawReviewContent = () => {
                 symbol: mtToken?.stable ?? '',
                 network: withdrawFromNetwork ?? 1,
               },
+            }}
+            success={{
+              show: withdrawStatus === 'success',
+              type: 'withdraw',
+              hash: transactionHash ?? '',
             }}
           />
         )

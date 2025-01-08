@@ -1,5 +1,6 @@
 import { Button } from '@components/ui/button'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
+import { SuccessButton } from '@modules/transaction-block/components/SuccessButton'
 import { TxReviewInfo } from '@modules/transaction-block/components/TxReviewInfo'
 import { useTransactionAnimation } from '@modules/transaction-block/hooks/useTransactionAnimation'
 import { useTransactionStatus } from '@modules/transaction-block/hooks/useTransactionStatus'
@@ -19,9 +20,12 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
     depositAsset,
     vaultAddress,
     depositFromNetwork,
+    depositToNetwork,
+    vault,
     inputValue: amount,
     inputValueInUSD,
     currentStep,
+    transactionHash,
     setCurrentStep,
     swapRoute,
     setIntermediateError,
@@ -108,6 +112,10 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
         )
       }
       case 3: {
+        if (swapAndDepositStatus === 'success') {
+          return <SuccessButton className={className} />
+        }
+
         return (
           <Button
             size="lg"
@@ -178,11 +186,24 @@ export const CrossChainSwap: React.FunctionComponent<IDepositWizardProperties> =
           label: 'You deposit',
           value: replaceCommasWithDots(trimTrailingZeros(amount)),
           usdValue: inputValueInUSD,
+          token: {
+            symbol: depositAsset?.contract_ticker_symbol ?? '',
+            network: depositFromNetwork ?? 1,
+          },
         }}
         receive={{
           label: 'You stake',
           value: amount,
           usdValue: inputValueInUSD,
+          token: {
+            symbol: vault ?? '',
+            network: depositToNetwork ?? 1,
+          },
+        }}
+        success={{
+          show: swapAndDepositStatus === 'success',
+          type: 'deposit',
+          hash: transactionHash ?? '',
         }}
       />
       <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">
