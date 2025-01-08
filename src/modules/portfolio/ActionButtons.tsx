@@ -41,7 +41,7 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
         onClick={handleClick('deposit')}
         className="flex flex-col justify-start gap-3 rounded-2xl bg-light-blue-15 p-4 normal-case text-main-100 max-lg:gap-[0.38rem] lg:font-bold"
       >
-        <Deposit className="size-6" />
+        <Deposit className="size-6 [&_path]:fill-main-100" />
         <span className="text-sm font-medium leading-4 max-lg:text-sm">Deposit</span>
       </Link>
       {isHaveDeposit && (

@@ -51,6 +51,7 @@ export const Header = ({ className, ...rest }: HeaderProperties) => {
             balance={balance ?? 0}
             isMobile={isMobile}
             openConnectModal={() => openConnectModal()}
+            context="header"
           />
           <PortfolioModal isOpen={isOpen} onClose={handlePortfolioClose} />
         </div>

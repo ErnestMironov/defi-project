@@ -3,6 +3,7 @@ import { useFormattedVaultData } from '@hooks/useFormattedVaultData'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps } from 'react'
+import { useAccount } from 'wagmi'
 
 import { AllAssets } from '../all-assets/AllAssets'
 import { NoDeposit } from '../all-assets/NoDeposit'

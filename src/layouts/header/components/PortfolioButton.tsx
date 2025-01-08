@@ -6,7 +6,7 @@ import Avatar from '@assets/images/avatar.jpg'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { formatAmount } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
-import React, { useMemo } from 'react'
+import React from 'react'
 import toast from 'react-hot-toast'
 import { useAccount } from 'wagmi'
 
@@ -16,38 +16,40 @@ interface PortfolioButtonProperties extends React.HTMLAttributes<HTMLButtonEleme
   isMobile?: boolean
   onClick: () => void
   openConnectModal: () => void
+  context?: 'modal' | 'header'
 }
 
 const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
   onClick,
   isOpen,
   balance,
-  isMobile = false,
+  isMobile,
   openConnectModal,
+  context,
 }) => {
   const { address } = useAccount()
-  const formattedBalance = useMemo(() => {
-    if (isOpen && !isMobile) {
-      return shortenAddress(address ?? '')
-    }
-    if (isMobile) {
-      return shortenAddress(address ?? '')
-    }
-    return formatAmount(balance ?? 0)
-  }, [isOpen, address, balance, isMobile])
 
+  const getDisplayValueForButton = () => {
+    if (context === 'modal' || isMobile) {
+      return shortenAddress(address ?? '')
+    }
+    if (context === 'header') {
+      return formatAmount(balance ?? 0)
+    }
+  }
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(address || '')
     toast.success('Address copied to clipboard')
   }
 
   const handleClick = () => {
-    if (isMobile) {
+    if (isMobile || isOpen) {
       openConnectModal()
     } else {
       onClick()
     }
   }
+  console.log(context === 'header' || !isMobile)
 
   return (
     <DropdownMenu.Root>
@@ -63,8 +65,10 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
                 <img src={Avatar} alt="avatar" className="size-full rounded-xl" />
               </div>
               <p className="truncate text-sm font-medium leading-6 text-text-100 max-md:text-[0.8125rem]">
-                {!isMobile && !isOpen && <span className="text-text-2100">$</span>}
-                {formattedBalance}
+                <span className="text-text-2100">
+                  {context === 'header' && !isMobile ? '$' : ''}
+                </span>
+                {getDisplayValueForButton()}
               </p>
             </div>
             {!isMobile && (
@@ -72,7 +76,7 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
                 className="flex items-center justify-center rounded-r-2xl px-3 transition-colors dark:border-stroke-40100"
                 type="button"
               >
-                {isOpen ? (
+                {context === 'modal' ? (
                   <ArrowRight className="size-4" />
                 ) : (
                   <DoubleArrow className="size-4" />

@@ -34,7 +34,6 @@ interface DetailsProperties {
   summaryAndFees: SummaryAndFees
   isLoading: boolean
   onOpenChange: (open: boolean) => void
-  isLoading: boolean
 }
 
 const Details: React.FC<DetailsProperties> = ({
