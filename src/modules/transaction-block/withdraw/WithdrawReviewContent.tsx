@@ -16,8 +16,8 @@ import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
 
 export const WithdrawReviewContent = () => {
   const {
-    inputValue: amount,
-    withdrawAmount: withdrawAmountInUSD,
+    withdrawInputValue: amount,
+    withdrawInputValueInUSD: withdrawAmountInUSD,
     mtToken,
     currentStep,
     withdrawFromNetwork,
@@ -28,6 +28,8 @@ export const WithdrawReviewContent = () => {
     setApprovalStatus,
     setTransactionStatus,
   } = useTxStore()
+
+  console.log(withdrawAmountInUSD)
 
   const { address } = useAccount()
 
