@@ -155,7 +155,7 @@ export const NativeOnchainSwap: React.FunctionComponent<
         }}
       />
       <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">
-        <ActionButton className="w-full px-[1.875rem] py-4 text-base font-medium normal-case leading-6" />
+        <ActionButton className="w-full px-[1.875rem] py-4 text-base font-medium normal-case leading-6 hover:bg-main-80" />
       </div>
     </>
   )

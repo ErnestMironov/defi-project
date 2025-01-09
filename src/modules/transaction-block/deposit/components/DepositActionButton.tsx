@@ -32,7 +32,7 @@ export const DepositActionButton = ({
     <Button
       size="lg"
       disabled={!inputValue || !!error}
-      className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case max-lg:text-[0.9375rem]"
+      className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80 max-lg:text-[0.9375rem]"
       onClick={onModalOpen}
     >
       {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}

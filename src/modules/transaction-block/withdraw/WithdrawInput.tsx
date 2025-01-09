@@ -216,7 +216,7 @@ export const WithdrawInput = () => {
             <Button
               size="lg"
               disabled={disabledButtonState}
-              className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+              className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80"
               onClick={handleReview}
             >
               Withdraw
@@ -224,7 +224,7 @@ export const WithdrawInput = () => {
           ) : (
             <Button
               size="lg"
-              className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case"
+              className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80"
               onClick={() => openConnectModal({ view: 'Connect' })}
             >
               Connect Wallet
