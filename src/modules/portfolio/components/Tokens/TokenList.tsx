@@ -43,8 +43,8 @@ const GroupedTokenItem = ({
   return (
     <div
       className={cn(
-        'relative rounded-xl pt-4  mb-4',
-        isOpen ? 'border border-stroke-100 pb-1' : 'hover:bg-light-blue-15 pb-4 ',
+        'relative rounded-xl pt-4 ',
+        isOpen ? 'border border-stroke-100 pb-1  mb-4' : 'hover:bg-light-blue-15 pb-4 ',
       )}
     >
       <div
@@ -80,10 +80,7 @@ const GroupedTokenItem = ({
                     <TokenIconComponent
                       key={chainId}
                       symbol={chainId}
-                      className={cn(
-                        'size-5 rounded-full overflow-hidden',
-                        index !== 0 && '-ml-2',
-                      )}
+                      className={cn('size-5 overflow-hidden', index !== 0 && '-ml-2')}
                       tokenLogoFallback={tokenGroup[0].logo_url}
                     />
                   ))}
@@ -129,7 +126,7 @@ const GroupedTokenItem = ({
                   <span className="flex gap-0.5 text-sm text-text-2100">
                     <TokenIconComponent
                       symbol={token.chain_id}
-                      className="size-4 overflow-hidden rounded-full"
+                      className="size-4 overflow-hidden"
                       tokenLogoFallback={token.logo_url}
                     />
                     {CHAIN_NAMES_BY_ID[token.chain_id as keyof typeof CHAIN_NAMES_BY_ID]}
@@ -177,7 +174,7 @@ export default function TokenList({
         className="hidden max-md:flex"
       />
       <div className={cn('px-1 pb-1', className)}>
-        <div className="flex flex-col gap-4 rounded-xl py-4 text-base max-md:gap-0 max-md:py-1 max-md:text-sm">
+        <div className="flex flex-col gap-1 rounded-xl py-4 text-base max-md:gap-0 max-md:py-1 max-md:text-sm">
           {Object.entries(groupedTokens).map(([groupName, tokenGroup]) => (
             <GroupedTokenItem
               key={groupName}
