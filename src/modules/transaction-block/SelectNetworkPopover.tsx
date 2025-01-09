@@ -35,8 +35,8 @@ const ChainItem = ({
     <div
       onClick={() => onNetworkChange(chain)}
       className={cn(
-        'flex items-center justify-between rounded-[0.625rem] gap-2 px-3 py-1.5 cursor-pointer hover:bg-input-default',
-        chain === currentChain && 'bg-input-default',
+        'flex items-center justify-between rounded-[0.625rem] gap-2 px-3 py-1.5 cursor-pointer hover:bg-input-active',
+        chain === currentChain && 'bg-input-active',
       )}
     >
       <div className="flex  items-center gap-2">

@@ -61,7 +61,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
               formatAmount(apy.toString(), {
                 maximumFractionDigits: 2,
               })}
-            <span className="text-text-270">%</span>
+            <span className="text-text-60">%</span>
           </p>
           <div className="flex items-center gap-[0.38rem]">
             <h6 className="uppercase">Apy</h6>
@@ -69,7 +69,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
         </div>
         <div>
           <p>
-            <span className="text-text-270">$</span>
+            <span className="text-text-60">$</span>
             {tvl && formatAmount(tvl, { notation: 'compact', minimumFractionDigits: 2 })}
           </p>
           <div className="flex items-center gap-[0.38rem]">
@@ -81,7 +81,7 @@ export const TokenStatsContainer = (props: TokenStatsContainerProperties) => {
             <Skeleton className="h-8 w-[9.1rem]" />
           ) : (
             <p>
-              <span className="text-text-270">$</span>
+              <span className="text-text-60">$</span>
               {rebalancingVolume &&
                 formatAmount(rebalancingVolume, {
                   notation: 'compact',

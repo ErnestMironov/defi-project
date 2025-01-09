@@ -48,7 +48,7 @@ export const TokensListItem = ({
       <div className="flex items-center justify-end gap-2">
         <div className="ml-auto flex flex-col items-end gap-[0.12rem]">
           <p className="text-medium text-base text-text-1100">
-            <span className="text-text-270">$</span>
+            <span className="text-text-60">$</span>
             {formatAmountValue(token?.balance_usd || '0', 2)}
           </p>
         </div>
