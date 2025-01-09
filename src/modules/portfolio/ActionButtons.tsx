@@ -16,7 +16,7 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
   const { className, value, onClose, ...rest } = props
   const { setTxType } = useTxStore()
   const MIN_VALUE = 0.001
-  const isHaveDeposit = true
+  const isHaveDeposit = value > MIN_VALUE
   const navigate = useNavigate()
   const handleClick = (type: 'deposit' | 'withdraw') => (e: React.MouseEvent) => {
     e.preventDefault()
