@@ -22,7 +22,7 @@ export const VaultSelection = () => {
         apy={`${Math.trunc(bestUSDCApy)}%`}
       />
       <div className="flex items-center max-md:hidden">
-        <Separator className="size-6" />
+        <Separator className="size-6 dark:[&_path]:stroke-stroke-100" />
       </div>
       <VaultInfoBox
         active={vault === 'USDT'}
