@@ -20,10 +20,10 @@ const Line: React.FC<
   }
 > = ({ title, value, usd, ...props }) => {
   return (
-    <div {...props} className="flex items-baseline justify-between text-text-80">
-      <p className="text-text-3100/70">{title}</p>
-      <p className="text-[1rem] text-text-80 ">
-        {value} {usd && <span className="text-gray-100">(${usd})</span>}
+    <div {...props} className="flex items-baseline justify-between text-text-80100">
+      <p className="text-text-80100">{title}</p>
+      <p className="text-[1rem] text-text-80100">
+        {value} {usd && <span>(${usd})</span>}
       </p>
     </div>
   )
@@ -54,18 +54,18 @@ const Details: React.FC<DetailsProperties> = ({
           <Skeleton className="h-[200px] w-full" />
         ) : (
           <>
-            <AdaptiveModalTitle className="flex justify-between px-8 py-6 text-center text-base normal-case text-text-3100">
+            <AdaptiveModalTitle className="flex justify-between border-b border-stroke-40100 bg-cards-widget px-8 py-6 text-center text-base normal-case  text-text-80100">
               <div className="flex items-center gap-1 text-gray-100 max-lg:text-[0.8125rem] ">
                 <Lightning className="h-[0.83356rem] w-[0.75031rem]" />
                 <span>Fees</span>
               </div>
               <span>
                 {' '}
-                (${summaryAndFees.total.usd} / {summaryAndFees.total.value})
+                ({summaryAndFees.total.value} / ${summaryAndFees.total.usd} )
               </span>
             </AdaptiveModalTitle>
 
-            <div className="flex flex-col gap-4 bg-input-default px-12 py-6 text-text-3100 dark:bg-[#3E3E4D66] max-md:p-6">
+            <div className="flex flex-col gap-4 bg-input-default px-12 py-6 text-text-80100 dark:bg-[#3E3E4D66] max-md:p-6">
               <h3 className="text-base font-[500]">Summary</h3>
               <div className="flex flex-col gap-1">
                 <Line

@@ -39,18 +39,18 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
       <Link
         to="/"
         onClick={handleClick('deposit')}
-        className="group flex flex-col justify-start gap-3 rounded-2xl bg-main-8 p-4 normal-case text-main-100 hover:bg-main-100 hover:text-white max-lg:gap-[0.38rem] lg:font-bold"
+        className="group flex flex-col justify-start gap-3 rounded-2xl bg-main-8 p-4 normal-case text-main-100   hover:opacity-60 max-lg:gap-[0.38rem] lg:font-bold"
       >
-        <Deposit className="size-6 [&_path]:fill-main-100 group-hover:[&_path]:fill-white group-hover:[&_path]:stroke-main-100" />
+        <Deposit className="size-6 [&_path]:fill-main-100" />
         <span className="text-sm font-medium leading-4 max-lg:text-sm">Deposit</span>
       </Link>
       {isHaveDeposit && (
         <Link
           to="/"
           onClick={handleClick('withdraw')}
-          className="group flex flex-col justify-start gap-3 rounded-2xl bg-main-8 p-4 normal-case text-main-100 hover:bg-main-100 hover:text-white max-lg:gap-[0.38rem] lg:font-bold"
+          className="group flex flex-col justify-start gap-3 rounded-2xl bg-main-8 p-4 normal-case text-main-100 hover:opacity-60 max-lg:gap-[0.38rem] lg:font-bold"
         >
-          <Withdraw className="size-6 [&_path]:fill-main-100 group-hover:[&_path]:fill-white group-hover:[&_path]:stroke-main-100" />
+          <Withdraw className="size-6 [&_path]:fill-main-100 " />
           <span className="text-sm font-medium leading-4 max-lg:text-sm">Withdraw</span>
         </Link>
       )}
@@ -60,7 +60,7 @@ export const ActionButtons = (props: DepositWithdrawButtonsProperties) => {
         className="flex cursor-auto flex-col justify-start gap-3 rounded-2xl bg-main-8 p-4 normal-case text-main-100 opacity-50 max-lg:gap-[0.38rem] lg:font-bold"
         aria-disabled
       >
-        <Add className="size-6 max-lg:size-7 [&_path]:fill-main-100 group-hover:[&_path]:fill-white group-hover:[&_path]:stroke-main-100" />
+        <Add className="size-6 max-lg:size-7 [&_path]:fill-main-100 " />
         <span className="text-sm font-medium leading-4 max-lg:text-sm">Buy crypto</span>
       </Link>
     </div>

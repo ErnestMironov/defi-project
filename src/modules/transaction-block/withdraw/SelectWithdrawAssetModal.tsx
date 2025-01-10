@@ -137,6 +137,7 @@ export const SelectWithdrawAssetModal = () => {
             <TokenWithNetwork
               classNames={{
                 token: 'rounded-full overflow-hidden size-9',
+                network: 'rounded-md size-4',
               }}
               symbol={selectedItem?.stable}
               network={selectedItem?.chainId}

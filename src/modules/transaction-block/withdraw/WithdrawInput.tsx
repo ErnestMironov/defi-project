@@ -172,10 +172,6 @@ export const WithdrawInput = () => {
             />
           </div>
         </div>
-
-        {validationError && (
-          <p className="mt-3 text-lg text-red-100">{validationError}</p>
-        )}
       </div>
       {mtToken && withdrawToAnotherChain && (
         <div
@@ -200,7 +196,7 @@ export const WithdrawInput = () => {
         </div>
       )}
       <div className="flex flex-col items-center justify-center py-3">
-        {(Number(inputValue) > 0 || Number(inputValueInUSD) > 0) && !!validationError && (
+        {(Number(inputValue) > 0 || Number(inputValueInUSD) > 0) && !validationError && (
           <WithdrawPointsBurn
             pointsBurned={
               formatAmount(burnedPoints?.pointsToBurn || 0, {
@@ -216,10 +212,13 @@ export const WithdrawInput = () => {
             <Button
               size="lg"
               disabled={disabledButtonState}
-              className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80"
+              className={cn(
+                'w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80',
+                validationError && '!bg-red-5 !text-red-100',
+              )}
               onClick={handleReview}
             >
-              Withdraw
+              {validationError || 'Withdraw'}
             </Button>
           ) : (
             <Button

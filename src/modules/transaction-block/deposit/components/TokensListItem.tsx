@@ -29,6 +29,7 @@ export const TokensListItem = ({
           tokenLogoFallback={token?.logo_url}
           classNames={{
             token: 'rounded-full overflow-hidden size-9',
+            network: 'rounded-md size-4',
           }}
         />
         <div className="flex flex-col items-start gap-[0.13rem]">

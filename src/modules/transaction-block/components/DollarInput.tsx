@@ -52,7 +52,7 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
       <div className={cn('flex items-center', wrapperClassName)}>
         <div
           className={cn(
-            'flex items-center text-text-2100',
+            'flex items-center text-text-30100',
             error && 'text-red-100',
             disabled && 'cursor-not-allowed opacity-50',
             inputClassName,
@@ -72,6 +72,7 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
               error && 'text-red-100',
               disabled && 'cursor-not-allowed',
               className,
+              'placeholder:text-text-20',
             )}
           />
         </div>
