@@ -47,7 +47,7 @@ const ChainItem = ({
           <div className="flex items-center justify-center gap-1">
             <TokenIconComponent
               symbol={chainId}
-              className="size-7 overflow-hidden rounded-full max-md:size-6"
+              className="size-7  max-md:size-6"
               tokenLogoFallback={
                 CHAIN_NAMES_BY_ID[chainId as keyof typeof CHAIN_NAMES_BY_ID]
               }
@@ -140,8 +140,8 @@ export const ChainsList = ({
         potentialUsdProfit={potentialUsdProfit}
         className="hidden max-md:flex"
       />
-      <div className={cn(`px-1 pb-1 ${className}`)}>
-        <div className={cn(' py-4 flex flex-col gap-4  rounded-xl ')}>
+      <div className={cn(`px-1 pb-1`, className)}>
+        <div className={cn(' py-4 flex flex-col gap-1 rounded-xl ')}>
           {Object.values(groupedByChain).map(
             ({ chainId, totalUsdValue, tokens: chainTokens }, i) => (
               <ChainItem
