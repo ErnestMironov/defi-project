@@ -25,7 +25,7 @@ export function ThemeToggler(props: ThemeToggleProperties) {
       onClick={toggleTheme}
       className={cn(
         'relative flex items-center w-auto h-auto rounded-[0.75rem] border border-stroke-100 p-1 gap-1 bg-misc-card',
-        'transition-colors cursor-pointer',
+        'transition-colors cursor-pointer shadow-test',
         className,
       )}
       type="button"

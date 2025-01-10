@@ -12,7 +12,7 @@ export const PointsBalance = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        'flex h-[3rem] max-md:h-[2.5rem] max-md:w-auto  rounded-[1rem] max-md:rounded-[0.75rem] bg-white border border-stroke-100 dark:bg-cards-widget dark:border-stroke-40100',
+        'flex h-[3rem] max-md:h-[2.5rem] max-md:w-auto shadow-test-2 rounded-[1rem] max-md:rounded-[0.75rem] bg-white border border-stroke-100 dark:bg-cards-widget dark:border-stroke-40100',
         className,
       )}
     >

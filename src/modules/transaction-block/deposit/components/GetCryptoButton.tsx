@@ -11,7 +11,7 @@ export const GetCryptoButton = ({ className }: GetCryptoButtonProperties) => {
     <Button
       size="lg"
       className={cn(
-        'flex h-[4.5rem] w-full items-center justify-center gap-[0.38rem] rounded-none bg-text-5 text-base hover:bg-text-5 cursor-no-drop max-md:h-auto max-md:text-[0.9375rem] opacity-50 border-t border-stroke-100',
+        'flex h-[4.5rem] w-full dark:text-white items-center text-[#0E1118] justify-center gap-[0.38rem] rounded-none bg-text-5 text-base hover:bg-text-5 cursor-no-drop max-md:h-auto max-md:text-[0.9375rem] opacity-50 border-t border-stroke-100 ',
         className,
       )}
     >

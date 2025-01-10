@@ -44,7 +44,7 @@ export const Socials = (props: SocialsProperties) => {
         <a target="_blank" href={social.link} key={social.link} rel="noreferrer">
           <social.icon
             className={cn(
-              'size-6 overflow-visible [&_path]:fill-gray-50 opacity-90 cursor-pointer hover:opacity-100',
+              'size-6 max-md:size-8 overflow-visible [&_path]:fill-gray-50 opacity-90 cursor-pointer hover:opacity-100',
               classNames?.icon,
             )}
           />
