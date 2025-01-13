@@ -98,7 +98,7 @@ export const DepositInput = () => {
           error && 'bg-input-error',
         )}
       >
-        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50 max-lg:text-[0.75rem]">
+        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-60 max-lg:text-[0.75rem]">
           You deposit
         </span>
         <div className="flex items-center justify-between gap-2">

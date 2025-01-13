@@ -52,13 +52,13 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
       <div className={cn('flex items-center', wrapperClassName)}>
         <div
           className={cn(
-            'flex items-center text-text-30100',
+            'flex items-center text-text-60',
             error && 'text-red-100',
             disabled && 'cursor-not-allowed opacity-50',
             inputClassName,
           )}
         >
-          <span className="select-none">$</span>
+          <span className="select-none text-text-60">$</span>
           <input
             ref={reference}
             type="text"
@@ -72,7 +72,7 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
               error && 'text-red-100',
               disabled && 'cursor-not-allowed',
               className,
-              'placeholder:text-text-20',
+              'placeholder:text-[#8585A9]',
             )}
           />
         </div>

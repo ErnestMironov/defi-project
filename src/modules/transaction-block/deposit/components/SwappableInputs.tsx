@@ -95,6 +95,7 @@ export const SwappableInputs = ({
       onValueChange={onUsdValueChange}
       error={!!error}
       inputClassName="text-[1rem] max-lg:text-[0.8125rem]"
+      className="text-text-2100"
     />
   )
 
@@ -123,7 +124,7 @@ export const SwappableInputs = ({
   return (
     <div className="flex flex-col gap-3">
       {/* Primary input with right element */}
-      <div className="flex h-12 items-center justify-between gap-2">
+      <div className="flex h-14 items-center justify-between gap-2">
         <div className="min-w-0 flex-1">{primaryInput}</div>
         {rightElement}
       </div>
