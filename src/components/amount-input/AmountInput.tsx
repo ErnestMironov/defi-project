@@ -109,9 +109,9 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
             className={cn(
               baseInputClasses,
               'focus:outline-none',
-              error && 'text-red-100',
               className,
               after && 'text-text-2100',
+              error && 'text-red-100',
             )}
             onChange={handleChange}
             value={value === '0.00' ? '' : value}

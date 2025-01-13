@@ -58,7 +58,9 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
             inputClassName,
           )}
         >
-          <span className="select-none text-text-60">$</span>
+          <span className={cn('select-none text-text-60', error && 'text-red-100')}>
+            $
+          </span>
           <input
             ref={reference}
             type="text"
@@ -69,10 +71,10 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
             placeholder={DEFAULT_PLACEHOLDER}
             className={cn(
               'bg-transparent font-medium outline-none text-text-100',
-              error && 'text-red-100',
               disabled && 'cursor-not-allowed',
               className,
               'placeholder:text-[#8585A9]',
+              error && 'text-red-100',
             )}
           />
         </div>
