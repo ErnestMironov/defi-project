@@ -173,9 +173,7 @@ export const DepositInput = () => {
         />
       </div>
       <GetCryptoButton className={cn(!error && 'hidden')} />
-      <ZapFee
-        className={cn((error && inputValue) || inputValueInUSD ? 'block' : 'hidden')}
-      />
+      {!error && <ZapFee />}
     </div>
   )
 }
