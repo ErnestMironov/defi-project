@@ -96,7 +96,7 @@ const MultiSelectTrigger = (props: MultiSelectTriggerProperties) => {
     <button
       type="button"
       className={cn(
-        'flex size-full items-center justify-between [&>svg]:size-4',
+        'flex size-full items-center justify-between [&>svg]:size-4 hover:bg-[#8585A914]',
         'shadow-test',
         multiSelectVariants({ variant }),
       )}
