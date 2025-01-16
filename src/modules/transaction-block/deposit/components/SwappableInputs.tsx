@@ -94,7 +94,7 @@ export const SwappableInputs = ({
       value={usdValue}
       onValueChange={onUsdValueChange}
       error={!!error}
-      inputClassName="text-[1rem] max-lg:text-[0.8125rem]"
+      inputClassName="text-normal max-lg:text-[0.8125rem]"
       className="text-text-2100"
     />
   )
@@ -103,7 +103,10 @@ export const SwappableInputs = ({
   const balanceInfo = (
     <div className="flex items-center gap-1">
       <p
-        className={cn('flex items-center gap-[.19rem]', error && '[&>span]:text-red-100')}
+        className={cn(
+          'text-normal flex items-center gap-[.19rem] max-lg:text-[0.8125rem]',
+          error && '[&>span]:text-red-100',
+        )}
       >
         <span className="ml-2 mr-[.19rem] text-text-2100">
           {formatTokenBalance(asset.balance, asset.contract_decimals)}
