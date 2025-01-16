@@ -144,7 +144,7 @@ export const MultiSelect = ({
         //     ? undefined
         //     : `${reference.current?.offsetWidth}px`,
         // }}
-        sideOffset={10}
+        sideOffset={-3}
         align={align}
         id={id}
         className={cn(
