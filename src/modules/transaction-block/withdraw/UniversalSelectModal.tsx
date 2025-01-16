@@ -88,7 +88,7 @@ export function UniversalSelectModal<T, R = T>({
           {filterBySearch && (
             <label
               htmlFor="search-input"
-              className="flex grow items-center gap-2 rounded-xl bg-input-active px-6 py-4"
+              className="flex grow items-center gap-2 rounded-xl border border-stroke-40100 bg-input-active  px-6 py-4"
             >
               <span className="sr-only">Search tokens</span>
               <Search />
