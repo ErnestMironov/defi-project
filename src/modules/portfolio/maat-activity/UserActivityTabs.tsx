@@ -19,7 +19,7 @@ export const UserActivityTabs = (props: UserActivityTabsProperties) => {
             <TabsTrigger
               variant="unstyled"
               value="tokens"
-              className="py-3 text-md leading-6 text-text-2100  data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100 max-md:text-sm max-md:leading-6"
+              className="py-3 text-md leading-6 text-text-2100 hover:text-text-60  data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100 max-md:text-sm max-md:leading-6"
               disabled={value <= 0}
             >
               Assets
@@ -27,7 +27,7 @@ export const UserActivityTabs = (props: UserActivityTabsProperties) => {
             <TabsTrigger
               value="activity"
               variant="unstyled"
-              className="py-3 text-md text-text-2100 data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100 max-md:text-sm max-md:leading-6"
+              className="py-3 text-md text-text-2100 hover:text-text-60 data-[state='active']:border-b-2 data-[state='active']:border-b-main-100 data-[state='active']:!text-main-100 max-md:text-sm max-md:leading-6"
               disabled={value <= 0}
             >
               Activity

@@ -25,7 +25,7 @@ export const VaultInfoBox = (props: VaultInfoBoxProperties) => {
       {icon}
       <div className="flex flex-col">
         <div className="font-medium leading-6">{vaultName} Vault</div>
-        <div className="flex items-center gap-[0.2rem] text-[0.875rem] leading-4 text-text-2100 max-lg:text-[0.75rem]">
+        <div className="flex items-center gap-[0.2rem] text-[0.875rem] font-normal leading-4 text-text-2100 max-lg:text-[0.75rem]">
           Up to {apy} APY + <PointIcon className="size-4" />
         </div>
       </div>

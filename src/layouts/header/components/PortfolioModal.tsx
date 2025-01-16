@@ -97,9 +97,11 @@ export const PortfolioModal = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex size-12 items-center justify-center rounded-xl bg-cards-widget hover:bg-gray-50"
+                  className="flex size-12 items-center justify-center rounded-xl bg-cards-widget p-1"
                 >
-                  <ClosePortfolioIcon />
+                  <div className="flex size-full items-center justify-center rounded-xl p-2 hover:bg-[#8585A914]">
+                    <ClosePortfolioIcon className="size-4 " />
+                  </div>
                 </button>
               )}
             </div>

@@ -106,7 +106,7 @@ export const DesktopMenu = () => {
           className="absolute left-full top-0 -z-10 flex h-full w-[2.8rem] -translate-x-4 justify-end rounded-r-2xl bg-input-active pr-2 pt-3 text-right"
           onClick={() => setIsOpen(false)}
         >
-          <ChevronsLeft className="size-4 text-[#30303066] dark:text-[#8585A9]" />
+          <ChevronsLeft className="size-4 text-[#30303066]  hover:translate-x-1 dark:text-[#8585A9]" />
         </button>
       )}
     </motion.nav>

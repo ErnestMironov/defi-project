@@ -21,7 +21,7 @@ const menuVariants = {
     },
   },
   open: {
-    width: '15rem',
+    width: '19rem',
     height: '100vh',
     top: 0,
     left: 0,
@@ -98,13 +98,13 @@ export const MobileMenu = () => {
               exit="closed"
             >
               <motion.div
-                className="mt-20 flex h-[calc(100vh-5rem)] flex-col justify-between p-5"
+                className="mt-32 flex h-[calc(100vh-5rem)] flex-col justify-between p-6"
                 variants={contentVariants}
                 initial="closed"
                 animate="open"
                 exit="closed"
               >
-                <ul className="flex flex-col items-stretch gap-8">
+                <ul className="flex flex-col items-stretch gap-6 text-[1.25rem]">
                   {menu.map((menuItem) => {
                     if (menuItem.linkType === 'external') {
                       return (

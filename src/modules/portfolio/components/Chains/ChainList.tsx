@@ -27,11 +27,10 @@ const ChainItem = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false)
   const chainName = CHAIN_NAMES_BY_ID[chainId as keyof typeof CHAIN_NAMES_BY_ID]
-  console.log(tokens)
   return (
     <div
       className={cn(
-        'relative rounded-xl py-4 hover:bg-light-blue-15',
+        'relative rounded-xl py-4 hover:bg-[#8585A914]',
         isOpen
           ? 'border bg-[rgba(133, 133, 169, 0.03)] border-stroke-100 hover:bg-transparent max-md:text-sm '
           : '',
@@ -48,7 +47,7 @@ const ChainItem = ({
           <div className="flex items-center justify-center gap-1">
             <TokenIconComponent
               symbol={chainId}
-              className="size-7 overflow-hidden rounded-full max-md:size-6"
+              className="size-7  max-md:size-6"
               tokenLogoFallback={
                 CHAIN_NAMES_BY_ID[chainId as keyof typeof CHAIN_NAMES_BY_ID]
               }
@@ -66,11 +65,11 @@ const ChainItem = ({
         </div>
       </div>
       {isOpen && (
-        <div className="left-0 z-10 mx-1 mt-2 w-auto rounded-lg px-6 hover:bg-light-blue-15 max-md:px-3  max-md:text-sm">
+        <div className="left-0 z-10 mx-1 mt-2 w-auto    max-md:px-3  max-md:text-sm">
           {tokens.map((token) => (
             <div
               key={token.contract_ticker_symbol}
-              className="flex select-none items-center justify-between py-4"
+              className="flex select-none items-center justify-between rounded-lg px-6 py-4 hover:bg-[#8585A90D]"
             >
               <div className="flex items-center">
                 <TokenIconComponent
@@ -141,8 +140,8 @@ export const ChainsList = ({
         potentialUsdProfit={potentialUsdProfit}
         className="hidden max-md:flex"
       />
-      <div className={cn(`px-1 pb-1 ${className}`)}>
-        <div className={cn(' py-4 flex flex-col gap-4  rounded-xl ')}>
+      <div className={cn(`px-1 pb-1`, className)}>
+        <div className={cn(' py-4 flex flex-col gap-1 rounded-xl ')}>
           {Object.values(groupedByChain).map(
             ({ chainId, totalUsdValue, tokens: chainTokens }, i) => (
               <ChainItem

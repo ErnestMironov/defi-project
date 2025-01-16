@@ -14,6 +14,7 @@ import { useAccount } from 'wagmi'
 import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { DepositActionButton } from './components/DepositActionButton'
+import { GetCryptoButton } from './components/GetCryptoButton'
 import { SwappableInputs } from './components/SwappableInputs'
 import { VaultSelection } from './components/VaultSelection'
 import { useVaultSelection } from './hooks/useVaultSelection'
@@ -88,7 +89,6 @@ export const DepositInput = () => {
   })
 
   const showSkeleton = (isRouteLoading || isAmountStale) && needsSwap && isTxZAP
-
   return (
     <div>
       {/* Deposit Input Section */}
@@ -98,7 +98,7 @@ export const DepositInput = () => {
           error && 'bg-input-error',
         )}
       >
-        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50 max-lg:text-[0.75rem]">
+        <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-60 max-lg:text-[0.75rem]">
           You deposit
         </span>
         <div className="flex items-center justify-between gap-2">
@@ -117,7 +117,6 @@ export const DepositInput = () => {
             />
           </div>
         </div>
-        {error && <p className="mt-3 text-lg text-red-100">{error}</p>}
       </div>
 
       <VaultSelection />
@@ -126,7 +125,6 @@ export const DepositInput = () => {
       <div
         className={cn(
           'flex w-full flex-col items-start justify-between max-lg:p-4  py-6 px-8 max-lg:mt-2 border-y border-stroke-100 max-lg:border-b-0',
-          error && 'bg-input-error',
         )}
       >
         <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50 max-lg:text-[0.75rem]">
@@ -174,9 +172,8 @@ export const DepositInput = () => {
           onModalOpen={() => setCurrentModal('review')}
         />
       </div>
-      <ZapFee
-        className={cn((error && inputValue) || inputValueInUSD ? 'block' : 'hidden')}
-      />
+      <GetCryptoButton className={cn(!error && 'hidden')} />
+      {!error && <ZapFee />}
     </div>
   )
 }

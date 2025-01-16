@@ -109,17 +109,23 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
             className={cn(
               baseInputClasses,
               'focus:outline-none',
-              error && 'text-red-100',
               className,
+              after && 'text-text-2100',
+              error && 'text-red-100',
             )}
             onChange={handleChange}
-            value={value}
+            value={value === '0.00' ? '' : value}
             ref={reference}
           />
 
           {/* Optional suffix */}
           {after && (
-            <span className="ml-[0.2rem] text-[1rem] text-[#A5A5A5] max-lg:text-[0.8125rem]">
+            <span
+              className={cn(
+                'ml-[0.2rem] text-[1rem] text-text-60 max-lg:text-[0.8125rem]',
+                error && 'text-red-100',
+              )}
+            >
               {after}
             </span>
           )}

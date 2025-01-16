@@ -1,5 +1,6 @@
 import { Button } from '@components/ui/button'
 import { useAppKit } from '@reown/appkit/react'
+import { cn } from '@utils/cn'
 
 interface DepositActionButtonProperties {
   isConnected: boolean
@@ -8,6 +9,8 @@ interface DepositActionButtonProperties {
   onModalOpen: () => void
 }
 
+type DepositButtonState = 'empty' | 'valid' | 'exceeded'
+
 export const DepositActionButton = ({
   isConnected,
   inputValue,
@@ -15,6 +18,22 @@ export const DepositActionButton = ({
   onModalOpen,
 }: DepositActionButtonProperties) => {
   const { open: openConnectModal } = useAppKit()
+
+  const getDepositButtonText = (): string => {
+    const state: DepositButtonState = inputValue
+      ? error
+        ? 'exceeded'
+        : 'valid'
+      : 'empty'
+
+    const buttonTexts: Record<DepositButtonState, string> = {
+      empty: 'Enter the amount',
+      valid: 'Deposit',
+      exceeded: 'Exceeds balance :(',
+    }
+
+    return buttonTexts[state]
+  }
 
   if (!isConnected) {
     return (
@@ -32,10 +51,13 @@ export const DepositActionButton = ({
     <Button
       size="lg"
       disabled={!inputValue || !!error}
-      className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case max-lg:text-[0.9375rem]"
+      className={cn(
+        'w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80 max-lg:text-[0.9375rem]',
+        error && '!bg-red-5 !text-red-100',
+      )}
       onClick={onModalOpen}
     >
-      {inputValue && +inputValue > 0 ? 'Deposit' : 'Enter the amount'}
+      {getDepositButtonText()}
     </Button>
   )
 }

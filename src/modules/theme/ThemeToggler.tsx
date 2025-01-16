@@ -24,17 +24,17 @@ export function ThemeToggler(props: ThemeToggleProperties) {
     <button
       onClick={toggleTheme}
       className={cn(
-        'relative flex items-center w-auto h-auto rounded-xl border border-stroke-100 p-1 gap-2 bg-misc-card',
-        'transition-colors cursor-pointer',
+        'relative flex items-center w-auto h-auto rounded-[0.75rem] border border-stroke-100 p-1 gap-1 bg-misc-card',
+        'transition-colors cursor-pointer shadow-test',
         className,
       )}
       type="button"
     >
       <motion.div
         className={cn(
-          'absolute top-1 left-1 z-0 rounded-[0.5rem]',
+          'absolute top-1 left-1 z-0 rounded-[0.75rem]',
           'bg-main-100',
-          'transition-all duration-300 ease-out pointer-events-none',
+          'transition-all duration-300 ease-out pointer-events-none ',
         )}
         initial={false}
         animate={{
@@ -50,12 +50,12 @@ export function ThemeToggler(props: ThemeToggleProperties) {
         }}
       />
 
-      <div className="relative z-10 flex w-full items-center">
-        <div className="flex w-1/2 items-center justify-center">
+      <div className="relative z-10 flex w-full items-center ">
+        <div className="flex w-1/2 items-center justify-center ">
           <div
             className={cn(
-              'flex justify-center items-center w-auto h-auto rounded-[0.5rem] hover:bg-main-100/10',
-              theme === 'light' ? 'bg-main-100' : 'bg-transparent',
+              'flex justify-center items-center w-auto h-auto rounded-[0.75rem] ',
+              theme === 'light' ? 'bg-main-100' : 'bg-transparent hover:bg-[#8585A914]',
               'p-3',
             )}
           >
@@ -70,11 +70,11 @@ export function ThemeToggler(props: ThemeToggleProperties) {
           </div>
         </div>
 
-        <div className="flex w-1/2 items-center justify-center">
+        <div className="flex w-1/2 items-center justify-center ">
           <div
             className={cn(
-              'flex justify-center items-center w-auto h-auto rounded-[0.5rem] hover:bg-main-100/10',
-              theme === 'dark' ? '!bg-main-100' : 'bg-transparent',
+              'flex justify-center items-center w-auto h-auto rounded-[0.75rem]',
+              theme === 'dark' ? '!bg-main-100' : 'bg-transparent hover:bg-[#8585A914]',
               'p-3',
             )}
           >

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import Check from '@assets/icons/check.svg'
+import ProtocolIcon from '@assets/icons/protocol.svg'
 import { TokenIconComponent } from '@components/token-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover'
 import { DEPOSIT_CHAIN_IDS, type DepositChainType } from '@constants/chains'
@@ -26,7 +27,13 @@ const ChainItem = ({
   const data = useTokenAsset(chain)
 
   const chainName = () => {
-    if (chain === null) return 'All networks'
+    if (chain === null)
+      return (
+        <div className="flex items-center gap-[0.38rem]">
+          <ProtocolIcon className="size-4" />
+          All Chains
+        </div>
+      )
 
     return data?.name || chain
   }
@@ -35,17 +42,14 @@ const ChainItem = ({
     <div
       onClick={() => onNetworkChange(chain)}
       className={cn(
-        'flex items-center justify-between rounded-[0.625rem] gap-2 px-3 py-1.5 cursor-pointer hover:bg-input-default',
-        chain === currentChain && 'bg-input-default',
+        'flex items-center justify-between rounded-[0.625rem] gap-2 p-3 cursor-pointer hover:bg-input-active',
+        chain === currentChain && 'bg-input-active',
       )}
     >
-      <div className="flex  items-center gap-2">
+      <div className="flex  items-center gap-[0.38rem]">
         {chain && (
-          <div className="overflow-hidden rounded-full">
-            <TokenIconComponent
-              symbol={chain}
-              className="size-4 overflow-hidden rounded-full"
-            />
+          <div className="">
+            <TokenIconComponent symbol={chain} className="size-4" />
           </div>
         )}
         <span
@@ -75,29 +79,32 @@ export const SelectNetworkPopover = ({
 
   return (
     <Popover open={isOpened} onOpenChange={() => setIsOpened(!isOpened)}>
-      <PopoverTrigger className="flex items-center gap-2">{trigger}</PopoverTrigger>
-      <PopoverContent
-        align="end"
-        className="pointer-events-auto inline-block w-[16.25rem] rounded-2xl border px-2 py-4 [&]:shadow-none"
-      >
-        <div className="flex flex-col gap-1 ">
-          {showAllNetworksOption && (
-            <ChainItem
-              chain={null}
-              onNetworkChange={onNetworkChange}
-              currentChain={currentChain}
-            />
-          )}
-          {DEPOSIT_CHAIN_IDS.map((chain) => (
-            <ChainItem
-              key={chain}
-              onNetworkChange={onNetworkChange}
-              chain={chain}
-              currentChain={currentChain}
-            />
-          ))}
+      <div className="relative">
+        <PopoverTrigger className="flex items-center gap-2">{trigger}</PopoverTrigger>
+
+        <div className="flex flex-col">
+          <PopoverContent
+            align="end"
+            className="pointer-events-auto flex  w-[16.25rem] flex-col gap-1 rounded-2xl border px-1  max-md:py-1 [&]:shadow-none"
+          >
+            {showAllNetworksOption && (
+              <ChainItem
+                chain={null}
+                onNetworkChange={onNetworkChange}
+                currentChain={currentChain}
+              />
+            )}
+            {DEPOSIT_CHAIN_IDS.map((chain) => (
+              <ChainItem
+                key={chain}
+                onNetworkChange={onNetworkChange}
+                chain={chain}
+                currentChain={currentChain}
+              />
+            ))}
+          </PopoverContent>
         </div>
-      </PopoverContent>
+      </div>
     </Popover>
   )
 }

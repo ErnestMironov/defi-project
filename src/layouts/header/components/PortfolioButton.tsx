@@ -56,7 +56,7 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          className="size-auto rounded-2xl border border-stroke-100 bg-white transition-colors dark:border-stroke-40100 dark:bg-cards-widget max-md:h-10 max-md:w-auto max-md:rounded-xl"
+          className="size-auto rounded-2xl border border-stroke-100 bg-white shadow-test-2 transition-colors dark:border-stroke-40100 dark:bg-cards-widget max-md:h-10 max-md:w-auto max-md:rounded-xl"
           onClick={handleClick}
         >
           <div className="flex w-full">

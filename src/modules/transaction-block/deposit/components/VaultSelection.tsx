@@ -1,3 +1,4 @@
+import Separator from '@assets/icons/separator.svg'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { useVaultAPY } from '@hooks/useVaultAPY'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
@@ -20,7 +21,9 @@ export const VaultSelection = () => {
         vaultName="USDC"
         apy={`${Math.trunc(bestUSDCApy)}%`}
       />
-      <div className="bg-stroke-current h-6 w-px max-lg:hidden" />
+      <div className="flex items-center max-md:hidden">
+        <Separator className="size-6 dark:[&_path]:stroke-stroke-100" />
+      </div>
       <VaultInfoBox
         active={vault === 'USDT'}
         onClick={() => setVault('USDT')}

@@ -32,8 +32,8 @@ export const TVLDisplay: React.FC<TVLDisplayProperties> = ({ className }) => {
         <span>
           $
           {formatAmount(totalTvl, {
-            maximumFractionDigits: 2,
-            currency: 'USD',
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3,
           })}
         </span>
       )}
