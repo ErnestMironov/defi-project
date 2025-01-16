@@ -162,9 +162,10 @@ export function UniversalSelectModal<T, R = T>({
     <Dialog open={opened} onOpenChange={handleOpenChange}>
       <DialogTrigger>{trigger}</DialogTrigger>
       <ResponsiveDialogContent
-        className="max-w-[31.25rem] overflow-hidden border border-stroke-100"
+        className="max-w-[31.25rem]  border border-stroke-100"
         opened={opened}
         setOpened={handleOpenChange}
+        showCloseButton
       >
         {modalContent}
       </ResponsiveDialogContent>
