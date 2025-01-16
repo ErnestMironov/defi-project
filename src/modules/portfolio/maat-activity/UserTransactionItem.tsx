@@ -44,7 +44,7 @@ const DropdownMenuForPortfolio: React.FC<UserTransactionItemProperties> = (props
         </div>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
-        className="mr-2  w-[15.75rem] gap-1 rounded-xl border border-stroke-100 bg-cards-widget p-1 shadow-test-2"
+        className="mr-1  w-[15.75rem] gap-1 rounded-2xl border border-stroke-100 bg-cards-widget p-1 shadow-test-2"
         side="left"
         align="start"
       >
