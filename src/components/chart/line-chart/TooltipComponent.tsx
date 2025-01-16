@@ -75,10 +75,10 @@ export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties
 
   const renderUsdcBody = (values: TooltipDataType[]) => {
     return (
-      <div className="flex flex-row items-center justify-center gap-[0.38rem] rounded-lg border border-stroke-40100 bg-cards-widget  text-[0.75rem] leading-4 shadow-test">
+      <div className="flex flex-row items-center justify-center rounded-lg border border-stroke-40100 bg-cards-widget  text-[0.75rem] leading-4 shadow-test">
         <div className="border-r border-stroke-100">
-          <div className="flex items-center gap-1 p-[0.38rem]">
-            <CalendarIcon className="size-3 " />
+          <div className="flex items-center gap-1 p-2 text-text-100">
+            <CalendarIcon className="size-3" />
             <p>
               {dayjs(data[0].timestamp).format('DD MMM')},{' '}
               <span className="text-text-260">
@@ -92,7 +92,7 @@ export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties
             <div className="border-r border-stroke-100">
               <div
                 key={i}
-                className="flex items-center justify-center gap-1 rounded  p-2 py-[0.38rem] text-text-100"
+                className="flex items-center justify-center gap-1 rounded  p-2  text-text-100"
               >
                 <TokenIconComponent symbol={item.icon} className="size-4" />
                 <p>{formatter(item.value)}</p>
