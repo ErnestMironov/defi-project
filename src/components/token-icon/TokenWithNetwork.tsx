@@ -65,7 +65,7 @@ export const TokenWithNetwork = (
         symbol={symbol}
         style={{ width, height: width }}
         tokenLogoFallback={props.tokenLogoFallback}
-        className={cn('', classNames?.token)}
+        className={cn('size-6', classNames?.token)}
       />
       <div
         className={cn(

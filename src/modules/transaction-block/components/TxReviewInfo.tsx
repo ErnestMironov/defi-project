@@ -48,6 +48,7 @@ export const TxReviewInfo = ({
 }: TxReviewInfoProperties) => {
   const chainData = useTokenAsset(chain)
   const { collapseTxInfo } = useTxStore()
+  console.log(withdraw)
 
   const renderAmountBlock = (data: AmountData) => (
     <div className="flex items-center justify-between px-6 py-3 text-[0.875rem] font-medium leading-6 max-md:px-4">
@@ -59,6 +60,7 @@ export const TxReviewInfo = ({
             network={data.token.network}
             width="1.5rem"
             position="bottom-right"
+            classNames={{ token: 'overflow-hidden rounded-full' }}
           />
         )}
         <span>
@@ -124,9 +126,9 @@ export const TxReviewInfo = ({
       style={{ overflow: 'hidden' }}
       className="text-[0.875rem] font-medium leading-6"
     >
-      <div className="flex w-full flex-col divide-y divide-stroke-100 border-y border-stroke-100">
+      <div className="flex w-full flex-col divide-y divide-stroke-100 border-y border-stroke-100 dark:divide-[#3E3E4D66] dark:border-[#3E3E4D66]">
         {renderSuccessBlock()}
-        <div className="grid grid-cols-2 divide-x divide-stroke-100">
+        <div className="grid grid-cols-2 divide-x divide-stroke-100 dark:divide-[#3E3E4D66]">
           <div className="flex items-center justify-between px-6 py-3 max-md:px-4">
             <span className="text-text-2100">{recipient.label}</span>
             <div className="flex items-center gap-2">
