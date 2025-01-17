@@ -131,7 +131,7 @@ export const WithdrawInput = () => {
   const assetData = mtToken
     ? {
         ...mtToken,
-        balance: BigInt(mtToken.balance),
+        balance: BigInt(mtToken.stableBalance),
         contract_decimals: mtToken.decimals,
         contract_ticker_symbol: mtToken.symbol,
       }

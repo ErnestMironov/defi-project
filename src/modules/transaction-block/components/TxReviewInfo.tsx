@@ -65,17 +65,11 @@ export const TxReviewInfo = ({
         )}
         <span>
           {formatAmount(data.value, {
-            maximumFractionDigits: 5,
+            maximumFractionDigits: 2,
           })}
           {data.token && ` ${data.token.symbol}`}
         </span>
-        <span className="text-text-60">
-          ($
-          {formatAmount(data.usdValue, {
-            maximumFractionDigits: 2,
-          })}
-          )
-        </span>
+        <span className="text-text-60">${data.usdValue}</span>
       </div>
     </div>
   )
