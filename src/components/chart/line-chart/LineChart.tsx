@@ -30,7 +30,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
   const { data, yAxisType, frame } = props
   const tooltipFormatter = (value?: string) => {
     if (yAxisType === 'percentage') {
-      return formatPercentValue(value, { maximumFractionDigits: 1 })
+      return formatPercentValue(value, { maximumFractionDigits: 2 })
     }
     if (yAxisType === 'usd') {
       return formatUsdValue(value, { notation: 'compact' })
