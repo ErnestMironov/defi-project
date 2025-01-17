@@ -32,7 +32,7 @@ const ChainItem = ({
       className={cn(
         'relative rounded-xl py-4 hover:bg-[#8585A914]',
         isOpen
-          ? 'border bg-[rgba(133, 133, 169, 0.03)] border-stroke-100 hover:bg-transparent max-md:text-sm '
+          ? 'border bg-[rgba(133, 133, 169, 0.03)] border-stroke-100 hover:bg-transparent max-md:text-sm bg-[#8585A908]'
           : '',
       )}
     >
