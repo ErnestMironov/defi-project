@@ -44,7 +44,9 @@ const GroupedTokenItem = ({
     <div
       className={cn(
         'relative rounded-xl pt-4 ',
-        isOpen ? 'border border-stroke-100 pb-1  mb-4' : 'hover:bg-light-blue-15 pb-4 ',
+        isOpen
+          ? 'border border-stroke-100 pb-1  mb-4 bg-[#8585A908]'
+          : 'hover:bg-[#8585A90D] pb-4 ',
       )}
     >
       <div
@@ -108,7 +110,7 @@ const GroupedTokenItem = ({
           {tokenGroup.map((token) => (
             <div
               key={token.contract_ticker_symbol}
-              className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-light-blue-15 max-md:px-3"
+              className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-[#8585A90D] max-md:px-3"
             >
               <div className="flex  items-center gap-2">
                 <TokenIconComponent

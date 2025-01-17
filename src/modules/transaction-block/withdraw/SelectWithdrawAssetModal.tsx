@@ -85,7 +85,9 @@ export const SelectWithdrawAssetModal = () => {
   const { switchChain: _switchChain } = useSwitchChain()
   const { address } = useAccount()
 
-  const { data, isLoading: isUserSharesLoading } = useUserShares(address)
+  const { data, isLoading: isUserSharesLoading } = useUserShares(
+    '0xd70fa171c3a814a7C1c3DFc16A74c71F5e70AD90',
+  )
   const balances = useUniqueTokens(data?.shares)
 
   const onChange = (_asset: WithdrawToken | null) => {
