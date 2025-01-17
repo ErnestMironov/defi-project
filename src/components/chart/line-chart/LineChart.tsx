@@ -71,7 +71,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
         break
       }
     }
-    return dayjs(value).format(format).toUpperCase()
+    return dayjs(value).format(format)
   }
 
   return (
@@ -98,7 +98,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           dataKey="timestamp"
           tickFormatter={tickFormatter}
           className="text-[0.6875rem] [&_text]:fill-text-270"
-          minTickGap={40}
+          minTickGap={80}
           tickCount={10}
           ticks={filteredData?.map((tick) => tick.timestamp)}
           interval="preserveEnd"
