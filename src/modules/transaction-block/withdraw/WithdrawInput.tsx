@@ -185,7 +185,7 @@ export const WithdrawInput = () => {
           </span>
           <div className="flex w-full items-center justify-between">
             <AmountInput
-              value={inputValue}
+              value={inputValue || ''}
               error={validationError}
               decimals={6}
               disabled
