@@ -85,9 +85,7 @@ export const SelectWithdrawAssetModal = () => {
   const { switchChain: _switchChain } = useSwitchChain()
   const { address } = useAccount()
 
-  const { data, isLoading: isUserSharesLoading } = useUserShares(
-    '0xd70fa171c3a814a7C1c3DFc16A74c71F5e70AD90',
-  )
+  const { data, isLoading: isUserSharesLoading } = useUserShares(address)
   const balances = useUniqueTokens(data?.shares)
 
   const onChange = (_asset: WithdrawToken | null) => {
@@ -134,7 +132,6 @@ export const SelectWithdrawAssetModal = () => {
           className={cn(
             selectedItem?.stable,
             !selectedItem && 'px-4 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
-            'hover:bg-[#8585A914]',
           )}
           icon={
             <TokenWithNetwork
