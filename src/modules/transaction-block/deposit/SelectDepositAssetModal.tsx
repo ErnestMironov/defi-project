@@ -47,7 +47,7 @@ export const SelectDepositAsset = () => {
           value={choiceBoxValue}
           className={cn(
             !selectedItem && 'px-4 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
-            ' hover:bg-[#8585A914]',
+            'hover:bg-[#8585A914]',
           )}
           icon={
             selectedItem?.contract_ticker_symbol && (

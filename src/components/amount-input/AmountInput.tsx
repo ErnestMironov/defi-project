@@ -1,5 +1,4 @@
 import { cn } from '@utils/cn'
-import { formatAmount } from '@utils/formatValue'
 import type { ComponentProps } from 'react'
 import { forwardRef, useEffect, useId, useRef, useState } from 'react'
 
@@ -61,13 +60,6 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
     const measureReference = useRef<HTMLSpanElement>(null)
     const [inputWidth, setInputWidth] = useState(0)
 
-    const displayValue =
-      value === ''
-        ? value
-        : formatAmount(value, {
-            maximumFractionDigits: 2,
-            useGrouping: true,
-          })
     // Update input width when value changes
     useEffect(() => {
       if (measureReference.current) {
@@ -103,7 +95,7 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
               className,
             )}
           >
-            {displayValue || DEFAULT_PLACEHOLDER}
+            {value || DEFAULT_PLACEHOLDER}
           </span>
 
           {/* Actual input element */}
@@ -120,10 +112,9 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(
               className,
               after && 'text-text-2100',
               error && 'text-red-100',
-              value === '' && 'text-text-20',
             )}
             onChange={handleChange}
-            value={displayValue || DEFAULT_PLACEHOLDER}
+            value={value === '0.00' ? '' : value}
             ref={reference}
           />
 
