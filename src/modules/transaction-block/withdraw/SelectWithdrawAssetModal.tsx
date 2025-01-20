@@ -134,6 +134,7 @@ export const SelectWithdrawAssetModal = () => {
           className={cn(
             selectedItem?.stable,
             !selectedItem && 'px-4 py-5 max-lg:py-[1rem] max-lg:px-[1.25rem]',
+            'hover:bg-[#8585A914]',
           )}
           icon={
             <TokenWithNetwork
