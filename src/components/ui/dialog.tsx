@@ -57,11 +57,13 @@ const DialogContent = React.forwardRef<
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close
-          className="absolute right-0 top-0 size-auto translate-y-[calc(-100%-.62rem)] cursor-pointer select-none items-center justify-center p-0 outline-none"
+          className="absolute right-0 top-0 size-auto translate-y-[calc(-100%-.62rem)] cursor-pointer select-none items-center justify-center outline-none"
           onClick={onClose}
         >
-          <ShadowBox className="flex size-12 items-center justify-center rounded-2xl bg-cards-widget ">
-            <CloseIcon className="w-4" />
+          <ShadowBox className="flex size-12 items-center justify-center rounded-2xl border border-stroke-100 bg-cards-widget p-1">
+            <div className="flex size-full items-center justify-center rounded-xl p-1 hover:bg-[#8585A914] dark:hover:bg-transparent">
+              <CloseIcon className="size-4" />
+            </div>
           </ShadowBox>
         </DialogPrimitive.Close>
       )}
