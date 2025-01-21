@@ -10,7 +10,6 @@ import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { SwappableInputs } from '../deposit/components/SwappableInputs'
-import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { useGetBurnedPoints } from './hooks/useGetBurnedPoints'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
@@ -146,6 +145,7 @@ export const WithdrawInput = () => {
         className={cn(
           'bg-input-default dark:bg-input-active py-6 px-8 max-lg:px-3 border-y border-stroke-100',
           validationError && 'bg-input-error',
+          !isConnected && 'pointer-events-none opacity-50',
         )}
       >
         <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
@@ -162,13 +162,7 @@ export const WithdrawInput = () => {
               asset={assetData}
               onMaxClick={() => handleInputChange(prettyMaxBalance)}
               tokenLabel={assetData?.stable}
-              rightElement={
-                isConnected ? (
-                  <SelectWithdrawAssetModal />
-                ) : (
-                  <SelectWithoutWalletPlaceholder />
-                )
-              }
+              rightElement={<SelectWithdrawAssetModal />}
             />
           </div>
         </div>
@@ -226,7 +220,7 @@ export const WithdrawInput = () => {
               className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80"
               onClick={() => openConnectModal({ view: 'Connect' })}
             >
-              Connect Wallet
+              Connect
             </Button>
           )}
         </div>
