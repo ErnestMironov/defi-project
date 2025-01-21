@@ -130,9 +130,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
                 icon: 'USDT',
               }
               const tooltipData = [value1, value2]
-              if (value1.value < value2.value) {
-                tooltipData.reverse()
-              }
+
               return <TooltipComponent formatter={tooltipFormatter} data={tooltipData} />
             }
 

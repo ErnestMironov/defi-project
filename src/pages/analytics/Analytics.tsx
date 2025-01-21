@@ -31,7 +31,7 @@ export const Analytics = () => {
           <TabsTrigger
             key={_tab}
             variant="unstyled"
-            className="capitalize hover:text-text-30100"
+            className="capitalize hover:text-[#8585A9]/40"
             value={_tab}
           >
             {_tab}

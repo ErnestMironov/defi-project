@@ -50,12 +50,12 @@ export const IncentiveRow = (props: IncentiveRowProperties) => {
       <Table.Cell>{renderAmount()}</Table.Cell>
       <Table.Cell className="capitalize">
         <div className="flex items-center gap-2">
-          <CompounderIcon />
+          <CompounderIcon className="size-8" />
           <p>{event.entity_initializer}</p>
         </div>
       </Table.Cell>
       <Table.Cell>
-        <IconWithLabelComponent symbol={event.src_chain_id} className="size-8 gap-3" />
+        <IconWithLabelComponent symbol={event.src_chain_id} className="size-5 gap-3" />
       </Table.Cell>
       <Table.Cell className="text-text-2100">
         {getFromNow(dayjs(event.creation_time).toString())}

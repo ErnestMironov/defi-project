@@ -21,6 +21,7 @@ interface AmountData {
   token?: {
     symbol: string
     network: ChainType
+    logo: string
   }
 }
 
@@ -48,7 +49,6 @@ export const TxReviewInfo = ({
 }: TxReviewInfoProperties) => {
   const chainData = useTokenAsset(chain)
   const { collapseTxInfo } = useTxStore()
-  console.log(withdraw)
 
   const renderAmountBlock = (data: AmountData) => (
     <div className="flex items-center justify-between px-6 py-3 text-[0.875rem] font-medium leading-6 max-md:px-4">
@@ -61,11 +61,12 @@ export const TxReviewInfo = ({
             width="1.5rem"
             position="bottom-right"
             classNames={{ token: 'overflow-hidden rounded-full' }}
+            tokenLogoFallback={data.token.logo}
           />
         )}
         <span>
           {formatAmount(data.value, {
-            maximumFractionDigits: 2,
+            maximumFractionDigits: 5,
           })}
           {data.token && ` ${data.token.symbol}`}
         </span>
@@ -91,8 +92,7 @@ export const TxReviewInfo = ({
           )}
           <div className="flex flex-col">
             <span className="text-base">
-              {success.type === 'deposit' ? 'Deposit' : 'Withdraw'}{' '}
-              <span className="text-[#8585A999]">Fulfillment</span>
+              {success.type === 'deposit' ? 'Deposit' : 'Withdraw Fulfillment'}{' '}
             </span>
             <div className="flex items-center gap-2 text-[0.875rem] leading-4 text-[#8585A999]">
               <span className="text-success-900">{shortenAddress(success.hash)}</span>
@@ -139,7 +139,7 @@ export const TxReviewInfo = ({
               <TokenIconComponent
                 symbol={chainData?.symbol ?? 'Unknown Symbol'}
                 width="1.5rem"
-                className="overflow-hidden rounded-lg"
+                className="overflow-hidden rounded"
               />
               <span>{chainData?.name ?? 'Unknown Chain'}</span>
             </div>

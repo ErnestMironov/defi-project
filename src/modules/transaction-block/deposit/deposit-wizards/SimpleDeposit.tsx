@@ -201,6 +201,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           token: {
             symbol: asset?.contract_ticker_symbol ?? '',
             network: depositFromNetwork ?? 1,
+            logo: asset?.logo_url ?? '',
           },
         }}
         receive={{
@@ -210,6 +211,7 @@ export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = 
           token: {
             symbol: asset?.contract_ticker_symbol ?? '',
             network: depositFromNetwork ?? 1,
+            logo: asset?.logo_url ?? '',
           },
         }}
         success={{

@@ -1,4 +1,5 @@
 /* eslint-disable import/no-unused-modules */
+/* eslint-disable simple-import-sort/imports */
 // network icons
 import Binance from '@assets/icons/bnb.svg'
 import Arbitrum from '@assets/icons/networks/arbitrum.svg'
@@ -12,6 +13,18 @@ import GravityAlpha from '@assets/icons/networks/gravity-alpha.svg'
 import Iota from '@assets/icons/networks/iota.svg'
 import Kaia from '@assets/icons/networks/kaia.svg'
 import Kava from '@assets/icons/networks/kava.svg'
+
+// Mobile networks icons
+import ArbitrumMobile from '@assets/icons/networks/mobile-icons/arbitrum.svg'
+import AvalancheMobile from '@assets/icons/networks/mobile-icons/avalanche.svg'
+import BaseMobile from '@assets/icons/networks/mobile-icons/base.svg'
+import BscMobile from '@assets/icons/networks/mobile-icons/bsc.svg'
+import EthereumMobile from '@assets/icons/networks/mobile-icons/ethereum.svg'
+import MantleMobile from '@assets/icons/networks/mobile-icons/mantle.svg'
+import OptimismMobile from '@assets/icons/networks/mobile-icons/optimism.svg'
+import PolygonMobile from '@assets/icons/networks/mobile-icons/polygon.svg'
+import SeiMobile from '@assets/icons/networks/mobile-icons/sei.svg'
+
 // import MantleNetowork from '@assets/icons/networks/mantle.svg'
 import Optimism from '@assets/icons/networks/optimism.svg'
 import Polygon from '@assets/icons/networks/polygon.svg'
@@ -19,6 +32,7 @@ import Rari from '@assets/icons/networks/rari.svg'
 import Scroll from '@assets/icons/networks/scroll.svg'
 import Sei from '@assets/icons/networks/sei.svg'
 // import Taiko from '@assets/icons/networks/taiko.svg'
+
 // protocol icons
 import Aave from '@assets/icons/protocols/aave.svg'
 import Beefy from '@assets/icons/protocols/beefy.svg'
@@ -32,6 +46,16 @@ import Sonne from '@assets/icons/protocols/sonne.svg'
 import Stargate from '@assets/icons/protocols/stargate.svg'
 import Superform from '@assets/icons/protocols/superform.svg'
 import Yearn from '@assets/icons/protocols/yearn.svg'
+
+// protocol mobile icons
+import AaveMobile from '@assets/icons/protocols/mobile-icon/aave.svg'
+import BeefyMobile from '@assets/icons/protocols/mobile-icon/beefy.svg'
+import HarvestMobile from '@assets/icons/protocols/mobile-icon/harvest.svg'
+import MetisMobile from '@assets/icons/protocols/mobile-icon/metis.svg'
+import StargateMobile from '@assets/icons/protocols/mobile-icon/stargate.svg'
+import SuperformMobile from '@assets/icons/protocols/mobile-icon/superform.svg'
+import YearnMobile from '@assets/icons/protocols/mobile-icon/yearn.svg'
+
 // token icons
 import Dai from '@assets/icons/tokens/dai.svg'
 import Eth from '@assets/icons/tokens/eth.svg'
@@ -42,8 +66,9 @@ import Wbtc from '@assets/icons/tokens/wbtc.svg'
 import Weth from '@assets/icons/tokens/weth.svg'
 import { useMemo } from 'react'
 
-interface ITokenAsset {
+export interface ITokenAsset {
   TokenIcon: React.FC<React.SVGProps<SVGElement>>
+  TokenIconMobile?: React.FC<React.SVGProps<SVGElement>>
   symbol: string
   name?: string
   chainId?: number
@@ -52,6 +77,7 @@ interface ITokenAsset {
 const TOKENS: ITokenAsset[] = [
   {
     TokenIcon: Eth,
+    TokenIconMobile: Eth,
     symbol: 'ETH',
     name: 'Ethereum',
   },
@@ -92,11 +118,13 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Mantle,
+    TokenIconMobile: MantleMobile,
     symbol: 'MNT',
     name: 'Mantle',
   },
   {
     TokenIcon: Optimism,
+    TokenIconMobile: OptimismMobile,
     symbol: 'OP',
     name: 'Optimism',
   },
@@ -108,66 +136,77 @@ const TOKENS: ITokenAsset[] = [
   // network icons
   {
     TokenIcon: Ethereum,
+    TokenIconMobile: EthereumMobile,
     symbol: 'eth-mainnet',
     chainId: 1,
     name: 'Ethereum',
   },
   {
     TokenIcon: Sei,
+    TokenIconMobile: SeiMobile,
     symbol: 'SEI',
     chainId: 1329,
     name: 'Sei',
   },
   {
     TokenIcon: Optimism,
+    TokenIconMobile: OptimismMobile,
     symbol: 'optimism-mainnet',
     chainId: 10,
     name: 'Optimism',
   },
   {
     TokenIcon: Arbitrum,
+    TokenIconMobile: ArbitrumMobile,
     symbol: 'Arbitrum',
     chainId: 42_161,
     name: 'Arbitrum',
   },
   {
     TokenIcon: Base,
+    TokenIconMobile: BaseMobile,
     symbol: 'Base',
     chainId: 8453,
     name: 'Base',
   },
   {
     TokenIcon: Polygon,
+    TokenIconMobile: PolygonMobile,
     symbol: 'matic',
     chainId: 137,
     name: 'Polygon',
   },
   {
     TokenIcon: Avalanche,
+    TokenIconMobile: AvalancheMobile,
     symbol: 'avalanche-mainnet',
     chainId: 43_114,
     name: 'Avalanche',
   },
   {
     TokenIcon: Polygon,
+    TokenIconMobile: PolygonMobile,
     symbol: 'matic-mainnet',
     chainId: 137,
     name: 'Polygon',
   },
   {
     TokenIcon: Bsc,
+    TokenIconMobile: BscMobile,
     symbol: 'bsc-mainnet',
     chainId: 56,
     name: 'Binance',
   },
   {
     TokenIcon: Mantle,
+    TokenIconMobile: MantleMobile,
     symbol: 'mantle-mainnet',
     chainId: 5000,
     name: 'Mantle',
   },
   {
     TokenIcon: Metis,
+    TokenIconMobile: MetisMobile,
     symbol: 'metis-mainnet',
     chainId: 1088,
     name: 'Metis',
@@ -211,12 +250,14 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Ethereum,
+    TokenIconMobile: EthereumMobile,
     symbol: 'taiko-mainnet',
     chainId: 167_000,
     name: 'Taiko',
   },
   {
     TokenIcon: Sei,
+    TokenIconMobile: SeiMobile,
     symbol: 'sei-mainnet',
     chainId: 1329,
     name: 'Sei',
@@ -236,11 +277,13 @@ const TOKENS: ITokenAsset[] = [
   // protocol icons
   {
     TokenIcon: Aave,
+    TokenIconMobile: AaveMobile,
     symbol: 'Aave',
     name: 'Aave',
   },
   {
     TokenIcon: Harvest,
+    TokenIconMobile: HarvestMobile,
     symbol: 'Harvest',
     name: 'Harvest',
   },
@@ -251,11 +294,13 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Metis,
+    TokenIconMobile: MetisMobile,
     symbol: 'Metis',
     name: 'Metis',
   },
   {
     TokenIcon: Mantle,
+    TokenIconMobile: MantleMobile,
     symbol: 'Mantle',
     name: 'Mantle',
   },
@@ -266,6 +311,7 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Beefy,
+    TokenIconMobile: BeefyMobile,
     symbol: 'Beefy',
     name: 'Beefy',
   },
@@ -281,16 +327,19 @@ const TOKENS: ITokenAsset[] = [
   },
   {
     TokenIcon: Yearn,
+    TokenIconMobile: YearnMobile,
     symbol: 'Yearn',
     name: 'Yearn',
   },
   {
     TokenIcon: Stargate,
+    TokenIconMobile: StargateMobile,
     symbol: 'Stargate',
     name: 'Stargate',
   },
   {
     TokenIcon: Superform,
+    TokenIconMobile: SuperformMobile,
     symbol: 'Superform',
     name: 'Superform',
   },
