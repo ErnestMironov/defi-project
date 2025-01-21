@@ -140,7 +140,7 @@ export const PortfolioModal = ({
                       )}
                     />
                     <h6 className="flex items-center gap-[0.38rem] text-sm leading-6 text-text-2100">
-                      <span className="font-medium">Portfolio Value</span>
+                      <span className="font-medium">Assets Locked</span>
                       <PortfolioValueTooltip />
                       {!isMobile && (
                         <div
