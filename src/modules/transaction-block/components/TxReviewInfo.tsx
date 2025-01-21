@@ -40,6 +40,26 @@ interface TxReviewInfoProperties {
   }
 }
 
+const STABLECOINS = ['USDC', 'USDT', 'DAI'] as const
+type Stablecoin = (typeof STABLECOINS)[number]
+
+const TOKEN_DECIMALS = {
+  stablecoin: 2,
+  other: 5,
+} as const
+
+const formatTokenAmount = (symbol: string, amount: string): string => {
+  if (!symbol || !amount) return '0'
+
+  const decimals = STABLECOINS.includes(symbol as Stablecoin)
+    ? TOKEN_DECIMALS.stablecoin
+    : TOKEN_DECIMALS.other
+
+  return formatAmount(amount, {
+    maximumFractionDigits: decimals,
+  })
+}
+
 export const TxReviewInfo = ({
   recipient,
   chain,
@@ -65,9 +85,7 @@ export const TxReviewInfo = ({
           />
         )}
         <span>
-          {formatAmount(data.value, {
-            maximumFractionDigits: 5,
-          })}
+          {formatTokenAmount(data.token?.symbol ?? '', data.value)}
           {data.token && ` ${data.token.symbol}`}
         </span>
         <span className="text-text-60">${data.usdValue}</span>
