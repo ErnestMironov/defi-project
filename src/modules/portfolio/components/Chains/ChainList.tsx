@@ -32,7 +32,7 @@ const ChainItem = ({
       className={cn(
         'relative rounded-xl py-4 hover:bg-[#8585A914]',
         isOpen
-          ? 'border bg-[rgba(133, 133, 169, 0.03)] border-stroke-100 hover:bg-transparent max-md:text-sm bg-[#8585A908]'
+          ? 'border bg-[#8585A908] hover:bg-color-none border-stroke-100  max-md:text-sm bg-[#8585A908] pt-4 pb-1'
           : '',
       )}
     >
@@ -47,7 +47,7 @@ const ChainItem = ({
           <div className="flex items-center justify-center gap-1">
             <TokenIconComponent
               symbol={chainId}
-              className="size-7  max-md:size-6"
+              className="size-6"
               tokenLogoFallback={
                 CHAIN_NAMES_BY_ID[chainId as keyof typeof CHAIN_NAMES_BY_ID]
               }

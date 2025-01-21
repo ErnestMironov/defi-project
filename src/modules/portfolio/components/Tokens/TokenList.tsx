@@ -45,7 +45,7 @@ const GroupedTokenItem = ({
       className={cn(
         'relative rounded-xl pt-4 ',
         isOpen
-          ? 'border border-stroke-100 pb-1  mb-4 bg-[#8585A908]'
+          ? 'border border-stroke-100 pb-1 bg-[#8585A908]'
           : 'hover:bg-[#8585A90D] pb-4 ',
       )}
     >
@@ -82,7 +82,7 @@ const GroupedTokenItem = ({
                     <TokenIconComponent
                       key={chainId}
                       symbol={chainId}
-                      className={cn('size-5 overflow-hidden', index !== 0 && '-ml-2')}
+                      className={cn('size-4 overflow-hidden', index !== 0 && '-ml-2')}
                       tokenLogoFallback={tokenGroup[0].logo_url}
                     />
                   ))}
