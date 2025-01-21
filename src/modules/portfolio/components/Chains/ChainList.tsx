@@ -65,11 +65,11 @@ const ChainItem = ({
         </div>
       </div>
       {isOpen && (
-        <div className="left-0 z-10 mx-1 mt-2 w-auto    max-md:px-3  max-md:text-sm">
+        <div className="left-0 z-10 mx-1 mt-2 w-auto    max-md:text-sm">
           {tokens.map((token) => (
             <div
               key={token.contract_ticker_symbol}
-              className="flex select-none items-center justify-between rounded-lg px-6 py-4 hover:bg-[#8585A90D]"
+              className="flex select-none items-center justify-between rounded-lg px-6 py-4 hover:bg-[#8585A90D] max-md:px-3"
             >
               <div className="flex items-center">
                 <TokenIconComponent

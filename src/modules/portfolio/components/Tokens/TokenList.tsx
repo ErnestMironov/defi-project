@@ -176,7 +176,7 @@ export default function TokenList({
         className="hidden max-md:flex"
       />
       <div className={cn('px-1 pb-1', className)}>
-        <div className="flex flex-col gap-1 rounded-xl py-4 text-base max-md:gap-0 max-md:py-1 max-md:text-sm">
+        <div className="flex flex-col gap-1 rounded-xl py-4 text-base max-md:py-1 max-md:text-sm">
           {Object.entries(groupedTokens).map(([groupName, tokenGroup]) => (
             <GroupedTokenItem
               key={groupName}
