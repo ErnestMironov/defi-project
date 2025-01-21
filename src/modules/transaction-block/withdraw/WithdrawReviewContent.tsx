@@ -31,8 +31,6 @@ export const WithdrawReviewContent = () => {
     setTransactionStatus,
   } = useTxStore()
 
-  console.log(withdrawAmountInUSD)
-
   const { address } = useAccount()
 
   const inputValueInMtToken = useMemo(() => {
@@ -168,8 +166,7 @@ export const WithdrawReviewContent = () => {
   }
 
   const isCrossChain = withdrawFromNetwork !== withdrawToNetwork
-
-  const WithdrawInfo = () => {
+  const renderWithdrawInfo = useMemo(() => {
     switch (isCrossChain) {
       case true: {
         return (
@@ -237,7 +234,17 @@ export const WithdrawReviewContent = () => {
         throw new Error('unknown action type')
       }
     }
-  }
+  }, [
+    isCrossChain,
+    address,
+    withdrawFromNetwork,
+    amount,
+    withdrawAmountInUSD,
+    mtToken?.stable,
+    withdrawToNetwork,
+    withdrawStatus,
+    transactionHash,
+  ])
 
   const TransactionAnimation = useTransactionAnimation()
 
@@ -245,6 +252,7 @@ export const WithdrawReviewContent = () => {
     setNetworkSwitchStatus(switchStatus)
     setApprovalStatus(approveStatus)
     setTransactionStatus(withdrawStatus)
+    console.log('🚀 ~ useEffect', withdrawStatus, approveStatus, switchStatus)
   }, [
     withdrawStatus,
     approveStatus,
@@ -257,7 +265,7 @@ export const WithdrawReviewContent = () => {
   return (
     <>
       <TransactionAnimation />
-      <WithdrawInfo />
+      {renderWithdrawInfo}
 
       <div className="flex items-center justify-center gap-2.5 self-stretch px-4 py-3">
         <ActionButton className="w-full px-[1.875rem] py-4 text-base font-medium normal-case leading-6 hover:bg-main-80" />

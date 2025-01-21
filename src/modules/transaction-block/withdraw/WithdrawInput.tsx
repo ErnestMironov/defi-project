@@ -220,7 +220,7 @@ export const WithdrawInput = () => {
               className="w-full rounded-2xl px-[1.88rem] py-4 text-base/6 normal-case hover:bg-main-80"
               onClick={() => openConnectModal({ view: 'Connect' })}
             >
-              Connect
+              Connect Wallet
             </Button>
           )}
         </div>
