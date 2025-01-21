@@ -29,7 +29,7 @@ export const DepositActionButton = ({
     const buttonTexts: Record<DepositButtonState, string> = {
       empty: 'Enter the amount',
       valid: 'Deposit',
-      exceeded: 'Exceeds balance :(',
+      exceeded: 'Exceeds balance',
     }
 
     return buttonTexts[state]
