@@ -21,7 +21,7 @@ interface AmountData {
   token?: {
     symbol: string
     network: ChainType
-    logo: string
+    logo?: string
   }
 }
 
