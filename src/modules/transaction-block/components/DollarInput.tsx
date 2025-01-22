@@ -1,5 +1,8 @@
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { cn } from '@utils/cn'
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
+
+import { useInputsMode } from '../deposit/hooks/useInputsMode'
 
 interface DollarInputProperties {
   /** Current input value */
@@ -20,6 +23,11 @@ interface DollarInputProperties {
 
 const DEFAULT_PLACEHOLDER = '0.00'
 
+const calculateLeftPosition = (inputWidth: number, isMobile: boolean): string => {
+  const offset = isMobile ? '1.4rem' : '1.6rem'
+  return `calc(${inputWidth}px + ${offset})`
+}
+
 const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
   (
     {
@@ -33,13 +41,24 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
     },
     reference,
   ) => {
+    const [inputWidth, setInputWidth] = useState(0)
+    const measureReference = useRef<HTMLSpanElement>(null)
+    const isInteger = !value.includes('.')
+    const { isBelowDesktop } = useDeviceWidth()
+    const { isSwapped } = useInputsMode()
+
+    useEffect(() => {
+      if (measureReference.current) {
+        setInputWidth(measureReference.current.offsetWidth)
+      }
+    }, [value])
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!onValueChange) return
 
       const newValue = event.target.value
       // Remove all non-numeric characters except decimal point
       const sanitizedValue = newValue.replaceAll(/[^\d.]/g, '')
-
       // Ensure only one decimal point
       const parts = sanitizedValue.split('.')
       const formattedValue =
@@ -52,7 +71,7 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
       <div className={cn('flex items-center', wrapperClassName)}>
         <div
           className={cn(
-            'flex items-center text-text-60',
+            'flex items-center text-text-60 relative',
             error && 'text-red-100',
             disabled && 'cursor-not-allowed opacity-50',
             inputClassName,
@@ -61,6 +80,18 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
           <span className={cn('select-none text-text-60', error && 'text-red-100')}>
             $
           </span>
+
+          <span
+            ref={measureReference}
+            aria-hidden="true"
+            className="invisible absolute whitespace-pre"
+            style={{
+              font: 'inherit',
+            }}
+          >
+            {value || '0'}
+          </span>
+
           <input
             ref={reference}
             type="text"
@@ -77,6 +108,20 @@ const DollarInput = forwardRef<HTMLInputElement, DollarInputProperties>(
               error && 'text-red-100',
             )}
           />
+          {isInteger && value && isSwapped && (
+            <span
+              className={cn(
+                'select-none text-text-60',
+                error && 'text-red-100 opacity-50',
+              )}
+              style={{
+                position: 'absolute',
+                left: calculateLeftPosition(inputWidth, isBelowDesktop),
+              }}
+            >
+              .00
+            </span>
+          )}
         </div>
       </div>
     )
