@@ -97,9 +97,9 @@ export const PortfolioModal = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex size-12 items-center justify-center rounded-xl bg-cards-widget p-1"
+                  className="flex size-12 items-center justify-center rounded-2xl border border-stroke-100 bg-cards-widget p-1"
                 >
-                  <div className="flex size-full items-center justify-center rounded-xl p-2 hover:bg-[#8585A914]">
+                  <div className="flex size-full items-center justify-center rounded-xl p-2 hover:bg-[#8585A914] dark:hover:bg-transparent">
                     <ClosePortfolioIcon className="size-4 " />
                   </div>
                 </button>
@@ -140,7 +140,7 @@ export const PortfolioModal = ({
                       )}
                     />
                     <h6 className="flex items-center gap-[0.38rem] text-sm leading-6 text-text-2100">
-                      <span className="font-medium">Portfolio Value</span>
+                      <span className="font-medium">Assets Locked</span>
                       <PortfolioValueTooltip />
                       {!isMobile && (
                         <div

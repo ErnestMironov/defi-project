@@ -20,10 +20,10 @@ const Line: React.FC<
   }
 > = ({ title, value, usd, ...props }) => {
   return (
-    <div {...props} className="flex items-baseline justify-between text-text-80100">
-      <p className="text-text-80100">{title}</p>
-      <p className="text-[1rem] text-text-80100">
-        {value} {usd && <span>(${usd})</span>}
+    <div {...props} className="flex items-baseline justify-between  text-[#8585A9]">
+      <p className="opacity-70">{title}</p>
+      <p className="text-[1rem]   ">
+        {value} {usd && <span className="opacity-70 dark:text-text-170">(${usd})</span>}
       </p>
     </div>
   )
@@ -55,19 +55,21 @@ const Details: React.FC<DetailsProperties> = ({
         ) : (
           <>
             <AdaptiveModalTitle className="flex justify-between border-b border-stroke-40100 bg-cards-widget px-8 py-6 text-center text-base normal-case  text-text-80100">
-              <div className="flex items-center gap-1 text-gray-100 max-lg:text-[0.8125rem] ">
+              <div className="flex items-center gap-1 text-[#8585A9] dark:text-white max-lg:text-[0.8125rem]">
                 <Lightning className="h-[0.83356rem] w-[0.75031rem]" />
                 <span>Fees</span>
               </div>
-              <span>
+              <span className="text-[#8585A9] opacity-70">
                 {' '}
                 ({summaryAndFees.total.value} / ${summaryAndFees.total.usd} )
               </span>
             </AdaptiveModalTitle>
 
             <div className="flex flex-col gap-4 bg-input-default px-12 py-6 text-text-80100 dark:bg-[#3E3E4D66] max-md:p-6">
-              <h3 className="text-base font-[500]">Summary</h3>
-              <div className="flex flex-col gap-1">
+              <h3 className="text-base font-[500] text-[#8585A9] dark:text-text-2100">
+                Summary
+              </h3>
+              <div className="flex flex-col gap-1 text-[#8585A9]">
                 <Line
                   title="Convert from"
                   value={summaryAndFees.convertFrom.value}

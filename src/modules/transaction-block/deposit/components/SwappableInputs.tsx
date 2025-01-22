@@ -109,7 +109,7 @@ export const SwappableInputs = ({
         )}
       >
         <span className="ml-2 mr-[.19rem] text-text-2100">
-          {formatTokenBalance(asset.balance, asset.contract_decimals)}
+          {formatTokenBalance(asset.balance, asset.contract_decimals, 2)}
         </span>
         <span className="text-text-260">
           {tokenLabel || asset.contract_ticker_symbol}

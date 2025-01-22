@@ -30,7 +30,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
   const { data, yAxisType, frame } = props
   const tooltipFormatter = (value?: string) => {
     if (yAxisType === 'percentage') {
-      return formatPercentValue(value, { maximumFractionDigits: 1 })
+      return formatPercentValue(value, { maximumFractionDigits: 2 })
     }
     if (yAxisType === 'usd') {
       return formatUsdValue(value, { notation: 'compact' })
@@ -71,7 +71,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
         break
       }
     }
-    return dayjs(value).format(format).toUpperCase()
+    return dayjs(value).format(format)
   }
 
   return (
@@ -98,7 +98,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
           dataKey="timestamp"
           tickFormatter={tickFormatter}
           className="text-[0.6875rem] [&_text]:fill-text-270"
-          minTickGap={40}
+          minTickGap={80}
           tickCount={10}
           ticks={filteredData?.map((tick) => tick.timestamp)}
           interval="preserveEnd"
@@ -130,9 +130,7 @@ export const LineChartComponent = (props: AreaChartComponentProperties) => {
                 icon: 'USDT',
               }
               const tooltipData = [value1, value2]
-              if (value1.value < value2.value) {
-                tooltipData.reverse()
-              }
+
               return <TooltipComponent formatter={tooltipFormatter} data={tooltipData} />
             }
 

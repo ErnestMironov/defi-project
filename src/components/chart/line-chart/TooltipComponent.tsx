@@ -1,5 +1,6 @@
 import CalendarIcon from '@assets/icons/calendar.svg'
 import { TokenIconComponent } from '@components/token-icon'
+import { cn } from '@utils/cn'
 import dayjs from 'dayjs'
 import type { ComponentProps } from 'react'
 
@@ -18,31 +19,31 @@ interface TooltipComponentProperties extends ComponentProps<'div'> {
 }
 
 export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties) => {
-  console.log(data)
-  const formatColorAttribute = (item: TooltipDataType): JSX.Element => {
-    switch (item.dataType) {
-      case 'TVL': {
-        const value = formatter(item.value).split(',')[0]
-        return (
-          <span>
-            <span className="text-[#FFFFFF99]">{value.charAt(0)}</span>
-            <span>{value.slice(1)}</span>
-          </span>
-        )
-      }
-      case 'APY': {
-        const value = formatter(item.value).split(',')[0]
-        return (
-          <span>
-            <span className="text-[#FFFFFF99]">{value.at(-1)}</span>{' '}
-            <span>{value.slice(0, -1)}</span>
-          </span>
-        )
-      }
-      default: {
-        return <></>
-      }
+  const formatColorAttribute = (
+    item: TooltipDataType,
+    symbolColor: string = '#8585A999',
+  ): JSX.Element => {
+    const value = formatter(item.value)
+
+    if (value.startsWith('$')) {
+      return (
+        <span>
+          <span className={cn(`text-[${symbolColor}]`)}>$</span>
+          <span>{value.slice(1)}</span>
+        </span>
+      )
     }
+
+    if (value.endsWith('%')) {
+      return (
+        <span>
+          <span>{value.slice(0, -1)}</span>
+          <span className={cn(`text-[${symbolColor}]`)}>%</span>
+        </span>
+      )
+    }
+
+    return <span>{value}</span>
   }
   const renderTvlOrApyBody = (values: TooltipDataType[]) => {
     return (
@@ -65,7 +66,7 @@ export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties
               className="flex items-center justify-center gap-1 rounded bg-main-100 px-2 py-[0.38rem] text-white"
             >
               <p>{item.dataType}</p>
-              <div className="">{formatColorAttribute(item)}</div>
+              <div>{formatColorAttribute(item, '#FFFFFF99')}</div>
             </div>
           )
         })}
@@ -95,8 +96,7 @@ export const TooltipComponent = ({ data, formatter }: TooltipComponentProperties
                 className="flex items-center justify-center gap-1 rounded  p-2  text-text-100"
               >
                 <TokenIconComponent symbol={item.icon} className="size-4" />
-                <p>{formatter(item.value)}</p>
-                <div className="">{formatColorAttribute(item)}</div>
+                <p className="">{formatColorAttribute(item)}</p>
               </div>
             </div>
           )

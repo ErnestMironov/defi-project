@@ -59,7 +59,7 @@ export const TxReviewModal = () => {
       {renderContent()}
       <button
         type="button"
-        className="flex w-full flex-row items-center justify-center gap-[0.38rem] border-t border-stroke-40100 bg-text-3100/5 px-6 py-3 text-[0.875rem] font-medium text-text-3100"
+        className="flex w-full flex-row items-center justify-center gap-[0.38rem] border-t bg-text-3100/5 px-6 py-3 text-[0.875rem] font-medium text-text-3100 dark:border-[#3E3E4D66]"
         onClick={() => setCollapseTxInfo(!collapseTxInfo)}
       >
         {collapseTxInfo ? (

@@ -1,3 +1,5 @@
+import useDeviceWidth from '@hooks/common/useDeviceWidth'
+import type { ITokenAsset } from '@hooks/common/useTokenAsset'
 import { useTokenAsset } from '@hooks/common/useTokenAsset'
 import { cn } from '@utils/cn'
 import React from 'react'
@@ -7,6 +9,11 @@ interface TokenIconProperties extends React.SVGProps<SVGElement> {
   tokenLogoFallback?: string
 }
 
+const getTokenIcon = (asset: ITokenAsset | undefined, isMobile: boolean) => {
+  if (!asset) return
+  return isMobile && asset.TokenIconMobile ? asset.TokenIconMobile : asset.TokenIcon
+}
+
 export const TokenIconComponent = ({
   symbol,
   className,
@@ -14,6 +21,7 @@ export const TokenIconComponent = ({
   ...rest
 }: TokenIconProperties) => {
   const asset = useTokenAsset(symbol)
+  const { isBelowDesktop } = useDeviceWidth()
 
   if (!asset && !tokenLogoFallback)
     return (
@@ -32,8 +40,9 @@ export const TokenIconComponent = ({
       <img src={tokenLogoFallback} className={cn(className)} alt="" style={rest.style} />
     )
 
-  const { TokenIcon } = asset
-  return <TokenIcon {...rest} className={cn('size-5', className)} />
+  const Icon = getTokenIcon(asset, isBelowDesktop)
+  if (!Icon) return
+  return <Icon {...rest} className={cn('size-5 rounded-md overflow-hidden', className)} />
 }
 
 export const IconWithLabelComponent = ({
@@ -43,11 +52,20 @@ export const IconWithLabelComponent = ({
   ...rest
 }: TokenIconProperties & { label?: string }) => {
   const asset = useTokenAsset(symbol)
+  const { isBelowDesktop } = useDeviceWidth()
+
   if (!asset) return
-  const { TokenIcon, name } = asset
+
+  const Icon = getTokenIcon(asset, isBelowDesktop)
+  if (!Icon) return
+  const { name } = asset
+
   return (
-    <div className={cn('flex items-center gap-[0.38rem]', className)}>
-      <TokenIcon {...rest} className={cn('size-5 max-lg:size-4')} />
+    <div className={cn('flex items-center gap-[0.38rem]')}>
+      <Icon
+        {...rest}
+        className={cn('size-5 max-lg:size-4 rounded overflow-hidden', className)}
+      />
       <p className="text-sm/[1rem]">{label || name}</p>
     </div>
   )

@@ -36,7 +36,7 @@ export default function InfoBlock({ className, ...props }: InfoBlockProperties) 
         </p>
         <Button
           variant="secondary"
-          className="h-12 w-[5.8125rem] items-center rounded-xl  border border-stroke-100 px-5 py-[1.875rem] text-[0.875rem] font-medium normal-case text-text-1100 shadow-test-2 max-md:hidden"
+          className="h-12 w-[5.8125rem] items-center rounded-xl border border-stroke-100  bg-white px-[1.875rem] py-5 text-[0.875rem] font-medium normal-case text-text-1100 shadow-test-2 dark:bg-cards-widget max-md:hidden"
           onClick={handleHide}
         >
           Clear

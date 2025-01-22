@@ -6,10 +6,10 @@ export const SelectWithoutWalletPlaceholder = () => {
 
   return (
     <ShadowBox
-      className="cursor-pointer rounded-[62.4375rem] px-6 py-5 transition-shadow max-lg:gap-1 max-lg:px-5 max-lg:py-4"
+      className="cursor-pointer rounded-[62.4375rem] px-6 py-5 transition-shadow hover:bg-[#8585A914] max-lg:gap-1 max-lg:px-5 max-lg:py-4"
       onClick={() => openConnectModal()}
     >
-      <span>Connect wallet</span>
+      <span>Connect</span>
     </ShadowBox>
   )
 }

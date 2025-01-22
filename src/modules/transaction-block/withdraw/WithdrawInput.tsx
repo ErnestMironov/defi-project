@@ -10,7 +10,6 @@ import { formatUnits, parseUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { SwappableInputs } from '../deposit/components/SwappableInputs'
-import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { useGetBurnedPoints } from './hooks/useGetBurnedPoints'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
@@ -131,7 +130,7 @@ export const WithdrawInput = () => {
   const assetData = mtToken
     ? {
         ...mtToken,
-        balance: BigInt(mtToken.balance),
+        balance: BigInt(mtToken.stableBalance),
         contract_decimals: mtToken.decimals,
         contract_ticker_symbol: mtToken.symbol,
       }
@@ -146,6 +145,7 @@ export const WithdrawInput = () => {
         className={cn(
           'bg-input-default dark:bg-input-active py-6 px-8 max-lg:px-3 border-y border-stroke-100',
           validationError && 'bg-input-error',
+          !isConnected && 'pointer-events-none opacity-50',
         )}
       >
         <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-2100/50">
@@ -162,13 +162,7 @@ export const WithdrawInput = () => {
               asset={assetData}
               onMaxClick={() => handleInputChange(prettyMaxBalance)}
               tokenLabel={assetData?.stable}
-              rightElement={
-                isConnected ? (
-                  <SelectWithdrawAssetModal />
-                ) : (
-                  <SelectWithoutWalletPlaceholder />
-                )
-              }
+              rightElement={<SelectWithdrawAssetModal />}
             />
           </div>
         </div>
@@ -185,7 +179,7 @@ export const WithdrawInput = () => {
           </span>
           <div className="flex w-full items-center justify-between">
             <AmountInput
-              value={inputValue}
+              value={inputValue || ''}
               error={validationError}
               decimals={6}
               disabled

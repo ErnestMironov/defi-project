@@ -47,7 +47,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
             {event.vault && (
               <IconWithLabelComponent
                 symbol={event.vault.token.symbol}
-                className="size-8"
+                className="size-5"
               />
             )}
           </div>
@@ -69,7 +69,7 @@ export const MaatTransactionHistoryRow = (props: MaatTransactionHistoryRowProper
           ) : (
             <IconWithLabelComponent
               symbol={event.src_chain_id}
-              className="size-8 gap-3"
+              className="size-5 gap-3"
             />
           )}
         </div>

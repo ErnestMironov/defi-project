@@ -186,6 +186,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ()
           token: {
             symbol: depositAsset?.contract_ticker_symbol ?? '',
             network: depositFromNetwork ?? 1,
+            logo: depositAsset?.logo_url ?? '',
           },
         }}
         receive={{
@@ -195,6 +196,7 @@ export const OnchainSwap: React.FunctionComponent<IDepositWizardProperties> = ()
           token: {
             symbol: vault ?? '',
             network: depositToNetwork ?? 1,
+            logo: depositAsset?.logo_url ?? '',
           },
         }}
         success={{

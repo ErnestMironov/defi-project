@@ -2,6 +2,7 @@ import TryAgainIcon from '@assets/icons/try-again.svg'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@utils/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { Loader2 } from 'lucide-react'
 import * as React from 'react'
 
 const buttonVariants = cva(
@@ -67,17 +68,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProperties>(
     const Comp = asChild ? Slot : 'button'
 
     const buttonVariant = error ? 'error' : variant
-    const buttonContent = loading ? 'Pending' : children
+    const buttonContent = loading ? 'Processing...' : children
 
     return (
       <Comp
         className={cn(buttonVariants({ variant: buttonVariant, size, className }), {
-          'opacity-50 pointer-events-none': loading,
+          'bg-text-5 text-[#8585A9] pointer-events-none gap-2': loading,
         })}
         ref={reference}
         {...props}
       >
         {buttonContent}
+        {loading && <Loader2 className="size-4 animate-spin text-main-100" />}
+
         {error && <TryAgainIcon className="ml-2 size-4" />}
       </Comp>
     )

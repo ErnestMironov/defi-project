@@ -57,7 +57,7 @@ export const TransactionHistoryRow = (props: TransactionHistoryRowProperties) =>
               {event.vault && (
                 <IconWithLabelComponent
                   symbol={event.vault.token.symbol}
-                  className="size-8"
+                  className="size-5"
                 />
               )}
             </div>

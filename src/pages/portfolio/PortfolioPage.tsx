@@ -75,7 +75,7 @@ export const PortfolioPage = (props: PortfolioPageProperties) => {
             className={cn('mt-2', portfolioValue > 0 ? 'text-text' : 'text-gray-100')}
           />
           <h6 className="flex items-center gap-[0.38rem] text-sm leading-6 text-text-2100">
-            <span className="font-medium">Portfolio Value</span>
+            <span className="font-medium">Assets Locked</span>
             <div
               className={cn(
                 'flex items-center gap-[0.12rem]',

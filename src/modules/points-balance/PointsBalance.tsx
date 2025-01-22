@@ -18,7 +18,7 @@ export const PointsBalance = ({ className }: { className?: string }) => {
     >
       <div className="flex items-center justify-center gap-1.5 rounded-l-2xl border-r border-stroke-40100 px-4 py-3 max-md:px-3 max-md:py-2">
         <PointIcon className="size-4 text-[#7B61FF]" />
-        <span className="text-sm font-medium leading-[1.5625rem] text-main-100">
+        <span className="text-sm font-medium leading-[1.5625rem] text-main-100 max-md:text-[0.8125rem] ">
           {Math.round(badgesInfo?.userRewards.totalPoints || 0)}
         </span>
       </div>

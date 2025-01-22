@@ -41,7 +41,7 @@ export const TokensListItem = ({
           <div className="flex items-center gap-[0.22rem]">
             <TokenIconComponent
               symbol={token?.chain_id}
-              className="size-4 overflow-hidden rounded-md"
+              className="size-4 overflow-hidden rounded"
             />
             <p className="text-[0.875rem]/[1rem] text-text-2100/60">
               {token?.contract_name || ''}

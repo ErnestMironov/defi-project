@@ -21,6 +21,7 @@ interface AmountData {
   token?: {
     symbol: string
     network: ChainType
+    logo?: string
   }
 }
 
@@ -37,6 +38,26 @@ interface TxReviewInfoProperties {
     type: 'deposit' | 'withdraw'
     hash: string
   }
+}
+
+const STABLECOINS = ['USDC', 'USDT', 'DAI'] as const
+type Stablecoin = (typeof STABLECOINS)[number]
+
+const TOKEN_DECIMALS = {
+  stablecoin: 2,
+  other: 5,
+} as const
+
+const formatTokenAmount = (symbol: string, amount: string): string => {
+  if (!symbol || !amount) return '0'
+
+  const decimals = STABLECOINS.includes(symbol as Stablecoin)
+    ? TOKEN_DECIMALS.stablecoin
+    : TOKEN_DECIMALS.other
+
+  return formatAmount(amount, {
+    maximumFractionDigits: decimals,
+  })
 }
 
 export const TxReviewInfo = ({
@@ -59,21 +80,15 @@ export const TxReviewInfo = ({
             network={data.token.network}
             width="1.5rem"
             position="bottom-right"
+            classNames={{ token: 'overflow-hidden rounded-full' }}
+            tokenLogoFallback={data.token.logo}
           />
         )}
         <span>
-          {formatAmount(data.value, {
-            maximumFractionDigits: 5,
-          })}
+          {formatTokenAmount(data.token?.symbol ?? '', data.value)}
           {data.token && ` ${data.token.symbol}`}
         </span>
-        <span className="text-text-60">
-          ($
-          {formatAmount(data.usdValue, {
-            maximumFractionDigits: 2,
-          })}
-          )
-        </span>
+        <span className="text-text-60">${data.usdValue}</span>
       </div>
     </div>
   )
@@ -95,8 +110,7 @@ export const TxReviewInfo = ({
           )}
           <div className="flex flex-col">
             <span className="text-base">
-              {success.type === 'deposit' ? 'Deposit' : 'Withdraw'}{' '}
-              <span className="text-[#8585A999]">Fulfillment</span>
+              {success.type === 'deposit' ? 'Deposit' : 'Withdraw Fulfillment'}{' '}
             </span>
             <div className="flex items-center gap-2 text-[0.875rem] leading-4 text-[#8585A999]">
               <span className="text-success-900">{shortenAddress(success.hash)}</span>
@@ -124,9 +138,9 @@ export const TxReviewInfo = ({
       style={{ overflow: 'hidden' }}
       className="text-[0.875rem] font-medium leading-6"
     >
-      <div className="flex w-full flex-col divide-y divide-stroke-100 border-y border-stroke-100">
+      <div className="flex w-full flex-col divide-y divide-stroke-100 border-y border-stroke-100 dark:divide-[#3E3E4D66] dark:border-[#3E3E4D66]">
         {renderSuccessBlock()}
-        <div className="grid grid-cols-2 divide-x divide-stroke-100">
+        <div className="grid grid-cols-2 divide-x divide-stroke-100 dark:divide-[#3E3E4D66]">
           <div className="flex items-center justify-between px-6 py-3 max-md:px-4">
             <span className="text-text-2100">{recipient.label}</span>
             <div className="flex items-center gap-2">
@@ -143,7 +157,7 @@ export const TxReviewInfo = ({
               <TokenIconComponent
                 symbol={chainData?.symbol ?? 'Unknown Symbol'}
                 width="1.5rem"
-                className="overflow-hidden rounded-lg"
+                className="overflow-hidden rounded"
               />
               <span>{chainData?.name ?? 'Unknown Chain'}</span>
             </div>

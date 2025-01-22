@@ -28,7 +28,12 @@ export const Analytics = () => {
     >
       <TabsList className="mb-6 max-lg:mb-4 max-lg:gap-6">
         {TABS.map((_tab) => (
-          <TabsTrigger key={_tab} variant="unstyled" className="capitalize" value={_tab}>
+          <TabsTrigger
+            key={_tab}
+            variant="unstyled"
+            className="capitalize hover:text-[#8585A9]/40"
+            value={_tab}
+          >
             {_tab}
           </TabsTrigger>
         ))}

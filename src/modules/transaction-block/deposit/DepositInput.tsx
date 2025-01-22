@@ -11,7 +11,6 @@ import { formatValueWithPrecision } from '@utils/formatValue'
 import { formatUnits } from 'viem'
 import { useAccount } from 'wagmi'
 
-import { SelectWithoutWalletPlaceholder } from '../SelectWithoutWalletPlaceholder'
 import { useTxStore } from '../store/useTxStore'
 import { DepositActionButton } from './components/DepositActionButton'
 import { GetCryptoButton } from './components/GetCryptoButton'
@@ -96,6 +95,7 @@ export const DepositInput = () => {
         className={cn(
           'bg-input-default dark:bg-input-active py-6 max-lg:p-4 px-8 border-y border-stroke-100',
           error && 'bg-input-error',
+          !isConnected && 'pointer-events-none opacity-50',
         )}
       >
         <span className="font-montreal text-[0.875rem] font-medium leading-6 text-text-60 max-lg:text-[0.75rem]">
@@ -111,9 +111,7 @@ export const DepositInput = () => {
               error={error}
               asset={asset ? { ...asset, balance: BigInt(asset.balance) } : undefined}
               onMaxClick={() => handleAction('token', prettyAssetBalance)}
-              rightElement={
-                isConnected ? <SelectDepositAsset /> : <SelectWithoutWalletPlaceholder />
-              }
+              rightElement={<SelectDepositAsset />}
             />
           </div>
         </div>

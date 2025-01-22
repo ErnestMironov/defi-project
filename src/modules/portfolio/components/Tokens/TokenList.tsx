@@ -44,7 +44,9 @@ const GroupedTokenItem = ({
     <div
       className={cn(
         'relative rounded-xl pt-4 ',
-        isOpen ? 'border border-stroke-100 pb-1  mb-4' : 'hover:bg-light-blue-15 pb-4 ',
+        isOpen
+          ? 'border border-stroke-100 pb-1 bg-[#8585A908]'
+          : 'hover:bg-[#8585A90D] pb-4 ',
       )}
     >
       <div
@@ -80,7 +82,7 @@ const GroupedTokenItem = ({
                     <TokenIconComponent
                       key={chainId}
                       symbol={chainId}
-                      className={cn('size-5 overflow-hidden', index !== 0 && '-ml-2')}
+                      className={cn('size-4 overflow-hidden', index !== 0 && '-ml-2')}
                       tokenLogoFallback={tokenGroup[0].logo_url}
                     />
                   ))}
@@ -108,7 +110,7 @@ const GroupedTokenItem = ({
           {tokenGroup.map((token) => (
             <div
               key={token.contract_ticker_symbol}
-              className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-light-blue-15 max-md:px-3"
+              className="flex items-center justify-between rounded-xl px-6 py-4 hover:bg-[#8585A90D] max-md:px-3"
             >
               <div className="flex  items-center gap-2">
                 <TokenIconComponent
@@ -174,7 +176,7 @@ export default function TokenList({
         className="hidden max-md:flex"
       />
       <div className={cn('px-1 pb-1', className)}>
-        <div className="flex flex-col gap-1 rounded-xl py-4 text-base max-md:gap-0 max-md:py-1 max-md:text-sm">
+        <div className="flex flex-col gap-1 rounded-xl py-4 text-base max-md:py-1 max-md:text-sm">
           {Object.entries(groupedTokens).map(([groupName, tokenGroup]) => (
             <GroupedTokenItem
               key={groupName}
