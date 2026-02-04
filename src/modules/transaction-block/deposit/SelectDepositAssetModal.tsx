@@ -9,15 +9,15 @@ import type { ChainType } from '@constants/chains'
 import useDeviceWidth from '@hooks/common/useDeviceWidth'
 import { useTokensList } from '@hooks/tokens/useTokensList'
 import { cn } from '@utils/cn'
-import { useAccount } from 'wagmi'
 
 import { UniversalSelectModal } from '../withdraw/UniversalSelectModal'
 import { TokensListItem } from './components/TokensListItem'
 import { useAssetSelection } from './hooks/useAssetSelection'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const SelectDepositAsset = () => {
   const { isBelowDesktop } = useDeviceWidth()
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
   const { asset, handleAssetChange } = useAssetSelection()
   const tokensList = useTokensList<ITokenData>

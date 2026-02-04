@@ -15,9 +15,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
 
 import PortfolioButton from './PortfolioButton'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface PortfolioModalProperties extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean
@@ -31,7 +31,7 @@ export const PortfolioModal = ({
   onClose,
   isMobile,
 }: PortfolioModalProperties) => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { yield: yieldData, isLoadingYield } = usePortfolioData()
 
   const { data: userShares, isLoading: isUserSharesLoading } = useUserShares(address)

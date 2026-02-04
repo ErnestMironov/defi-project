@@ -3,7 +3,6 @@ import { CHAIN_NAMES_BY_ID } from '@constants/chains'
 import BigNumber from 'bignumber.js'
 import { useEffect, useMemo } from 'react'
 import { parseUnits } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { SuccessButton } from '../components/SuccessButton'
 import { TxReviewInfo } from '../components/TxReviewInfo'
@@ -14,6 +13,7 @@ import { useTransactionStatus } from '../hooks/useTransactionStatus'
 import { useTxStore } from '../store/useTxStore'
 import { getButtonContent } from '../utils/getButtonText'
 import { useWithdrawTransaction } from './hooks/useWithdrawTransaction'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const WithdrawReviewContent = () => {
   const {
@@ -31,7 +31,7 @@ export const WithdrawReviewContent = () => {
     setTransactionStatus,
   } = useTxStore()
 
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
 
   const inputValueInMtToken = useMemo(() => {
     const parsedAmount = parseUnits(amount, mtToken?.decimals ?? 6)

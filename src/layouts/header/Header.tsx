@@ -9,19 +9,19 @@ import clsx from 'clsx'
 import { type ComponentProps } from 'react'
 import { Link } from 'react-router-dom'
 import { formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
 
 import PortfolioButton from './components/PortfolioButton'
 import { PortfolioModal } from './components/PortfolioModal'
 import { usePortfolioModalState } from './hooks/UsePortfolioModalState'
 import { Menu } from './menu/Menu'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface HeaderProperties extends ComponentProps<'div'> {}
 
 export const Header = ({ className, ...rest }: HeaderProperties) => {
   useTransactionStatusChecker()
 
-  const account = useAccount()
+  const account = useActiveAccount()
   const { isOpen, handlePortfolioClose, handlePortfolioOpen } = usePortfolioModalState()
   const { data: userShares } = useUserShares(account.address)
   const balance = userShares?.shares?.reduce<number>(

@@ -2,12 +2,13 @@ import { Button } from '@components/ui/button'
 import { Logo } from '@components/ui/logo'
 import clsx from 'clsx'
 import type { ComponentProps } from 'react'
-import { useAccount, useDisconnect } from 'wagmi'
+import { useDisconnect } from 'wagmi'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface OtpHeaderProperties extends ComponentProps<'div'> {}
 
 export const OtpHeader = ({ className }: OtpHeaderProperties) => {
-  const { isConnected } = useAccount()
+  const { isConnected } = useActiveAccount()
   const { disconnect } = useDisconnect()
 
   return (

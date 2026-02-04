@@ -30,13 +30,17 @@ export const useDesktopStrategies = () => {
 
   useEffect(() => {
     if (data) {
-      const topColoredStrategies = COLORS.slice(0, TOP_STRATEGIES_SIZE).map(
-        (color, i) => ({
-          color,
-          strategy: data.items[i],
-          visible: true,
-        }),
-      )
+      const topColoredStrategies = COLORS.slice(0, TOP_STRATEGIES_SIZE)
+        .map((color, i) => {
+          const strategy = data.items[i]
+          if (!strategy) return null
+          return { color, strategy, visible: true }
+        })
+        .filter(Boolean) as Array<{
+          color: string
+          strategy: (typeof data.items)[number]
+          visible: boolean
+        }>
       setTopStrategiesWithColors(topColoredStrategies)
       if (customStrategiesWithColors.length === 0) {
         setCustomStrategiesWithColors(topColoredStrategies)

@@ -7,7 +7,6 @@ import { formatAmount, formatValueWithPrecision } from '@utils/formatValue.ts'
 import { useEffect, useMemo, useState } from 'react'
 import type { Address } from 'viem'
 import { formatUnits, parseUnits } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { SwappableInputs } from '../deposit/components/SwappableInputs'
 import { useTxStore } from '../store/useTxStore'
@@ -15,9 +14,10 @@ import { useGetBurnedPoints } from './hooks/useGetBurnedPoints'
 import { SelectWithdrawAssetModal } from './SelectWithdrawAssetModal'
 import { SelectWithdrawNetworkModal } from './SelectWithdrawNetwork'
 import { WithdrawPointsBurn } from './WithdrawPointsBurn'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const WithdrawInput = () => {
-  const { isConnected, address } = useAccount()
+  const { isConnected, address } = useActiveAccount()
   const {
     withdrawInputValue: inputValue,
     setWithdrawInputValue: setInputValue,

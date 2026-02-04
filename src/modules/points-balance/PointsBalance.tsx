@@ -3,10 +3,10 @@ import PlusIcon from '@assets/icons/plus.svg'
 import PointIcon from '@assets/icons/point-icon.svg'
 import { cn } from '@utils/cn'
 import type { Address } from 'viem'
-import { useAccount } from 'wagmi'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const PointsBalance = ({ className }: { className?: string }) => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { data: badgesInfo } = useGetUserBadges(address as Address)
 
   return (

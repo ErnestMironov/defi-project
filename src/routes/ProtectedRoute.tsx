@@ -1,9 +1,9 @@
 import { useAppKit } from '@reown/appkit/react'
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAccount } from 'wagmi'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isConnected } = useAccount()
+  const { isConnected } = useActiveAccount()
   const { open: openConnectModal } = useAppKit()
   const location = useLocation()
 

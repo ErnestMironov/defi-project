@@ -4,7 +4,6 @@ import UserAvatar from '@assets/images/userAvatar.svg'
 import { useLocalSignature } from '@hooks/useLocalSignature'
 import { cn } from '@utils/cn'
 import type { Address } from 'viem'
-import { useAccount } from 'wagmi'
 
 import BonusMultiplier from './BonusMultiplier'
 import { Incentives } from './Incentives'
@@ -12,12 +11,13 @@ import LeaderBoard from './LeaderBoard'
 import { OtherBenefits } from './OtherBenefits'
 import ReferalLinks from './ReferalLinks'
 import UserNextLevel from './UserNextLevel'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface UserInfoProperties extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function UserInfo({ className, ...props }: UserInfoProperties) {
-  const { address } = useAccount()
-  const account = useAccount()
+  const { address } = useActiveAccount()
+  const account = useActiveAccount()
   const { signature } = useLocalSignature()
   const { data: badgesInfo } = useGetUserBadges(address as Address)
   const { addressInfo } = useGetAddressInfo({

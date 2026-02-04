@@ -1,10 +1,12 @@
 import { CHAIN_IDS_BY_NAME, CONFIRMATIONS_NUMBER } from '@constants/chains'
+import { USE_MOCKS } from '@configs/mocks'
 import { waitForTransactionReceipt } from '@wagmi/core'
 import { useCallback, useEffect, useState } from 'react'
 import { type Address, erc20Abi } from 'viem'
-import { useAccount, useConfig, useReadContract, useWriteContract } from 'wagmi'
+import { useConfig, useReadContract, useWriteContract } from 'wagmi'
 
 import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface IProperties extends IDepositWizardHook {
   approveValue?: string
@@ -23,7 +25,7 @@ export const useApproveERC20 = ({
   const { writeContract, ...rest } = useWriteContract()
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<STEP_STATUS>('idle')
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
 
   const config = useConfig()
 
@@ -32,18 +34,30 @@ export const useApproveERC20 = ({
     abi: erc20Abi,
     functionName: 'allowance',
     args: [address!, transactionRequestTarget as Address],
+    query: {
+      enabled: !USE_MOCKS,
+    },
   })
   console.log('🚀 ~ tokenAddress:', tokenAddress)
 
   useEffect(() => {
-    console.log('🚀 ~ useEffect ~ allowance:', allowance)
-    if (allowance && approveValue && BigInt(allowance) >= BigInt(approveValue)) {
-      setStatus('success')
-      onSuccessHandler?.()
+    if (!USE_MOCKS) {
+      console.log('🚀 ~ useEffect ~ allowance:', allowance)
+      if (allowance && approveValue && BigInt(allowance) >= BigInt(approveValue)) {
+        setStatus('success')
+        onSuccessHandler?.()
+      }
     }
   }, [allowance, approveValue, onSuccessHandler])
 
   const approve = useCallback(() => {
+    if (USE_MOCKS) {
+      setLoading(false)
+      setStatus('success')
+      onSuccessHandler?.()
+      return
+    }
+
     console.log('🚀 ~ approve ~ approveValue:', approveValue)
 
     if (!approveValue || !tokenAddress || !transactionRequestTarget) {

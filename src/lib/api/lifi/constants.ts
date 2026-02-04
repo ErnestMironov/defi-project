@@ -1,5 +1,9 @@
 import axios from 'axios'
 
+import { USE_MOCKS } from '@configs/mocks'
+
+import { createLifiMockAdapter } from './mock'
+
 export const API_URL = 'https://li.quest/v1/'
 
 export const lifiApiClient = axios.create({
@@ -7,4 +11,5 @@ export const lifiApiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  adapter: USE_MOCKS ? createLifiMockAdapter() : undefined,
 })

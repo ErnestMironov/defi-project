@@ -14,11 +14,12 @@ import { cn } from '@utils/cn'
 import { formatAmount, formatAmountValue } from '@utils/formatValue'
 import { useMemo } from 'react'
 import { formatUnits } from 'viem'
-import { useAccount, useSwitchChain } from 'wagmi'
+import { useSwitchChain } from 'wagmi'
 
 import { useTxStore } from '../store/useTxStore'
 import { useGetMTokenInfo } from './hooks/useGetMTokenInfo'
 import { UniversalSelectModal } from './UniversalSelectModal'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 const WithdrawAssetItem = ({
   token,
@@ -83,7 +84,7 @@ export const SelectWithdrawAssetModal = () => {
   const { mtToken, setMToken, setWithdrawToNetwork, setWithdrawFromNetwork } =
     useTxStore()
   const { switchChain: _switchChain } = useSwitchChain()
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
 
   const { data, isLoading: isUserSharesLoading } = useUserShares(address)
   const balances = useUniqueTokens(data?.shares)

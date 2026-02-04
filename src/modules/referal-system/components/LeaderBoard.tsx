@@ -15,11 +15,33 @@ interface User {
     totalPoints: number
   }
 }
+interface LegacyUser {
+  address: `0x${string}`
+  totalRewards: number
+  currentRewardMultiplier?: number
+}
 
 interface LeaderBoardProperties extends React.HTMLAttributes<HTMLDivElement> {}
 export default function LeaderBoard({ className, ...rest }: LeaderBoardProperties) {
   const { data } = useGetUsersPoints()
-  const users = (data?.items || []) as unknown as User[]
+  const rawUsers = (data?.items || []) as Array<User | LegacyUser>
+  const users = rawUsers
+    .map((user) => {
+      if ('info' in user && user.info?.userId) {
+        return user as User
+      }
+      if ('address' in user && user.address) {
+        return {
+          badge: { level: 1 },
+          info: {
+            userId: user.address,
+            totalPoints: Number(user.totalRewards ?? 0),
+          },
+        } satisfies User
+      }
+      return null
+    })
+    .filter(Boolean) as User[]
 
   return (
     <div

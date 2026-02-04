@@ -4,13 +4,13 @@ import type { OptionType } from '@components/select/Select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { cn } from '@utils/cn'
 import { type ComponentProps } from 'react'
-import { useAccount } from 'wagmi'
 
 import { ChainsList } from '../components/Chains/ChainList'
 import TokensList from '../components/Tokens/TokenList'
 import { AssetItemSkeleton } from './AssetItem'
 import { EmptyState } from './EmptyState'
 import { useAllAssets } from './useAllAssets'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface AllAssetsProperties extends ComponentProps<'div'> {}
 
@@ -61,7 +61,7 @@ export const AllAssets = (props: AllAssetsProperties) => {
   const { className, ...rest } = props
   const chains: OptionType[] = []
   const { tokens, isLoading, potentialUsdProfit } = useAllAssets(chains)
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { data: userShares } = useUserShares(address)
 
   const hasDeposits = userShares?.shares && userShares.shares.length > 0

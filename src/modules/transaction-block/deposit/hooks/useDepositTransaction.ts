@@ -6,9 +6,10 @@ import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
 import { useCallback, useState } from 'react'
 import { type Address, formatUnits } from 'viem'
-import { useAccount, useWriteContract } from 'wagmi'
+import { useWriteContract } from 'wagmi'
 
 import type { IDepositWizardHook, STEP_STATUS } from '../interfaces'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface IProperties extends IDepositWizardHook {
   address: Address
@@ -28,7 +29,7 @@ export const useDepositTransaction = ({ address, amount }: IProperties) => {
     setTxDifficulty,
     setTimerDuration,
   } = useTxStore()
-  const { address: userAddress } = useAccount()
+  const { address: userAddress } = useActiveAccount()
   const [status, setStatus] = useState<STEP_STATUS>('idle')
   const { addTransaction } = useTransactionStore()
 

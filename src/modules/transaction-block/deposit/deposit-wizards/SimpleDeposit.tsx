@@ -9,15 +9,15 @@ import { getButtonContent } from '@modules/transaction-block/utils/getButtonText
 import { replaceCommasWithDots, trimTrailingZeros } from '@utils/formatValue'
 import { useEffect } from 'react'
 import { type Address, parseUnits } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { useApproveERC20 } from '../hooks/useApproveERC20'
 import { useDepositTransaction } from '../hooks/useDepositTransaction'
 import { useSwitchToTokenChain } from '../hooks/useSwitchToTokenChain'
 import type { IDepositWizardProperties } from '../interfaces'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const SimpleDeposit: React.FunctionComponent<IDepositWizardProperties> = () => {
-  const { chainId } = useAccount()
+  const { chainId } = useActiveAccount()
   const {
     depositAsset: asset,
     inputValue: amount,

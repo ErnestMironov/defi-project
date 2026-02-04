@@ -8,7 +8,7 @@ import { formatAmount } from '@utils/formatValue'
 import { shortenAddress } from '@utils/transform'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { useAccount } from 'wagmi'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface PortfolioButtonProperties extends React.HTMLAttributes<HTMLButtonElement> {
   isOpen: boolean
@@ -27,7 +27,7 @@ const PortfolioButton: React.FC<PortfolioButtonProperties> = ({
   openConnectModal,
   context,
 }) => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
 
   const getDisplayValueForButton = () => {
     if (context === 'modal' || isMobile) {

@@ -9,7 +9,6 @@ import { useStaleAmountTracking } from '@modules/transaction-block/deposit/hooks
 import { cn } from '@utils/cn'
 import { formatValueWithPrecision } from '@utils/formatValue'
 import { formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { useTxStore } from '../store/useTxStore'
 import { DepositActionButton } from './components/DepositActionButton'
@@ -19,6 +18,7 @@ import { VaultSelection } from './components/VaultSelection'
 import { useVaultSelection } from './hooks/useVaultSelection'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import ZapFee from './zap-fee/ZapFee'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 // Check if swap is needed
 const isSwapRequired = (
@@ -30,7 +30,7 @@ const isSwapRequired = (
 }
 
 export const DepositInput = () => {
-  const { isConnected } = useAccount()
+  const { isConnected } = useActiveAccount()
   const { bestUSDCApy, bestUSDTApy, isLoading: isStrategiesLoading } = useVaultAPY()
   const { isPending: isRouteLoading } = useGetSwapRoute()
   const {

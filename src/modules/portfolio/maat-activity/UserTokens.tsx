@@ -3,19 +3,19 @@ import { useFormattedVaultData } from '@hooks/useFormattedVaultData'
 import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps } from 'react'
-import { useAccount } from 'wagmi'
 
 import { AllAssets } from '../all-assets/AllAssets'
 import { NoDeposit } from '../all-assets/NoDeposit'
 import { useAllAssets } from '../all-assets/useAllAssets'
 import { useGetTokensRate } from './useGetTokensRate'
 import { VaultTokenItem } from './VaultTokenItem'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface UserTokensProperties extends ComponentProps<'div'> {}
 
 export const UserTokens = (props: UserTokensProperties) => {
   const { className, ...rest } = props
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { formattedData } = useFormattedVaultData(address)
 
   const tokenNames = ['USDT', 'USDC']

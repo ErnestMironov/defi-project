@@ -6,14 +6,15 @@ import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { convertBigIntToString } from '@utils/formatValue'
 import { useState } from 'react'
 import type { Address } from 'viem'
-import { useAccount, useWriteContract } from 'wagmi'
+import { useWriteContract } from 'wagmi'
 
 import { useVaultBalance } from './useVaultBalance'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 const ESTIMATED_TIME_TO_COMPLETE_WITHDRAW = 60 * 15
 
 export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const {
     mtToken,
     withdrawToNetwork,

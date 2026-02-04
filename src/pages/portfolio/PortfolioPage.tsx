@@ -9,7 +9,7 @@ import { cn } from '@utils/cn'
 import { formatAmount } from '@utils/formatValue'
 import { type ComponentProps, useEffect, useMemo } from 'react'
 import { type Address, formatUnits } from 'viem'
-import { useAccount } from 'wagmi'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface PortfolioPageProperties extends ComponentProps<'div'> {
   isMobile?: boolean
@@ -17,7 +17,7 @@ interface PortfolioPageProperties extends ComponentProps<'div'> {
 
 export const PortfolioPage = (props: PortfolioPageProperties) => {
   const { className, isMobile, ...rest } = props
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { open } = useAppKit()
   useEffect(() => {
     if (!address) {

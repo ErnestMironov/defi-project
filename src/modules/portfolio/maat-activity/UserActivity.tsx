@@ -6,16 +6,16 @@ import { cn } from '@utils/cn'
 import { parseUnits } from 'ethers'
 import type { ComponentProps } from 'react'
 import type { Address } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { EmptyTransactionsState } from './EmptyTransactionsState'
 import { UserTransactionItem, UserTransactionItemSkeleton } from './UserTransactionItem'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface UserActivityProperties extends ComponentProps<'div'> {}
 
 export const UserActivity = (props: UserActivityProperties) => {
   const { className, ...rest } = props
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { data, isLoading, error } = usePortfolioTransactions(address as Address, {})
   const { transactions } = useTransactionStore()
 

@@ -2,8 +2,10 @@
 
 import { tokenVaultAbi } from '@constants/abi/token-vault'
 import { ARB_USDC, ARB_USDT } from '@constants/contract-address'
+import { USE_MOCKS } from '@configs/mocks'
 import type { Address } from 'viem'
-import { useAccount, useReadContract } from 'wagmi'
+import { useReadContract } from 'wagmi'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const VAULT_ADDRESSES = {
   USDT: ARB_USDT,
@@ -11,7 +13,7 @@ export const VAULT_ADDRESSES = {
 } as const
 
 export const useVaultBalance = (token: Address) => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
 
   const { data: sharesBalance } = useReadContract({
     abi: tokenVaultAbi,
@@ -19,7 +21,7 @@ export const useVaultBalance = (token: Address) => {
     args: [address],
     functionName: 'balanceOf',
     query: {
-      enabled: !!address,
+      enabled: !USE_MOCKS && !!address,
     },
   })
 
@@ -29,12 +31,12 @@ export const useVaultBalance = (token: Address) => {
     args: [sharesBalance],
     functionName: 'previewRedeem',
     query: {
-      enabled: !!sharesBalance,
+      enabled: !USE_MOCKS && !!sharesBalance,
     },
   })
 
   return {
-    tokenBalance: tokenBalance as bigint | undefined,
-    sharesBalance: sharesBalance as bigint | undefined,
+    tokenBalance: USE_MOCKS ? 990_000n : (tokenBalance as bigint | undefined),
+    sharesBalance: USE_MOCKS ? 1_000_000n : (sharesBalance as bigint | undefined),
   }
 }

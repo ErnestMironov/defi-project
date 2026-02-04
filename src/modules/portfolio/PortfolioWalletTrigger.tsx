@@ -10,17 +10,17 @@ import { cn } from '@utils/cn'
 import { shortenAddress } from '@utils/transform'
 import { type ComponentProps, useMemo, useState } from 'react'
 import type { Address } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { ActionButtons } from './ActionButtons'
 import { SeparatedUsdValue } from './components/SeparatedUsdValue'
 import { UserActivityTabs } from './maat-activity/UserActivityTabs'
 import { PortfolioValueTooltip } from './PortfolioValueTooltip'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface PortfolioWalletTriggerProperties extends ComponentProps<'div'> {}
 
 export const PortfolioWalletDrawer = (_props: PortfolioWalletTriggerProperties) => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { open: openConnectModal } = useAppKit()
   const [open, setOpen] = useState(false)
 

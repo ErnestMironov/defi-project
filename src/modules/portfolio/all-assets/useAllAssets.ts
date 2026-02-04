@@ -6,9 +6,9 @@ import { CHAIN_IDS_BY_BACKEND_NAMES_FOR_PORTFOLIO } from '@constants/chains'
 import { useBestApy } from '@hooks/useBestApy'
 import BigNumber from 'bignumber.js'
 import { useMemo } from 'react'
-import { useAccount } from 'wagmi'
 
 import { useSquidSDKState } from './useSquidSdkState'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 /**
  * Sorts tokens by quote in descending order
@@ -19,7 +19,7 @@ const sortTokensByQuote = (tokens: ITokenData[]) => {
 }
 
 export const useAllAssets = (chains: OptionType[]) => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { data: userTokens, isLoading } = useTokensBalance({ address })
   const { squid, loading } = useSquidSDKState()
 

@@ -14,10 +14,10 @@ import { signMessage } from '@wagmi/core'
 import { AxiosError } from 'axios'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useAccount } from 'wagmi'
 
 import OtpVideoDark from './assets/otp-preview-dark.mp4'
 import OtpVideoLight from './assets/otp-preview-light.mp4'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export const VALID_OTP_HASH =
   'eaf89db7108470dc3f6b23ea90618264b3e8f8b6145371667c4055e9c5ce9f52'
@@ -25,7 +25,7 @@ export const VALID_OTP_HASH =
 export const Otp = () => {
   const theme = useTheme()
   const navigate = useNavigate()
-  const { isConnected, address } = useAccount()
+  const { isConnected, address } = useActiveAccount()
   const { isLoading: isLoadingCheckRegistration } = useCheckRegistration()
   const { saveSignature, signature } = useLocalSignature()
 

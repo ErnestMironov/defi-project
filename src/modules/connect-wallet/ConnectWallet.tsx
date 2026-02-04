@@ -3,7 +3,8 @@ import { Button, type ButtonProperties } from '@components/ui/button'
 import { useAppKit } from '@reown/appkit/react'
 import { shortenAddress } from '@utils/transform'
 import clsx from 'clsx'
-import { useAccount, useDisconnect } from 'wagmi'
+import { useDisconnect } from 'wagmi'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 interface IConnectWalletProperties {
   btnProps?: ButtonProperties
@@ -13,7 +14,7 @@ interface IConnectWalletProperties {
 export const ConnectWallet = ({ btnProps, className }: IConnectWalletProperties) => {
   const { open: openConnectModal } = useAppKit()
   const { disconnect } = useDisconnect()
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   return (
     <Button
       variant="container"

@@ -2,9 +2,10 @@ import { usePortfolioAssets } from '@api/maat-finance/usePortfolioAssets'
 import { usePortfolioYield } from '@api/maat-finance/usePortfolioYield'
 import { useEffect } from 'react'
 import type { Address } from 'viem'
-import { useAccount } from 'wagmi'
+
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 // Define the store state type
 interface PortfolioState {
@@ -31,7 +32,7 @@ const usePortfolioStore = create<PortfolioState>()(
 
 // Create a hook to fetch and update the store
 export const usePortfolioData = () => {
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const { assets, yield: yieldData, setAssets, setYield } = usePortfolioStore()
 
   const { data: assetsData, isLoading: isLoadingAssets } = usePortfolioAssets(

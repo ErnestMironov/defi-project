@@ -30,7 +30,9 @@ export const StrategiesApyChart = (props: StrategiesChartProperties) => {
     isFetching,
     error,
   } = useStrategiesMetrics({
-    strategy_id: topStrategiesWithColors.map(({ strategy }) => strategy.id),
+    strategy_id: topStrategiesWithColors
+      .filter(({ strategy }) => !!strategy)
+      .map(({ strategy }) => strategy.id),
     from_timestamp: currentTimestamp.toString(),
   })
   const formattedStrategiesMetrics: StrategiesMetricsChartData[] = useMemo(() => {

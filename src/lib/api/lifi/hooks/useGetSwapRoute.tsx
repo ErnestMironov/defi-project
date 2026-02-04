@@ -4,9 +4,9 @@ import type { ContractCallsQuoteRequest } from '@lifi/sdk'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { encodeFunctionData, parseUnits } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { useGetQuote } from '../endpoints/get-quote'
+import { useActiveAccount } from '@hooks/useActiveAccount'
 
 export function useGetSwapRoute() {
   const {
@@ -19,7 +19,7 @@ export function useGetSwapRoute() {
     setSwapRoute,
   } = useTxStore()
 
-  const { address } = useAccount()
+  const { address } = useActiveAccount()
   const [estimatedTokens, setEstimatedTokens] = useState<bigint>()
   const [isFirstRequestPending, setIsFirstRequestPending] = useState(false)
   const [debouncedInputValue, setDebouncedInputValue] = useState(inputValue)

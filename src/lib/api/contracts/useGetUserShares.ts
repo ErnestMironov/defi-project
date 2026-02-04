@@ -1,5 +1,6 @@
 import { TOKEN_VAULT } from '@abi/token-vault'
 import { USDC_VAULT_ADDRESS, USDT_VAULT_ADDRESS } from '@constants/vaults'
+import { USE_MOCKS } from '@configs/mocks'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import type { Address } from 'viem'
@@ -51,6 +52,46 @@ type Errors = Array<{
 export const useUserShares = (userAddress?: Address) => {
   const fetchShares = useCallback(async () => {
     if (!userAddress) return { shares: [], errors: [] }
+
+    if (USE_MOCKS) {
+      return {
+        shares: [
+          {
+            chainId: arbitrum.id,
+            balance: 1_250_000n,
+            decimals: 6,
+            stable: 'USDC',
+            address: USDC_VAULT_ADDRESS as Address,
+            stableBalance: 1_245_000n,
+          },
+          {
+            chainId: arbitrum.id,
+            balance: 850_000n,
+            decimals: 6,
+            stable: 'USDT',
+            address: USDT_VAULT_ADDRESS as Address,
+            stableBalance: 845_000n,
+          },
+          {
+            chainId: polygon.id,
+            balance: 2_400_000n,
+            decimals: 6,
+            stable: 'USDC',
+            address: USDC_VAULT_ADDRESS as Address,
+            stableBalance: 2_395_000n,
+          },
+          {
+            chainId: optimism.id,
+            balance: 1_900_000n,
+            decimals: 6,
+            stable: 'USDT',
+            address: USDT_VAULT_ADDRESS as Address,
+            stableBalance: 1_895_000n,
+          },
+        ],
+        errors: [],
+      }
+    }
 
     const sharesMap: Record<string, TokenShares> = {}
     const newErrors: Errors = []
