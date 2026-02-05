@@ -6,12 +6,31 @@ import type {
   Event,
   IncentiveEvent,
   PaginationResponse,
-  ProtocolMetrics,
   RebalanceVolume,
   ReportType,
   Strategy,
   VaultType,
 } from './types'
+
+type ProtocolMetrics = {
+  history: {
+    [currency: string]: {
+      apy: number
+      tvl: number
+      timestamps: {
+        [timestamp: string]: {
+          apy: number
+          tvl: number
+          chain: string
+          protocol: string
+          token: string
+          token_stats: null
+          strategy_id: string
+        }
+      }
+    }
+  }
+}
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -435,7 +454,7 @@ const jsonResponse = <T>(config: AxiosRequestConfig, data: T, status = 200): Axi
   status,
   statusText: 'OK',
   headers: {},
-  config,
+  config: config as AxiosResponse<T>['config'],
 })
 
 const normalizeUrl = (config: AxiosRequestConfig) => {

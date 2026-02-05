@@ -9,7 +9,7 @@ const jsonResponse = <T>(config: AxiosRequestConfig, data: T, status = 200): Axi
   status,
   statusText: 'OK',
   headers: {},
-  config,
+  config: config as AxiosResponse<T>['config'],
 })
 
 const normalizeUrl = (config: AxiosRequestConfig) => {
