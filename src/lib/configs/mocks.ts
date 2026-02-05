@@ -1,8 +1,8 @@
 export const USE_MOCKS = (() => {
   const flag = import.meta.env.VITE_USE_MOCKS
-  if (flag === 'true') return true
   if (flag === 'false') return false
-  return import.meta.env.DEV
+  if (flag === 'true') return true
+  return true
 })()
 
 export const MOCK_LATENCY_MS = (() => {
