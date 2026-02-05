@@ -175,7 +175,11 @@ export const formatValueWithPrecision = (
   const balanceString = typeof balance === 'number' ? balance.toString() : balance
   const [integerPart, fractionalPart = ''] = balanceString.split('.')
   const formattedFractionalPart = fractionalPart.slice(0, decimals)
-  return `${integerPart}${
-    formattedFractionalPart ? '.' : ''
-  }${formattedFractionalPart}`.replace(/\.?0+$/, '')
+  if (!formattedFractionalPart) {
+    return integerPart
+  }
+
+  return `${integerPart}.${formattedFractionalPart}`
+    .replace(/0+$/, '')
+    .replace(/\.$/, '')
 }

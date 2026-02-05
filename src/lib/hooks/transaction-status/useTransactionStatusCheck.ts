@@ -1,5 +1,6 @@
 import { CONFIRMATIONS_NUMBER } from '@constants/chains'
 import type { IPendingTransactionData } from '@modules/transaction-block/store/usePendingTransactionsStore'
+import { MOCK_LATENCY_MS, USE_MOCKS } from '@configs/mocks'
 import { type Config, waitForTransactionReceipt } from '@wagmi/core'
 import { useCallback } from 'react'
 import type { Address } from 'viem'
@@ -16,6 +17,13 @@ export const useTransactionStatusCheck = () => {
 
   return useCallback(
     async (tx: IPendingTransactionData) => {
+      if (USE_MOCKS) {
+        await new Promise<void>((resolve) =>
+          setTimeout(resolve, Math.max(300, MOCK_LATENCY_MS)),
+        )
+        return
+      }
+
       const network =
         tx.txType === 'deposit'
           ? tx.depositAsset?.chain_id

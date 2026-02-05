@@ -19,14 +19,16 @@ import { useVaultSelection } from './hooks/useVaultSelection'
 import { SelectDepositAsset } from './SelectDepositAssetModal'
 import ZapFee from './zap-fee/ZapFee'
 import { useActiveAccount } from '@hooks/useActiveAccount'
+import { MOCK_SWAP_LATENCY_MS, USE_MOCKS } from '@configs/mocks'
+import { useEffect, useState } from 'react'
 
 // Check if swap is needed
 const isSwapRequired = (
-  assetAddress: string | undefined,
+  assetSymbol: string | undefined,
   vault: string | undefined,
 ): boolean => {
-  if (!assetAddress || !vault) return false
-  return !assetAddress.toLowerCase().includes(vault.toLowerCase())
+  if (!assetSymbol || !vault) return false
+  return assetSymbol.toUpperCase() !== vault.toUpperCase()
 }
 
 export const DepositInput = () => {
@@ -38,6 +40,7 @@ export const DepositInput = () => {
     inputValue,
     inputValueInUSD,
     depositTotalAmount,
+    depositTotalInUSD,
     vault,
     isTxZAP,
     swapRoute,
@@ -80,14 +83,26 @@ export const DepositInput = () => {
     onUsdValueChange: setInputValueInUSD,
   })
 
-  const needsSwap = isSwapRequired(asset?.contract_address, vault)
+  const needsSwap = isSwapRequired(asset?.contract_ticker_symbol, vault)
   const isAmountStale = useStaleAmountTracking({
     isRouteLoading,
     depositTotalAmount,
     isSwapRequired: needsSwap,
   })
 
-  const showSkeleton = (isRouteLoading || isAmountStale) && needsSwap && isTxZAP
+  const [demoStakeLoading, setDemoStakeLoading] = useState(false)
+
+  useEffect(() => {
+    if (!USE_MOCKS || !needsSwap || !isTxZAP) return
+    if (!inputValue) return
+
+    setDemoStakeLoading(true)
+    const timeout = setTimeout(() => setDemoStakeLoading(false), MOCK_SWAP_LATENCY_MS)
+    return () => clearTimeout(timeout)
+  }, [inputValue, isTxZAP, needsSwap])
+
+  const showSkeleton =
+    (isRouteLoading || isAmountStale || demoStakeLoading) && needsSwap && isTxZAP
   return (
     <div>
       {/* Deposit Input Section */}
@@ -136,8 +151,9 @@ export const DepositInput = () => {
               </div>
             ) : (
               <AmountInput
-                value={Number(depositTotalAmount).toFixed(2)}
-                decimals={18}
+                value={Number(depositTotalInUSD || 0).toFixed(2)}
+                decimals={2}
+                after="USD"
                 disabled
               />
             )

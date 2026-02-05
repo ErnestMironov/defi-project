@@ -52,9 +52,17 @@ export const useApproveERC20 = ({
 
   const approve = useCallback(() => {
     if (USE_MOCKS) {
-      setLoading(false)
-      setStatus('success')
-      onSuccessHandler?.()
+      setLoading(true)
+      setStatus('confirm_in_wallet')
+      const delay = Math.max(300, (Number(import.meta.env.VITE_MOCK_LATENCY_MS) || 150))
+      setTimeout(() => {
+        setStatus('pending')
+        setTimeout(() => {
+          setLoading(false)
+          setStatus('success')
+          onSuccessHandler?.()
+        }, delay)
+      }, delay)
       return
     }
 

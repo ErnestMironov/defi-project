@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import { USE_MOCKS } from '@configs/mocks'
 import { useEffect, useState } from 'react'
 
 const MIN_DEPOSIT_USD = 1
@@ -46,7 +47,10 @@ export const useInputValidation = ({
       return
     }
 
-    if (inputValueInUSD && +inputValueInUSD < MIN_DEPOSIT_USD) {
+    if (
+      inputValueInUSD &&
+      +inputValueInUSD < (USE_MOCKS ? 0 : MIN_DEPOSIT_USD)
+    ) {
       setError('Deposit amount cannot be less than 1$')
       onError('Deposit amount cannot be less than 1$')
       return

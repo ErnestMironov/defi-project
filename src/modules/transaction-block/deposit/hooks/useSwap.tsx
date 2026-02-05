@@ -3,6 +3,7 @@ import { AXELAR_SCAN_URL } from '@constants/index'
 import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
+import { MOCK_LATENCY_MS, USE_MOCKS } from '@configs/mocks'
 import { convertBigIntToString } from '@utils/formatValue'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
@@ -217,7 +218,8 @@ export const useSwap = () => {
     setTimerDuration,
     swapRoute: route,
   } = useTxStore()
-  const { addTransaction } = useTransactionStore()
+  const { addTransaction, updateTransaction, removeTransaction } =
+    useTransactionStore()
 
   const { sendTransaction } = useSendTransaction({
     mutation: {
@@ -245,7 +247,42 @@ export const useSwap = () => {
     },
   })
 
+  const mockDelay = (multiplier = 1) =>
+    new Promise<void>((resolve) =>
+      setTimeout(resolve, Math.max(300, MOCK_LATENCY_MS * multiplier)),
+    )
+
+  const mockHash = () =>
+    `0x${Math.floor(Date.now()).toString(16).padStart(64, '0')}` as `0x${string}`
+
   const swapTokens = useCallback(async () => {
+    if (USE_MOCKS) {
+      setStatus('confirm_in_wallet')
+      await mockDelay(1)
+      const data = mockHash()
+      setTransactionHash(data)
+      setTimerDuration(
+        (route?.estimate?.executionDuration ?? 0) + ESTIMATED_TIME_OF_CONFIRMATION,
+      )
+      setStatus('pending')
+      setDepositHash(data)
+
+      const txState = getFullState()
+      const preparedTxState = convertBigIntToString(txState)
+      addTransaction({
+        ...preparedTxState,
+        transactionHash: data,
+        status: 'pending',
+        timestamp: Date.now(),
+      })
+
+      await mockDelay(2)
+      setStatus('success')
+      updateTransaction(data, 'success')
+      setTimeout(() => removeTransaction(data), 2_000)
+      return
+    }
+
     if (!route?.transactionRequest) return
     try {
       setStatus('confirm_in_wallet')

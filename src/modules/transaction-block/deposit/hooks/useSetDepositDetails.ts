@@ -5,6 +5,7 @@ import { useTxStore } from '@modules/transaction-block/store/useTxStore'
 import { formatTokenBalance } from '@utils/formatValue'
 import { useEffect } from 'react'
 import { type Address, formatUnits } from 'viem'
+import { MOCK_SWAP_LATENCY_MS, USE_MOCKS } from '@configs/mocks'
 
 export const useSetDepositDetails = () => {
   const {
@@ -13,6 +14,7 @@ export const useSetDepositDetails = () => {
     depositToNetwork,
     vault,
     inputValue,
+    inputValueInUSD,
     depositAsset,
     vaultDepositTokenAddress,
     isTxZAP,
@@ -26,25 +28,46 @@ export const useSetDepositDetails = () => {
 
   useEffect(() => {
     console.log('🚀 ~ useEffect ~ swapRoute:', swapRoute)
-    if (!swapRoute || !isTxZAP) {
-      setDepositTotalInUSD(inputValue)
+    if (USE_MOCKS && inputValue) {
+      setDepositTotalInUSD(inputValueInUSD ?? inputValue)
       setDepositTotalAmount(inputValue ?? '0')
       return
     }
 
-    setDepositTotalInUSD(
-      formatUnits(
-        BigInt(swapRoute?.includedSteps?.[0]?.estimate?.toAmount ?? '0'),
-        swapRoute?.includedSteps?.[0]?.action?.toToken?.decimals ?? 6,
-      ),
-    )
-    setDepositTotalAmount(
-      formatTokenBalance(
+    if (!swapRoute || !isTxZAP) {
+      setDepositTotalInUSD(inputValueInUSD ?? inputValue)
+      setDepositTotalAmount(inputValue ?? '0')
+      return
+    }
+
+    const applyTotals = () => {
+      const amount = formatTokenBalance(
         swapRoute?.includedSteps?.[0]?.estimate?.toAmount ?? '0',
         swapRoute?.includedSteps?.[0]?.action?.toToken?.decimals ?? 6,
-      ) ?? '0',
-    )
-  }, [swapRoute, setDepositTotalInUSD, inputValue, setDepositTotalAmount, isTxZAP])
+      )
+      const amountUsd = formatUnits(
+        BigInt(swapRoute?.includedSteps?.[0]?.estimate?.toAmount ?? '0'),
+        swapRoute?.includedSteps?.[0]?.action?.toToken?.decimals ?? 6,
+      )
+
+      setDepositTotalInUSD(amountUsd)
+      setDepositTotalAmount(amount ?? '0')
+    }
+
+    if (USE_MOCKS) {
+      const timeout = setTimeout(applyTotals, MOCK_SWAP_LATENCY_MS)
+      return () => clearTimeout(timeout)
+    }
+
+    applyTotals()
+  }, [
+    swapRoute,
+    setDepositTotalInUSD,
+    inputValue,
+    inputValueInUSD,
+    setDepositTotalAmount,
+    isTxZAP,
+  ])
 
   useEffect(() => {
     if (!vault) return

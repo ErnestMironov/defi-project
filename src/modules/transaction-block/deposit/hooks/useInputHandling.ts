@@ -50,7 +50,7 @@ export const useInputHandling = ({
     }
 
     const assetQuoteBN = BigNumber(
-      swapRoute?.action?.fromToken?.priceUSD || assetRate || 1,
+      assetRate || swapRoute?.action?.fromToken?.priceUSD || 1,
     )
     const numericValue = BigNumber(value)
 

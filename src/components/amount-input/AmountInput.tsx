@@ -40,7 +40,14 @@ const formatInputValue = (value: string, decimals: number): string => {
   }
 
   // Remove leading zeros except for "0" itself
-  return formattedValue.replace(/^0+/, '0')
+  if (formattedValue.startsWith('0') && !formattedValue.startsWith('0.')) {
+    formattedValue = formattedValue.replace(/^0+/, '')
+    if (formattedValue === '') {
+      formattedValue = '0'
+    }
+  }
+
+  return formattedValue
 }
 
 export const AmountInput = forwardRef<HTMLInputElement, AmountInputProperties>(

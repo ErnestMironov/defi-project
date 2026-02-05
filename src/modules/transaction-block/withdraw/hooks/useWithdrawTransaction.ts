@@ -3,6 +3,7 @@ import { EIDS_BY_CHAIN_ID } from '@constants/eids'
 import type { STEP_STATUS } from '@modules/transaction-block/deposit/interfaces'
 import { useTransactionStore } from '@modules/transaction-block/store/usePendingTransactionsStore'
 import { useTxStore } from '@modules/transaction-block/store/useTxStore'
+import { USE_MOCKS, MOCK_LATENCY_MS } from '@configs/mocks'
 import { convertBigIntToString } from '@utils/formatValue'
 import { useState } from 'react'
 import type { Address } from 'viem'
@@ -26,7 +27,7 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
     setTimerDuration,
   } = useTxStore()
 
-  const { addTransaction } = useTransactionStore()
+  const { addTransaction, updateTransaction, removeTransaction } = useTransactionStore()
 
   const [status, setStatus] = useState<STEP_STATUS>('idle')
 
@@ -36,6 +37,14 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
     sharesBalance && amount ? sharesBalance >= BigInt(amount) : undefined
 
   const { writeContract, ...rest } = useWriteContract({})
+
+  const mockDelay = (multiplier = 1) =>
+    new Promise<void>((resolve) =>
+      setTimeout(resolve, Math.max(300, MOCK_LATENCY_MS * multiplier)),
+    )
+
+  const mockHash = () =>
+    `0x${Math.floor(Date.now()).toString(16).padStart(64, '0')}` as `0x${string}`
 
   const withdraw = async () => {
     if (
@@ -48,6 +57,29 @@ export const useWithdrawTransaction = ({ amount }: { amount: string }) => {
     )
       return
     setStatus('confirm_in_wallet')
+
+    if (USE_MOCKS) {
+      await mockDelay(1)
+      const data = mockHash()
+      setStatus('pending')
+      setTransactionHash(data)
+      setTimerDuration(ESTIMATED_TIME_TO_COMPLETE_WITHDRAW)
+      setTxDifficulty('on_chain')
+      const txState = getFullState()
+      const txStateWithStringBigInt = convertBigIntToString(txState)
+      addTransaction({
+        ...txStateWithStringBigInt,
+        status: 'pending',
+        timestamp: Date.now(),
+        transactionHash: data,
+      })
+      setTransactionCanBeCollapsed(true)
+
+      await mockDelay(2)
+      updateTransaction(data, 'success')
+      setTimeout(() => removeTransaction(data), 2_000)
+      return
+    }
 
     return writeContract(
       {
